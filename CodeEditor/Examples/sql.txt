@@ -1,0 +1,264 @@
+IF EXISTS (SELECT * FROM [sys].[objects] WHERE OBJECT_ID = OBJECT_ID(N'[dbo].[LoadMisAllotments]') AND TYPE IN (N'P', N'PC'))
+    DROP PROCEDURE [dbo].[LoadMisAllotments]
+GO
+
+IF EXISTS (SELECT * FROM [sys].[objects] WHERE OBJECT_ID = OBJECT_ID(N'[dbo].[LoadMisQuotas]') AND TYPE IN (N'P', N'PC'))
+    DROP PROCEDURE [dbo].[LoadMisQuotas]
+GO
+
+CREATE PROCEDURE [dbo].[LoadMisQuotas]
+(
+    @hotelKey                 INT      = NULL,  -- ключ отеля
+    @flightKey                INT      = NULL,  -- ключ перелета
+    @startDate                DATETIME = NULL,  -- дата начала интервала, по которому изменялись квоты (для стопов передается null)
+    @endDate                  DATETIME = NULL,  -- дата окончания интервала, по которому изменялись квоты (для стопов передается null)
+    @quotesUpdate             BIT      = NULL,  -- признак того, что обновлять надо квоты (т.е. 1 - обновление квот, 0 - обновление стопов)
+    @roomAvailableBigPlaces   BIT      = NULL,
+    @tourStopImportType       INT      = 1,     -- 1 - при импорте стопа на тариф сбрасываются даты продаж у цен; 2 - переносится на 3000 дней дата действия цены; 3 - во всех ЦБ по сопоставленному пакету удаляются цены,
+    @addQuotaPlacesBusyPlaces BIT      = 0,
+    @blockPlaces              BIT      = NULL,  -- настройка Блок мест
+    @createQuotaDate          DATETIME,
+    @log                      NVARCHAR(MAX) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON
+    SET DATEFORMAT YMD
+
+    SET @log = ''
+
+    DECLARE @uskey INT
+    SET @uskey = 0
+    SELECT @uskey = ISNULL([US_Key],0) FROM [dbo].[UserList] WHERE [US_USERID] = SYSTEM_USER
+
+    DECLARE @mq_Id BIGINT
+
+    DECLARE @misQuotaTmpTable TABLE ([MQ_Id] BIGINT)
+
+    IF (ISNULL(@quotesUpdate, 1) = 1)
+    BEGIN
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT [MQ_Id]
+        FROM [MIS_Quotas] WITH(NOLOCK)
+        WHERE ((@hotelKey IS NOT NULL AND [MQ_HotelKey] = @hotelKey) OR (@hotelKey IS NULL))
+                AND ((@flightKey IS NOT NULL AND [MQ_FlightKey] = @flightKey) OR (@flightKey IS NULL))
+                AND ([MQ_StopSale] = 0)
+                AND ([MQ_MTKey] IS NULL)
+                AND ([MQ_Group] = 0)
+                AND ([MQ_ErrorState] IS NULL)
+                AND ([MQ_Places] != -1)
+                AND ([MQ_IsByCheckin] = 0)
+                AND ([MQ_RecordDate] = @createQuotaDate)
+
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            EXEC [ImportMisQuota] @mq_Id, @roomAvailableBigPlaces, @addQuotaPlacesBusyPlaces, @blockPlaces
+            FETCH NEXT FROM [qCur] INTO @mq_Id
+        END
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+
+        DELETE FROM @misQuotaTmpTable
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT [MQ_Id]
+        FROM [MIS_Quotas]
+        WHERE ((@hotelKey IS NOT NULL AND [MQ_HotelKey] = @hotelKey) OR (@hotelKey IS NULL))
+            AND ((@flightKey IS NOT NULL AND [MQ_FlightKey] = @flightKey) OR (@flightKey IS NULL))
+            AND ([MQ_StopSale] = 0)
+            AND ([MQ_MTKey] IS NULL)
+            AND ([MQ_Group] = 0)
+            AND ([MQ_ErrorState] IS NULL)
+            AND ([MQ_Places] != -1)
+            AND ([MQ_IsByCheckin] = 1)
+            AND ([MQ_RecordDate] = @createQuotaDate)
+
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            EXEC [ImportMisCheckinQuota] @mq_Id
+            FETCH NEXT FROM [qCur] INTO @mq_Id
+        END
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+
+        DELETE FROM @misQuotaTmpTable
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT MIN([MQ_Id])
+        FROM [MIS_Quotas] WITH(NOLOCK)
+        WHERE ((@hotelKey IS NOT NULL AND [MQ_HotelKey] = @hotelKey) OR (@hotelKey IS NULL))
+              AND ((@flightKey IS NOT NULL AND [MQ_FlightKey] = @flightKey) OR (@flightKey IS NULL))
+              AND ([MQ_StopSale] = 0)
+              AND ([MQ_MTKey] IS NULL)
+              AND ([MQ_Group] > 0)
+              AND ([MQ_ErrorState] IS NULL)
+              AND ([MQ_Places] != -1)
+              AND ([MQ_IsByCheckin] = 0)
+              AND ([MQ_RecordDate] = @createQuotaDate)
+        GROUP BY [MQ_Group]
+
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            EXEC [ImportMISQuotaExt] @mq_Id, @addQuotaPlacesBusyPlaces
+            FETCH NEXT FROM [qCur] INTO @mq_Id
+        END
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+    END
+
+    --обрабатываем стопы
+    IF (@quotesUpdate = 0 OR @quotesUpdate IS NULL)
+    BEGIN
+        DELETE FROM @misQuotaTmpTable
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT [MQ_Id]
+        FROM [MIS_Quotas] WITH(NOLOCK)
+        WHERE ([MQ_HotelKey] = @hotelKey OR @hotelKey IS NULL)
+            AND ([MQ_FlightKey] = @flightKey OR @flightKey IS NULL)
+            AND ([MQ_StopSale] = 1)
+            AND ([MQ_Places] = 0)
+            AND ([MQ_Date] < '2079-06-05')
+            AND ([MQ_MTKey] IS NULL)
+            AND ([MQ_ErrorState] IS NULL)
+            AND ([MQ_RecordDate] = @createQuotaDate)
+
+        -- стопы на комнату
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            EXEC [ImportMisStop] @mq_Id
+            FETCH NEXT FROM [qCur] INTO @mq_Id
+        END
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+
+        -- стопы на тариф
+        DELETE FROM @misQuotaTmpTable
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT [MQ_Id]
+        FROM [MIS_Quotas] WITH(NOLOCK)
+        WHERE ([MQ_HotelKey] = @hotelKey OR @hotelKey IS NULL)
+            AND ([MQ_FlightKey] = @flightKey OR @flightKey IS NULL)
+            AND ([MQ_StopSale] = 1)
+            AND ([MQ_Places] > 0)
+            AND ([MQ_TourKey] IS NOT NULL)
+            AND ([MQ_CancelStopsale] = 0)
+            AND ([MQ_Date] < '2079-06-05')
+            AND ([MQ_MTKey] IS NULL)
+            AND ([MQ_ErrorState] IS NULL)
+            AND ([MQ_RecordDate] = @createQuotaDate)
+
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        IF @tourStopImportType = 1
+        BEGIN
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                EXEC [ImportMisTourStop] @mq_Id, @log OUTPUT
+                FETCH NEXT FROM [qCur] INTO @mq_Id
+            END
+        END
+        ELSE IF @tourStopImportType = 2
+        BEGIN
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                EXEC [ImportMisTourStop2] @mq_Id, @log OUTPUT
+                FETCH NEXT FROM [qCur] INTO @mq_Id
+            END
+        END
+        ELSE IF @tourStopImportType = 3
+        BEGIN
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                EXEC [ImportMisTourStop_15] @mq_Id, @log OUTPUT
+                FETCH NEXT FROM [qCur] INTO @mq_Id
+            END
+        END
+
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+
+        -- отмененные стопы на тариф
+        DELETE FROM @misQuotaTmpTable
+        INSERT INTO @misQuotaTmpTable ([MQ_Id])
+        SELECT [MQ_Id]
+        FROM [MIS_Quotas] WITH(NOLOCK)
+        WHERE ([MQ_HotelKey] = @hotelKey OR @hotelKey IS NULL)
+            AND ([MQ_FlightKey] = @flightKey OR @flightKey IS NULL)
+            AND ([MQ_StopSale] = 1)
+            AND ([MQ_Places] > 0)
+            AND ([MQ_TourKey] IS NOT NULL)
+            AND ([MQ_CancelStopsale] = 1)
+            AND ([MQ_Date] < '2079-06-05')
+            AND ([MQ_MTKey] IS NULL)
+            AND ([MQ_ErrorState] IS NULL)
+            AND ([MQ_RecordDate] = @createQuotaDate)
+
+        DECLARE [qCur] CURSOR LOCAL FORWARD_ONLY STATIC FOR
+        SELECT [MQ_Id]
+        FROM @misQuotaTmpTable
+
+        OPEN [qCur]
+        FETCH NEXT FROM [qCur]
+        INTO @mq_Id
+
+        IF @tourStopImportType = 1
+        BEGIN
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                EXEC [ImportMisCancelTourStop] @mq_Id, @log OUTPUT
+                FETCH NEXT FROM [qCur] INTO @mq_Id
+            END
+        END
+        ELSE IF @tourStopImportType = 2
+        BEGIN
+            WHILE @@FETCH_STATUS = 0
+            BEGIN
+                EXEC [ImportMisCancelTourStop2] @mq_Id, @log OUTPUT
+                FETCH NEXT FROM [qCur] INTO @mq_Id
+            END
+        END
+
+        CLOSE [qCur]
+        DEALLOCATE [qCur]
+    END
+END
+GO
+
+GRANT EXEC ON [dbo].[LoadMisQuotas] TO PUBLIC
+GO
