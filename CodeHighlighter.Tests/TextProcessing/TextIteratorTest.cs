@@ -185,9 +185,11 @@ namespace CodeHighlighter.Tests.TextProcessing
             Assert.True(_iterator.Eof);
         }
 
-        private void Init(string text)
+        private void Init(string textString)
         {
-            _iterator = new TextIterator(new Text(text));
+            var text = new Text();
+            text.SetText(textString);
+            _iterator = new TextIterator(text);
         }
     }
 }

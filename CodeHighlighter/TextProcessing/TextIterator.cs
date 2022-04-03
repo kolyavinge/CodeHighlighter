@@ -34,7 +34,14 @@
             _text = text;
             LineIndex = 0;
             ColumnIndex = -1;
-            MoveNext();
+            if (text.LinesCount > 0)
+            {
+                MoveNext();
+            }
+            else
+            {
+                Eof = true;
+            }
         }
 
         public void MoveNext()

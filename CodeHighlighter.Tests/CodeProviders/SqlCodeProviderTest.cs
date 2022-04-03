@@ -191,9 +191,11 @@ from MyTable'";
             lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
         }
 
-        private List<Lexem> GetLexems(string text)
+        private List<Lexem> GetLexems(string textString)
         {
-            return _provider.GetLexems(new TextIterator(new Text(text))).ToList();
+            var text = new Text();
+            text.SetText(textString);
+            return _provider.GetLexems(new TextIterator(text)).ToList();
         }
     }
 }

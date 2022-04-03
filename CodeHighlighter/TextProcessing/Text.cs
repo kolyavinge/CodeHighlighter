@@ -6,13 +6,14 @@ namespace CodeHighlighter.TextProcessing
 {
     class Text
     {
-        private readonly List<Line> _lines;
+        private readonly List<Line> _lines = new();
 
         public int LinesCount => _lines.Count;
 
-        public Text(string text)
+        public void SetText(string text)
         {
-            _lines = text.Split('\r', '\n').Select(line => new Line(line)).ToList();
+            _lines.Clear();
+            _lines.AddRange(text.Split('\n').Select(line => new Line(line.Replace("\r", ""))).ToList());
         }
 
         public string GetSubstring(int lineIndex, int startIndex, int length)
@@ -27,6 +28,7 @@ namespace CodeHighlighter.TextProcessing
 
         public int GetMaxLineWidth()
         {
+            if (!_lines.Any()) return 0;
             return _lines.Select(x => x.Length).Max();
         }
     }

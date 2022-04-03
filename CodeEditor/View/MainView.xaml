@@ -7,13 +7,12 @@
         mc:Ignorable="d"
         Title="MainView"
         WindowStartupLocation="CenterScreen"
-        Height="450" Width="800">
+        Height="800" Width="1200">
     <Grid>
         <highlighter:CodeTextBox
             CodeProvider="{Binding CodeProvider}"
             Text="{Binding Code, Mode=TwoWay}"
             FontFamily="Consolas"
-            FontSize="12"
-            Background="Azure" />
+            FontSize="14" />
     </Grid>
 </Window>
