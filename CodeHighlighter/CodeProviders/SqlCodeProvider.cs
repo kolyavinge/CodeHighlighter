@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 using CodeHighlighter.Sql;
 
@@ -16,11 +14,13 @@ namespace CodeHighlighter.CodeProviders
 
         private readonly HashSet<char[]> _keywords;
         private readonly HashSet<char[]> _functions;
+        private readonly HashSet<char[]> _operators;
 
         public SqlCodeProvider()
         {
             _keywords = new HashSet<char[]>(new KeywordsCollection().Select(x => x.ToArray()).ToList());
             _functions = new HashSet<char[]>(new FunctionsCollection().Select(x => x.ToArray()).ToList());
+            _operators = new HashSet<char[]>(new OperatorsCollection().Select(x => x.ToArray()).ToList());
         }
 
         public IEnumerable<Lexem> GetLexems(ITextIterator textIterator)
@@ -184,6 +184,7 @@ namespace CodeHighlighter.CodeProviders
         private LexemKind GetLexemKind(char[] lexemNameArray, int lexemNameArrayIndex)
         {
             if (IsKeyword(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Keyword;
+            if (IsOperator(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Operator;
             if (IsFunction(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Function;
             if (IsVariable(lexemNameArray)) return LexemKind.Variable;
             if (IsIdentifier(lexemNameArray)) return LexemKind.Identifier;
@@ -194,6 +195,11 @@ namespace CodeHighlighter.CodeProviders
         private bool IsKeyword(char[] lexemNameArray, int lexemNameArrayIndex)
         {
             return _keywords.Contains(lexemNameArray, new CharArrayEqualityComparer(lexemNameArrayIndex));
+        }
+
+        private bool IsOperator(char[] lexemNameArray, int lexemNameArrayIndex)
+        {
+            return _operators.Contains(lexemNameArray, new CharArrayEqualityComparer(lexemNameArrayIndex));
         }
 
         private bool IsFunction(char[] lexemNameArray, int lexemNameArrayIndex)
@@ -221,6 +227,7 @@ namespace CodeHighlighter.CodeProviders
             return new[]
             {
                 new LexemColor(LexemKind.Keyword, Colors.Blue),
+                new LexemColor(LexemKind.Operator, Colors.DimGray),
                 new LexemColor(LexemKind.Function, Colors.Magenta),
                 new LexemColor(LexemKind.Variable, Colors.Brown),
                 new LexemColor(LexemKind.String, Colors.Red),

@@ -201,7 +201,8 @@ namespace CodeHighlighter
         {
             _verticalScrollBar!.ViewportSize = sizeInfo.NewSize.Height;
             _horizontalScrollBar!.ViewportSize = sizeInfo.NewSize.Width;
-            UpdateScrollbars();
+            UpdateScrollbarsMaximumValues();
+            InvalidateVisual();
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -294,11 +295,11 @@ namespace CodeHighlighter
             {
                 _lexems.SetLexems(_text, CodeProvider.GetLexems(new TextIterator(_text)));
                 _lexemColors.SetColors(CodeProvider.GetColors());
-                UpdateScrollbars();
+                UpdateScrollbarsMaximumValues();
             }
         }
 
-        private void UpdateScrollbars()
+        private void UpdateScrollbarsMaximumValues()
         {
             _verticalScrollBar!.Maximum = _text.LinesCount * _textMeasures.LineHeight;
             _horizontalScrollBar!.Maximum = _viewport!.Width < _text.GetMaxLineWidth() * _textMeasures.LetterWidth ? _text.GetMaxLineWidth() * _textMeasures.LetterWidth : 0;

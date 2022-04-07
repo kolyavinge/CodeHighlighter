@@ -106,7 +106,7 @@ namespace CodeHighlighter.Sql
             "SCOPE_IDENTITY",
             "ERROR_MESSAGE",
             "DB_NAME",
-            "OBJECT_NAME"
+            "OBJECT_NAME",
         };
 
         public IEnumerator<string> GetEnumerator()
