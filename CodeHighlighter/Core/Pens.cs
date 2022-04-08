@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace CodeHighlighter.Drawing
+namespace CodeHighlighter.Core
 {
     internal static class Pens
     {

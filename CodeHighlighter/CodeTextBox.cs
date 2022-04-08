@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using CodeHighlighter.Drawing;
+using CodeHighlighter.Core;
 using CodeHighlighter.TextProcessing;
 
 namespace CodeHighlighter
@@ -64,42 +64,42 @@ namespace CodeHighlighter
 
         static CodeTextBox()
         {
-            FontSizeProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(FontSizePropertyChangedCallback));
-            FontFamilyProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(FontFamilyPropertyChangedCallback));
-            FontStyleProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(FontStylePropertyChangedCallback));
-            FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(FontWeightPropertyChangedCallback));
-            FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(FontStretchPropertyChangedCallback));
+            FontSizeProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSizePropertyChanged));
+            FontFamilyProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontFamilyPropertyChanged));
+            FontStyleProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontStylePropertyChanged));
+            FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontWeightPropertyChanged));
+            FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontStretchPropertyChanged));
         }
 
-        private static void FontSizePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnFontSizePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
             control._fontSettings.FontSize = (double)e.NewValue;
             control._textMeasures.UpdateMeasures();
         }
 
-        private static void FontFamilyPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnFontFamilyPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
             control._fontSettings.FontFamily = (FontFamily)e.NewValue;
             control._textMeasures.UpdateMeasures();
         }
 
-        private static void FontStylePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnFontStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
             control._fontSettings.FontStyle = (FontStyle)e.NewValue;
             control._textMeasures.UpdateMeasures();
         }
 
-        private static void FontWeightPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnFontWeightPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
             control._fontSettings.FontWeight = (FontWeight)e.NewValue;
             control._textMeasures.UpdateMeasures();
         }
 
-        private static void FontStretchPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnFontStretchPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
             control._fontSettings.FontStretch = (FontStretch)e.NewValue;
@@ -162,7 +162,7 @@ namespace CodeHighlighter
 
         protected override void OnRender(DrawingContext context)
         {
-            context.DrawRectangle(Background ?? Brushes.White, Pens.Transparent, new Rect(0, 0, ActualWidth, ActualHeight));
+            context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             var lineHeight = _textMeasures.LineHeight;
             // lexems
             var typeface = MakeTypeface();
@@ -174,7 +174,7 @@ namespace CodeHighlighter
             {
                 var lineLexems = _lexems.GetLexemsForLine(lineIndex);
                 if (!lineLexems.Any()) { offsetY += lineHeight; continue; }
-                var offsetX = 0.0 - _horizontalScrollBar!.Value;
+                var offsetX = -_horizontalScrollBar!.Value;
                 foreach (var lexem in lineLexems)
                 {
                     var text = _text.GetSubstring(lineIndex, lexem.ColumnIndex, lexem.Length);

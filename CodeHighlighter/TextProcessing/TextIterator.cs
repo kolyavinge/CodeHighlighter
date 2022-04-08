@@ -3,6 +3,7 @@
     internal class TextIterator : ITextIterator
     {
         private readonly Text _text;
+        private readonly int _endLineIndex;
 
         public char Char { get; private set; }
 
@@ -23,18 +24,23 @@
                 if (Eof) return (char)0;
                 if (IsReturn) return (char)0;
                 var line = _text.GetLine(LineIndex);
-                if (ColumnIndex == line.Length - 1 && LineIndex == _text.LinesCount - 1) return (char)0;
+                if (ColumnIndex == line.Length - 1 && LineIndex == _endLineIndex) return (char)0;
                 if (ColumnIndex == line.Length - 1) return '\n';
                 return line[ColumnIndex + 1];
             }
         }
 
-        public TextIterator(Text text)
+        public TextIterator(Text text) : this(text, 0, text.LinesCount - 1)
+        {
+        }
+
+        public TextIterator(Text text, int startLineIndex, int endLineIndex)
         {
             _text = text;
-            LineIndex = 0;
+            _endLineIndex = endLineIndex;
+            LineIndex = startLineIndex;
             ColumnIndex = -1;
-            if (text.LinesCount > 0)
+            if ((endLineIndex - startLineIndex) >= 0)
             {
                 MoveNext();
             }
@@ -61,7 +67,7 @@
             {
                 Char = line[ColumnIndex];
             }
-            else if (ColumnIndex == line.Length && LineIndex < _text.LinesCount - 1)
+            else if (ColumnIndex == line.Length && LineIndex < _endLineIndex)
             {
                 Char = '\n';
             }

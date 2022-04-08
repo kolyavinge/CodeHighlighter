@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace CodeHighlighter
+namespace CodeHighlighter.TextProcessing
 {
     internal class FontSettings
     {

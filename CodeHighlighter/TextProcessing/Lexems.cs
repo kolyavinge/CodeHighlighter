@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using CodeHighlighter.TextProcessing;
 
-namespace CodeHighlighter
+namespace CodeHighlighter.TextProcessing
 {
-    class Lexems
+    internal class Lexems
     {
         private readonly Dictionary<int, MergedLexem[]> _lines = new();
 
         public void SetLexems(Text text, IEnumerable<Lexem> lexems)
         {
+            _lines.Clear();
             var groups = lexems.GroupBy(x => x.LineIndex).ToList();
             foreach (var group in groups)
             {
@@ -55,7 +56,7 @@ namespace CodeHighlighter
         }
     }
 
-    struct MergedLexem
+    internal struct MergedLexem
     {
         public readonly int ColumnIndex;
         public readonly int Length;

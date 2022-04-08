@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls.Primitives;
 
-namespace CodeHighlighter
+namespace CodeHighlighter.Core
 {
     class Viewport
     {

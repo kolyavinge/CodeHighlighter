@@ -167,7 +167,7 @@ from MyTable'";
         [Test]
         public void SQLFile_1()
         {
-            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\SQLFiles\1.sql");
+            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_1.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(637, lexems.Count);
             lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
@@ -176,7 +176,7 @@ from MyTable'";
         [Test]
         public void SQLFile_2()
         {
-            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\SQLFiles\2.sql");
+            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_2.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(1744, lexems.Count);
             lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
@@ -185,7 +185,7 @@ from MyTable'";
         [Test]
         public void SQLFile_3()
         {
-            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\SQLFiles\3.sql");
+            var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_3.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(31058, lexems.Count);
             lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));

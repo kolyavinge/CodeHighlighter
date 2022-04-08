@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace CodeHighlighter
+namespace CodeHighlighter.TextProcessing
 {
-    class LexemsColors
+    internal class LexemsColors
     {
         private readonly Dictionary<LexemKind, Brush> _colors = new();
 
