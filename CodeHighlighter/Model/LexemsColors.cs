@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace CodeHighlighter.TextProcessing
+namespace CodeHighlighter.Model
 {
-    internal class LexemsColors
+    internal interface ILexemsColors
+    {
+        Brush? GetColorBrushOrNull(LexemKind lexemKind);
+    }
+
+    internal class LexemsColors : ILexemsColors
     {
         private readonly Dictionary<LexemKind, Brush> _colors = new();
 

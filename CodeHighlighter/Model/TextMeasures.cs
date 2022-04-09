@@ -3,13 +3,19 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
 
-namespace CodeHighlighter.TextProcessing
+namespace CodeHighlighter.Model
 {
-    internal class TextMeasures
+    internal interface ITextMeasures
     {
-        private readonly FontSettings _fontSettings;
+        double LineHeight { get; }
+        double LetterWidth { get; }
+    }
 
-        public TextMeasures(FontSettings fontSettings)
+    internal class TextMeasures : ITextMeasures
+    {
+        private readonly IFontSettings _fontSettings;
+
+        public TextMeasures(IFontSettings fontSettings)
         {
             _fontSettings = fontSettings;
             UpdateMeasures();

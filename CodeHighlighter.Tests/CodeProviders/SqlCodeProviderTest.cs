@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeHighlighter.CodeProviders;
-using CodeHighlighter.TextProcessing;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.CodeProviders

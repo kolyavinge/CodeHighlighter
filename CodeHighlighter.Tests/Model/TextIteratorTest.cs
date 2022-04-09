@@ -1,7 +1,7 @@
-﻿using CodeHighlighter.TextProcessing;
+﻿using CodeHighlighter.Model;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.TextProcessing
+namespace CodeHighlighter.Tests.Model
 {
     class TextIteratorTest
     {

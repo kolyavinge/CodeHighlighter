@@ -1,9 +1,16 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace CodeHighlighter.TextProcessing
+namespace CodeHighlighter.Model
 {
-    internal class TextCursor
+    internal interface ITextCursor
+    {
+        int LineIndex { get; }
+        int ColumnIndex { get; }
+        Point AbsolutePoint { get; }
+    }
+
+    internal class TextCursor : ITextCursor
     {
         public static readonly Pen BlackPen = new(Brushes.Black, 1.5);
 
@@ -31,19 +38,19 @@ namespace CodeHighlighter.TextProcessing
             if (ColumnIndex > _text.GetLine(LineIndex).Length) ColumnIndex = _text.GetLine(LineIndex).Length;
         }
 
-        public void MoveByUp()
+        public void MoveUp()
         {
             LineIndex--;
             CorrectPosition();
         }
 
-        public void MoveByDown()
+        public void MoveDown()
         {
             LineIndex++;
             CorrectPosition();
         }
 
-        public void MoveByLeft()
+        public void MoveLeft()
         {
             ColumnIndex--;
             if (ColumnIndex == -1)
@@ -54,7 +61,7 @@ namespace CodeHighlighter.TextProcessing
             CorrectPosition();
         }
 
-        public void MoveByRight()
+        public void MoveRight()
         {
             ColumnIndex++;
             if (ColumnIndex == _text.GetLine(LineIndex).Length + 1)
@@ -65,25 +72,25 @@ namespace CodeHighlighter.TextProcessing
             CorrectPosition();
         }
 
-        public void MoveByHome()
+        public void MoveHome()
         {
             ColumnIndex = 0;
             CorrectPosition();
         }
 
-        public void MoveByEnd()
+        public void MoveEnd()
         {
             ColumnIndex = _text.GetLine(LineIndex).Length;
             CorrectPosition();
         }
 
-        public void MoveByPageUp(int pageSize)
+        public void MovePageUp(int pageSize)
         {
             LineIndex -= pageSize;
             CorrectPosition();
         }
 
-        public void MoveByPageDown(int pageSize)
+        public void MovePageDown(int pageSize)
         {
             LineIndex += pageSize;
             CorrectPosition();

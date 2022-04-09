@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.TextProcessing;
 
-namespace CodeHighlighter.TextProcessing
+namespace CodeHighlighter.Model
 {
-    internal class Lexems
+    internal interface ILexems
+    {
+        MergedLexem[] GetLexemsForLine(int lineIndex);
+    }
+
+    internal class Lexems : ILexems
     {
         private readonly Dictionary<int, MergedLexem[]> _lines = new();
 
-        public void SetLexems(Text text, IEnumerable<Lexem> lexems)
+        public void SetLexems(IText text, IEnumerable<Lexem> lexems)
         {
             _lines.Clear();
             var groups = lexems.GroupBy(x => x.LineIndex).ToList();

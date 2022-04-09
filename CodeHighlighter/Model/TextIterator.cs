@@ -1,8 +1,8 @@
-﻿namespace CodeHighlighter.TextProcessing
+﻿namespace CodeHighlighter.Model
 {
     internal class TextIterator : ITextIterator
     {
-        private readonly Text _text;
+        private readonly IText _text;
         private readonly int _endLineIndex;
 
         public char Char { get; private set; }
@@ -30,11 +30,11 @@
             }
         }
 
-        public TextIterator(Text text) : this(text, 0, text.LinesCount - 1)
+        public TextIterator(IText text) : this(text, 0, text.LinesCount - 1)
         {
         }
 
-        public TextIterator(Text text, int startLineIndex, int endLineIndex)
+        public TextIterator(IText text, int startLineIndex, int endLineIndex)
         {
             _text = text;
             _endLineIndex = endLineIndex;

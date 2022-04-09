@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeHighlighter.TextProcessing
+namespace CodeHighlighter.Model
 {
-    class Text
+    internal interface IText
+    {
+        int LinesCount { get; }
+        string GetSubstring(int lineIndex, int startIndex, int length);
+        Line GetLine(int lineIndex);
+        int GetMaxLineWidth();
+    }
+
+    internal class Text : IText
     {
         private readonly List<Line> _lines = new();
 
