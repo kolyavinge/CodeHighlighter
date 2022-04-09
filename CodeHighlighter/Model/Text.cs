@@ -39,29 +39,76 @@ namespace CodeHighlighter.Model
             if (!_lines.Any()) return 0;
             return _lines.Select(x => x.Length).Max();
         }
-    }
 
-    class Line
-    {
-        private readonly List<char> _symbs;
-
-        public int Length => _symbs.Count;
-
-        public char this[int i] => _symbs[i];
-
-        public Line(string str)
+        public void NewLine(int lineIndex, int columnIndex)
         {
-            _symbs = (str ?? "").ToCharArray().ToList();
+            var line = _lines[lineIndex];
+            var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
+            line.RemoveRange(columnIndex, line.Length - columnIndex);
+            _lines.Insert(lineIndex + 1, new Line(remains));
         }
 
-        public string GetSubstring(int startIndex, int length)
+        public void AppendChar(int lineIndex, int columnIndex, char ch)
         {
-            return new string(_symbs.Skip(startIndex).Take(length).ToArray());
+            _lines[lineIndex].AppendChar(columnIndex, ch);
+        }
+
+        public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
+        {
+            if (currentColumnIndex > 0)
+            {
+                return (currentLineIndex, currentColumnIndex - 1);
+            }
+            else if (currentLineIndex > 0)
+            {
+                return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
+            }
+            else
+            {
+                return (currentLineIndex, currentColumnIndex);
+            }
+        }
+
+        public DeleteResult LeftDelete(int lineIndex, int columnIndex)
+        {
+            if (columnIndex > 0)
+            {
+                _lines[lineIndex].RemoveAt(columnIndex - 1);
+            }
+            else if (lineIndex > 0)
+            {
+                _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
+                _lines.RemoveAt(lineIndex);
+                return new DeleteResult { IsLineDeleted = true };
+            }
+
+            return new DeleteResult { IsLineDeleted = false };
+        }
+
+        public DeleteResult RightDelete(int lineIndex, int columnIndex)
+        {
+            if (columnIndex < _lines[lineIndex].Length)
+            {
+                _lines[lineIndex].RemoveAt(columnIndex);
+            }
+            else if (lineIndex < _lines.Count - 1)
+            {
+                _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
+                _lines.RemoveAt(lineIndex + 1);
+                return new DeleteResult { IsLineDeleted = true };
+            }
+
+            return new DeleteResult { IsLineDeleted = false };
         }
 
         public override string ToString()
         {
-            return String.Join("", _symbs);
+            return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
+        }
+
+        public struct DeleteResult
+        {
+            public bool IsLineDeleted;
         }
     }
 }

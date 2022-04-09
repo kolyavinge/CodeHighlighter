@@ -10,7 +10,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void Empty()
         {
-            Init("");
+            SetText("");
 
             Assert.AreEqual(0, _iterator.Char);
             Assert.AreEqual(0, _iterator.NextChar);
@@ -22,7 +22,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void Return()
         {
-            Init("\n");
+            SetText("\n");
 
             Assert.AreEqual('\n', _iterator.Char);
             Assert.AreEqual(0, _iterator.NextChar);
@@ -41,7 +41,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void OneLine()
         {
-            Init("123");
+            SetText("123");
 
             Assert.AreEqual('1', _iterator.Char);
             Assert.AreEqual('2', _iterator.NextChar);
@@ -73,7 +73,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void OneLineAndReturn()
         {
-            Init("123\n");
+            SetText("123\n");
 
             Assert.AreEqual('1', _iterator.Char);
             Assert.False(_iterator.Eof);
@@ -102,7 +102,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void TwoLines()
         {
-            Init("123\n456");
+            SetText("123\n456");
 
             Assert.AreEqual('1', _iterator.Char);
             Assert.False(_iterator.Eof);
@@ -143,7 +143,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void TwoLinesAndReturn()
         {
-            Init("123\n456\n");
+            SetText("123\n456\n");
 
             Assert.AreEqual('1', _iterator.Char);
             Assert.False(_iterator.Eof);
@@ -188,7 +188,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void OnlyFirstLine()
         {
-            Init("123\n456", 0, 0);
+            SetText("123\n456", 0, 0);
 
             Assert.AreEqual('1', _iterator.Char);
             Assert.False(_iterator.Eof);
@@ -211,7 +211,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void OnlyTwoLine()
         {
-            Init("1\n2\n3", 0, 1);
+            SetText("1\n2\n3", 0, 1);
 
             Assert.AreEqual('1', _iterator.Char);
 
@@ -227,14 +227,14 @@ namespace CodeHighlighter.Tests.Model
             Assert.True(_iterator.Eof);
         }
 
-        private void Init(string textString)
+        private void SetText(string textString)
         {
             var text = new Text();
             text.SetText(textString);
             _iterator = new TextIterator(text);
         }
 
-        private void Init(string textString, int startLineIndex, int endLineIndex)
+        private void SetText(string textString, int startLineIndex, int endLineIndex)
         {
             var text = new Text();
             text.SetText(textString);

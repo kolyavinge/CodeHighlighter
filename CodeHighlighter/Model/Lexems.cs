@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model
@@ -11,17 +10,53 @@ namespace CodeHighlighter.Model
 
     internal class Lexems : ILexems
     {
-        private readonly Dictionary<int, MergedLexem[]> _lines = new();
+        private readonly List<MergedLexem[]> _lines = new();
 
-        public void SetLexems(IText text, IEnumerable<Lexem> lexems)
+        public void SetLexems(IText text, IReadOnlyCollection<Lexem> lexems)
         {
             _lines.Clear();
-            var groups = lexems.GroupBy(x => x.LineIndex).ToList();
-            foreach (var group in groups)
+            if (!lexems.Any()) return;
+
+            var merged = lexems
+                .GroupBy(x => x.LineIndex)
+                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
+
+            var linesCount = merged.Keys.Max(x => x) + 1;
+            for (int lineIndex = 0; lineIndex < linesCount; lineIndex++)
             {
-                if (_lines.ContainsKey(group.Key)) _lines.Remove(group.Key);
-                _lines.Add(group.Key, MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
+                _lines.Add(merged.ContainsKey(lineIndex) ? merged[lineIndex] : new MergedLexem[0]);
             }
+        }
+
+        public void ReplaceLexems(IText text, IReadOnlyCollection<Lexem> lexems)
+        {
+            if (!lexems.Any()) return;
+
+            var merged = lexems
+                .GroupBy(x => x.LineIndex)
+                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
+
+            foreach (var lineLexems in merged)
+            {
+                if (lineLexems.Key < _lines.Count)
+                {
+                    _lines[lineLexems.Key] = lineLexems.Value;
+                }
+                else
+                {
+                    _lines.Add(new MergedLexem[0]);
+                }
+            }
+        }
+
+        public void InsertEmpty(int lineIndex)
+        {
+            _lines.Insert(lineIndex, new MergedLexem[0]);
+        }
+
+        public void RemoveAt(int lineIndex)
+        {
+            _lines.RemoveAt(lineIndex);
         }
 
         private IEnumerable<MergedLexem> MergeLexems(Line line, Lexem[] lexems)
@@ -49,14 +84,7 @@ namespace CodeHighlighter.Model
 
         public MergedLexem[] GetLexemsForLine(int lineIndex)
         {
-            if (_lines.ContainsKey(lineIndex))
-            {
-                return _lines[lineIndex];
-            }
-            else
-            {
-                return Array.Empty<MergedLexem>();
-            }
+            return _lines[lineIndex];
         }
     }
 

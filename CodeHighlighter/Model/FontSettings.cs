@@ -23,6 +23,7 @@ namespace CodeHighlighter.Model
         public FontSettings()
         {
             FontFamily = new FontFamily("Consolas");
+            FontSize = 12;
         }
     }
 }

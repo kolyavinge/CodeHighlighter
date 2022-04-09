@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.Model
+﻿using System.Linq;
+
+namespace CodeHighlighter.Model
 {
     internal class CodeTextBoxModel
     {
@@ -8,6 +10,7 @@
         private readonly FontSettings _fontSettings;
         private readonly Lexems _lexems;
         private readonly LexemsColors _lexemColors;
+        private ICodeProvider? _codeProvider;
 
         public IFontSettings FontSettings => _fontSettings;
         public IText Text => _text;
@@ -25,6 +28,12 @@
             _textCursor = new(_text, _textMeasures);
             _lexems = new();
             _lexemColors = new();
+        }
+
+        public void SetCodeProvider(ICodeProvider codeProvider)
+        {
+            _codeProvider = codeProvider;
+            SetLexems();
         }
 
         public void SetText(string text)
@@ -67,24 +76,24 @@
             _textCursor.MoveRight();
         }
 
-        public void MoveCursorHome()
+        public void MoveCursorStartLine()
         {
-            _textCursor.MoveHome();
+            _textCursor.MoveStartLine();
         }
 
-        public void CursorGotoTextBegin()
+        public void MoveCursorTextBegin()
         {
-            _textCursor.GotoTextBegin();
+            _textCursor.MoveTextBegin();
         }
 
-        public void MoveCursorEnd()
+        public void MoveCursorEndLine()
         {
-            _textCursor.MoveEnd();
+            _textCursor.MoveEndLine();
         }
 
-        public void CursorGotoTextEnd()
+        public void MoveCursorTextEnd()
         {
-            _textCursor.GotoTextEnd();
+            _textCursor.MoveTextEnd();
         }
 
         public void MoveCursorPageUp()
@@ -97,10 +106,53 @@
             _textCursor.MovePageDown(GetLinesCountInViewport());
         }
 
-        public void UpdateLexems(ICodeProvider codeProvider)
+        public void NewLine()
         {
-            _lexems.SetLexems(_text, codeProvider.GetLexems(new TextIterator(_text)));
-            _lexemColors.SetColors(codeProvider.GetColors());
+            _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
+            _lexems.InsertEmpty(_textCursor.LineIndex + 1);
+            _textCursor.MoveDown();
+            _textCursor.MoveStartLine();
+            UpdateLexemsForLines(_textCursor.LineIndex - 1, 2);
+        }
+
+        public void AppendChar(char ch)
+        {
+            _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
+            _textCursor.MoveRight();
+            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+        }
+
+        public void LeftDelete()
+        {
+            (int newLineIndex, int newColumnIndex) = _text.GetCursorPositionAfterLeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+            var deleteResult = _text.LeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+            if (deleteResult.IsLineDeleted)
+            {
+                _lexems.RemoveAt(_textCursor.LineIndex);
+            }
+            _textCursor.Move(newLineIndex, newColumnIndex);
+            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+        }
+
+        public void RightDelete()
+        {
+            var deleteResult = _text.RightDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+            if (deleteResult.IsLineDeleted)
+            {
+                _lexems.RemoveAt(_textCursor.LineIndex + 1);
+            }
+            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+        }
+
+        public void SetLexems()
+        {
+            _lexems.SetLexems(_text, _codeProvider!.GetLexems(new TextIterator(_text)).ToList());
+            _lexemColors.SetColors(_codeProvider.GetColors());
+        }
+
+        private void UpdateLexemsForLines(int startLineIndex, int count)
+        {
+            _lexems.ReplaceLexems(_text, _codeProvider!.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList());
         }
 
         public int GetLinesCountInViewport()

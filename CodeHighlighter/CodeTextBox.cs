@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -50,8 +51,11 @@ namespace CodeHighlighter
         private static void CodeProviderPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var codeTextBox = (CodeTextBox)d;
-            codeTextBox.OnUpdateCodeProvider();
-            codeTextBox.InvalidateVisual();
+            if (e.NewValue != null)
+            {
+                codeTextBox.OnUpdateCodeProvider();
+                codeTextBox.InvalidateVisual();
+            }
         }
         #endregion
 
@@ -127,9 +131,8 @@ namespace CodeHighlighter
             var offsetY = -(_verticalScrollBar.Value % _model.TextMeasures.LineHeight);
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
-                var lineLexems = _model.Lexems.GetLexemsForLine(lineIndex);
-                if (!lineLexems.Any()) { offsetY += _model.TextMeasures.LineHeight; continue; }
                 var offsetX = -_horizontalScrollBar!.Value;
+                var lineLexems = _model.Lexems.GetLexemsForLine(lineIndex);
                 foreach (var lexem in lineLexems)
                 {
                     var text = _model.Text.GetSubstring(lineIndex, lexem.ColumnIndex, lexem.Length);
@@ -194,19 +197,19 @@ namespace CodeHighlighter
             }
             else if (e.Key == Key.Home && e.KeyboardDevice.Modifiers == ModifierKeys.None)
             {
-                _model.MoveCursorHome();
+                _model.MoveCursorStartLine();
             }
             else if (e.Key == Key.Home && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                _model.CursorGotoTextBegin();
+                _model.MoveCursorTextBegin();
             }
             else if (e.Key == Key.End && e.KeyboardDevice.Modifiers == ModifierKeys.None)
             {
-                _model.MoveCursorEnd();
+                _model.MoveCursorEndLine();
             }
             else if (e.Key == Key.End && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
-                _model.CursorGotoTextEnd();
+                _model.MoveCursorTextEnd();
             }
             else if (e.Key == Key.PageUp)
             {
@@ -216,18 +219,40 @@ namespace CodeHighlighter
             {
                 _model.MoveCursorPageDown();
             }
+            else if (e.Key == Key.Return)
+            {
+                _model.NewLine();
+            }
+            else if (e.Key == Key.Back)
+            {
+                _model.LeftDelete();
+            }
+            else if (e.Key == Key.Delete)
+            {
+                _model.RightDelete();
+            }
+            _model.CorrectViewport();
+            InvalidateVisual();
+        }
 
+        private static readonly HashSet<char> _notAllowedSymbols = new HashSet<char>(
+            new char[] { '\n', '\r', '\b' });
+        protected override void OnTextInput(TextCompositionEventArgs e)
+        {
+            var text = e.Text.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
+            if (!text.Any()) return;
+            foreach (var ch in text)
+            {
+                _model.AppendChar(ch);
+            }
             _model.CorrectViewport();
             InvalidateVisual();
         }
 
         private void OnUpdateCodeProvider()
         {
-            if (CodeProvider != null)
-            {
-                _model.UpdateLexems(CodeProvider);
-                _model.UpdateScrollbarsMaximumValues();
-            }
+            _model.SetCodeProvider(CodeProvider);
+            _model.UpdateScrollbarsMaximumValues();
         }
     }
 }

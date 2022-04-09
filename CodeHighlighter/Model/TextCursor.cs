@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 
 namespace CodeHighlighter.Model
@@ -27,7 +28,13 @@ namespace CodeHighlighter.Model
         {
             _text = text;
             _textMeasures = textMeasures;
-            LineIndex = -1;
+            LineIndex = 0;
+        }
+
+        public void Move(int lineIndex, int columnIndex)
+        {
+            LineIndex = lineIndex;
+            ColumnIndex = columnIndex;
         }
 
         public void MoveByClick(double x, double y)
@@ -72,13 +79,13 @@ namespace CodeHighlighter.Model
             CorrectPosition();
         }
 
-        public void MoveHome()
+        public void MoveStartLine()
         {
             ColumnIndex = 0;
             CorrectPosition();
         }
 
-        public void MoveEnd()
+        public void MoveEndLine()
         {
             ColumnIndex = _text.GetLine(LineIndex).Length;
             CorrectPosition();
@@ -96,13 +103,13 @@ namespace CodeHighlighter.Model
             CorrectPosition();
         }
 
-        public void GotoTextBegin()
+        public void MoveTextBegin()
         {
             ColumnIndex = 0;
             LineIndex = 0;
         }
 
-        public void GotoTextEnd()
+        public void MoveTextEnd()
         {
             ColumnIndex = 0;
             LineIndex = _text.LinesCount - 1;
