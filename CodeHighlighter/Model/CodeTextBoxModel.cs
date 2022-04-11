@@ -4,30 +4,27 @@ namespace CodeHighlighter.Model
 {
     internal class CodeTextBoxModel
     {
-        private readonly TextCursor _textCursor;
         private readonly Text _text;
-        private readonly TextMeasures _textMeasures;
-        private readonly FontSettings _fontSettings;
+        private readonly TextCursor _textCursor;
+        private readonly TextSelection _textSelection;
         private readonly Lexems _lexems;
         private readonly LexemsColors _lexemColors;
-        private ICodeProvider? _codeProvider;
+        private ICodeProvider _codeProvider;
 
-        public IFontSettings FontSettings => _fontSettings;
         public IText Text => _text;
+        public ITextCursor TextCursor => _textCursor;
+        public ITextSelection TextSelection => _textSelection;
         public ILexems Lexems => _lexems;
         public ILexemsColors LexemColors => _lexemColors;
-        public ITextMeasures TextMeasures => _textMeasures;
-        public ITextCursor TextCursor => _textCursor;
-        public Viewport? Viewport { get; set; }
 
-        public CodeTextBoxModel(FontSettings fontSettings)
+        public CodeTextBoxModel()
         {
-            _fontSettings = fontSettings;
-            _textMeasures = new(FontSettings);
             _text = new();
-            _textCursor = new(_text, _textMeasures);
+            _textCursor = new(_text);
+            _textSelection = new();
             _lexems = new();
             _lexemColors = new();
+            _codeProvider = new CodeProviders.EmptyCodeProvider();
         }
 
         public void SetCodeProvider(ICodeProvider codeProvider)
@@ -41,69 +38,105 @@ namespace CodeHighlighter.Model
             _text.SetText(text);
         }
 
-        public void SetFontSettings(FontSettings fontSettings)
+        public void MoveCursorTo(int lineIndex, int columnIndex)
         {
-            _fontSettings.FontFamily = fontSettings.FontFamily;
-            _fontSettings.FontSize = fontSettings.FontSize;
-            _fontSettings.FontStretch = fontSettings.FontStretch;
-            _fontSettings.FontStyle = fontSettings.FontStyle;
-            _fontSettings.FontWeight = fontSettings.FontWeight;
-            _textMeasures.UpdateMeasures();
-        }
-
-        public void MoveCursorByClick(double x, double y)
-        {
-            _textCursor.MoveByClick(x, y);
+            _textCursor.MoveTo(lineIndex, columnIndex);
+            SetSelection();
         }
 
         public void MoveCursorUp()
         {
             _textCursor.MoveUp();
+            SetSelection();
         }
 
         public void MoveCursorDown()
         {
             _textCursor.MoveDown();
+            SetSelection();
         }
 
         public void MoveCursorLeft()
         {
             _textCursor.MoveLeft();
+            SetSelection();
         }
 
         public void MoveCursorRight()
         {
             _textCursor.MoveRight();
+            SetSelection();
         }
 
         public void MoveCursorStartLine()
         {
             _textCursor.MoveStartLine();
+            SetSelection();
         }
 
         public void MoveCursorTextBegin()
         {
             _textCursor.MoveTextBegin();
+            SetSelection();
         }
 
         public void MoveCursorEndLine()
         {
             _textCursor.MoveEndLine();
+            SetSelection();
         }
 
         public void MoveCursorTextEnd()
         {
             _textCursor.MoveTextEnd();
+            SetSelection();
         }
 
-        public void MoveCursorPageUp()
+        public void MoveCursorPageUp(int pageSize)
         {
-            _textCursor.MovePageUp(GetLinesCountInViewport());
+            _textCursor.MovePageUp(pageSize);
+            SetSelection();
         }
 
-        public void MoveCursorPageDown()
+        public void MoveCursorPageDown(int pageSize)
         {
-            _textCursor.MovePageDown(GetLinesCountInViewport());
+            _textCursor.MovePageDown(pageSize);
+            SetSelection();
+        }
+
+        public void SelectAll()
+        {
+            _textSelection.InProgress = false;
+            _textSelection.StartLineIndex = 0;
+            _textSelection.StartColumnIndex = 0;
+            _textSelection.EndLineIndex = _text.LinesCount - 1;
+            _textSelection.EndColumnIndex = _text.GetLine(_textSelection.EndLineIndex).Length;
+            _textCursor.MoveTextEnd();
+        }
+
+        public void StartSelection()
+        {
+            _textSelection.InProgress = true;
+        }
+
+        public void EndSelection()
+        {
+            _textSelection.InProgress = false;
+        }
+
+        private void SetSelection()
+        {
+            if (_textSelection.InProgress)
+            {
+                _textSelection.EndLineIndex = _textCursor.LineIndex;
+                _textSelection.EndColumnIndex = _textCursor.ColumnIndex;
+            }
+            else
+            {
+                _textSelection.StartLineIndex = _textCursor.LineIndex;
+                _textSelection.StartColumnIndex = _textCursor.ColumnIndex;
+                _textSelection.EndLineIndex = -1;
+            }
         }
 
         public void NewLine()
@@ -130,7 +163,7 @@ namespace CodeHighlighter.Model
             {
                 _lexems.RemoveAt(_textCursor.LineIndex);
             }
-            _textCursor.Move(newLineIndex, newColumnIndex);
+            _textCursor.MoveTo(newLineIndex, newColumnIndex);
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
         }
 
@@ -146,49 +179,13 @@ namespace CodeHighlighter.Model
 
         public void SetLexems()
         {
-            _lexems.SetLexems(_text, _codeProvider!.GetLexems(new TextIterator(_text)).ToList());
+            _lexems.SetLexems(_text, _codeProvider.GetLexems(new TextIterator(_text)).ToList());
             _lexemColors.SetColors(_codeProvider.GetColors());
         }
 
         private void UpdateLexemsForLines(int startLineIndex, int count)
         {
-            _lexems.ReplaceLexems(_text, _codeProvider!.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList());
-        }
-
-        public int GetLinesCountInViewport()
-        {
-            var result = (int)(Viewport!.Height / _textMeasures.LineHeight) + 1;
-            if (Viewport.Height % _textMeasures.LineHeight != 0) result++;
-
-            return result;
-        }
-
-        public void CorrectViewport()
-        {
-            if (_textCursor.AbsolutePoint.X < Viewport!.HorizontalScrollBar!.Value)
-            {
-                Viewport.HorizontalScrollBar.Value = _textCursor.AbsolutePoint.X;
-            }
-            else if (_textCursor.AbsolutePoint.X + _textMeasures.LetterWidth > Viewport.HorizontalScrollBar.Value + Viewport.Width)
-            {
-                Viewport.HorizontalScrollBar.Value = _textCursor.AbsolutePoint.X - Viewport.Width + _textMeasures.LetterWidth;
-            }
-
-            if (_textCursor.AbsolutePoint.Y < Viewport.VerticalScrollBar!.Value)
-            {
-                Viewport.VerticalScrollBar.Value = _textCursor.AbsolutePoint.Y;
-            }
-            else if (_textCursor.AbsolutePoint.Y + _textMeasures.LineHeight > Viewport.VerticalScrollBar.Value + Viewport.Height)
-            {
-                Viewport.VerticalScrollBar.Value = _textCursor.AbsolutePoint.Y - Viewport.Height + _textMeasures.LineHeight;
-            }
-        }
-
-        public void UpdateScrollbarsMaximumValues()
-        {
-            var maxLineWidthInPixels = _text.GetMaxLineWidth() * _textMeasures.LetterWidth;
-            Viewport!.HorizontalScrollBar!.Maximum = Viewport!.Width < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
-            Viewport.VerticalScrollBar!.Maximum = _text.LinesCount * _textMeasures.LineHeight;
+            _lexems.ReplaceLexems(_text, _codeProvider.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList());
         }
     }
 }

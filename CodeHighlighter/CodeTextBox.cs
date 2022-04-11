@@ -13,7 +13,13 @@ namespace CodeHighlighter
 {
     public class CodeTextBox : Control
     {
+        private static readonly Pen CursorBlackPen = new(Brushes.Black, 1.5);
+        private static readonly Brush SelectionBrush = new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 });
+
         private readonly CodeTextBoxModel _model;
+        private readonly FontSettings _fontSettings;
+        private readonly TextMeasures _textMeasures;
+        private Viewport? _viewport;
         private ScrollBar? _verticalScrollBar;
         private RepeatButton? _verticalScrollBarUpButton, _verticalScrollBarDownButton;
         private ScrollBar? _horizontalScrollBar;
@@ -71,12 +77,19 @@ namespace CodeHighlighter
         private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var control = (CodeTextBox)d;
-            control._model.SetFontSettings(control.MakeFontSettings());
+            control._fontSettings.FontFamily = control.FontFamily;
+            control._fontSettings.FontSize = control.FontSize;
+            control._fontSettings.FontStretch = control.FontStretch;
+            control._fontSettings.FontStyle = control.FontStyle;
+            control._fontSettings.FontWeight = control.FontWeight;
+            control._textMeasures.UpdateMeasures();
         }
 
         public CodeTextBox()
         {
-            _model = new CodeTextBoxModel(MakeFontSettings());
+            _model = new CodeTextBoxModel();
+            _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
+            _textMeasures = new TextMeasures(_fontSettings);
             var template = new ControlTemplate(typeof(CodeTextBox));
             template.VisualTree = new FrameworkElementFactory(typeof(Grid), "RootLayout");
             template.VisualTree.AppendChild(new FrameworkElementFactory(typeof(ScrollBar), "VerticalScrollBar"));
@@ -85,8 +98,6 @@ namespace CodeHighlighter
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
         }
-
-        private FontSettings MakeFontSettings() => new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
 
         public override void OnApplyTemplate()
         {
@@ -100,8 +111,8 @@ namespace CodeHighlighter
             {
                 _verticalScrollBarUpButton = (RepeatButton)_verticalScrollBar.Template.FindName("PART_LineUpButton", _verticalScrollBar);
                 _verticalScrollBarDownButton = (RepeatButton)_verticalScrollBar.Template.FindName("PART_LineDownButton", _verticalScrollBar);
-                _verticalScrollBarUpButton.Click += (s, e) => { _verticalScrollBar.Value -= _model.TextMeasures.LineHeight; InvalidateVisual(); };
-                _verticalScrollBarDownButton.Click += (s, e) => { _verticalScrollBar.Value += _model.TextMeasures.LineHeight; InvalidateVisual(); };
+                _verticalScrollBarUpButton.Click += (s, e) => { _verticalScrollBar.Value -= _textMeasures.LineHeight; InvalidateVisual(); };
+                _verticalScrollBarDownButton.Click += (s, e) => { _verticalScrollBar.Value += _textMeasures.LineHeight; InvalidateVisual(); };
             };
             _horizontalScrollBar = (ScrollBar)Template.FindName("HorizontalScrollBar", this);
             _horizontalScrollBar.Minimum = 0;
@@ -114,10 +125,10 @@ namespace CodeHighlighter
             {
                 _horizontalScrollBarLeftButton = (RepeatButton)_horizontalScrollBar.Template.FindName("PART_LineLeftButton", _horizontalScrollBar);
                 _horizontalScrollBarRightButton = (RepeatButton)_horizontalScrollBar.Template.FindName("PART_LineRightButton", _horizontalScrollBar);
-                _horizontalScrollBarLeftButton.Click += (s, e) => { _horizontalScrollBar.Value -= _model.TextMeasures.LetterWidth; InvalidateVisual(); };
-                _horizontalScrollBarRightButton.Click += (s, e) => { _horizontalScrollBar.Value += _model.TextMeasures.LetterWidth; InvalidateVisual(); };
+                _horizontalScrollBarLeftButton.Click += (s, e) => { _horizontalScrollBar.Value -= _textMeasures.LetterWidth; InvalidateVisual(); };
+                _horizontalScrollBarRightButton.Click += (s, e) => { _horizontalScrollBar.Value += _textMeasures.LetterWidth; InvalidateVisual(); };
             };
-            _model.Viewport = new Viewport(this, _verticalScrollBar, _horizontalScrollBar);
+            _viewport = new Viewport(this, _verticalScrollBar, _horizontalScrollBar, _model.Text, _textMeasures);
         }
 
         protected override void OnRender(DrawingContext context)
@@ -125,10 +136,10 @@ namespace CodeHighlighter
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             // lexems
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-            var startLine = (int)(_verticalScrollBar!.Value / _model.TextMeasures.LineHeight);
-            var linesCount = _model.GetLinesCountInViewport();
+            var startLine = (int)(_verticalScrollBar!.Value / _textMeasures.LineHeight);
+            var linesCount = _viewport!.GetLinesCountInViewport();
             var endLine = Math.Min(startLine + linesCount, _model.Text.LinesCount);
-            var offsetY = -(_verticalScrollBar.Value % _model.TextMeasures.LineHeight);
+            var offsetY = -(_verticalScrollBar.Value % _textMeasures.LineHeight);
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
                 var offsetX = -_horizontalScrollBar!.Value;
@@ -141,34 +152,69 @@ namespace CodeHighlighter
                     context.DrawText(formattedText, new Point(offsetX, offsetY));
                     offsetX += formattedText.WidthIncludingTrailingWhitespace;
                 }
-                offsetY += _model.TextMeasures.LineHeight;
+                offsetY += _textMeasures.LineHeight;
+            }
+            // selection
+            foreach (var line in _model.TextSelection.GetTextSelectionLines(_model.Text))
+            {
+                DrawSelectionLine(context, line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex);
             }
             // cursor
-            var cursorAbsolutePoint = _model.TextCursor.AbsolutePoint;
+            var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
             cursorAbsolutePoint.X -= _horizontalScrollBar!.Value;
             cursorAbsolutePoint.Y -= _verticalScrollBar.Value;
             if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
             {
-                context.DrawLine(TextCursor.BlackPen,
+                context.DrawLine(CursorBlackPen,
                     new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
-                    new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _model.TextMeasures.LineHeight)));
+                    new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
             }
+        }
+
+        private void DrawSelectionLine(DrawingContext context, int lineIndex, int leftColumnIndex, int rightColumnIndex)
+        {
+            var leftColumnPos = leftColumnIndex * _textMeasures.LetterWidth - _horizontalScrollBar!.Value;
+            var rightColumnPos = rightColumnIndex * _textMeasures.LetterWidth - _horizontalScrollBar!.Value;
+            context.DrawRectangle(
+                SelectionBrush,
+                null,
+                new Rect(leftColumnPos, lineIndex * _textMeasures.LineHeight - _verticalScrollBar!.Value, rightColumnPos - leftColumnPos, _textMeasures.LineHeight));
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
             _verticalScrollBar!.ViewportSize = sizeInfo.NewSize.Height;
             _horizontalScrollBar!.ViewportSize = sizeInfo.NewSize.Width;
-            _model.UpdateScrollbarsMaximumValues();
+            _viewport!.UpdateScrollbarsMaximumValues();
             InvalidateVisual();
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
-            var pos = e.GetPosition(this);
-            _model.MoveCursorByClick(pos.X + _horizontalScrollBar!.Value, pos.Y + _verticalScrollBar!.Value);
+            var positionInControl = e.GetPosition(this);
+            var lineIndex = _viewport!.GetCursorLineIndex(positionInControl);
+            var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+            _model.MoveCursorTo(lineIndex, columnIndex);
             InvalidateVisual();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                _model.StartSelection();
+                var positionInControl = e.GetPosition(this);
+                var lineIndex = _viewport!.GetCursorLineIndex(positionInControl);
+                var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+                _model.MoveCursorTo(lineIndex, columnIndex);
+                InvalidateVisual();
+            }
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            _model.EndSelection();
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -179,6 +225,7 @@ namespace CodeHighlighter
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            var needToInvalidate = true;
             if (e.Key == Key.Up)
             {
                 _model.MoveCursorUp();
@@ -195,29 +242,29 @@ namespace CodeHighlighter
             {
                 _model.MoveCursorRight();
             }
-            else if (e.Key == Key.Home && e.KeyboardDevice.Modifiers == ModifierKeys.None)
-            {
-                _model.MoveCursorStartLine();
-            }
             else if (e.Key == Key.Home && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 _model.MoveCursorTextBegin();
             }
-            else if (e.Key == Key.End && e.KeyboardDevice.Modifiers == ModifierKeys.None)
+            else if (e.Key == Key.Home)
             {
-                _model.MoveCursorEndLine();
+                _model.MoveCursorStartLine();
             }
             else if (e.Key == Key.End && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 _model.MoveCursorTextEnd();
             }
+            else if (e.Key == Key.End)
+            {
+                _model.MoveCursorEndLine();
+            }
             else if (e.Key == Key.PageUp)
             {
-                _model.MoveCursorPageUp();
+                _model.MoveCursorPageUp(_viewport!.GetLinesCountInViewport());
             }
             else if (e.Key == Key.PageDown)
             {
-                _model.MoveCursorPageDown();
+                _model.MoveCursorPageDown(_viewport!.GetLinesCountInViewport());
             }
             else if (e.Key == Key.Return)
             {
@@ -231,12 +278,43 @@ namespace CodeHighlighter
             {
                 _model.RightDelete();
             }
-            _model.CorrectViewport();
-            InvalidateVisual();
+            else if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                _model.StartSelection();
+            }
+            else if (e.Key == Key.A && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                _model.SelectAll();
+            }
+            else
+            {
+                needToInvalidate = false;
+            }
+            if (needToInvalidate)
+            {
+                _viewport!.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
+                InvalidateVisual();
+            }
         }
 
-        private static readonly HashSet<char> _notAllowedSymbols = new HashSet<char>(
-            new char[] { '\n', '\r', '\b' });
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            var needToInvalidate = true;
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                _model.EndSelection();
+            }
+            else
+            {
+                needToInvalidate = false;
+            }
+            if (needToInvalidate)
+            {
+                InvalidateVisual();
+            }
+        }
+
+        private static readonly HashSet<char> _notAllowedSymbols = new HashSet<char>(new char[] { '\n', '\r', '\b' });
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
             var text = e.Text.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
@@ -245,14 +323,14 @@ namespace CodeHighlighter
             {
                 _model.AppendChar(ch);
             }
-            _model.CorrectViewport();
+            _viewport!.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
             InvalidateVisual();
         }
 
         private void OnUpdateCodeProvider()
         {
             _model.SetCodeProvider(CodeProvider);
-            _model.UpdateScrollbarsMaximumValues();
+            _viewport!.UpdateScrollbarsMaximumValues();
         }
     }
 }

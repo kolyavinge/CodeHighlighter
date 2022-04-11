@@ -8,41 +8,30 @@ namespace CodeHighlighter.Model
     {
         int LineIndex { get; }
         int ColumnIndex { get; }
-        Point AbsolutePoint { get; }
+        Point GetAbsolutePosition(ITextMeasures textMeasures);
     }
 
     internal class TextCursor : ITextCursor
     {
-        public static readonly Pen BlackPen = new(Brushes.Black, 1.5);
-
         private readonly Text _text;
-        private readonly TextMeasures _textMeasures;
 
         public int LineIndex { get; private set; }
 
         public int ColumnIndex { get; private set; }
 
-        public Point AbsolutePoint => new(ColumnIndex * _textMeasures.LetterWidth, LineIndex * _textMeasures.LineHeight);
+        public Point GetAbsolutePosition(ITextMeasures textMeasures) => new(ColumnIndex * textMeasures.LetterWidth, LineIndex * textMeasures.LineHeight);
 
-        public TextCursor(Text text, TextMeasures textMeasures)
+        public TextCursor(Text text)
         {
             _text = text;
-            _textMeasures = textMeasures;
             LineIndex = 0;
         }
 
-        public void Move(int lineIndex, int columnIndex)
+        public void MoveTo(int lineIndex, int columnIndex)
         {
             LineIndex = lineIndex;
             ColumnIndex = columnIndex;
-        }
-
-        public void MoveByClick(double x, double y)
-        {
-            LineIndex = (int)(y / _textMeasures.LineHeight);
-            ColumnIndex = (int)(x / _textMeasures.LetterWidth);
-            if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
-            if (ColumnIndex > _text.GetLine(LineIndex).Length) ColumnIndex = _text.GetLine(LineIndex).Length;
+            CorrectPosition();
         }
 
         public void MoveUp()
@@ -59,6 +48,7 @@ namespace CodeHighlighter.Model
 
         public void MoveLeft()
         {
+            if (LineIndex == 0 && ColumnIndex == 0) return;
             ColumnIndex--;
             if (ColumnIndex == -1)
             {
@@ -70,6 +60,7 @@ namespace CodeHighlighter.Model
 
         public void MoveRight()
         {
+            if (LineIndex == _text.LinesCount - 1 && ColumnIndex == _text.GetLine(LineIndex).Length) return;
             ColumnIndex++;
             if (ColumnIndex == _text.GetLine(LineIndex).Length + 1)
             {
@@ -111,8 +102,8 @@ namespace CodeHighlighter.Model
 
         public void MoveTextEnd()
         {
-            ColumnIndex = 0;
             LineIndex = _text.LinesCount - 1;
+            ColumnIndex = _text.GetLine(LineIndex).Length;
         }
 
         private void CorrectPosition()
