@@ -389,6 +389,24 @@ namespace CodeHighlighter.Tests.Model
             Assert.False(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
         }
 
+        [Test]
+        public void DeleteSelection()
+        {
+            AppendString("0123456789");
+            _model.NewLine();
+            AppendString("9876543210");
+            _model.MoveCursorTo(0, 3);
+            _model.StartSelection();
+            _model.MoveCursorTo(1, 7);
+            _model.EndSelection();
+            _model.LeftDelete();
+
+            Assert.AreEqual("012210", _model.Text.ToString());
+            Assert.AreEqual(0, _model.TextCursor.LineIndex);
+            Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+            Assert.AreEqual(1, _model.Lexems.Count);
+        }
+
         private void AppendString(string str)
         {
             str.ToList().ForEach(_model.AppendChar);

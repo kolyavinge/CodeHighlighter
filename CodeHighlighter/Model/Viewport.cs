@@ -42,7 +42,7 @@ namespace CodeHighlighter.Model
 
         public int CursorColumnIndex(Point cursorClickPosition)
         {
-            return (int)((cursorClickPosition.X + HorizontalScrollBar!.Value) / _textMeasures.LetterWidth);
+            return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + HorizontalScrollBar!.Value) / _textMeasures.LetterWidth);
         }
 
         public void CorrectViewport(Point cursorGetAbsolutePoint)

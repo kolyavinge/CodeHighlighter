@@ -101,6 +101,32 @@ namespace CodeHighlighter.Model
             return new DeleteResult { IsLineDeleted = false };
         }
 
+        public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
+        {
+            var selectionLines = textSelection.GetTextSelectionLines(this).ToList();
+            if (selectionLines.Count == 1)
+            {
+                var selectionLine = selectionLines.First();
+                var line = _lines[selectionLine.LineIndex];
+                line.RemoveRange(selectionLine.LeftColumnIndex, selectionLine.RightColumnIndex - selectionLine.LeftColumnIndex);
+
+                return new DeleteSelectionResult();
+            }
+            else
+            {
+                var firstSelectionLine = selectionLines.First();
+                var lastSelectionLine = selectionLines.Last();
+                var firstLine = _lines[firstSelectionLine.LineIndex];
+                var lastLine = _lines[lastSelectionLine.LineIndex];
+                firstLine.RemoveRange(firstSelectionLine.LeftColumnIndex, firstSelectionLine.RightColumnIndex - firstSelectionLine.LeftColumnIndex);
+                firstLine.AppendLine(lastLine, lastSelectionLine.RightColumnIndex, lastLine.Length - lastSelectionLine.RightColumnIndex);
+                var secondSelectionLine = selectionLines.Skip(1).First();
+                _lines.RemoveRange(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+
+                return new DeleteSelectionResult(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+            }
+        }
+
         public override string ToString()
         {
             return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
@@ -109,6 +135,17 @@ namespace CodeHighlighter.Model
         public struct DeleteResult
         {
             public bool IsLineDeleted;
+        }
+
+        public struct DeleteSelectionResult
+        {
+            public readonly int FirstDeletedLineIndex;
+            public readonly int DeletedLinesCount;
+            public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
+            {
+                FirstDeletedLineIndex = firstDeletedLineIndex;
+                DeletedLinesCount = deletedLinesCount;
+            }
         }
     }
 }

@@ -5,12 +5,15 @@ namespace CodeHighlighter.Model
 {
     internal interface ILexems
     {
+        int Count { get; }
         MergedLexem[] GetLexemsForLine(int lineIndex);
     }
 
     internal class Lexems : ILexems
     {
         private readonly List<MergedLexem[]> _lines = new();
+
+        public int Count => _lines.Count;
 
         public void SetLexems(IText text, IReadOnlyCollection<Lexem> lexems)
         {
@@ -57,6 +60,11 @@ namespace CodeHighlighter.Model
         public void RemoveAt(int lineIndex)
         {
             _lines.RemoveAt(lineIndex);
+        }
+
+        public void RemoveRange(int lineIndex, int count)
+        {
+            _lines.RemoveRange(lineIndex, count);
         }
 
         private IEnumerable<MergedLexem> MergeLexems(Line line, Lexem[] lexems)

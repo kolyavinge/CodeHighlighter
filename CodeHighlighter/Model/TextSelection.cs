@@ -47,6 +47,19 @@ namespace CodeHighlighter.Model
         public int EndLineIndex { get; set; }
         public int EndColumnIndex { get; set; }
 
+        public TextSelection()
+        {
+            InProgress = false;
+        }
+
+        public TextSelection(int startLineIndex, int startColumnIndex, int endLineIndex, int endColumnIndex) : this()
+        {
+            StartLineIndex = startLineIndex;
+            StartColumnIndex = startColumnIndex;
+            EndLineIndex = endLineIndex;
+            EndColumnIndex = endColumnIndex;
+        }
+
         public (TextSelectionPosition, TextSelectionPosition) GetSortedPositions()
         {
             var start = new TextSelectionPosition(StartLineIndex, StartColumnIndex);
@@ -76,9 +89,9 @@ namespace CodeHighlighter.Model
             }
         }
 
-        public TextSelection()
+        public void Reset()
         {
-            InProgress = false;
+            EndLineIndex = -1;
         }
     }
 }

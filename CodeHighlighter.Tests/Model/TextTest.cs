@@ -129,6 +129,100 @@ namespace CodeHighlighter.Tests.Model
             Assert.True(result.IsLineDeleted);
         }
 
+        [Test]
+        public void DeleteSelection_OneLine_Begin()
+        {
+            SetText("012345");
+            var result = _text.DeleteSelection(new TextSelection(0, 0, 0, 4));
+            Assert.AreEqual("45", _text.ToString());
+            Assert.AreEqual(0, result.FirstDeletedLineIndex);
+            Assert.AreEqual(0, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_OneLine_End()
+        {
+            SetText("012345");
+            _text.DeleteSelection(new TextSelection(0, 1, 0, 6));
+            Assert.AreEqual("0", _text.ToString());
+        }
+
+        [Test]
+        public void DeleteSelection_OneLine_Middle()
+        {
+            SetText("012345");
+            _text.DeleteSelection(new TextSelection(0, 1, 0, 5));
+            Assert.AreEqual("05", _text.ToString());
+        }
+
+        [Test]
+        public void DeleteSelection_OneLine_All()
+        {
+            SetText("012345");
+            _text.DeleteSelection(new TextSelection(0, 0, 0, 6));
+            Assert.AreEqual("", _text.ToString());
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_Begin()
+        {
+            SetText("012345\n012345");
+            var result = _text.DeleteSelection(new TextSelection(0, 0, 1, 4));
+            Assert.AreEqual("45", _text.ToString());
+            Assert.AreEqual(1, result.FirstDeletedLineIndex);
+            Assert.AreEqual(1, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_Middle()
+        {
+            SetText("012345\n012345");
+            var result = _text.DeleteSelection(new TextSelection(0, 2, 1, 4));
+            Assert.AreEqual("0145", _text.ToString());
+            Assert.AreEqual(1, result.FirstDeletedLineIndex);
+            Assert.AreEqual(1, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_End()
+        {
+            SetText("012345\n012345");
+            var result = _text.DeleteSelection(new TextSelection(0, 2, 1, 6));
+            Assert.AreEqual("01", _text.ToString());
+            Assert.AreEqual(1, result.FirstDeletedLineIndex);
+            Assert.AreEqual(1, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_DeleteFirst()
+        {
+            SetText("012345\n555555");
+            var result = _text.DeleteSelection(new TextSelection(0, 0, 0, 6));
+            Assert.AreEqual("\r\n555555", _text.ToString());
+            Assert.AreEqual(0, result.FirstDeletedLineIndex);
+            Assert.AreEqual(0, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_DeleteLast()
+        {
+            SetText("012345\n555555");
+            var result = _text.DeleteSelection(new TextSelection(1, 0, 1, 6));
+            Assert.AreEqual("012345\r\n", _text.ToString());
+            Assert.AreEqual(0, result.FirstDeletedLineIndex);
+            Assert.AreEqual(0, result.DeletedLinesCount);
+        }
+
+        [Test]
+        public void DeleteSelection_ManyLines_All()
+        {
+            SetText("012345\n012345");
+            var result = _text.DeleteSelection(new TextSelection(0, 0, 1, 6));
+            Assert.AreEqual("", _text.ToString());
+            Assert.AreEqual(1, result.FirstDeletedLineIndex);
+            Assert.AreEqual(1, result.DeletedLinesCount);
+        }
+
         private void SetText(string textString)
         {
             _text = new Text();

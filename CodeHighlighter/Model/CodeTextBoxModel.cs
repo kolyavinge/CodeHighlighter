@@ -135,12 +135,13 @@ namespace CodeHighlighter.Model
             {
                 _textSelection.StartLineIndex = _textCursor.LineIndex;
                 _textSelection.StartColumnIndex = _textCursor.ColumnIndex;
-                _textSelection.EndLineIndex = -1;
+                _textSelection.Reset();
             }
         }
 
         public void NewLine()
         {
+            if (_textSelection.IsExist) DeleteSelection();
             _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
             _lexems.InsertEmpty(_textCursor.LineIndex + 1);
             _textCursor.MoveDown();
@@ -150,6 +151,7 @@ namespace CodeHighlighter.Model
 
         public void AppendChar(char ch)
         {
+            if (_textSelection.IsExist) DeleteSelection();
             _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
             _textCursor.MoveRight();
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
@@ -157,24 +159,47 @@ namespace CodeHighlighter.Model
 
         public void LeftDelete()
         {
-            (int newLineIndex, int newColumnIndex) = _text.GetCursorPositionAfterLeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
-            var deleteResult = _text.LeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
-            if (deleteResult.IsLineDeleted)
+            if (_textSelection.IsExist)
             {
-                _lexems.RemoveAt(_textCursor.LineIndex);
+                DeleteSelection();
             }
-            _textCursor.MoveTo(newLineIndex, newColumnIndex);
+            else
+            {
+                (int newLineIndex, int newColumnIndex) = _text.GetCursorPositionAfterLeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+                var deleteResult = _text.LeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+                if (deleteResult.IsLineDeleted)
+                {
+                    _lexems.RemoveAt(_textCursor.LineIndex);
+                }
+                _textCursor.MoveTo(newLineIndex, newColumnIndex);
+            }
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
         }
 
         public void RightDelete()
         {
-            var deleteResult = _text.RightDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
-            if (deleteResult.IsLineDeleted)
+            if (_textSelection.IsExist)
             {
-                _lexems.RemoveAt(_textCursor.LineIndex + 1);
+                DeleteSelection();
+            }
+            else
+            {
+                var deleteResult = _text.RightDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
+                if (deleteResult.IsLineDeleted)
+                {
+                    _lexems.RemoveAt(_textCursor.LineIndex + 1);
+                }
             }
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
+        }
+
+        private void DeleteSelection()
+        {
+            var deleteResult = _text.DeleteSelection(_textSelection);
+            _lexems.RemoveRange(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
+            var startCursorPosition = _textSelection.GetSortedPositions().Item1;
+            _textCursor.MoveTo(startCursorPosition.LineIndex, startCursorPosition.ColumnIndex);
+            _textSelection.Reset();
         }
 
         public void SetLexems()

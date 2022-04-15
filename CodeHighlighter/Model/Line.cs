@@ -32,6 +32,15 @@ namespace CodeHighlighter.Model
             _symbs.AddRange(line._symbs);
         }
 
+        public void AppendLine(Line line, int columnIndex, int count)
+        {
+            var endColumnIndex = columnIndex + count - 1;
+            for (int i = columnIndex; i <= endColumnIndex; i++)
+            {
+                _symbs.Add(line._symbs[i]);
+            }
+        }
+
         public void RemoveAt(int columnIndex)
         {
             _symbs.RemoveAt(columnIndex);

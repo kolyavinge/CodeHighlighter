@@ -314,7 +314,7 @@ namespace CodeHighlighter
             }
         }
 
-        private static readonly HashSet<char> _notAllowedSymbols = new HashSet<char>(new char[] { '\n', '\r', '\b' });
+        private static readonly HashSet<char> _notAllowedSymbols = new(new char[] { '\n', '\r', '\b' });
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
             var text = e.Text.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
