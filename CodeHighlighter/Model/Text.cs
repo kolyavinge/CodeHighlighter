@@ -9,6 +9,8 @@ namespace CodeHighlighter.Model
         int LinesCount { get; }
         string GetSubstring(int lineIndex, int startIndex, int length);
         Line GetLine(int lineIndex);
+        Line GetFirstLine();
+        Line GetLastLine();
         int GetMaxLineWidth();
     }
 
@@ -17,6 +19,13 @@ namespace CodeHighlighter.Model
         private readonly List<Line> _lines = new();
 
         public int LinesCount => _lines.Count;
+
+        public Text() { }
+
+        public Text(string text)
+        {
+            SetText(text);
+        }
 
         public void SetText(string text)
         {
@@ -29,10 +38,11 @@ namespace CodeHighlighter.Model
             return _lines[lineIndex].GetSubstring(startIndex, length);
         }
 
-        public Line GetLine(int lineIndex)
-        {
-            return _lines[lineIndex];
-        }
+        public Line GetLine(int lineIndex) => _lines[lineIndex];
+
+        public Line GetFirstLine() => _lines.First();
+
+        public Line GetLastLine() => _lines.Last();
 
         public int GetMaxLineWidth()
         {
@@ -51,6 +61,25 @@ namespace CodeHighlighter.Model
         public void AppendChar(int lineIndex, int columnIndex, char ch)
         {
             _lines[lineIndex].AppendChar(columnIndex, ch);
+        }
+
+        public void Insert(int lineIndex, int columnIndex, IText insertedText)
+        {
+            if (insertedText.LinesCount == 0) return;
+            if (insertedText.LinesCount == 1)
+            {
+                _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
+            }
+            else
+            {
+                NewLine(lineIndex, columnIndex);
+                _lines[lineIndex].AppendLine(insertedText.GetFirstLine());
+                for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
+                {
+                    _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
+                }
+                _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
+            }
         }
 
         public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)

@@ -56,6 +56,62 @@ namespace CodeHighlighter.Tests.Model
         }
 
         [Test]
+        public void InsertOneLine_Begin()
+        {
+            SetText("345");
+            _text.Insert(0, 0, new Text("12"));
+            Assert.AreEqual("12345", _text.ToString());
+        }
+
+        [Test]
+        public void InsertOneLine_Middle()
+        {
+            SetText("125");
+            _text.Insert(0, 2, new Text("34"));
+            Assert.AreEqual("12345", _text.ToString());
+        }
+
+        [Test]
+        public void InsertOneLine_End()
+        {
+            SetText("123");
+            _text.Insert(0, 3, new Text("45"));
+            Assert.AreEqual("12345", _text.ToString());
+        }
+
+        [Test]
+        public void InsertTwoLines_Begin()
+        {
+            SetText("45");
+            _text.Insert(0, 0, new Text("12\n3"));
+            Assert.AreEqual("12\r\n345", _text.ToString());
+        }
+
+        [Test]
+        public void InsertTwoLines_Middle()
+        {
+            SetText("125");
+            _text.Insert(0, 2, new Text("3\n4"));
+            Assert.AreEqual("123\r\n45", _text.ToString());
+        }
+
+        [Test]
+        public void InsertTwoLines_End()
+        {
+            SetText("12");
+            _text.Insert(0, 2, new Text("3\n45"));
+            Assert.AreEqual("123\r\n45", _text.ToString());
+        }
+
+        [Test]
+        public void InsertMultyLines_End()
+        {
+            SetText("18");
+            _text.Insert(0, 1, new Text("2\n34\n56\n7"));
+            Assert.AreEqual("12\r\n34\r\n56\r\n78", _text.ToString());
+        }
+
+        [Test]
         public void LeftDelete_First()
         {
             SetText("123");

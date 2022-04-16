@@ -286,6 +286,19 @@ namespace CodeHighlighter
             {
                 _model.SelectAll();
             }
+            else if (e.Key == Key.X && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                Clipboard.SetText(_model.GetSelectedText());
+                _model.LeftDelete();
+            }
+            else if (e.Key == Key.C && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                Clipboard.SetText(_model.GetSelectedText());
+            }
+            else if (e.Key == Key.V && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                _model.InsertText(Clipboard.GetText());
+            }
             else
             {
                 needToInvalidate = false;

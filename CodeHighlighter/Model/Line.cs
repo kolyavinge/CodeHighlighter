@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CodeHighlighter.Utils;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model
 {
-    class Line
+    class Line : IEnumerable<char>
     {
         private readonly List<char> _symbs;
 
@@ -32,12 +34,20 @@ namespace CodeHighlighter.Model
             _symbs.AddRange(line._symbs);
         }
 
-        public void AppendLine(Line line, int columnIndex, int count)
+        public void AppendLine(Line appendedLine, int appendedLineColumnIndex, int appendedLineCount)
         {
-            var endColumnIndex = columnIndex + count - 1;
-            for (int i = columnIndex; i <= endColumnIndex; i++)
+            var endColumnIndex = appendedLineColumnIndex + appendedLineCount - 1;
+            for (int i = appendedLineColumnIndex; i <= endColumnIndex; i++)
             {
-                _symbs.Add(line._symbs[i]);
+                _symbs.Add(appendedLine._symbs[i]);
+            }
+        }
+
+        public void InsertLine(int columnIndex, Line appendedLine)
+        {
+            for (int i = 0; i < appendedLine.Length; i++)
+            {
+                _symbs.Insert(columnIndex + i, appendedLine[i]);
             }
         }
 
@@ -55,5 +65,9 @@ namespace CodeHighlighter.Model
         {
             return String.Join("", _symbs);
         }
+
+        public IEnumerator<char> GetEnumerator() => _symbs.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _symbs.GetEnumerator();
     }
 }

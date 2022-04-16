@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace CodeHighlighter.Model
 {
@@ -155,6 +158,34 @@ namespace CodeHighlighter.Model
             _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
             _textCursor.MoveRight();
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
+        }
+
+        public string GetSelectedText()
+        {
+            if (!_textSelection.IsExist) return "";
+            var selectedLines = new List<string>();
+            foreach (var line in _textSelection.GetTextSelectionLines(_text))
+            {
+                selectedLines.Add(_text.GetSubstring(line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
+            }
+
+            return String.Join(Environment.NewLine, selectedLines);
+        }
+
+        public void InsertText(string text)
+        {
+            var insertedText = new Text(text);
+            if (_textSelection.IsExist) DeleteSelection();
+            _text.Insert(_textCursor.LineIndex, _textCursor.ColumnIndex, insertedText);
+            if (insertedText.LinesCount == 1)
+            {
+                _textCursor.MoveTo(_textCursor.LineIndex, _textCursor.ColumnIndex + insertedText.GetLastLine().Length);
+            }
+            else
+            {
+                _textCursor.MoveTo(_textCursor.LineIndex + insertedText.LinesCount - 1, insertedText.GetLastLine().Length);
+            }
+            UpdateLexemsForLines(0, _text.LinesCount);
         }
 
         public void LeftDelete()
