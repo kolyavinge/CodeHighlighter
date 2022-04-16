@@ -7,6 +7,7 @@ namespace CodeHighlighter.Model
     internal interface IText
     {
         int LinesCount { get; }
+        int VisibleLinesCount { get; }
         string GetSubstring(int lineIndex, int startIndex, int length);
         Line GetLine(int lineIndex);
         Line GetFirstLine();
@@ -19,6 +20,8 @@ namespace CodeHighlighter.Model
         private readonly List<Line> _lines = new();
 
         public int LinesCount => _lines.Count;
+
+        public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
 
         public Text() { }
 

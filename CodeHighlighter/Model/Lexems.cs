@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model
@@ -24,30 +25,29 @@ namespace CodeHighlighter.Model
                 .GroupBy(x => x.LineIndex)
                 .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
 
-            var linesCount = merged.Keys.Max(x => x) + 1;
-            for (int lineIndex = 0; lineIndex < linesCount; lineIndex++)
+            for (int lineIndex = 0; lineIndex < text.LinesCount; lineIndex++)
             {
                 _lines.Add(merged.ContainsKey(lineIndex) ? merged[lineIndex] : new MergedLexem[0]);
             }
         }
 
-        public void ReplaceLexems(IText text, IReadOnlyCollection<Lexem> lexems)
+        public void ReplaceLexems(IText text, IReadOnlyCollection<Lexem> lexems, int startLineIndex, int linesCount)
         {
-            if (!lexems.Any()) return;
-
             var merged = lexems
                 .GroupBy(x => x.LineIndex)
                 .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
 
-            foreach (var lineLexems in merged)
+            var length = startLineIndex + linesCount;
+            for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
             {
-                if (lineLexems.Key < _lines.Count)
+                var lineLexems = merged.ContainsKey(lineIndex) ? merged[lineIndex] : new MergedLexem[0];
+                if (lineIndex < _lines.Count)
                 {
-                    _lines[lineLexems.Key] = lineLexems.Value;
+                    _lines[lineIndex] = lineLexems;
                 }
                 else
                 {
-                    _lines.Add(new MergedLexem[0]);
+                    _lines.Add(lineLexems);
                 }
             }
         }

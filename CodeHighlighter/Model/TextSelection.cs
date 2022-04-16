@@ -49,7 +49,7 @@ namespace CodeHighlighter.Model
 
         public TextSelection()
         {
-            InProgress = false;
+            Reset();
         }
 
         public TextSelection(int startLineIndex, int startColumnIndex, int endLineIndex, int endColumnIndex) : this()
@@ -91,6 +91,7 @@ namespace CodeHighlighter.Model
 
         public void Reset()
         {
+            InProgress = false;
             EndLineIndex = -1;
         }
     }

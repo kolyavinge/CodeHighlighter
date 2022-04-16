@@ -8,6 +8,24 @@ namespace CodeHighlighter.Tests.Model
         private Text _text;
 
         [Test]
+        public void Empty()
+        {
+            SetText("");
+            Assert.AreEqual("", _text.ToString());
+            Assert.AreEqual(1, _text.LinesCount);
+            Assert.AreEqual(0, _text.VisibleLinesCount);
+        }
+
+        [Test]
+        public void Spaces()
+        {
+            SetText(" ");
+            Assert.AreEqual(" ", _text.ToString());
+            Assert.AreEqual(1, _text.LinesCount);
+            Assert.AreEqual(1, _text.VisibleLinesCount);
+        }
+
+        [Test]
         public void NewLine_First()
         {
             SetText("123");

@@ -235,13 +235,15 @@ namespace CodeHighlighter.Model
 
         public void SetLexems()
         {
-            _lexems.SetLexems(_text, _codeProvider.GetLexems(new TextIterator(_text)).ToList());
+            var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text)).ToList();
+            _lexems.SetLexems(_text, codeProviderLexems);
             _lexemColors.SetColors(_codeProvider.GetColors());
         }
 
         private void UpdateLexemsForLines(int startLineIndex, int count)
         {
-            _lexems.ReplaceLexems(_text, _codeProvider.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList());
+            var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
+            _lexems.ReplaceLexems(_text, codeProviderLexems, startLineIndex, count);
         }
     }
 }

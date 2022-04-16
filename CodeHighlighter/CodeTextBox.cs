@@ -138,7 +138,7 @@ namespace CodeHighlighter
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
             var startLine = (int)(_verticalScrollBar!.Value / _textMeasures.LineHeight);
             var linesCount = _viewport!.GetLinesCountInViewport();
-            var endLine = Math.Min(startLine + linesCount, _model.Text.LinesCount);
+            var endLine = Math.Min(startLine + linesCount, _model.Text.VisibleLinesCount);
             var offsetY = -(_verticalScrollBar.Value % _textMeasures.LineHeight);
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
@@ -277,6 +277,10 @@ namespace CodeHighlighter
             else if (e.Key == Key.Delete)
             {
                 _model.RightDelete();
+            }
+            else if (e.Key == Key.Tab)
+            {
+                _model.AppendChar('\t');
             }
             else if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
             {
