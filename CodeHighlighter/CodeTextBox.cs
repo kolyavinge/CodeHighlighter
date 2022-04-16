@@ -4,14 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter
 {
-    public class CodeTextBox : Control
+    public class CodeTextBox : Control, IScrollBarHolder
     {
         private static readonly Pen CursorBlackPen = new(Brushes.Black, 1.5);
         private static readonly Brush SelectionBrush = new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 });
@@ -19,11 +18,7 @@ namespace CodeHighlighter
         private readonly CodeTextBoxModel _model;
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
-        private Viewport? _viewport;
-        private ScrollBar? _verticalScrollBar;
-        private RepeatButton? _verticalScrollBarUpButton, _verticalScrollBarDownButton;
-        private ScrollBar? _horizontalScrollBar;
-        private RepeatButton? _horizontalScrollBarLeftButton, _horizontalScrollBarRightButton;
+        private readonly Viewport _viewport;
 
         #region Property Text
         public string Text
@@ -65,6 +60,92 @@ namespace CodeHighlighter
         }
         #endregion
 
+        #region VerticalScrollBarValue
+        public double VerticalScrollBarValue
+        {
+            get { return (double)GetValue(VerticalScrollBarValueProperty); }
+            set { SetValue(VerticalScrollBarValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalScrollBarValueProperty =
+            DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
+
+        private static void VerticalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            if ((double)e.NewValue < 0) codeTextBox.VerticalScrollBarValue = 0.0;
+            codeTextBox.InvalidateVisual();
+        }
+        #endregion
+
+        #region VerticalScrollBarMaximum
+        public double VerticalScrollBarMaximum
+        {
+            get { return (double)GetValue(VerticalScrollBarMaximumProperty); }
+            set { SetValue(VerticalScrollBarMaximumProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalScrollBarMaximumProperty =
+            DependencyProperty.Register("VerticalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        #endregion
+
+        #region VerticalScrollBarViewportSize
+        public double VerticalScrollBarViewportSize
+        {
+            get { return (double)GetValue(VerticalScrollBarViewportSizeProperty); }
+            set { SetValue(VerticalScrollBarViewportSizeProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalScrollBarViewportSizeProperty =
+            DependencyProperty.Register("VerticalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        #endregion
+
+        #region HorizontalScrollBarValue
+        public double HorizontalScrollBarValue
+        {
+            get { return (double)GetValue(HorizontalScrollBarValueProperty); }
+            set { SetValue(HorizontalScrollBarValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty HorizontalScrollBarValueProperty =
+            DependencyProperty.Register("HorizontalScrollBarValue", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, HorizontalScrollBarValueChangedCallback));
+
+        private static void HorizontalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            if ((double)e.NewValue < 0) codeTextBox.HorizontalScrollBarValue = 0.0;
+            codeTextBox.InvalidateVisual();
+        }
+        #endregion
+
+        #region HorizontalScrollBarMaximum
+        public double HorizontalScrollBarMaximum
+        {
+            get { return (double)GetValue(HorizontalScrollBarMaximumProperty); }
+            set { SetValue(HorizontalScrollBarMaximumProperty, value); }
+        }
+
+        public static readonly DependencyProperty HorizontalScrollBarMaximumProperty =
+            DependencyProperty.Register("HorizontalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        #endregion
+
+        #region HorizontalScrollBarViewportSize
+        public double HorizontalScrollBarViewportSize
+        {
+            get { return (double)GetValue(HorizontalScrollBarViewportSizeProperty); }
+            set { SetValue(HorizontalScrollBarViewportSizeProperty, value); }
+        }
+
+        public static readonly DependencyProperty HorizontalScrollBarViewportSizeProperty =
+            DependencyProperty.Register("HorizontalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        #endregion
+
+        private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            codeTextBox.InvalidateVisual();
+        }
+
         static CodeTextBox()
         {
             FontSizeProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
@@ -90,45 +171,9 @@ namespace CodeHighlighter
             _model = new CodeTextBoxModel();
             _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
             _textMeasures = new TextMeasures(_fontSettings);
-            var template = new ControlTemplate(typeof(CodeTextBox));
-            template.VisualTree = new FrameworkElementFactory(typeof(Grid), "RootLayout");
-            template.VisualTree.AppendChild(new FrameworkElementFactory(typeof(ScrollBar), "VerticalScrollBar"));
-            template.VisualTree.AppendChild(new FrameworkElementFactory(typeof(ScrollBar), "HorizontalScrollBar"));
-            Template = template;
+            _viewport = new Viewport(this, this, _model.Text, _textMeasures);
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
-        }
-
-        public override void OnApplyTemplate()
-        {
-            _verticalScrollBar = (ScrollBar)Template.FindName("VerticalScrollBar", this);
-            _verticalScrollBar.Minimum = 0;
-            _verticalScrollBar.Orientation = Orientation.Vertical;
-            _verticalScrollBar.HorizontalAlignment = HorizontalAlignment.Right;
-            _verticalScrollBar.Cursor = Cursors.Arrow;
-            _verticalScrollBar.Scroll += (s, e) => InvalidateVisual();
-            _verticalScrollBar.Loaded += (s, e) =>
-            {
-                _verticalScrollBarUpButton = (RepeatButton)_verticalScrollBar.Template.FindName("PART_LineUpButton", _verticalScrollBar);
-                _verticalScrollBarDownButton = (RepeatButton)_verticalScrollBar.Template.FindName("PART_LineDownButton", _verticalScrollBar);
-                _verticalScrollBarUpButton.Click += (s, e) => { _verticalScrollBar.Value -= _textMeasures.LineHeight; InvalidateVisual(); };
-                _verticalScrollBarDownButton.Click += (s, e) => { _verticalScrollBar.Value += _textMeasures.LineHeight; InvalidateVisual(); };
-            };
-            _horizontalScrollBar = (ScrollBar)Template.FindName("HorizontalScrollBar", this);
-            _horizontalScrollBar.Minimum = 0;
-            _horizontalScrollBar.Orientation = Orientation.Horizontal;
-            _horizontalScrollBar.VerticalAlignment = VerticalAlignment.Bottom;
-            _horizontalScrollBar.Margin = new Thickness(0, 0, _verticalScrollBar.Width, 0);
-            _horizontalScrollBar.Cursor = Cursors.Arrow;
-            _horizontalScrollBar.Scroll += (s, e) => InvalidateVisual();
-            _horizontalScrollBar.Loaded += (s, e) =>
-            {
-                _horizontalScrollBarLeftButton = (RepeatButton)_horizontalScrollBar.Template.FindName("PART_LineLeftButton", _horizontalScrollBar);
-                _horizontalScrollBarRightButton = (RepeatButton)_horizontalScrollBar.Template.FindName("PART_LineRightButton", _horizontalScrollBar);
-                _horizontalScrollBarLeftButton.Click += (s, e) => { _horizontalScrollBar.Value -= _textMeasures.LetterWidth; InvalidateVisual(); };
-                _horizontalScrollBarRightButton.Click += (s, e) => { _horizontalScrollBar.Value += _textMeasures.LetterWidth; InvalidateVisual(); };
-            };
-            _viewport = new Viewport(this, _verticalScrollBar, _horizontalScrollBar, _model.Text, _textMeasures);
         }
 
         protected override void OnRender(DrawingContext context)
@@ -136,13 +181,13 @@ namespace CodeHighlighter
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             // lexems
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-            var startLine = (int)(_verticalScrollBar!.Value / _textMeasures.LineHeight);
-            var linesCount = _viewport!.GetLinesCountInViewport();
+            var startLine = (int)(VerticalScrollBarValue / _textMeasures.LineHeight);
+            var linesCount = _viewport.GetLinesCountInViewport();
             var endLine = Math.Min(startLine + linesCount, _model.Text.VisibleLinesCount);
-            var offsetY = -(_verticalScrollBar.Value % _textMeasures.LineHeight);
+            var offsetY = -(VerticalScrollBarValue % _textMeasures.LineHeight);
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
-                var offsetX = -_horizontalScrollBar!.Value;
+                var offsetX = -HorizontalScrollBarValue;
                 var lineLexems = _model.Lexems.GetLexemsForLine(lineIndex);
                 foreach (var lexem in lineLexems)
                 {
@@ -161,8 +206,8 @@ namespace CodeHighlighter
             }
             // cursor
             var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
-            cursorAbsolutePoint.X -= _horizontalScrollBar!.Value;
-            cursorAbsolutePoint.Y -= _verticalScrollBar.Value;
+            cursorAbsolutePoint.X -= HorizontalScrollBarValue;
+            cursorAbsolutePoint.Y -= VerticalScrollBarValue;
             if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
             {
                 context.DrawLine(CursorBlackPen,
@@ -173,19 +218,19 @@ namespace CodeHighlighter
 
         private void DrawSelectionLine(DrawingContext context, int lineIndex, int leftColumnIndex, int rightColumnIndex)
         {
-            var leftColumnPos = leftColumnIndex * _textMeasures.LetterWidth - _horizontalScrollBar!.Value;
-            var rightColumnPos = rightColumnIndex * _textMeasures.LetterWidth - _horizontalScrollBar!.Value;
+            var leftColumnPos = leftColumnIndex * _textMeasures.LetterWidth - HorizontalScrollBarValue;
+            var rightColumnPos = rightColumnIndex * _textMeasures.LetterWidth - HorizontalScrollBarValue;
             context.DrawRectangle(
                 SelectionBrush,
                 null,
-                new Rect(leftColumnPos, lineIndex * _textMeasures.LineHeight - _verticalScrollBar!.Value, rightColumnPos - leftColumnPos, _textMeasures.LineHeight));
+                new Rect(leftColumnPos, lineIndex * _textMeasures.LineHeight - VerticalScrollBarValue, rightColumnPos - leftColumnPos, _textMeasures.LineHeight));
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            _verticalScrollBar!.ViewportSize = sizeInfo.NewSize.Height;
-            _horizontalScrollBar!.ViewportSize = sizeInfo.NewSize.Width;
-            _viewport!.UpdateScrollbarsMaximumValues();
+            VerticalScrollBarViewportSize = sizeInfo.NewSize.Height;
+            HorizontalScrollBarViewportSize = sizeInfo.NewSize.Width;
+            _viewport.UpdateScrollbarsMaximumValues();
             InvalidateVisual();
         }
 
@@ -193,7 +238,7 @@ namespace CodeHighlighter
         {
             Focus();
             var positionInControl = e.GetPosition(this);
-            var lineIndex = _viewport!.GetCursorLineIndex(positionInControl);
+            var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
             var columnIndex = _viewport.CursorColumnIndex(positionInControl);
             _model.MoveCursorTo(lineIndex, columnIndex);
             InvalidateVisual();
@@ -205,7 +250,7 @@ namespace CodeHighlighter
             {
                 _model.StartSelection();
                 var positionInControl = e.GetPosition(this);
-                var lineIndex = _viewport!.GetCursorLineIndex(positionInControl);
+                var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
                 var columnIndex = _viewport.CursorColumnIndex(positionInControl);
                 _model.MoveCursorTo(lineIndex, columnIndex);
                 InvalidateVisual();
@@ -219,7 +264,7 @@ namespace CodeHighlighter
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            _verticalScrollBar!.Value -= e.Delta;
+            VerticalScrollBarValue -= e.Delta;
             InvalidateVisual();
         }
 
@@ -260,11 +305,11 @@ namespace CodeHighlighter
             }
             else if (e.Key == Key.PageUp)
             {
-                _model.MoveCursorPageUp(_viewport!.GetLinesCountInViewport());
+                _model.MoveCursorPageUp(_viewport.GetLinesCountInViewport());
             }
             else if (e.Key == Key.PageDown)
             {
-                _model.MoveCursorPageDown(_viewport!.GetLinesCountInViewport());
+                _model.MoveCursorPageDown(_viewport.GetLinesCountInViewport());
             }
             else if (e.Key == Key.Return)
             {
@@ -309,7 +354,7 @@ namespace CodeHighlighter
             }
             if (needToInvalidate)
             {
-                _viewport!.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
+                _viewport.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
                 InvalidateVisual();
             }
         }
@@ -340,14 +385,14 @@ namespace CodeHighlighter
             {
                 _model.AppendChar(ch);
             }
-            _viewport!.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
+            _viewport.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
             InvalidateVisual();
         }
 
         private void OnUpdateCodeProvider()
         {
             _model.SetCodeProvider(CodeProvider);
-            _viewport!.UpdateScrollbarsMaximumValues();
+            _viewport.UpdateScrollbarsMaximumValues();
         }
     }
 }

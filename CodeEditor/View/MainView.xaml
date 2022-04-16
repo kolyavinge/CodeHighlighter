@@ -10,9 +10,34 @@
         Height="800" Width="1200">
     <Grid>
         <highlighter:CodeTextBox
+            x:Name="codeTextBox"
             CodeProvider="{Binding CodeProvider}"
             Text="{Binding Code, Mode=TwoWay}"
             FontFamily="Consolas"
-            FontSize="14" />
+            FontSize="14"
+            Margin="0,0,28,17"
+            />
+
+        <ScrollBar
+            x:Name="verticalScrollBar"
+            Orientation="Vertical"
+            Maximum="{Binding VerticalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
+            Value="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+            ViewportSize="{Binding VerticalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+            Width="28"
+            Margin="0,8,0,17"
+            HorizontalAlignment="Right"
+            Cursor="Arrow"
+            />
+
+        <ScrollBar
+            x:Name="horizontalScrollBar"
+            Orientation="Horizontal"
+            Maximum="{Binding HorizontalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
+            Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+            ViewportSize="{Binding HorizontalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+            VerticalAlignment="Bottom"
+            Cursor="Arrow"
+            />
     </Grid>
 </Window>

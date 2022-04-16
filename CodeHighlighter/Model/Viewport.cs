@@ -1,76 +1,77 @@
 ﻿using System.Windows;
-using System.Windows.Controls.Primitives;
 
 namespace CodeHighlighter.Model
 {
+    interface IScrollBarHolder
+    {
+        double VerticalScrollBarValue { get; set; }
+        double VerticalScrollBarMaximum { get; set; }
+        double VerticalScrollBarViewportSize { get; set; }
+        double HorizontalScrollBarValue { get; set; }
+        double HorizontalScrollBarMaximum { get; set; }
+        double HorizontalScrollBarViewportSize { get; set; }
+    }
+
     class Viewport
     {
         private readonly FrameworkElement _control;
+        private readonly IScrollBarHolder _scrollbarHolder;
         private readonly IText _text;
         private readonly ITextMeasures _textMeasures;
 
-        public ScrollBar VerticalScrollBar { get; }
-
-        public ScrollBar HorizontalScrollBar { get; }
-
-        public double Width => _control.ActualWidth - VerticalScrollBar.ActualWidth;
-
-        public double Height => _control.ActualHeight - HorizontalScrollBar.ActualHeight;
-
         public Viewport(
-            FrameworkElement control, ScrollBar verticalScrollBar, ScrollBar horizontalScrollBar, IText text, ITextMeasures textMeasures)
+            FrameworkElement control, IScrollBarHolder scrollbarHolder, IText text, ITextMeasures textMeasures)
         {
             _control = control;
-            VerticalScrollBar = verticalScrollBar;
-            HorizontalScrollBar = horizontalScrollBar;
+            _scrollbarHolder = scrollbarHolder;
             _text = text;
             _textMeasures = textMeasures;
         }
 
         public int GetLinesCountInViewport()
         {
-            var result = (int)(Height / _textMeasures.LineHeight) + 1;
-            if (Height % _textMeasures.LineHeight != 0) result++;
+            var result = (int)(_control.ActualHeight / _textMeasures.LineHeight) + 1;
+            if (_control.ActualHeight % _textMeasures.LineHeight != 0) result++;
 
             return result;
         }
 
         public int GetCursorLineIndex(Point cursorClickPosition)
         {
-            return (int)((cursorClickPosition.Y + VerticalScrollBar!.Value) / _textMeasures.LineHeight);
+            return (int)((cursorClickPosition.Y + _scrollbarHolder.VerticalScrollBarValue) / _textMeasures.LineHeight);
         }
 
         public int CursorColumnIndex(Point cursorClickPosition)
         {
-            return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + HorizontalScrollBar!.Value) / _textMeasures.LetterWidth);
+            return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _scrollbarHolder.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
         }
 
         public void CorrectViewport(Point cursorGetAbsolutePoint)
         {
-            if (cursorGetAbsolutePoint.X < HorizontalScrollBar!.Value)
+            if (cursorGetAbsolutePoint.X < _scrollbarHolder.HorizontalScrollBarValue)
             {
-                HorizontalScrollBar.Value = cursorGetAbsolutePoint.X;
+                _scrollbarHolder.HorizontalScrollBarValue = cursorGetAbsolutePoint.X;
             }
-            else if (cursorGetAbsolutePoint.X + _textMeasures.LetterWidth > HorizontalScrollBar.Value + Width)
+            else if (cursorGetAbsolutePoint.X + _textMeasures.LetterWidth > _scrollbarHolder.HorizontalScrollBarValue + _control.ActualWidth)
             {
-                HorizontalScrollBar.Value = cursorGetAbsolutePoint.X - Width + _textMeasures.LetterWidth;
+                _scrollbarHolder.HorizontalScrollBarValue = cursorGetAbsolutePoint.X - _control.ActualWidth + _textMeasures.LetterWidth;
             }
 
-            if (cursorGetAbsolutePoint.Y < VerticalScrollBar!.Value)
+            if (cursorGetAbsolutePoint.Y < _scrollbarHolder.VerticalScrollBarValue)
             {
-                VerticalScrollBar.Value = cursorGetAbsolutePoint.Y;
+                _scrollbarHolder.VerticalScrollBarValue = cursorGetAbsolutePoint.Y;
             }
-            else if (cursorGetAbsolutePoint.Y + _textMeasures.LineHeight > VerticalScrollBar.Value + Height)
+            else if (cursorGetAbsolutePoint.Y + _textMeasures.LineHeight > _scrollbarHolder.VerticalScrollBarValue + _control.ActualHeight)
             {
-                VerticalScrollBar.Value = cursorGetAbsolutePoint.Y - Height + _textMeasures.LineHeight;
+                _scrollbarHolder.VerticalScrollBarValue = cursorGetAbsolutePoint.Y - _control.ActualHeight + _textMeasures.LineHeight;
             }
         }
 
         public void UpdateScrollbarsMaximumValues()
         {
             var maxLineWidthInPixels = _text.GetMaxLineWidth() * _textMeasures.LetterWidth;
-            HorizontalScrollBar!.Maximum = Width < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
-            VerticalScrollBar!.Maximum = _text.LinesCount * _textMeasures.LineHeight;
+            _scrollbarHolder.HorizontalScrollBarMaximum = _control.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
+            _scrollbarHolder.VerticalScrollBarMaximum = _text.LinesCount * _textMeasures.LineHeight;
         }
     }
 }
