@@ -10,7 +10,7 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter
 {
-    public class CodeTextBox : Control, IScrollBarHolder
+    public class CodeTextBox : Control, IViewportContext
     {
         private static readonly Pen CursorBlackPen = new(Brushes.Black, 1.5);
         private static readonly Brush SelectionBrush = new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 });
@@ -21,21 +21,23 @@ namespace CodeHighlighter
         private readonly Viewport _viewport;
 
         #region Property Text
-        public string Text
+        public TextHolder TextHolder
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get { return (TextHolder)GetValue(TextHolderProperty); }
+            set { SetValue(TextHolderProperty, value); }
         }
 
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(CodeTextBox), new PropertyMetadata("", TextPropertyChangedCallback));
+        public static readonly DependencyProperty TextHolderProperty =
+            DependencyProperty.Register("TextHolder", typeof(TextHolder), typeof(CodeTextBox), new PropertyMetadata(TextHolderPropertyChangedCallback));
 
-        private static void TextPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void TextHolderPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var codeTextBox = (CodeTextBox)d;
-            codeTextBox._model.SetText((string)e.NewValue);
-            codeTextBox.OnUpdateCodeProvider();
-            codeTextBox.InvalidateVisual();
+            var textHolder = (TextHolder)e.NewValue;
+            var initialText = textHolder.GetTextAction != null ? textHolder.GetTextAction() : null;
+            if (!String.IsNullOrWhiteSpace(initialText)) codeTextBox.UpdateText(initialText);
+            textHolder.GetTextAction = () => codeTextBox._model.Text.ToString();
+            textHolder.SetTextAction = codeTextBox.UpdateText;
         }
         #endregion
 
@@ -171,7 +173,7 @@ namespace CodeHighlighter
             _model = new CodeTextBoxModel();
             _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
             _textMeasures = new TextMeasures(_fontSettings);
-            _viewport = new Viewport(this, this, _model.Text, _textMeasures);
+            _viewport = new Viewport(this, _model.Text, _textMeasures);
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
         }
@@ -200,19 +202,22 @@ namespace CodeHighlighter
                 offsetY += _textMeasures.LineHeight;
             }
             // selection
-            foreach (var line in _model.TextSelection.GetTextSelectionLines(_model.Text))
+            foreach (var line in _model.TextSelection.GetSelectedLines(_model.Text))
             {
                 DrawSelectionLine(context, line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex);
             }
             // cursor
-            var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
-            cursorAbsolutePoint.X -= HorizontalScrollBarValue;
-            cursorAbsolutePoint.Y -= VerticalScrollBarValue;
-            if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
+            if (IsFocused)
             {
-                context.DrawLine(CursorBlackPen,
-                    new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
-                    new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
+                var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
+                cursorAbsolutePoint.X -= HorizontalScrollBarValue;
+                cursorAbsolutePoint.Y -= VerticalScrollBarValue;
+                if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
+                {
+                    context.DrawLine(CursorBlackPen,
+                        new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
+                        new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
+                }
             }
         }
 
@@ -386,6 +391,19 @@ namespace CodeHighlighter
                 _model.AppendChar(ch);
             }
             _viewport.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
+            InvalidateVisual();
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e)
+        {
+            base.OnLostFocus(e);
+            InvalidateVisual();
+        }
+
+        private void UpdateText(string text)
+        {
+            _model.SetText(text);
+            OnUpdateCodeProvider();
             InvalidateVisual();
         }
 

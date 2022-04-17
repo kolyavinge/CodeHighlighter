@@ -9,7 +9,7 @@ namespace CodeHighlighter.Model
         int EndLineIndex { get; }
         int EndColumnIndex { get; }
         (TextSelectionPosition, TextSelectionPosition) GetSortedPositions();
-        IEnumerable<TextSelectionLine> GetTextSelectionLines(IText text);
+        IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
     }
 
     internal struct TextSelectionPosition
@@ -70,7 +70,7 @@ namespace CodeHighlighter.Model
             return (end, start);
         }
 
-        public IEnumerable<TextSelectionLine> GetTextSelectionLines(IText text)
+        public IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
         {
             if (!IsExist) yield break;
             (var start, var end) = GetSortedPositions();

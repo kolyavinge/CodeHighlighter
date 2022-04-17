@@ -13,6 +13,7 @@ namespace CodeHighlighter.Model
         Line GetFirstLine();
         Line GetLastLine();
         int GetMaxLineWidth();
+        string ToString();
     }
 
     internal class Text : IText
@@ -135,7 +136,7 @@ namespace CodeHighlighter.Model
 
         public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
         {
-            var selectionLines = textSelection.GetTextSelectionLines(this).ToList();
+            var selectionLines = textSelection.GetSelectedLines(this).ToList();
             if (selectionLines.Count == 1)
             {
                 var selectionLine = selectionLines.First();

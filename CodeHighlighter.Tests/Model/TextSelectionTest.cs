@@ -25,7 +25,7 @@ namespace CodeHighlighter.Tests.Model
             _textSelection.EndLineIndex = 3;
             _textSelection.EndColumnIndex = 4;
 
-            var result = _textSelection.GetTextSelectionLines(_text).ToList();
+            var result = _textSelection.GetSelectedLines(_text).ToList();
 
             Assert.AreEqual(4, result.Count);
 
@@ -55,7 +55,7 @@ namespace CodeHighlighter.Tests.Model
             _textSelection.EndLineIndex = 0;
             _textSelection.EndColumnIndex = 2;
 
-            var result = _textSelection.GetTextSelectionLines(_text).ToList();
+            var result = _textSelection.GetSelectedLines(_text).ToList();
 
             Assert.AreEqual(4, result.Count);
 

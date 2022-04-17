@@ -271,7 +271,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(0, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(10, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -286,7 +286,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(10, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(0, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -303,7 +303,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(5, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(5, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -320,7 +320,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(5, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(5, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -337,7 +337,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(4, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(9, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -354,7 +354,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(9, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(4, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -368,7 +368,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(0, _model.TextSelection.StartColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
             Assert.AreEqual(10, _model.TextSelection.EndColumnIndex);
-            Assert.True(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -377,7 +377,7 @@ namespace CodeHighlighter.Tests.Model
             AppendString("0000000000");
             _model.SelectAll();
             _model.MoveCursorTo(0, 5);
-            Assert.False(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.False(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]
@@ -386,7 +386,7 @@ namespace CodeHighlighter.Tests.Model
             AppendString("0000000000");
             _model.SelectAll();
             _model.MoveCursorRight();
-            Assert.False(_model.TextSelection.GetTextSelectionLines(_model.Text).Any());
+            Assert.False(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
         [Test]

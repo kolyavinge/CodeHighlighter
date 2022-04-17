@@ -164,7 +164,7 @@ namespace CodeHighlighter.Model
         {
             if (!_textSelection.IsExist) return "";
             var selectedLines = new List<string>();
-            foreach (var line in _textSelection.GetTextSelectionLines(_text))
+            foreach (var line in _textSelection.GetSelectedLines(_text))
             {
                 selectedLines.Add(_text.GetSubstring(line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
             }
