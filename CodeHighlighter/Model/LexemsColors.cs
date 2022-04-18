@@ -5,12 +5,12 @@ namespace CodeHighlighter.Model
 {
     internal interface ILexemsColors
     {
-        Brush? GetColorBrushOrNull(LexemKind lexemKind);
+        Brush? GetColorBrushOrNull(byte lexemKind);
     }
 
     internal class LexemsColors : ILexemsColors
     {
-        private readonly Dictionary<LexemKind, Brush> _colors = new();
+        private readonly Dictionary<byte, Brush> _colors = new();
 
         public void SetColors(IEnumerable<LexemColor> lexemColors)
         {
@@ -21,7 +21,7 @@ namespace CodeHighlighter.Model
             }
         }
 
-        public Brush? GetColorBrushOrNull(LexemKind lexemKind)
+        public Brush? GetColorBrushOrNull(byte lexemKind)
         {
             return _colors.ContainsKey(lexemKind) ? _colors[lexemKind] : null;
         }

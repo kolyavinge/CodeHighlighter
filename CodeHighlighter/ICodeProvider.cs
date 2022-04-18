@@ -24,42 +24,26 @@ namespace CodeHighlighter
     public struct Lexem
     {
         public readonly int LineIndex;
-        public readonly int ColumnIndex;
-        public readonly LexemKind Kind;
+        public readonly int StartColumnIndex;
+        public readonly byte Kind;
 
-        public Lexem(int lineIndex, int columnIndex, LexemKind kind)
+        public Lexem(int lineIndex, int startColumnIndex, byte kind)
         {
             LineIndex = lineIndex;
-            ColumnIndex = columnIndex;
+            StartColumnIndex = startColumnIndex;
             Kind = kind;
         }
     }
 
     public struct LexemColor
     {
-        public readonly LexemKind Kind;
+        public readonly byte Kind;
         public readonly Color Color;
 
-        public LexemColor(LexemKind kind, Color color)
+        public LexemColor(byte kind, Color color)
         {
             Kind = kind;
             Color = color;
         }
-    }
-
-    public enum LexemKind
-    {
-        Identifier,
-        Keyword,
-        Operator,
-        Function,
-        Method,
-        Property,
-        Variable,
-        Constant,
-        String,
-        Comment,
-        Delimiter,
-        Other
     }
 }

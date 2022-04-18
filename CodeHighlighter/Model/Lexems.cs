@@ -78,9 +78,9 @@ namespace CodeHighlighter.Model
                 while (i < lexems.Length && kind == lexems[i].Kind) i++;
                 if (i < lexems.Length)
                 {
-                    length = lexems[i].ColumnIndex - columnIndex;
+                    length = lexems[i].StartColumnIndex - columnIndex;
                     yield return new(columnIndex, length, kind);
-                    columnIndex = lexems[i].ColumnIndex;
+                    columnIndex = lexems[i].StartColumnIndex;
                 }
                 else
                 {
@@ -100,9 +100,9 @@ namespace CodeHighlighter.Model
     {
         public readonly int ColumnIndex;
         public readonly int Length;
-        public readonly LexemKind Kind;
+        public readonly byte Kind;
 
-        public MergedLexem(int columnIndex, int length, LexemKind kind)
+        public MergedLexem(int columnIndex, int length, byte kind)
         {
             ColumnIndex = columnIndex;
             Length = length;

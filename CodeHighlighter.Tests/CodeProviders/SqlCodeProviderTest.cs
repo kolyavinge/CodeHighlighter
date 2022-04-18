@@ -24,17 +24,17 @@ namespace CodeHighlighter.Tests.CodeProviders
             var lexems = GetLexems(text);
             Assert.AreEqual(4, lexems.Count);
             int i = 0;
-            Assert.AreEqual(0, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[i].Kind);
+            Assert.AreEqual(0, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[i].Kind);
             i++;
-            Assert.AreEqual(7, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Delimiter, lexems[i].Kind);
+            Assert.AreEqual(7, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Delimiter, lexems[i].Kind);
             i++;
-            Assert.AreEqual(9, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[i].Kind);
+            Assert.AreEqual(9, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[i].Kind);
             i++;
-            Assert.AreEqual(14, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Identifier, lexems[i].Kind);
+            Assert.AreEqual(14, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[i].Kind);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace CodeHighlighter.Tests.CodeProviders
             var text = "select * from #TempTable";
             var lexems = GetLexems(text);
             Assert.AreEqual(4, lexems.Count);
-            Assert.AreEqual(LexemKind.Identifier, lexems[3].Kind);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[3].Kind);
         }
 
         [Test]
@@ -53,29 +53,29 @@ namespace CodeHighlighter.Tests.CodeProviders
             var lexems = GetLexems(text);
             Assert.AreEqual(8, lexems.Count);
             int i = 0;
-            Assert.AreEqual(0, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[i].Kind);
+            Assert.AreEqual(0, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[i].Kind);
             i++;
-            Assert.AreEqual(7, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Delimiter, lexems[i].Kind);
+            Assert.AreEqual(7, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Delimiter, lexems[i].Kind);
             i++;
-            Assert.AreEqual(9, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[i].Kind);
+            Assert.AreEqual(9, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[i].Kind);
             i++;
-            Assert.AreEqual(14, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Identifier, lexems[i].Kind);
+            Assert.AreEqual(14, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[i].Kind);
             i++;
-            Assert.AreEqual(22, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[i].Kind);
+            Assert.AreEqual(22, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[i].Kind);
             i++;
-            Assert.AreEqual(28, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Identifier, lexems[i].Kind);
+            Assert.AreEqual(28, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[i].Kind);
             i++;
-            Assert.AreEqual(30, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Delimiter, lexems[i].Kind);
+            Assert.AreEqual(30, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Delimiter, lexems[i].Kind);
             i++;
-            Assert.AreEqual(32, lexems[i].ColumnIndex);
-            Assert.AreEqual(LexemKind.Other, lexems[i].Kind);
+            Assert.AreEqual(32, lexems[i].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Other, lexems[i].Kind);
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace CodeHighlighter.Tests.CodeProviders
             var text = "select [group] from MyTable";
             var lexems = GetLexems(text);
             Assert.AreEqual(4, lexems.Count);
-            Assert.AreEqual(7, lexems[1].ColumnIndex);
-            Assert.AreEqual(LexemKind.Identifier, lexems[1].Kind);
+            Assert.AreEqual(7, lexems[1].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[1].Kind);
         }
 
         [Test]
@@ -96,11 +96,11 @@ namespace CodeHighlighter.Tests.CodeProviders
 
             Assert.AreEqual(4, lexems.Count);
 
-            Assert.AreEqual(7, lexems[1].ColumnIndex);
-            Assert.AreEqual(LexemKind.Identifier, lexems[1].Kind);
+            Assert.AreEqual(7, lexems[1].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[1].Kind);
 
-            Assert.AreEqual(14, lexems[2].ColumnIndex);
-            Assert.AreEqual(LexemKind.Keyword, lexems[2].Kind);
+            Assert.AreEqual(14, lexems[2].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[2].Kind);
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace CodeHighlighter.Tests.CodeProviders
             var text = "select [group-1] from MyTable";
             var lexems = GetLexems(text);
             Assert.AreEqual(4, lexems.Count);
-            Assert.AreEqual(LexemKind.Identifier, lexems[1].Kind);
+            Assert.AreEqual((byte)LexemKind.Identifier, lexems[1].Kind);
         }
 
         [Test]
@@ -118,8 +118,8 @@ namespace CodeHighlighter.Tests.CodeProviders
             var text = "select * from MyTable -- comments";
             var lexems = GetLexems(text);
             Assert.AreEqual(5, lexems.Count);
-            Assert.AreEqual(22, lexems[4].ColumnIndex);
-            Assert.AreEqual(LexemKind.Comment, lexems[4].Kind);
+            Assert.AreEqual(22, lexems[4].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.Comment, lexems[4].Kind);
         }
 
         [Test]
@@ -128,8 +128,8 @@ namespace CodeHighlighter.Tests.CodeProviders
             var text = "'select [group] from MyTable'";
             var lexems = GetLexems(text);
             Assert.AreEqual(1, lexems.Count);
-            Assert.AreEqual(0, lexems[0].ColumnIndex);
-            Assert.AreEqual(LexemKind.String, lexems[0].Kind);
+            Assert.AreEqual(0, lexems[0].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.String, lexems[0].Kind);
         }
 
         [Test]
@@ -139,8 +139,8 @@ namespace CodeHighlighter.Tests.CodeProviders
 from MyTable'";
             var lexems = GetLexems(text);
             Assert.AreEqual(1, lexems.Count);
-            Assert.AreEqual(0, lexems[0].ColumnIndex);
-            Assert.AreEqual(LexemKind.String, lexems[0].Kind);
+            Assert.AreEqual(0, lexems[0].StartColumnIndex);
+            Assert.AreEqual((byte)LexemKind.String, lexems[0].Kind);
         }
 
         [Test]
@@ -149,9 +149,9 @@ from MyTable'";
             var text = "declare @var int";
             var lexems = GetLexems(text);
             Assert.AreEqual(3, lexems.Count);
-            Assert.AreEqual(LexemKind.Keyword, lexems[0].Kind);
-            Assert.AreEqual(LexemKind.Variable, lexems[1].Kind);
-            Assert.AreEqual(LexemKind.Keyword, lexems[2].Kind);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[0].Kind);
+            Assert.AreEqual((byte)LexemKind.Variable, lexems[1].Kind);
+            Assert.AreEqual((byte)LexemKind.Keyword, lexems[2].Kind);
         }
 
         [Test]
@@ -160,8 +160,8 @@ from MyTable'";
             var text = "N'string'";
             var lexems = GetLexems(text);
             Assert.AreEqual(2, lexems.Count);
-            Assert.AreEqual(LexemKind.Other, lexems[0].Kind);
-            Assert.AreEqual(LexemKind.String, lexems[1].Kind);
+            Assert.AreEqual((byte)LexemKind.Other, lexems[0].Kind);
+            Assert.AreEqual((byte)LexemKind.String, lexems[1].Kind);
         }
 
         [Test]
@@ -170,7 +170,7 @@ from MyTable'";
             var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_1.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(637, lexems.Count);
-            lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
+            lexems.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
         }
 
         [Test]
@@ -179,7 +179,7 @@ from MyTable'";
             var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_2.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(1744, lexems.Count);
-            lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
+            lexems.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
         }
 
         [Test]
@@ -188,7 +188,7 @@ from MyTable'";
             var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_3.sql");
             var lexems = GetLexems(text);
             Assert.AreEqual(31058, lexems.Count);
-            lexems.ForEach(x => Assert.IsTrue(x.ColumnIndex <= text.Length));
+            lexems.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
         }
 
         private List<Lexem> GetLexems(string textString)
