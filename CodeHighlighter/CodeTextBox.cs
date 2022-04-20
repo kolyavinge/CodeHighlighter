@@ -12,13 +12,21 @@ namespace CodeHighlighter
 {
     public class CodeTextBox : Control, IViewportContext
     {
-        private static readonly Pen CursorBlackPen = new(Brushes.Black, 1.5);
-        private static readonly Brush SelectionBrush = new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 });
-
         private readonly CodeTextBoxModel _model;
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
         private readonly Viewport _viewport;
+
+        #region Property SelectionBrush
+        public Brush SelectionBrush
+        {
+            get { return (Brush)GetValue(SelectionBrushProperty); }
+            set { SetValue(SelectionBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectionBrushProperty =
+            DependencyProperty.Register("SelectionBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 })));
+        #endregion
 
         #region Property Text
         public TextHolder TextHolder
@@ -180,7 +188,13 @@ namespace CodeHighlighter
 
         protected override void OnRender(DrawingContext context)
         {
+            context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
+            // selection
+            foreach (var line in _model.TextSelection.GetSelectedLines(_model.Text))
+            {
+                DrawSelectionLine(context, line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex);
+            }
             // lexems
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
             var startLine = (int)(VerticalScrollBarValue / _textMeasures.LineHeight);
@@ -201,11 +215,6 @@ namespace CodeHighlighter
                 }
                 offsetY += _textMeasures.LineHeight;
             }
-            // selection
-            foreach (var line in _model.TextSelection.GetSelectedLines(_model.Text))
-            {
-                DrawSelectionLine(context, line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex);
-            }
             // cursor
             if (IsFocused)
             {
@@ -214,11 +223,12 @@ namespace CodeHighlighter
                 cursorAbsolutePoint.Y -= VerticalScrollBarValue;
                 if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
                 {
-                    context.DrawLine(CursorBlackPen,
-                        new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
-                        new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
+                    context.DrawLine(new Pen(Foreground, 2.0),
+                        new Point((int)cursorAbsolutePoint.X + 1.0, (int)cursorAbsolutePoint.Y),
+                        new Point((int)cursorAbsolutePoint.X + 1.0, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
                 }
             }
+            context.Pop();
         }
 
         private void DrawSelectionLine(DrawingContext context, int lineIndex, int leftColumnIndex, int rightColumnIndex)
@@ -278,18 +288,22 @@ namespace CodeHighlighter
             var needToInvalidate = true;
             if (e.Key == Key.Up)
             {
+                e.Handled = true;
                 _model.MoveCursorUp();
             }
             else if (e.Key == Key.Down)
             {
+                e.Handled = true;
                 _model.MoveCursorDown();
             }
             else if (e.Key == Key.Left)
             {
+                e.Handled = true;
                 _model.MoveCursorLeft();
             }
             else if (e.Key == Key.Right)
             {
+                e.Handled = true;
                 _model.MoveCursorRight();
             }
             else if (e.Key == Key.Home && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
@@ -366,6 +380,7 @@ namespace CodeHighlighter
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
+            e.Handled = true;
             var needToInvalidate = true;
             if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
             {
@@ -381,7 +396,7 @@ namespace CodeHighlighter
             }
         }
 
-        private static readonly HashSet<char> _notAllowedSymbols = new(new char[] { '\n', '\r', '\b' });
+        private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b' });
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
             var text = e.Text.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();

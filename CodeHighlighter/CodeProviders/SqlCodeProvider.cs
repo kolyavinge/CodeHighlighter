@@ -36,7 +36,7 @@ namespace CodeHighlighter.CodeProviders
             {
                 case State.General:
                     if (textIterator.Eof) break;
-                    if (textIterator.IsReturn || textIterator.IsSpace)
+                    if (IsReturn(textIterator.Char) || IsSpace(textIterator.Char))
                     {
                         textIterator.MoveNext();
                         goto case State.General;
@@ -93,7 +93,7 @@ namespace CodeHighlighter.CodeProviders
                     }
                 case State.KeywordFunctionOther: // keyword, function or other name
                     if (textIterator.Eof) goto case State.EndUnknownLexem;
-                    if (textIterator.IsSpace || textIterator.IsReturn || IsDelimiter(textIterator.Char))
+                    if (IsSpace(textIterator.Char) || IsReturn(textIterator.Char) || IsDelimiter(textIterator.Char))
                     {
                         lexemKind = GetLexemKind(lexemNameArray, lexemNameArrayIndex);
                         lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
@@ -117,7 +117,7 @@ namespace CodeHighlighter.CodeProviders
                     }
                 case State.Comment: // comment
                     if (textIterator.Eof) goto case State.End;
-                    if (textIterator.IsReturn)
+                    if (IsReturn(textIterator.Char))
                     {
                         lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
@@ -148,7 +148,7 @@ namespace CodeHighlighter.CodeProviders
                     }
                 case State.Identifier:
                     if (textIterator.Eof) goto case State.End;
-                    if (textIterator.IsReturn)
+                    if (IsReturn(textIterator.Char))
                     {
                         lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
@@ -220,6 +220,16 @@ namespace CodeHighlighter.CodeProviders
         private bool IsDelimiter(char ch)
         {
             return _delimiters.Contains(ch);
+        }
+
+        private bool IsSpace(char ch)
+        {
+            return ch == ' ' || ch == '\t';
+        }
+
+        private bool IsReturn(char ch)
+        {
+            return ch == '\n';
         }
 
         public IEnumerable<LexemColor> GetColors()

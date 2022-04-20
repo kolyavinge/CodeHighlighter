@@ -68,6 +68,10 @@ namespace CodeHighlighter.Model
         {
             var maxLineWidthInPixels = _text.GetMaxLineWidth() * _textMeasures.LetterWidth;
             _context.HorizontalScrollBarMaximum = _context.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
+            if (_context.HorizontalScrollBarMaximum == 0)
+            {
+                _context.HorizontalScrollBarValue = 0;
+            }
             _context.VerticalScrollBarMaximum = _text.LinesCount * _textMeasures.LineHeight;
         }
     }

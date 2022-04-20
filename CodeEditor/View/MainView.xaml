@@ -17,7 +17,8 @@
             TextHolder="{Binding TextHolder}"
             FontFamily="Consolas"
             FontSize="14"
-            Margin="0,24,28,17"
+            Margin="16,24,38,28"
+            Background="Azure"
             />
 
         <ScrollBar

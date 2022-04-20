@@ -13,10 +13,6 @@
 
         public bool Eof { get; private set; }
 
-        public bool IsReturn => Char == '\n';
-
-        public bool IsSpace => Char == ' ' || Char == '\t';
-
         public char NextChar
         {
             get
@@ -30,6 +26,8 @@
             }
         }
 
+        private bool IsReturn => Char == '\n';
+
         public TextIterator(IText text) : this(text, 0, text.LinesCount - 1)
         {
         }
@@ -40,7 +38,7 @@
             _endLineIndex = endLineIndex;
             LineIndex = startLineIndex;
             ColumnIndex = -1;
-            if ((endLineIndex - startLineIndex) >= 0)
+            if (endLineIndex - startLineIndex >= 0)
             {
                 MoveNext();
             }

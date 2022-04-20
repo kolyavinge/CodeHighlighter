@@ -11,14 +11,12 @@ namespace CodeHighlighter
 
     public interface ITextIterator
     {
-        void MoveNext();
         char Char { get; }
+        char NextChar { get; }
         int LineIndex { get; }
         int ColumnIndex { get; }
         bool Eof { get; }
-        bool IsReturn { get; }
-        bool IsSpace { get; }
-        char NextChar { get; }
+        void MoveNext();
     }
 
     public struct Lexem
