@@ -29,9 +29,9 @@ namespace CodeHighlighter.CodeProviders
             if (textIterator.Eof) return lexems;
             var lexemNameArray = new char[10 * 1024];
             int lexemNameArrayIndex = 0;
-            int lexemLineIndex = 0;
-            int lexemStartColumn = 0;
-            var lexemKind = LexemKind.Other;
+            int lexemLineIndex;
+            int lexemStartColumn;
+            LexemKind lexemKind;
             switch (State.General)
             {
                 case State.General:
@@ -79,7 +79,7 @@ namespace CodeHighlighter.CodeProviders
                         lexemLineIndex = textIterator.LineIndex;
                         lexemStartColumn = textIterator.ColumnIndex;
                         lexemKind = LexemKind.Delimiter;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, 1, (byte)lexemKind));
                         textIterator.MoveNext();
                         goto case State.General;
                     }
@@ -96,7 +96,7 @@ namespace CodeHighlighter.CodeProviders
                     if (IsSpace(textIterator.Char) || IsReturn(textIterator.Char) || IsDelimiter(textIterator.Char))
                     {
                         lexemKind = GetLexemKind(lexemNameArray, lexemNameArrayIndex);
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         goto case State.General;
                     }
@@ -105,7 +105,7 @@ namespace CodeHighlighter.CodeProviders
                         lexemLineIndex = textIterator.LineIndex;
                         lexemStartColumn = textIterator.ColumnIndex;
                         lexemKind = LexemKind.Other;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, 1, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         goto case State.General;
                     }
@@ -119,7 +119,7 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Eof) goto case State.End;
                     if (IsReturn(textIterator.Char))
                     {
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
@@ -135,7 +135,7 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Char == '\'')
                     {
                         lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
@@ -150,7 +150,7 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Eof) goto case State.End;
                     if (IsReturn(textIterator.Char))
                     {
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
@@ -158,7 +158,7 @@ namespace CodeHighlighter.CodeProviders
                     else if (textIterator.Char == ']')
                     {
                         lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                         lexemNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
@@ -171,10 +171,10 @@ namespace CodeHighlighter.CodeProviders
                     }
                 case State.EndUnknownLexem:
                     lexemKind = GetLexemKind(lexemNameArray, lexemNameArrayIndex);
-                    lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                    lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                     break;
                 case State.End:
-                    lexems.Add(new(lexemLineIndex, lexemStartColumn, (byte)lexemKind));
+                    lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
                     break;
             }
 

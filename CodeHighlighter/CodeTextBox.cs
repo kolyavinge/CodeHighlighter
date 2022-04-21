@@ -188,7 +188,7 @@ namespace CodeHighlighter
 
         protected override void OnRender(DrawingContext context)
         {
-            context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
+            context.PushClip(new RectangleGeometry(new Rect(-1, -1, ActualWidth + 1, ActualHeight + 1)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             // selection
             foreach (var line in _model.TextSelection.GetSelectedLines(_model.Text))
@@ -224,8 +224,8 @@ namespace CodeHighlighter
                 if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
                 {
                     context.DrawLine(new Pen(Foreground, 2.0),
-                        new Point((int)cursorAbsolutePoint.X + 1.0, (int)cursorAbsolutePoint.Y),
-                        new Point((int)cursorAbsolutePoint.X + 1.0, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
+                        new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
+                        new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
                 }
             }
             context.Pop();
