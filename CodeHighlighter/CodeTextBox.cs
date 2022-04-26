@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using CodeHighlighter.Model;
+using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter
 {
@@ -16,6 +17,7 @@ namespace CodeHighlighter
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
         private readonly Viewport _viewport;
+        private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
 
         #region Property SelectionBrush
         public Brush SelectionBrush
@@ -182,6 +184,7 @@ namespace CodeHighlighter
             _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
             _textMeasures = new TextMeasures(_fontSettings);
             _viewport = new Viewport(this, _model.Text, _textMeasures);
+            _textSelectionRenderLogic = new TextSelectionRenderLogic();
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
         }
@@ -191,10 +194,7 @@ namespace CodeHighlighter
             context.PushClip(new RectangleGeometry(new Rect(-1, -1, ActualWidth + 1, ActualHeight + 1)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             // selection
-            foreach (var line in _model.TextSelection.GetSelectedLines(_model.Text))
-            {
-                DrawSelectionLine(context, line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex);
-            }
+            _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
             // lexems
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
             var startLine = (int)(VerticalScrollBarValue / _textMeasures.LineHeight);
@@ -229,16 +229,6 @@ namespace CodeHighlighter
                 }
             }
             context.Pop();
-        }
-
-        private void DrawSelectionLine(DrawingContext context, int lineIndex, int leftColumnIndex, int rightColumnIndex)
-        {
-            var leftColumnPos = leftColumnIndex * _textMeasures.LetterWidth - HorizontalScrollBarValue;
-            var rightColumnPos = rightColumnIndex * _textMeasures.LetterWidth - HorizontalScrollBarValue;
-            context.DrawRectangle(
-                SelectionBrush,
-                null,
-                new Rect(leftColumnPos, lineIndex * _textMeasures.LineHeight - VerticalScrollBarValue, rightColumnPos - leftColumnPos, _textMeasures.LineHeight));
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
