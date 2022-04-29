@@ -16,6 +16,16 @@ namespace CodeHighlighter.Tests.Model
             _textSelection = new TextSelection();
         }
 
+
+        [Test]
+        public void Init()
+        {
+            Assert.AreEqual(0, _textSelection.StartLineIndex);
+            Assert.AreEqual(0, _textSelection.StartColumnIndex);
+            Assert.AreEqual(0, _textSelection.EndLineIndex);
+            Assert.AreEqual(0, _textSelection.EndColumnIndex);
+        }
+
         [Test]
         public void GetTextSelectionLines_1()
         {
@@ -74,6 +84,21 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(3, result[3].LineIndex);
             Assert.AreEqual(0, result[3].LeftColumnIndex);
             Assert.AreEqual(4, result[3].RightColumnIndex);
+        }
+
+        [Test]
+        public void SelectAll()
+        {
+            _text.SetText("");
+            _textSelection.StartLineIndex = 0;
+            _textSelection.StartColumnIndex = 0;
+            _textSelection.EndLineIndex = 0;
+            _textSelection.EndColumnIndex = 0;
+
+            var result = _textSelection.GetSelectedLines(_text).ToList();
+
+            Assert.AreEqual(false, _textSelection.IsExist);
+            Assert.AreEqual(0, result.Count);
         }
     }
 }

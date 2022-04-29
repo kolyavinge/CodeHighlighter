@@ -9,6 +9,7 @@ namespace CodeHighlighter.Model
         int LineIndex { get; }
         int ColumnIndex { get; }
         Point GetAbsolutePosition(ITextMeasures textMeasures);
+        (int, int) GetLineAndColumnIndex { get; }
     }
 
     internal class TextCursor : ITextCursor

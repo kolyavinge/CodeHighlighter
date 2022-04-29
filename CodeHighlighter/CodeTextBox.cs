@@ -204,7 +204,7 @@ namespace CodeHighlighter
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
                 var offsetX = -HorizontalScrollBarValue;
-                var lineLexems = _model.Lexems.GetLexemsForLine(lineIndex);
+                var lineLexems = _model.Lexems.GetLine(lineIndex);
                 foreach (var lexem in lineLexems)
                 {
                     var text = _model.Text.GetSubstring(lineIndex, lexem.ColumnIndex, lexem.Length);
@@ -356,6 +356,10 @@ namespace CodeHighlighter
             else if (e.Key == Key.V && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 _model.InsertText(Clipboard.GetText());
+            }
+            else if (e.Key == Key.L && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                _model.DeleteSelectedLines();
             }
             else
             {

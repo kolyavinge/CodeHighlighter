@@ -162,7 +162,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual("012210", _model.Text.ToString());
             Assert.AreEqual(0, _model.TextCursor.LineIndex);
             Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
-            Assert.AreEqual(1, _model.Lexems.Count);
+            Assert.AreEqual(1, _model.Lexems.LinesCount);
         }
 
         [Test]
@@ -221,6 +221,149 @@ namespace CodeHighlighter.Tests.Model
             _model.SelectAll();
             var result = _model.GetSelectedText();
             Assert.AreEqual("0123456789\r\n0123456789", result);
+        }
+
+        [Test]
+        public void DeleteCurrentLine()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("456");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTextBegin();
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("456\r\n789", _model.Text.ToString());
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("789", _model.Text.ToString());
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("", _model.Text.ToString());
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("", _model.Text.ToString());
+        }
+
+        [Test]
+        public void DeleteLastLine_Clear()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("456");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTextEnd();
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("123\r\n456\r\n", _model.Text.ToString());
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual("123\r\n456\r\n", _model.Text.ToString());
+        }
+
+        [Test]
+        public void DeleteLines_Cursor()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("45600");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTo(0, 3);
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((0, 3), _model.TextCursor.GetLineAndColumnIndex);
+
+            _model.MoveCursorTo(0, 5);
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((0, 3), _model.TextCursor.GetLineAndColumnIndex);
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((0, 0), _model.TextCursor.GetLineAndColumnIndex);
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((0, 0), _model.TextCursor.GetLineAndColumnIndex);
+        }
+
+        [Test]
+        public void DeleteLines_SelectionFirstTwoLines()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("45600");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTo(0, 2);
+            _model.StartSelection();
+            _model.MoveCursorTo(1, 5);
+            _model.EndSelection();
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
+            Assert.AreEqual("789", _model.Text.ToString());
+            Assert.AreEqual(1, _model.Lexems.LinesCount);
+            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
+        }
+
+        [Test]
+        public void DeleteLines_SelectionLastTwoLines_1()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("45600");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTo(1, 2);
+            _model.StartSelection();
+            _model.MoveCursorTo(2, 3);
+            _model.EndSelection();
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
+            Assert.AreEqual("123\r\n", _model.Text.ToString());
+            Assert.AreEqual(2, _model.Lexems.LinesCount);
+            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
+            Assert.AreEqual(0, _model.Lexems.GetLine(1).Count);
+        }
+
+        [Test]
+        public void DeleteLines_SelectionLastTwoLines_2()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("45600");
+            _model.NewLine();
+            AppendString("789");
+            _model.MoveCursorTo(2, 3);
+            _model.StartSelection();
+            _model.MoveCursorTo(1, 2);
+            _model.EndSelection();
+
+            _model.DeleteSelectedLines();
+            Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
+            Assert.AreEqual("123\r\n", _model.Text.ToString());
+            Assert.AreEqual(2, _model.Lexems.LinesCount);
+            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
+            Assert.AreEqual(0, _model.Lexems.GetLine(1).Count);
+        }
+
+        [Test]
+        public void DeleteLines_All()
+        {
+            AppendString("123");
+            _model.NewLine();
+            AppendString("45600");
+            _model.NewLine();
+            AppendString("789");
+            _model.SelectAll();
+
+            _model.DeleteSelectedLines();
+
+            Assert.AreEqual("", _model.Text.ToString());
+            Assert.AreEqual(1, _model.Lexems.LinesCount);
+            Assert.AreEqual(0, _model.Lexems.GetLine(0).Count);
         }
 
         private void AppendString(string str)

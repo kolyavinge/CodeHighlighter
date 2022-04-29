@@ -40,7 +40,7 @@ namespace CodeHighlighter.Model
 
     class TextSelection : ITextSelection
     {
-        public bool IsExist => EndLineIndex != -1;
+        public bool IsExist => StartLineIndex != EndLineIndex || StartColumnIndex != EndColumnIndex;
         public bool InProgress { get; set; }
         public int StartLineIndex { get; set; }
         public int StartColumnIndex { get; set; }
@@ -49,7 +49,6 @@ namespace CodeHighlighter.Model
 
         public TextSelection()
         {
-            Reset();
         }
 
         public TextSelection(int startLineIndex, int startColumnIndex, int endLineIndex, int endColumnIndex) : this()
@@ -92,7 +91,10 @@ namespace CodeHighlighter.Model
         public void Reset()
         {
             InProgress = false;
-            EndLineIndex = -1;
+            StartLineIndex = 0;
+            StartColumnIndex = 0;
+            EndLineIndex = 0;
+            EndColumnIndex = 0;
         }
     }
 }

@@ -7,8 +7,22 @@ namespace CodeHighlighter.Tests.Model
     {
         private Text _text;
 
+        [SetUp]
+        public void Setup()
+        {
+            _text = new Text();
+        }
+
         [Test]
-        public void Empty()
+        public void Created()
+        {
+            Assert.AreEqual("", _text.ToString());
+            Assert.AreEqual(1, _text.LinesCount);
+            Assert.AreEqual(0, _text.VisibleLinesCount);
+        }
+
+        [Test]
+        public void SetEmptyString()
         {
             SetText("");
             Assert.AreEqual("", _text.ToString());
@@ -297,9 +311,20 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual(1, result.DeletedLinesCount);
         }
 
+        [Test]
+        public void DeleteLine()
+        {
+            SetText("123\n456");
+            _text.DeleteLine(1);
+            Assert.AreEqual("123", _text.ToString());
+            _text.DeleteLine(0);
+            Assert.AreEqual("", _text.ToString());
+            _text.DeleteLine(0);
+            Assert.AreEqual("", _text.ToString());
+        }
+
         private void SetText(string textString)
         {
-            _text = new Text();
             _text.SetText(textString);
         }
     }

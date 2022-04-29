@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CodeHighlighter.Model
 {
@@ -138,7 +137,8 @@ namespace CodeHighlighter.Model
             {
                 _textSelection.StartLineIndex = _textCursor.LineIndex;
                 _textSelection.StartColumnIndex = _textCursor.ColumnIndex;
-                _textSelection.Reset();
+                _textSelection.EndLineIndex = _textCursor.LineIndex;
+                _textSelection.EndColumnIndex = _textCursor.ColumnIndex;
             }
         }
 
@@ -200,7 +200,7 @@ namespace CodeHighlighter.Model
                 var deleteResult = _text.LeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
                 if (deleteResult.IsLineDeleted)
                 {
-                    _lexems.RemoveAt(_textCursor.LineIndex);
+                    _lexems.DeleteLine(_textCursor.LineIndex);
                 }
                 _textCursor.MoveTo(newLineIndex, newColumnIndex);
             }
@@ -218,7 +218,7 @@ namespace CodeHighlighter.Model
                 var deleteResult = _text.RightDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
                 if (deleteResult.IsLineDeleted)
                 {
-                    _lexems.RemoveAt(_textCursor.LineIndex + 1);
+                    _lexems.DeleteLine(_textCursor.LineIndex + 1);
                 }
             }
             UpdateLexemsForLines(_textCursor.LineIndex, 1);
@@ -227,13 +227,41 @@ namespace CodeHighlighter.Model
         private void DeleteSelection()
         {
             var deleteResult = _text.DeleteSelection(_textSelection);
-            _lexems.RemoveRange(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
+            _lexems.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
             var startCursorPosition = _textSelection.GetSortedPositions().Item1;
             _textCursor.MoveTo(startCursorPosition.LineIndex, startCursorPosition.ColumnIndex);
             _textSelection.Reset();
         }
 
-        public void SetLexems()
+        public void DeleteSelectedLines()
+        {
+            TextSelectionPosition start, end;
+            if (_textSelection.IsExist)
+            {
+                (start, end) = _textSelection.GetSortedPositions();
+                _textSelection.Reset();
+            }
+            else
+            {
+                start = end = new TextSelectionPosition(_textCursor.LineIndex, _textCursor.ColumnIndex);
+            }
+            for (int i = start.LineIndex; i <= end.LineIndex; i++)
+            {
+                if (start.LineIndex < _text.LinesCount - 1)
+                {
+                    _text.DeleteLine(start.LineIndex);
+                    _lexems.DeleteLine(start.LineIndex);
+                }
+                else
+                {
+                    _text.GetLine(start.LineIndex).Clear();
+                    _lexems.GetLine(start.LineIndex).Clear();
+                }
+            }
+            _textCursor.MoveTo(start.LineIndex, start.ColumnIndex);
+        }
+
+        private void SetLexems()
         {
             var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text)).ToList();
             _lexems.SetLexems(_text, codeProviderLexems);

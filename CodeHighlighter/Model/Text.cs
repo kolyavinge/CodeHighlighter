@@ -24,7 +24,7 @@ namespace CodeHighlighter.Model
 
         public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
 
-        public Text() { }
+        public Text() : this("") { }
 
         public Text(string text)
         {
@@ -158,6 +158,18 @@ namespace CodeHighlighter.Model
 
                 return new DeleteSelectionResult(secondSelectionLine.LineIndex, selectionLines.Count - 1);
             }
+        }
+
+        public void DeleteLine(int lineIndex)
+        {
+            _lines.RemoveAt(lineIndex);
+            if (!_lines.Any()) _lines.Add(new Line(""));
+        }
+
+        public void DeleteLines(int lineIndex, int count)
+        {
+            _lines.RemoveRange(lineIndex, count);
+            if (!_lines.Any()) _lines.Add(new Line(""));
         }
 
         public override string ToString()

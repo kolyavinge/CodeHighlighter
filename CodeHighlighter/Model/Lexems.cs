@@ -6,15 +6,15 @@ namespace CodeHighlighter.Model
 {
     internal interface ILexems
     {
-        int Count { get; }
-        MergedLexem[] GetLexemsForLine(int lineIndex);
+        int LinesCount { get; }
+        List<MergedLexem> GetLine(int lineIndex);
     }
 
     internal class Lexems : ILexems
     {
-        private readonly List<MergedLexem[]> _lines = new();
+        private readonly List<List<MergedLexem>> _lines = new();
 
-        public int Count => _lines.Count;
+        public int LinesCount => _lines.Count;
 
         public void SetLexems(IText text, IReadOnlyCollection<Lexem> lexems)
         {
@@ -23,11 +23,11 @@ namespace CodeHighlighter.Model
 
             var merged = lexems
                 .GroupBy(x => x.LineIndex)
-                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
+                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToList()).ToList());
 
             for (int lineIndex = 0; lineIndex < text.LinesCount; lineIndex++)
             {
-                _lines.Add(merged.ContainsKey(lineIndex) ? merged[lineIndex] : new MergedLexem[0]);
+                _lines.Add(merged.ContainsKey(lineIndex) ? merged[lineIndex] : new List<MergedLexem>());
             }
         }
 
@@ -35,12 +35,12 @@ namespace CodeHighlighter.Model
         {
             var merged = lexems
                 .GroupBy(x => x.LineIndex)
-                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToArray()).ToArray());
+                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToList()).ToList());
 
             var length = startLineIndex + linesCount;
             for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
             {
-                var lineLexems = merged.ContainsKey(lineIndex) ? merged[lineIndex] : new MergedLexem[0];
+                var lineLexems = merged.ContainsKey(lineIndex) ? merged[lineIndex] : new List<MergedLexem>();
                 if (lineIndex < _lines.Count)
                 {
                     _lines[lineIndex] = lineLexems;
@@ -54,29 +54,30 @@ namespace CodeHighlighter.Model
 
         public void InsertEmpty(int lineIndex)
         {
-            _lines.Insert(lineIndex, new MergedLexem[0]);
+            _lines.Insert(lineIndex, new List<MergedLexem>());
         }
 
-        public void RemoveAt(int lineIndex)
+        public void DeleteLine(int lineIndex)
         {
+            if (lineIndex == 0 && !_lines.Any()) return;
             _lines.RemoveAt(lineIndex);
         }
 
-        public void RemoveRange(int lineIndex, int count)
+        public void DeleteLines(int lineIndex, int count)
         {
             _lines.RemoveRange(lineIndex, count);
         }
 
-        private IEnumerable<MergedLexem> MergeLexems(Line line, Lexem[] lexems)
+        private IEnumerable<MergedLexem> MergeLexems(Line line, List<Lexem> lexems)
         {
             int columnIndex = 0;
             int length;
-            for (int i = 0; i < lexems.Length;)
+            for (int i = 0; i < lexems.Count;)
             {
                 var kind = lexems[i].Kind;
                 i++;
-                while (i < lexems.Length && kind == lexems[i].Kind) i++;
-                if (i < lexems.Length)
+                while (i < lexems.Count && kind == lexems[i].Kind) i++;
+                if (i < lexems.Count)
                 {
                     length = lexems[i].StartColumnIndex - columnIndex;
                     yield return new(columnIndex, length, kind);
@@ -90,7 +91,7 @@ namespace CodeHighlighter.Model
             }
         }
 
-        public MergedLexem[] GetLexemsForLine(int lineIndex)
+        public List<MergedLexem> GetLine(int lineIndex)
         {
             return _lines[lineIndex];
         }

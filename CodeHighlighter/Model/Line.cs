@@ -61,6 +61,11 @@ namespace CodeHighlighter.Model
             _symbs.RemoveRange(columnIndex, count);
         }
 
+        public void Clear()
+        {
+            _symbs.Clear();
+        }
+
         public override string ToString()
         {
             return String.Join("", _symbs);
