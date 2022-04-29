@@ -21,6 +21,8 @@ namespace CodeHighlighter.Model
 
         public Point GetAbsolutePosition(ITextMeasures textMeasures) => new(ColumnIndex * textMeasures.LetterWidth, LineIndex * textMeasures.LineHeight);
 
+        public (int, int) GetLineAndColumnIndex => (LineIndex, ColumnIndex);
+
         public TextCursor(Text text)
         {
             _text = text;
