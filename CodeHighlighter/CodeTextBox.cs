@@ -183,7 +183,7 @@ namespace CodeHighlighter
             _model = new CodeTextBoxModel();
             _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
             _textMeasures = new TextMeasures(_fontSettings);
-            _viewport = new Viewport(this, _model.Text, _textMeasures);
+            _viewport = new Viewport(this, _textMeasures);
             _textSelectionRenderLogic = new TextSelectionRenderLogic();
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
@@ -235,7 +235,7 @@ namespace CodeHighlighter
         {
             VerticalScrollBarViewportSize = sizeInfo.NewSize.Height;
             HorizontalScrollBarViewportSize = sizeInfo.NewSize.Width;
-            _viewport.UpdateScrollbarsMaximumValues();
+            _viewport.UpdateScrollbarsMaximumValues(_model.Text);
             InvalidateVisual();
         }
 
@@ -275,8 +275,53 @@ namespace CodeHighlighter
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            var needToCorrectPosition = true;
             var needToInvalidate = true;
-            if (e.Key == Key.Up)
+            var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            // with control pressed
+            if (controlPressed && e.Key == Key.Up)
+            {
+                e.Handled = true;
+                needToCorrectPosition = false;
+                _viewport.ScrollLineUp();
+            }
+            else if (controlPressed && e.Key == Key.Down)
+            {
+                e.Handled = true;
+                needToCorrectPosition = false;
+                _viewport.ScrollLineDown();
+            }
+            else if (controlPressed && e.Key == Key.Home)
+            {
+                _model.MoveCursorTextBegin();
+            }
+            else if (controlPressed && e.Key == Key.End)
+            {
+                _model.MoveCursorTextEnd();
+            }
+            else if (controlPressed && e.Key == Key.A)
+            {
+                _model.SelectAll();
+            }
+            else if (controlPressed && e.Key == Key.X)
+            {
+                Clipboard.SetText(_model.GetSelectedText());
+                _model.LeftDelete();
+            }
+            else if (controlPressed && e.Key == Key.C)
+            {
+                Clipboard.SetText(_model.GetSelectedText());
+            }
+            else if (controlPressed && e.Key == Key.V)
+            {
+                _model.InsertText(Clipboard.GetText());
+            }
+            else if (controlPressed && e.Key == Key.L)
+            {
+                _model.DeleteSelectedLines();
+            }
+            // without any modifiers
+            else if (e.Key == Key.Up)
             {
                 e.Handled = true;
                 _model.MoveCursorUp();
@@ -296,17 +341,9 @@ namespace CodeHighlighter
                 e.Handled = true;
                 _model.MoveCursorRight();
             }
-            else if (e.Key == Key.Home && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                _model.MoveCursorTextBegin();
-            }
             else if (e.Key == Key.Home)
             {
                 _model.MoveCursorStartLine();
-            }
-            else if (e.Key == Key.End && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                _model.MoveCursorTextEnd();
             }
             else if (e.Key == Key.End)
             {
@@ -340,34 +377,18 @@ namespace CodeHighlighter
             {
                 _model.StartSelection();
             }
-            else if (e.Key == Key.A && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                _model.SelectAll();
-            }
-            else if (e.Key == Key.X && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                Clipboard.SetText(_model.GetSelectedText());
-                _model.LeftDelete();
-            }
-            else if (e.Key == Key.C && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                Clipboard.SetText(_model.GetSelectedText());
-            }
-            else if (e.Key == Key.V && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                _model.InsertText(Clipboard.GetText());
-            }
-            else if (e.Key == Key.L && (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                _model.DeleteSelectedLines();
-            }
             else
             {
+                needToCorrectPosition = false;
                 needToInvalidate = false;
+            }
+
+            if (needToCorrectPosition)
+            {
+                _viewport.CorrectByCursorPosition(_model.TextCursor.GetAbsolutePosition(_textMeasures));
             }
             if (needToInvalidate)
             {
-                _viewport.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
                 InvalidateVisual();
             }
         }
@@ -399,7 +420,7 @@ namespace CodeHighlighter
             {
                 _model.AppendChar(ch);
             }
-            _viewport.CorrectViewport(_model.TextCursor.GetAbsolutePosition(_textMeasures));
+            _viewport.CorrectByCursorPosition(_model.TextCursor.GetAbsolutePosition(_textMeasures));
             InvalidateVisual();
         }
 
@@ -419,7 +440,7 @@ namespace CodeHighlighter
         private void OnUpdateCodeProvider()
         {
             _model.SetCodeProvider(CodeProvider);
-            _viewport.UpdateScrollbarsMaximumValues();
+            _viewport.UpdateScrollbarsMaximumValues(_model.Text);
         }
     }
 }
