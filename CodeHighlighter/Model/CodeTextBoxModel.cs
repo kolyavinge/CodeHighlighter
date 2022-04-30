@@ -142,11 +142,21 @@ namespace CodeHighlighter.Model
             }
         }
 
+        public void SelectLexem(int lineIndex, int columnIndex)
+        {
+            var lexem = _lexems.GetLexem(lineIndex, columnIndex);
+            _textSelection.Reset();
+            _textSelection.StartLineIndex = lineIndex;
+            _textSelection.StartColumnIndex = lexem.StartColumnIndex;
+            _textSelection.EndLineIndex = lineIndex;
+            _textSelection.EndColumnIndex = lexem.EndColumnIndex;
+        }
+
         public void NewLine()
         {
             if (_textSelection.IsExist) DeleteSelection();
             _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
-            _lexems.InsertEmpty(_textCursor.LineIndex + 1);
+            _lexems.InsertEmptyLine(_textCursor.LineIndex + 1);
             _textCursor.MoveDown();
             _textCursor.MoveStartLine();
             UpdateLexemsForLines(_textCursor.LineIndex - 1, 2);
@@ -255,7 +265,7 @@ namespace CodeHighlighter.Model
                 else
                 {
                     _text.GetLine(start.LineIndex).Clear();
-                    _lexems.GetLine(start.LineIndex).Clear();
+                    _lexems.GetMergedLexems(start.LineIndex).Clear();
                 }
             }
             _textCursor.MoveTo(start.LineIndex, start.ColumnIndex);
@@ -264,14 +274,14 @@ namespace CodeHighlighter.Model
         private void SetLexems()
         {
             var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text)).ToList();
-            _lexems.SetLexems(_text, codeProviderLexems);
+            _lexems.SetLexems(codeProviderLexems, 0, _text.LinesCount);
             _lexemColors.SetColors(_codeProvider.GetColors());
         }
 
         private void UpdateLexemsForLines(int startLineIndex, int count)
         {
             var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
-            _lexems.ReplaceLexems(_text, codeProviderLexems, startLineIndex, count);
+            _lexems.SetLexems(codeProviderLexems, startLineIndex, count);
         }
     }
 }

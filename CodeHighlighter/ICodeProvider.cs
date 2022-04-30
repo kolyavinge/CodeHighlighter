@@ -25,6 +25,7 @@ namespace CodeHighlighter
         public readonly int StartColumnIndex;
         public readonly int Length;
         public readonly byte Kind;
+        public int EndColumnIndex => StartColumnIndex + Length;
 
         public Lexem(int lineIndex, int startColumnIndex, int length, byte kind)
         {

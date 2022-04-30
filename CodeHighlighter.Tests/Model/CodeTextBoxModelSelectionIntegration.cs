@@ -304,7 +304,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("789", _model.Text.ToString());
             Assert.AreEqual(1, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
+            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
         }
 
         [Test]
@@ -324,8 +324,8 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("123\r\n", _model.Text.ToString());
             Assert.AreEqual(2, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
-            Assert.AreEqual(0, _model.Lexems.GetLine(1).Count);
+            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
+            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(1).Count);
         }
 
         [Test]
@@ -345,8 +345,8 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("123\r\n", _model.Text.ToString());
             Assert.AreEqual(2, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetLine(0).Count);
-            Assert.AreEqual(0, _model.Lexems.GetLine(1).Count);
+            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
+            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(1).Count);
         }
 
         [Test]
@@ -363,7 +363,7 @@ namespace CodeHighlighter.Tests.Model
 
             Assert.AreEqual("", _model.Text.ToString());
             Assert.AreEqual(1, _model.Lexems.LinesCount);
-            Assert.AreEqual(0, _model.Lexems.GetLine(0).Count);
+            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(0).Count);
         }
 
         private void AppendString(string str)

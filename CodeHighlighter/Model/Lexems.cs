@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model
@@ -7,93 +6,105 @@ namespace CodeHighlighter.Model
     internal interface ILexems
     {
         int LinesCount { get; }
-        List<MergedLexem> GetLine(int lineIndex);
+        List<MergedLexem> GetMergedLexems(int lineIndex);
     }
 
     internal class Lexems : ILexems
     {
-        private readonly List<List<MergedLexem>> _lines = new();
+        private readonly List<List<Lexem>> _lexems = new();
+        private readonly List<List<MergedLexem>> _mergedLexems = new();
 
-        public int LinesCount => _lines.Count;
+        public int LinesCount => _lexems.Count;
 
-        public void SetLexems(IText text, IReadOnlyCollection<Lexem> lexems)
+        public void SetLexems(IEnumerable<Lexem> lexems, int startLineIndex, int linesCount)
         {
-            _lines.Clear();
-            if (!lexems.Any()) return;
-
-            var merged = lexems
+            var groupedLexems = lexems
                 .GroupBy(x => x.LineIndex)
-                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToList()).ToList());
-
-            for (int lineIndex = 0; lineIndex < text.LinesCount; lineIndex++)
-            {
-                _lines.Add(merged.ContainsKey(lineIndex) ? merged[lineIndex] : new List<MergedLexem>());
-            }
-        }
-
-        public void ReplaceLexems(IText text, IReadOnlyCollection<Lexem> lexems, int startLineIndex, int linesCount)
-        {
-            var merged = lexems
-                .GroupBy(x => x.LineIndex)
-                .ToDictionary(group => group.Key, group => MergeLexems(text.GetLine(group.Key), group.ToList()).ToList());
+                .ToDictionary(group => group.Key, group => group.ToList());
 
             var length = startLineIndex + linesCount;
             for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
             {
-                var lineLexems = merged.ContainsKey(lineIndex) ? merged[lineIndex] : new List<MergedLexem>();
-                if (lineIndex < _lines.Count)
+                var lineLexems = groupedLexems.ContainsKey(lineIndex) ? groupedLexems[lineIndex] : new List<Lexem>();
+                if (lineIndex < _lexems.Count)
                 {
-                    _lines[lineIndex] = lineLexems;
+                    _lexems[lineIndex] = lineLexems;
+                    _mergedLexems[lineIndex] = MergeLexems(lineLexems);
                 }
                 else
                 {
-                    _lines.Add(lineLexems);
+                    _lexems.Add(lineLexems);
+                    _mergedLexems.Add(MergeLexems(lineLexems));
                 }
             }
         }
 
-        public void InsertEmpty(int lineIndex)
+        public List<MergedLexem> MergeLexems(IEnumerable<Lexem> lexems)
         {
-            _lines.Insert(lineIndex, new List<MergedLexem>());
+            var result = new List<MergedLexem>();
+            var lexemsArray = lexems.ToArray();
+            int columnIndex = 0;
+            int length;
+            for (int i = 0; i < lexemsArray.Length;)
+            {
+                var kind = lexemsArray[i].Kind;
+                i++;
+                while (i < lexemsArray.Length && kind == lexemsArray[i].Kind) i++;
+                if (i < lexemsArray.Length)
+                {
+                    length = lexemsArray[i].StartColumnIndex - columnIndex;
+                    result.Add(new(columnIndex, length, kind));
+                    columnIndex = lexemsArray[i].StartColumnIndex;
+                }
+                else
+                {
+                    var lineLength = lexems.Last().StartColumnIndex + lexems.Last().Length;
+                    result.Add(new(columnIndex, lineLength - columnIndex, kind));
+                }
+            }
+
+            return result;
+        }
+
+        public void InsertEmptyLine(int lineIndex)
+        {
+            _lexems.Insert(lineIndex, new List<Lexem>());
+            _mergedLexems.Insert(lineIndex, new List<MergedLexem>());
         }
 
         public void DeleteLine(int lineIndex)
         {
-            if (lineIndex == 0 && !_lines.Any()) return;
-            _lines.RemoveAt(lineIndex);
+            if (lineIndex == 0 && !_lexems.Any()) return;
+            _lexems.RemoveAt(lineIndex);
+            _mergedLexems.RemoveAt(lineIndex);
         }
 
         public void DeleteLines(int lineIndex, int count)
         {
-            _lines.RemoveRange(lineIndex, count);
+            _lexems.RemoveRange(lineIndex, count);
+            _mergedLexems.RemoveRange(lineIndex, count);
         }
 
-        private IEnumerable<MergedLexem> MergeLexems(Line line, List<Lexem> lexems)
+        public List<MergedLexem> GetMergedLexems(int lineIndex)
         {
-            int columnIndex = 0;
-            int length;
-            for (int i = 0; i < lexems.Count;)
+            return _mergedLexems[lineIndex];
+        }
+
+        public Lexem GetLexem(int lineIndex, int columnIndex)
+        {
+            if (lineIndex >= _lexems.Count) return default;
+            var line = _lexems[lineIndex];
+            if (columnIndex >= line.LastOrDefault().EndColumnIndex) return line.LastOrDefault();
+            var index = line.FindIndex(x => x.StartColumnIndex <= columnIndex && columnIndex <= x.EndColumnIndex);
+            if (index != -1)
             {
-                var kind = lexems[i].Kind;
-                i++;
-                while (i < lexems.Count && kind == lexems[i].Kind) i++;
-                if (i < lexems.Count)
-                {
-                    length = lexems[i].StartColumnIndex - columnIndex;
-                    yield return new(columnIndex, length, kind);
-                    columnIndex = lexems[i].StartColumnIndex;
-                }
-                else
-                {
-                    length = line.Length;
-                    yield return new(columnIndex, length, kind);
-                }
+                if (index + 1 < line.Count && columnIndex == line[index + 1].StartColumnIndex) return line[index + 1];
+                else return line[index];
             }
-        }
-
-        public List<MergedLexem> GetLine(int lineIndex)
-        {
-            return _lines[lineIndex];
+            else
+            {
+                return line.FirstOrDefault(x => x.StartColumnIndex > columnIndex);
+            }
         }
     }
 

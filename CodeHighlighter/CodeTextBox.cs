@@ -204,7 +204,7 @@ namespace CodeHighlighter
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
                 var offsetX = -HorizontalScrollBarValue;
-                var lineLexems = _model.Lexems.GetLine(lineIndex);
+                var lineLexems = _model.Lexems.GetMergedLexems(lineIndex);
                 foreach (var lexem in lineLexems)
                 {
                     var text = _model.Text.GetSubstring(lineIndex, lexem.ColumnIndex, lexem.Length);
@@ -270,6 +270,15 @@ namespace CodeHighlighter
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             VerticalScrollBarValue -= e.Delta;
+            InvalidateVisual();
+        }
+
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            var positionInControl = e.GetPosition(this);
+            var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
+            var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+            _model.SelectLexem(lineIndex, columnIndex);
             InvalidateVisual();
         }
 
