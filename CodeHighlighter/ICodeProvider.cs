@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media;
 
 namespace CodeHighlighter
 {
     public interface ICodeProvider
     {
-        IEnumerable<Lexem> GetLexems(ITextIterator textIterator);
-        IEnumerable<LexemColor> GetColors();
+        IEnumerable<Token> GetTokens(ITextIterator textIterator);
+        IEnumerable<TokenColor> GetColors();
     }
 
     public interface ITextIterator
@@ -19,15 +20,15 @@ namespace CodeHighlighter
         void MoveNext();
     }
 
-    public struct Lexem
+    public struct Token
     {
         public readonly int LineIndex;
         public readonly int StartColumnIndex;
         public readonly int Length;
         public readonly byte Kind;
-        public int EndColumnIndex => StartColumnIndex + Length;
+        public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-        public Lexem(int lineIndex, int startColumnIndex, int length, byte kind)
+        public Token(int lineIndex, int startColumnIndex, int length, byte kind)
         {
             LineIndex = lineIndex;
             StartColumnIndex = startColumnIndex;
@@ -36,12 +37,12 @@ namespace CodeHighlighter
         }
     }
 
-    public struct LexemColor
+    public struct TokenColor
     {
         public readonly byte Kind;
         public readonly Color Color;
 
-        public LexemColor(byte kind, Color color)
+        public TokenColor(byte kind, Color color)
         {
             Kind = kind;
             Color = color;

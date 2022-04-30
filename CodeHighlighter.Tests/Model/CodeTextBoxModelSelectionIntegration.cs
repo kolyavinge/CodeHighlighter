@@ -26,9 +26,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorEndLine();
             _model.EndSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(0, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(10, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(10, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -41,9 +41,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorStartLine();
             _model.EndSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(10, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(10, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(0, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -58,9 +58,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorDown();
             _model.EndSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(5, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(5, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(5, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -75,9 +75,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorUp();
             _model.EndSelection();
             Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(5, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(5, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(5, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -92,9 +92,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorTo(1, 9);
             _model.EndSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(4, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(4, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(9, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(9, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -109,9 +109,9 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveCursorTo(0, 4);
             _model.EndSelection();
             Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(9, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(9, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(4, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(4, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -123,9 +123,9 @@ namespace CodeHighlighter.Tests.Model
             AppendString("0000000000");
             _model.SelectAll();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
-            Assert.AreEqual(0, _model.TextSelection.StartColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
-            Assert.AreEqual(10, _model.TextSelection.EndColumnIndex);
+            Assert.AreEqual(10, _model.TextSelection.EndCursorColumnIndex);
             Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
         }
 
@@ -162,7 +162,7 @@ namespace CodeHighlighter.Tests.Model
             Assert.AreEqual("012210", _model.Text.ToString());
             Assert.AreEqual(0, _model.TextCursor.LineIndex);
             Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
-            Assert.AreEqual(1, _model.Lexems.LinesCount);
+            Assert.AreEqual(1, _model.Tokens.LinesCount);
         }
 
         [Test]
@@ -221,6 +221,36 @@ namespace CodeHighlighter.Tests.Model
             _model.SelectAll();
             var result = _model.GetSelectedText();
             Assert.AreEqual("0123456789\r\n0123456789", result);
+        }
+
+        [Test]
+        public void SelectToken()
+        {
+            AppendString("SELECT Name FROM Table");
+
+            _model.SelectToken(0, 0);
+            Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+            Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+            Assert.AreEqual(6, _model.TextSelection.EndCursorColumnIndex);
+
+            _model.SelectToken(0, 8);
+            Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+            Assert.AreEqual(7, _model.TextSelection.StartCursorColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+            Assert.AreEqual(11, _model.TextSelection.EndCursorColumnIndex);
+
+            _model.SelectToken(0, 12);
+            Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+            Assert.AreEqual(12, _model.TextSelection.StartCursorColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+            Assert.AreEqual(16, _model.TextSelection.EndCursorColumnIndex);
+
+            _model.SelectToken(0, 20);
+            Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+            Assert.AreEqual(17, _model.TextSelection.StartCursorColumnIndex);
+            Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+            Assert.AreEqual(22, _model.TextSelection.EndCursorColumnIndex);
         }
 
         [Test]
@@ -303,8 +333,8 @@ namespace CodeHighlighter.Tests.Model
             _model.DeleteSelectedLines();
             Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("789", _model.Text.ToString());
-            Assert.AreEqual(1, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
+            Assert.AreEqual(1, _model.Tokens.LinesCount);
+            Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
         }
 
         [Test]
@@ -323,9 +353,9 @@ namespace CodeHighlighter.Tests.Model
             _model.DeleteSelectedLines();
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("123\r\n", _model.Text.ToString());
-            Assert.AreEqual(2, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
-            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(1).Count);
+            Assert.AreEqual(2, _model.Tokens.LinesCount);
+            Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
+            Assert.AreEqual(0, _model.Tokens.GetMergedTokens(1).Count);
         }
 
         [Test]
@@ -344,9 +374,9 @@ namespace CodeHighlighter.Tests.Model
             _model.DeleteSelectedLines();
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
             Assert.AreEqual("123\r\n", _model.Text.ToString());
-            Assert.AreEqual(2, _model.Lexems.LinesCount);
-            Assert.AreEqual(1, _model.Lexems.GetMergedLexems(0).Count);
-            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(1).Count);
+            Assert.AreEqual(2, _model.Tokens.LinesCount);
+            Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
+            Assert.AreEqual(0, _model.Tokens.GetMergedTokens(1).Count);
         }
 
         [Test]
@@ -362,8 +392,8 @@ namespace CodeHighlighter.Tests.Model
             _model.DeleteSelectedLines();
 
             Assert.AreEqual("", _model.Text.ToString());
-            Assert.AreEqual(1, _model.Lexems.LinesCount);
-            Assert.AreEqual(0, _model.Lexems.GetMergedLexems(0).Count);
+            Assert.AreEqual(1, _model.Tokens.LinesCount);
+            Assert.AreEqual(0, _model.Tokens.GetMergedTokens(0).Count);
         }
 
         private void AppendString(string str)

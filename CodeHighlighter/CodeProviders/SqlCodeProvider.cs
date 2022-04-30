@@ -23,15 +23,15 @@ namespace CodeHighlighter.CodeProviders
             _operators = new HashSet<char[]>(new OperatorsCollection().Select(x => x.ToArray()).ToList());
         }
 
-        public IEnumerable<Lexem> GetLexems(ITextIterator textIterator)
+        public IEnumerable<Token> GetTokens(ITextIterator textIterator)
         {
-            var lexems = new List<Lexem>();
-            if (textIterator.Eof) return lexems;
-            var lexemNameArray = new char[10 * 1024];
-            int lexemNameArrayIndex = 0;
-            int lexemLineIndex;
-            int lexemStartColumn;
-            LexemKind lexemKind;
+            var tokens = new List<Token>();
+            if (textIterator.Eof) return tokens;
+            var tokenNameArray = new char[10 * 1024];
+            int tokenNameArrayIndex = 0;
+            int tokenLineIndex;
+            int tokenStartColumn;
+            TokenKind tokenKind;
             switch (State.General)
             {
                 case State.General:
@@ -43,75 +43,75 @@ namespace CodeHighlighter.CodeProviders
                     }
                     else if (textIterator.Char == '-' && textIterator.NextChar == '-') // comment start
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = '-';
-                        lexemNameArray[lexemNameArrayIndex++] = '-';
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemKind = LexemKind.Comment;
+                        tokenNameArray[tokenNameArrayIndex++] = '-';
+                        tokenNameArray[tokenNameArrayIndex++] = '-';
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenKind = TokenKind.Comment;
                         textIterator.MoveNext();
                         textIterator.MoveNext();
                         goto case State.Comment;
                     }
                     else if (textIterator.Char == '\'') // string start
                     {
-                        //if (lexems.Any() && lexems.Last().Name == "N")
+                        //if (tokens.Any() && tokens.Last().Name == "N")
                         //{
-                        //    lexems.Last().Kind = LexemKind.Other;
+                        //    tokens.Last().Kind = TokenKind.Other;
                         //}
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemKind = LexemKind.String;
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenKind = TokenKind.String;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.String;
                     }
                     else if (textIterator.Char == '[')
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = '[';
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemKind = LexemKind.Identifier;
+                        tokenNameArray[tokenNameArrayIndex++] = '[';
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenKind = TokenKind.Identifier;
                         textIterator.MoveNext();
                         goto case State.Identifier;
                     }
                     else if (IsDelimiter(textIterator.Char))
                     {
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemKind = LexemKind.Delimiter;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, 1, (byte)lexemKind));
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenKind = TokenKind.Delimiter;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, 1, (byte)tokenKind));
                         textIterator.MoveNext();
                         goto case State.General;
                     }
                     else
                     {
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.KeywordFunctionOther;
                     }
                 case State.KeywordFunctionOther: // keyword, function or other name
-                    if (textIterator.Eof) goto case State.EndUnknownLexem;
+                    if (textIterator.Eof) goto case State.EndUnknownToken;
                     if (IsSpace(textIterator.Char) || IsReturn(textIterator.Char) || IsDelimiter(textIterator.Char))
                     {
-                        lexemKind = GetLexemKind(lexemNameArray, lexemNameArrayIndex);
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokenKind = GetTokenKind(tokenNameArray, tokenNameArrayIndex);
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         goto case State.General;
                     }
-                    else if (textIterator.Char == '\'' && lexemNameArray[lexemNameArrayIndex - 1] == 'N')
+                    else if (textIterator.Char == '\'' && tokenNameArray[tokenNameArrayIndex - 1] == 'N')
                     {
-                        lexemLineIndex = textIterator.LineIndex;
-                        lexemStartColumn = textIterator.ColumnIndex;
-                        lexemKind = LexemKind.Other;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, 1, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokenLineIndex = textIterator.LineIndex;
+                        tokenStartColumn = textIterator.ColumnIndex;
+                        tokenKind = TokenKind.Other;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, 1, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         goto case State.General;
                     }
                     else
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.KeywordFunctionOther;
                     }
@@ -119,14 +119,14 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Eof) goto case State.End;
                     if (IsReturn(textIterator.Char))
                     {
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
                     }
                     else
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.Comment;
                     }
@@ -134,15 +134,15 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Eof) goto case State.End;
                     if (textIterator.Char == '\'')
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
                     }
                     else
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.String;
                     }
@@ -150,71 +150,71 @@ namespace CodeHighlighter.CodeProviders
                     if (textIterator.Eof) goto case State.End;
                     if (IsReturn(textIterator.Char))
                     {
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
                     }
                     else if (textIterator.Char == ']')
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
-                        lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
-                        lexemNameArrayIndex = 0;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
+                        tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                        tokenNameArrayIndex = 0;
                         textIterator.MoveNext();
                         goto case State.General;
                     }
                     else
                     {
-                        lexemNameArray[lexemNameArrayIndex++] = textIterator.Char;
+                        tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
                         textIterator.MoveNext();
                         goto case State.Identifier;
                     }
-                case State.EndUnknownLexem:
-                    lexemKind = GetLexemKind(lexemNameArray, lexemNameArrayIndex);
-                    lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
+                case State.EndUnknownToken:
+                    tokenKind = GetTokenKind(tokenNameArray, tokenNameArrayIndex);
+                    tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
                     break;
                 case State.End:
-                    lexems.Add(new(lexemLineIndex, lexemStartColumn, lexemNameArrayIndex, (byte)lexemKind));
+                    tokens.Add(new(tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
                     break;
             }
 
-            return lexems;
+            return tokens;
         }
 
-        private LexemKind GetLexemKind(char[] lexemNameArray, int lexemNameArrayIndex)
+        private TokenKind GetTokenKind(char[] tokenNameArray, int tokenNameArrayIndex)
         {
-            if (IsKeyword(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Keyword;
-            if (IsOperator(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Operator;
-            if (IsFunction(lexemNameArray, lexemNameArrayIndex)) return LexemKind.Function;
-            if (IsVariable(lexemNameArray)) return LexemKind.Variable;
-            if (IsIdentifier(lexemNameArray)) return LexemKind.Identifier;
+            if (IsKeyword(tokenNameArray, tokenNameArrayIndex)) return TokenKind.Keyword;
+            if (IsOperator(tokenNameArray, tokenNameArrayIndex)) return TokenKind.Operator;
+            if (IsFunction(tokenNameArray, tokenNameArrayIndex)) return TokenKind.Function;
+            if (IsVariable(tokenNameArray)) return TokenKind.Variable;
+            if (IsIdentifier(tokenNameArray)) return TokenKind.Identifier;
 
-            return LexemKind.Other;
+            return TokenKind.Other;
         }
 
-        private bool IsKeyword(char[] lexemNameArray, int lexemNameArrayIndex)
+        private bool IsKeyword(char[] tokenNameArray, int tokenNameArrayIndex)
         {
-            return _keywords.Contains(lexemNameArray, new CharArrayEqualityComparer(lexemNameArrayIndex));
+            return _keywords.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
         }
 
-        private bool IsOperator(char[] lexemNameArray, int lexemNameArrayIndex)
+        private bool IsOperator(char[] tokenNameArray, int tokenNameArrayIndex)
         {
-            return _operators.Contains(lexemNameArray, new CharArrayEqualityComparer(lexemNameArrayIndex));
+            return _operators.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
         }
 
-        private bool IsFunction(char[] lexemNameArray, int lexemNameArrayIndex)
+        private bool IsFunction(char[] tokenNameArray, int tokenNameArrayIndex)
         {
-            return _functions.Contains(lexemNameArray, new CharArrayEqualityComparer(lexemNameArrayIndex));
+            return _functions.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
         }
 
-        private bool IsVariable(char[] lexemNameArray)
+        private bool IsVariable(char[] tokenNameArray)
         {
-            return lexemNameArray[0] == '@';
+            return tokenNameArray[0] == '@';
         }
 
-        private bool IsIdentifier(char[] lexemNameArray)
+        private bool IsIdentifier(char[] tokenNameArray)
         {
-            return Char.IsLetter(lexemNameArray[0]) || lexemNameArray[0] == '_' || lexemNameArray[0] == '#';
+            return Char.IsLetter(tokenNameArray[0]) || tokenNameArray[0] == '_' || tokenNameArray[0] == '#';
         }
 
         private bool IsDelimiter(char ch)
@@ -232,16 +232,16 @@ namespace CodeHighlighter.CodeProviders
             return ch == '\n';
         }
 
-        public IEnumerable<LexemColor> GetColors()
+        public IEnumerable<TokenColor> GetColors()
         {
             return new[]
             {
-                new LexemColor((byte)LexemKind.Keyword, Colors.Blue),
-                new LexemColor((byte)LexemKind.Operator, Colors.DimGray),
-                new LexemColor((byte)LexemKind.Function, Colors.Magenta),
-                new LexemColor((byte)LexemKind.Variable, Colors.Brown),
-                new LexemColor((byte)LexemKind.String, Colors.Red),
-                new LexemColor((byte)LexemKind.Comment, Colors.Green),
+                new TokenColor((byte)TokenKind.Keyword, Colors.Blue),
+                new TokenColor((byte)TokenKind.Operator, Colors.DimGray),
+                new TokenColor((byte)TokenKind.Function, Colors.Magenta),
+                new TokenColor((byte)TokenKind.Variable, Colors.Brown),
+                new TokenColor((byte)TokenKind.String, Colors.Red),
+                new TokenColor((byte)TokenKind.Comment, Colors.Green),
             };
         }
 
@@ -252,7 +252,7 @@ namespace CodeHighlighter.CodeProviders
             Identifier,
             Comment,
             String,
-            EndUnknownLexem,
+            EndUnknownToken,
             End
         }
 
@@ -285,7 +285,7 @@ namespace CodeHighlighter.CodeProviders
         }
     }
 
-    internal enum LexemKind : byte
+    internal enum TokenKind : byte
     {
         Identifier,
         Keyword,

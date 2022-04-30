@@ -5,9 +5,9 @@ namespace CodeHighlighter.Model
     internal interface ITextSelection
     {
         int StartLineIndex { get; }
-        int StartColumnIndex { get; }
+        int StartCursorColumnIndex { get; }
         int EndLineIndex { get; }
-        int EndColumnIndex { get; }
+        int EndCursorColumnIndex { get; }
         (TextSelectionPosition, TextSelectionPosition) GetSortedPositions();
         IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
     }
@@ -40,12 +40,12 @@ namespace CodeHighlighter.Model
 
     class TextSelection : ITextSelection
     {
-        public bool IsExist => StartLineIndex != EndLineIndex || StartColumnIndex != EndColumnIndex;
+        public bool IsExist => StartLineIndex != EndLineIndex || StartCursorColumnIndex != EndCursorColumnIndex;
         public bool InProgress { get; set; }
         public int StartLineIndex { get; set; }
-        public int StartColumnIndex { get; set; }
+        public int StartCursorColumnIndex { get; set; }
         public int EndLineIndex { get; set; }
-        public int EndColumnIndex { get; set; }
+        public int EndCursorColumnIndex { get; set; }
 
         public TextSelection()
         {
@@ -54,15 +54,15 @@ namespace CodeHighlighter.Model
         public TextSelection(int startLineIndex, int startColumnIndex, int endLineIndex, int endColumnIndex) : this()
         {
             StartLineIndex = startLineIndex;
-            StartColumnIndex = startColumnIndex;
+            StartCursorColumnIndex = startColumnIndex;
             EndLineIndex = endLineIndex;
-            EndColumnIndex = endColumnIndex;
+            EndCursorColumnIndex = endColumnIndex;
         }
 
         public (TextSelectionPosition, TextSelectionPosition) GetSortedPositions()
         {
-            var start = new TextSelectionPosition(StartLineIndex, StartColumnIndex);
-            var end = new TextSelectionPosition(EndLineIndex, EndColumnIndex);
+            var start = new TextSelectionPosition(StartLineIndex, StartCursorColumnIndex);
+            var end = new TextSelectionPosition(EndLineIndex, EndCursorColumnIndex);
             if (start.LineIndex < end.LineIndex) return (start, end);
             if (start.LineIndex > end.LineIndex) return (end, start);
             if (start.ColumnIndex < end.ColumnIndex) return (start, end);
@@ -92,9 +92,9 @@ namespace CodeHighlighter.Model
         {
             InProgress = false;
             StartLineIndex = 0;
-            StartColumnIndex = 0;
+            StartCursorColumnIndex = 0;
             EndLineIndex = 0;
-            EndColumnIndex = 0;
+            EndCursorColumnIndex = 0;
         }
     }
 }

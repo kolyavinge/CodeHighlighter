@@ -5,13 +5,13 @@ namespace CodeHighlighter.CodeProviders
 {
     internal class EmptyCodeProvider : ICodeProvider
     {
-        public IEnumerable<Lexem> GetLexems(ITextIterator textIterator)
+        public IEnumerable<Token> GetTokens(ITextIterator textIterator)
         {
-            return Enumerable.Empty<Lexem>();
+            return Enumerable.Empty<Token>();
         }
-        public IEnumerable<LexemColor> GetColors()
+        public IEnumerable<TokenColor> GetColors()
         {
-            return Enumerable.Empty<LexemColor>();
+            return Enumerable.Empty<TokenColor>();
         }
     }
 }

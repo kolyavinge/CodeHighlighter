@@ -21,9 +21,9 @@ namespace CodeHighlighter.Tests.Model
         public void Init()
         {
             Assert.AreEqual(0, _textSelection.StartLineIndex);
-            Assert.AreEqual(0, _textSelection.StartColumnIndex);
+            Assert.AreEqual(0, _textSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _textSelection.EndLineIndex);
-            Assert.AreEqual(0, _textSelection.EndColumnIndex);
+            Assert.AreEqual(0, _textSelection.EndCursorColumnIndex);
         }
 
         [Test]
@@ -31,9 +31,9 @@ namespace CodeHighlighter.Tests.Model
         {
             _text.SetText("01234\n01234\n01234\n01234\n01234");
             _textSelection.StartLineIndex = 0;
-            _textSelection.StartColumnIndex = 2;
+            _textSelection.StartCursorColumnIndex = 2;
             _textSelection.EndLineIndex = 3;
-            _textSelection.EndColumnIndex = 4;
+            _textSelection.EndCursorColumnIndex = 4;
 
             var result = _textSelection.GetSelectedLines(_text).ToList();
 
@@ -61,9 +61,9 @@ namespace CodeHighlighter.Tests.Model
         {
             _text.SetText("01234\n01234\n01234\n01234\n01234");
             _textSelection.StartLineIndex = 3;
-            _textSelection.StartColumnIndex = 4;
+            _textSelection.StartCursorColumnIndex = 4;
             _textSelection.EndLineIndex = 0;
-            _textSelection.EndColumnIndex = 2;
+            _textSelection.EndCursorColumnIndex = 2;
 
             var result = _textSelection.GetSelectedLines(_text).ToList();
 
@@ -91,9 +91,9 @@ namespace CodeHighlighter.Tests.Model
         {
             _text.SetText("");
             _textSelection.StartLineIndex = 0;
-            _textSelection.StartColumnIndex = 0;
+            _textSelection.StartCursorColumnIndex = 0;
             _textSelection.EndLineIndex = 0;
-            _textSelection.EndColumnIndex = 0;
+            _textSelection.EndCursorColumnIndex = 0;
 
             var result = _textSelection.GetSelectedLines(_text).ToList();
 

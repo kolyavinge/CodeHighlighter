@@ -195,7 +195,7 @@ namespace CodeHighlighter
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             // selection
             _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
-            // lexems
+            // tokens
             var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
             var startLine = (int)(VerticalScrollBarValue / _textMeasures.LineHeight);
             var linesCount = _viewport.GetLinesCountInViewport();
@@ -204,11 +204,11 @@ namespace CodeHighlighter
             for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
             {
                 var offsetX = -HorizontalScrollBarValue;
-                var lineLexems = _model.Lexems.GetMergedLexems(lineIndex);
-                foreach (var lexem in lineLexems)
+                var lineTokens = _model.Tokens.GetMergedTokens(lineIndex);
+                foreach (var token in lineTokens)
                 {
-                    var text = _model.Text.GetSubstring(lineIndex, lexem.ColumnIndex, lexem.Length);
-                    var brush = _model.LexemColors.GetColorBrushOrNull(lexem.Kind) ?? Foreground;
+                    var text = _model.Text.GetSubstring(lineIndex, token.ColumnIndex, token.Length);
+                    var brush = _model.TokenColors.GetColorBrushOrNull(token.Kind) ?? Foreground;
                     var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, brush, 1.0);
                     context.DrawText(formattedText, new Point(offsetX, offsetY));
                     offsetX += formattedText.WidthIncludingTrailingWhitespace;
@@ -278,7 +278,7 @@ namespace CodeHighlighter
             var positionInControl = e.GetPosition(this);
             var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
             var columnIndex = _viewport.CursorColumnIndex(positionInControl);
-            _model.SelectLexem(lineIndex, columnIndex);
+            _model.SelectToken(lineIndex, columnIndex);
             InvalidateVisual();
         }
 

@@ -9,30 +9,30 @@ namespace CodeHighlighter.Model
         private readonly Text _text;
         private readonly TextCursor _textCursor;
         private readonly TextSelection _textSelection;
-        private readonly Lexems _lexems;
-        private readonly LexemsColors _lexemColors;
+        private readonly Tokens _tokens;
+        private readonly TokensColors _tokenColors;
         private ICodeProvider _codeProvider;
 
         public IText Text => _text;
         public ITextCursor TextCursor => _textCursor;
         public ITextSelection TextSelection => _textSelection;
-        public ILexems Lexems => _lexems;
-        public ILexemsColors LexemColors => _lexemColors;
+        public ITokens Tokens => _tokens;
+        public ITokensColors TokenColors => _tokenColors;
 
         public CodeTextBoxModel()
         {
             _text = new();
             _textCursor = new(_text);
             _textSelection = new();
-            _lexems = new();
-            _lexemColors = new();
+            _tokens = new();
+            _tokenColors = new();
             _codeProvider = new CodeProviders.EmptyCodeProvider();
         }
 
         public void SetCodeProvider(ICodeProvider codeProvider)
         {
             _codeProvider = codeProvider;
-            SetLexems();
+            SetTokens();
         }
 
         public void SetText(string text)
@@ -110,9 +110,9 @@ namespace CodeHighlighter.Model
         {
             _textSelection.InProgress = false;
             _textSelection.StartLineIndex = 0;
-            _textSelection.StartColumnIndex = 0;
+            _textSelection.StartCursorColumnIndex = 0;
             _textSelection.EndLineIndex = _text.LinesCount - 1;
-            _textSelection.EndColumnIndex = _text.GetLine(_textSelection.EndLineIndex).Length;
+            _textSelection.EndCursorColumnIndex = _text.GetLine(_textSelection.EndLineIndex).Length;
             _textCursor.MoveTextEnd();
         }
 
@@ -131,35 +131,36 @@ namespace CodeHighlighter.Model
             if (_textSelection.InProgress)
             {
                 _textSelection.EndLineIndex = _textCursor.LineIndex;
-                _textSelection.EndColumnIndex = _textCursor.ColumnIndex;
+                _textSelection.EndCursorColumnIndex = _textCursor.ColumnIndex;
             }
             else
             {
                 _textSelection.StartLineIndex = _textCursor.LineIndex;
-                _textSelection.StartColumnIndex = _textCursor.ColumnIndex;
+                _textSelection.StartCursorColumnIndex = _textCursor.ColumnIndex;
                 _textSelection.EndLineIndex = _textCursor.LineIndex;
-                _textSelection.EndColumnIndex = _textCursor.ColumnIndex;
+                _textSelection.EndCursorColumnIndex = _textCursor.ColumnIndex;
             }
         }
 
-        public void SelectLexem(int lineIndex, int columnIndex)
+        public void SelectToken(int lineIndex, int columnIndex)
         {
-            var lexem = _lexems.GetLexem(lineIndex, columnIndex);
+            var selector = new TokenSelector();
+            var range = selector.GetToken(_tokens, lineIndex, columnIndex);
             _textSelection.Reset();
             _textSelection.StartLineIndex = lineIndex;
-            _textSelection.StartColumnIndex = lexem.StartColumnIndex;
+            _textSelection.StartCursorColumnIndex = range.StartCursorColumnIndex;
             _textSelection.EndLineIndex = lineIndex;
-            _textSelection.EndColumnIndex = lexem.EndColumnIndex;
+            _textSelection.EndCursorColumnIndex = range.EndCursorColumnIndex;
         }
 
         public void NewLine()
         {
             if (_textSelection.IsExist) DeleteSelection();
             _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
-            _lexems.InsertEmptyLine(_textCursor.LineIndex + 1);
+            _tokens.InsertEmptyLine(_textCursor.LineIndex + 1);
             _textCursor.MoveDown();
             _textCursor.MoveStartLine();
-            UpdateLexemsForLines(_textCursor.LineIndex - 1, 2);
+            UpdateTokensForLines(_textCursor.LineIndex - 1, 2);
         }
 
         public void AppendChar(char ch)
@@ -167,7 +168,7 @@ namespace CodeHighlighter.Model
             if (_textSelection.IsExist) DeleteSelection();
             _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
             _textCursor.MoveRight();
-            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+            UpdateTokensForLines(_textCursor.LineIndex, 1);
         }
 
         public string GetSelectedText()
@@ -195,7 +196,7 @@ namespace CodeHighlighter.Model
             {
                 _textCursor.MoveTo(_textCursor.LineIndex + insertedText.LinesCount - 1, insertedText.GetLastLine().Length);
             }
-            UpdateLexemsForLines(0, _text.LinesCount);
+            UpdateTokensForLines(0, _text.LinesCount);
         }
 
         public void LeftDelete()
@@ -210,11 +211,11 @@ namespace CodeHighlighter.Model
                 var deleteResult = _text.LeftDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
                 if (deleteResult.IsLineDeleted)
                 {
-                    _lexems.DeleteLine(_textCursor.LineIndex);
+                    _tokens.DeleteLine(_textCursor.LineIndex);
                 }
                 _textCursor.MoveTo(newLineIndex, newColumnIndex);
             }
-            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+            UpdateTokensForLines(_textCursor.LineIndex, 1);
         }
 
         public void RightDelete()
@@ -228,16 +229,16 @@ namespace CodeHighlighter.Model
                 var deleteResult = _text.RightDelete(_textCursor.LineIndex, _textCursor.ColumnIndex);
                 if (deleteResult.IsLineDeleted)
                 {
-                    _lexems.DeleteLine(_textCursor.LineIndex + 1);
+                    _tokens.DeleteLine(_textCursor.LineIndex + 1);
                 }
             }
-            UpdateLexemsForLines(_textCursor.LineIndex, 1);
+            UpdateTokensForLines(_textCursor.LineIndex, 1);
         }
 
         private void DeleteSelection()
         {
             var deleteResult = _text.DeleteSelection(_textSelection);
-            _lexems.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
+            _tokens.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
             var startCursorPosition = _textSelection.GetSortedPositions().Item1;
             _textCursor.MoveTo(startCursorPosition.LineIndex, startCursorPosition.ColumnIndex);
             _textSelection.Reset();
@@ -260,28 +261,28 @@ namespace CodeHighlighter.Model
                 if (start.LineIndex < _text.LinesCount - 1)
                 {
                     _text.DeleteLine(start.LineIndex);
-                    _lexems.DeleteLine(start.LineIndex);
+                    _tokens.DeleteLine(start.LineIndex);
                 }
                 else
                 {
                     _text.GetLine(start.LineIndex).Clear();
-                    _lexems.GetMergedLexems(start.LineIndex).Clear();
+                    _tokens.GetMergedTokens(start.LineIndex).Clear();
                 }
             }
             _textCursor.MoveTo(start.LineIndex, start.ColumnIndex);
         }
 
-        private void SetLexems()
+        private void SetTokens()
         {
-            var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text)).ToList();
-            _lexems.SetLexems(codeProviderLexems, 0, _text.LinesCount);
-            _lexemColors.SetColors(_codeProvider.GetColors());
+            var codeProviderTokens = _codeProvider.GetTokens(new TextIterator(_text)).ToList();
+            _tokens.SetTokens(codeProviderTokens, 0, _text.LinesCount);
+            _tokenColors.SetColors(_codeProvider.GetColors());
         }
 
-        private void UpdateLexemsForLines(int startLineIndex, int count)
+        private void UpdateTokensForLines(int startLineIndex, int count)
         {
-            var codeProviderLexems = _codeProvider.GetLexems(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
-            _lexems.SetLexems(codeProviderLexems, startLineIndex, count);
+            var codeProviderTokens = _codeProvider.GetTokens(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
+            _tokens.SetTokens(codeProviderTokens, startLineIndex, count);
         }
     }
 }
