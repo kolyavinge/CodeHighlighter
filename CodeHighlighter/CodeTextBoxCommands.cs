@@ -18,6 +18,7 @@ namespace CodeHighlighter
         public Command ScrollLineUpCommand { get; private set; }
         public Command ScrollLineDownCommand { get; private set; }
         public Command SelectAllCommand { get; private set; }
+        public Command TextInputCommand { get; private set; }
         public Command NewLineCommand { get; private set; }
         public Command InsertTextCommand { get; private set; }
         public Command DeleteSelectedLinesCommand { get; private set; }
@@ -39,6 +40,7 @@ namespace CodeHighlighter
             ScrollLineUpCommand = new ScrollLineUpCommand(context);
             ScrollLineDownCommand = new ScrollLineDownCommand(context);
             SelectAllCommand = new SelectAllCommand(context);
+            TextInputCommand = new TextInputCommand(context);
             NewLineCommand = new NewLineCommand(context);
             InsertTextCommand = new InsertTextCommand(context);
             DeleteSelectedLinesCommand = new DeleteSelectedLinesCommand(context);

@@ -10,8 +10,9 @@
         Height="800" Width="1200">
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <Button Content="Copy text" Command="{Binding CopyTextCommand}" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
-            <Button Content="Insert line" Command="{Binding InsertLineCommand}" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Button Content="Copy text" Command="{Binding CopyTextCommand}" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Button Content="Insert line" Command="{Binding InsertLineCommand}" Margin="8,0,0,0" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <CheckBox x:Name="readOnlyCheckBox" Content="Read only" Margin="8,3,0,0" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
         </StackPanel>
 
         <highlighter:CodeTextBox
@@ -19,6 +20,7 @@
             TextHolder="{Binding TextHolder}"
             Commands="{Binding Commands}"
             CodeProvider="{Binding CodeProvider}"
+            IsReadOnly="{Binding IsChecked, ElementName=readOnlyCheckBox, Mode=TwoWay}"
             FontFamily="Consolas"
             FontSize="14"
             Margin="16,24,38,28"

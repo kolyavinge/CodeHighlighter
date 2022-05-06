@@ -18,7 +18,7 @@ namespace CodeHighlighter.Commands
 
         public override void Execute(object parameter)
         {
-            var p = parameter as InsertTextCommandParameter;
+            var p = (InsertTextCommandParameter)parameter;
             _context.Model.InsertText(p.InsertedText);
             _context.Viewport.CorrectByCursorPosition(_context.Model.TextCursor);
             _context.TextBox.InvalidateVisual();

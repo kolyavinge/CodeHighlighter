@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,6 +23,17 @@ namespace CodeHighlighter
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
+
+        #region IsReadOnly
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
+            "IsReadOnly", typeof(bool), typeof(CodeTextBox), new PropertyMetadata(false));
+        #endregion
 
         #region Property SelectionBrush
         public Brush SelectionBrush
@@ -335,6 +344,7 @@ namespace CodeHighlighter
             }
             else if (controlPressed && e.Key == Key.X)
             {
+                if (IsReadOnly) return;
                 Clipboard.SetText(_model.GetSelectedText());
                 Commands.LeftDeleteCommand.Execute();
             }
@@ -344,10 +354,12 @@ namespace CodeHighlighter
             }
             else if (controlPressed && e.Key == Key.V)
             {
+                if (IsReadOnly) return;
                 Commands.InsertTextCommand.Execute(new InsertTextCommandParameter(Clipboard.GetText()));
             }
             else if (controlPressed && e.Key == Key.L)
             {
+                if (IsReadOnly) return;
                 Commands.DeleteSelectedLinesCommand.Execute();
             }
             // without any modifiers
@@ -373,7 +385,7 @@ namespace CodeHighlighter
             }
             else if (e.Key == Key.Home)
             {
-               Commands.MoveCursorStartLineCommand.Execute();
+                Commands.MoveCursorStartLineCommand.Execute();
             }
             else if (e.Key == Key.End)
             {
@@ -389,14 +401,17 @@ namespace CodeHighlighter
             }
             else if (e.Key == Key.Return)
             {
+                if (IsReadOnly) return;
                 Commands.NewLineCommand.Execute();
             }
             else if (e.Key == Key.Back)
             {
+                if (IsReadOnly) return;
                 Commands.LeftDeleteCommand.Execute();
             }
             else if (e.Key == Key.Delete)
             {
+                if (IsReadOnly) return;
                 Commands.RightDeleteCommand.Execute();
             }
             else if (e.Key == Key.Tab)
@@ -427,17 +442,10 @@ namespace CodeHighlighter
             }
         }
 
-        private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b' });
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
-            var text = e.Text.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
-            if (!text.Any()) return;
-            foreach (var ch in text)
-            {
-                _model.AppendChar(ch);
-            }
-            _viewport.CorrectByCursorPosition(_model.TextCursor.GetAbsolutePosition(_textMeasures));
-            InvalidateVisual();
+            if (IsReadOnly) return;
+            Commands.TextInputCommand.Execute(new TextInputCommandParameter(e.Text));
         }
 
         protected override void OnLostFocus(RoutedEventArgs e)
