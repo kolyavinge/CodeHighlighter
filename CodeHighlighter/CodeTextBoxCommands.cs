@@ -25,6 +25,29 @@ namespace CodeHighlighter
         public Command LeftDeleteCommand { get; private set; }
         public Command RightDeleteCommand { get; private set; }
 
+        public CodeTextBoxCommands()
+        {
+            MoveCursorLeftCommand = new UninitializedCommand();
+            MoveCursorRightCommand = new UninitializedCommand();
+            MoveCursorUpCommand = new UninitializedCommand();
+            MoveCursorDownCommand = new UninitializedCommand();
+            MoveCursorStartLineCommand = new UninitializedCommand();
+            MoveCursorEndLineCommand = new UninitializedCommand();
+            MoveCursorTextBeginCommand = new UninitializedCommand();
+            MoveCursorTextEndCommand = new UninitializedCommand();
+            MoveCursorPageUpCommand = new UninitializedCommand();
+            MoveCursorPageDownCommand = new UninitializedCommand();
+            ScrollLineUpCommand = new UninitializedCommand();
+            ScrollLineDownCommand = new UninitializedCommand();
+            SelectAllCommand = new UninitializedCommand();
+            TextInputCommand = new UninitializedCommand();
+            NewLineCommand = new UninitializedCommand();
+            InsertTextCommand = new UninitializedCommand();
+            DeleteSelectedLinesCommand = new UninitializedCommand();
+            LeftDeleteCommand = new UninitializedCommand();
+            RightDeleteCommand = new UninitializedCommand();
+        }
+
         internal void Init(InputCommandContext context)
         {
             MoveCursorLeftCommand = new MoveCursorLeftCommand(context);
