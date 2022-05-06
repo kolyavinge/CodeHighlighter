@@ -6,17 +6,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using CodeHighlighter.Commands;
+using CodeHighlighter.Input;
 using CodeHighlighter.Model;
 using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter
 {
-    public class CodeTextBox : Control, IViewportContext
+    public interface ICodeTextBox
+    {
+        void InvalidateVisual();
+    }
+
+    public class CodeTextBox : Control, ICodeTextBox, IViewportContext
     {
         private readonly CodeTextBoxModel _model;
+        private readonly Viewport _viewport;
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
-        private readonly Viewport _viewport;
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
 
         #region Property SelectionBrush
@@ -59,7 +66,7 @@ namespace CodeHighlighter
         }
 
         public static readonly DependencyProperty CodeProviderProperty =
-            DependencyProperty.Register("CodeProvider", typeof(ICodeProvider), typeof(CodeTextBox), new PropertyMetadata(CodeProviderPropertyChangedCallback));
+            DependencyProperty.Register("CodeProvider", typeof(ICodeProvider), typeof(CodeTextBox), new PropertyMetadata(new CodeProviders.EmptyCodeProvider(), CodeProviderPropertyChangedCallback));
 
         private static void CodeProviderPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -150,6 +157,24 @@ namespace CodeHighlighter
 
         public static readonly DependencyProperty HorizontalScrollBarViewportSizeProperty =
             DependencyProperty.Register("HorizontalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        #endregion
+
+        #region Commands
+        public CodeTextBoxCommands Commands
+        {
+            get { return (CodeTextBoxCommands)GetValue(CommandsProperty); }
+            set { SetValue(CommandsProperty, value); }
+        }
+
+        public static readonly DependencyProperty CommandsProperty = DependencyProperty.Register(
+            "Commands", typeof(CodeTextBoxCommands), typeof(CodeTextBox), new PropertyMetadata(new CodeTextBoxCommands(), PropertyChangedCallback));
+
+        private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            var commands = (CodeTextBoxCommands)e.NewValue;
+            commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport));
+        }
         #endregion
 
         private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -284,38 +309,34 @@ namespace CodeHighlighter
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            var needToCorrectPosition = true;
-            var needToInvalidate = true;
             var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
             // with control pressed
             if (controlPressed && e.Key == Key.Up)
             {
                 e.Handled = true;
-                needToCorrectPosition = false;
-                _viewport.ScrollLineUp();
+                Commands.ScrollLineUpCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.Down)
             {
                 e.Handled = true;
-                needToCorrectPosition = false;
-                _viewport.ScrollLineDown();
+                Commands.ScrollLineDownCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.Home)
             {
-                _model.MoveCursorTextBegin();
+                Commands.MoveCursorTextBeginCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.End)
             {
-                _model.MoveCursorTextEnd();
+                Commands.MoveCursorTextEndCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.A)
             {
-                _model.SelectAll();
+                Commands.SelectAllCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.X)
             {
                 Clipboard.SetText(_model.GetSelectedText());
-                _model.LeftDelete();
+                Commands.LeftDeleteCommand.Execute();
             }
             else if (controlPressed && e.Key == Key.C)
             {
@@ -323,60 +344,60 @@ namespace CodeHighlighter
             }
             else if (controlPressed && e.Key == Key.V)
             {
-                _model.InsertText(Clipboard.GetText());
+                Commands.InsertTextCommand.Execute(new InsertTextCommandParameter(Clipboard.GetText()));
             }
             else if (controlPressed && e.Key == Key.L)
             {
-                _model.DeleteSelectedLines();
+                Commands.DeleteSelectedLinesCommand.Execute();
             }
             // without any modifiers
             else if (e.Key == Key.Up)
             {
                 e.Handled = true;
-                _model.MoveCursorUp();
+                Commands.MoveCursorUpCommand.Execute();
             }
             else if (e.Key == Key.Down)
             {
                 e.Handled = true;
-                _model.MoveCursorDown();
+                Commands.MoveCursorDownCommand.Execute();
             }
             else if (e.Key == Key.Left)
             {
                 e.Handled = true;
-                _model.MoveCursorLeft();
+                Commands.MoveCursorLeftCommand.Execute();
             }
             else if (e.Key == Key.Right)
             {
                 e.Handled = true;
-                _model.MoveCursorRight();
+                Commands.MoveCursorRightCommand.Execute();
             }
             else if (e.Key == Key.Home)
             {
-                _model.MoveCursorStartLine();
+               Commands.MoveCursorStartLineCommand.Execute();
             }
             else if (e.Key == Key.End)
             {
-                _model.MoveCursorEndLine();
+                Commands.MoveCursorEndLineCommand.Execute();
             }
             else if (e.Key == Key.PageUp)
             {
-                _model.MoveCursorPageUp(_viewport.GetLinesCountInViewport());
+                Commands.MoveCursorPageUpCommand.Execute();
             }
             else if (e.Key == Key.PageDown)
             {
-                _model.MoveCursorPageDown(_viewport.GetLinesCountInViewport());
+                Commands.MoveCursorPageDownCommand.Execute();
             }
             else if (e.Key == Key.Return)
             {
-                _model.NewLine();
+                Commands.NewLineCommand.Execute();
             }
             else if (e.Key == Key.Back)
             {
-                _model.LeftDelete();
+                Commands.LeftDeleteCommand.Execute();
             }
             else if (e.Key == Key.Delete)
             {
-                _model.RightDelete();
+                Commands.RightDeleteCommand.Execute();
             }
             else if (e.Key == Key.Tab)
             {
@@ -385,20 +406,6 @@ namespace CodeHighlighter
             else if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
             {
                 _model.StartSelection();
-            }
-            else
-            {
-                needToCorrectPosition = false;
-                needToInvalidate = false;
-            }
-
-            if (needToCorrectPosition)
-            {
-                _viewport.CorrectByCursorPosition(_model.TextCursor.GetAbsolutePosition(_textMeasures));
-            }
-            if (needToInvalidate)
-            {
-                InvalidateVisual();
             }
         }
 

@@ -41,6 +41,11 @@ namespace CodeHighlighter.Model
             return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
         }
 
+        public void CorrectByCursorPosition(ITextCursor textCursor)
+        {
+            CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
+        }
+
         public void CorrectByCursorPosition(Point cursorAbsolutePoint)
         {
             if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)

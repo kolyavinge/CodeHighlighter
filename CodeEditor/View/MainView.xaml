@@ -9,12 +9,16 @@
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1200">
     <Grid>
-        <Button Command="{Binding CopyTextCommand}" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Copy text" Command="{Binding CopyTextCommand}" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <Button Content="Insert line" Command="{Binding InsertLineCommand}" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        </StackPanel>
 
         <highlighter:CodeTextBox
             x:Name="codeTextBox"
-            CodeProvider="{Binding CodeProvider}"
             TextHolder="{Binding TextHolder}"
+            Commands="{Binding Commands}"
+            CodeProvider="{Binding CodeProvider}"
             FontFamily="Consolas"
             FontSize="14"
             Margin="16,24,38,28"
