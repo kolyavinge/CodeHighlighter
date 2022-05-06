@@ -1,25 +1,35 @@
-﻿using System.Linq;
-
-namespace CodeHighlighter.Model
+﻿namespace CodeHighlighter.Model
 {
     internal class TokenSelector
     {
-        public SelectedRange GetToken(ITokens tokens, int lineIndex, int columnIndex)
+        public SelectedRange GetSelection(ITokens tokens, int lineIndex, int columnIndex)
         {
             if (lineIndex >= tokens.LinesCount) return default;
             var lineTokens = tokens.GetTokens(lineIndex);
-            if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1) return ToSelectedRange(lineTokens.LastOrDefault());
-            var index = lineTokens.FindIndex(x => x.StartColumnIndex <= columnIndex && columnIndex <= x.EndColumnIndex + 1);
-            if (index != -1)
+            var cursor = TokenCursorPosition.GetPosition(lineTokens, lineIndex, columnIndex);
+            if (cursor.Position == TokenCursorPositionKind.StartLine)
             {
-                if (index + 1 < lineTokens.Count && columnIndex == lineTokens[index + 1].StartColumnIndex) return ToSelectedRange(lineTokens[index + 1]);
-                else return ToSelectedRange(lineTokens[index]);
+                return ToSelectedRange(cursor.Right);
             }
-            else
+            else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && columnIndex == cursor.Right.StartColumnIndex)
             {
-                index = lineTokens.FindIndex(x => x.StartColumnIndex > columnIndex);
-                if (index == 0) return ToSelectedRange(lineTokens.First());
-                else return new SelectedRange(lineTokens[index - 1].EndColumnIndex + 1, lineTokens[index].StartColumnIndex);
+                return ToSelectedRange(cursor.Right);
+            }
+            else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && columnIndex == cursor.Left.EndColumnIndex + 1)
+            {
+                return ToSelectedRange(cursor.Left);
+            }
+            else if (cursor.Position == TokenCursorPositionKind.BetweenTokens)
+            {
+                return new SelectedRange(cursor.Left.EndColumnIndex + 1, cursor.Right.StartColumnIndex);
+            }
+            else if (cursor.Position == TokenCursorPositionKind.InToken)
+            {
+                return ToSelectedRange(cursor.Left);
+            }
+            else // TokenCursorPositionKind.EndLine
+            {
+                return ToSelectedRange(cursor.Left);
             }
         }
 

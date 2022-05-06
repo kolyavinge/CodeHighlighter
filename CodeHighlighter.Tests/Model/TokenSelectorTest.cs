@@ -22,12 +22,12 @@ namespace CodeHighlighter.Tests.Model
         {
             _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
             _tokens.SetupGet(x => x.LinesCount).Returns(0);
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 0));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 1));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 10));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 0));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 1));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 10));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 10));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 0));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 1));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 10));
         }
 
         [Test]
@@ -35,12 +35,12 @@ namespace CodeHighlighter.Tests.Model
         {
             _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token> { new Token() });
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 0));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 1));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 0, 10));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 0));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 1));
-            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetToken(_tokens.Object, 1, 10));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 10));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 0));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 1));
+            Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 1, 10));
         }
 
         [Test]
@@ -56,20 +56,20 @@ namespace CodeHighlighter.Tests.Model
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
 
-            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetToken(_tokens.Object, 0, 0));
-            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetToken(_tokens.Object, 0, 1));
-            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetToken(_tokens.Object, 0, 2));
-            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetToken(_tokens.Object, 0, 3));
-            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetToken(_tokens.Object, 0, 4));
+            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetSelection(_tokens.Object, 0, 0));
+            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetSelection(_tokens.Object, 0, 1));
+            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetSelection(_tokens.Object, 0, 2));
+            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetSelection(_tokens.Object, 0, 3));
+            Assert.AreEqual(new TokenSelector.SelectedRange(2, 4), _selector.GetSelection(_tokens.Object, 0, 4));
 
-            Assert.AreEqual(new TokenSelector.SelectedRange(4, 6), _selector.GetToken(_tokens.Object, 0, 5));
+            Assert.AreEqual(new TokenSelector.SelectedRange(4, 6), _selector.GetSelection(_tokens.Object, 0, 5));
 
-            Assert.AreEqual(new TokenSelector.SelectedRange(6, 7), _selector.GetToken(_tokens.Object, 0, 6));
+            Assert.AreEqual(new TokenSelector.SelectedRange(6, 7), _selector.GetSelection(_tokens.Object, 0, 6));
 
-            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetToken(_tokens.Object, 0, 7));
-            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetToken(_tokens.Object, 0, 8));
-            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetToken(_tokens.Object, 0, 9));
-            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetToken(_tokens.Object, 0, 50));
+            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetSelection(_tokens.Object, 0, 7));
+            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetSelection(_tokens.Object, 0, 8));
+            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetSelection(_tokens.Object, 0, 9));
+            Assert.AreEqual(new TokenSelector.SelectedRange(7, 9), _selector.GetSelection(_tokens.Object, 0, 50));
         }
     }
 }

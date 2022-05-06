@@ -330,6 +330,16 @@ namespace CodeHighlighter
                 e.Handled = true;
                 Commands.ScrollLineDownCommand.Execute();
             }
+            else if (controlPressed && e.Key == Key.Left)
+            {
+                e.Handled = true;
+                Commands.MoveToPrevTokenCommand.Execute();
+            }
+            else if (controlPressed && e.Key == Key.Right)
+            {
+                e.Handled = true;
+                Commands.MoveToNextTokenCommand.Execute();
+            }
             else if (controlPressed && e.Key == Key.Home)
             {
                 Commands.MoveCursorTextBeginCommand.Execute();

@@ -38,6 +38,7 @@ namespace CodeHighlighter.Model
         public void SetText(string text)
         {
             _text.SetText(text);
+            SetTokens();
         }
 
         public void MoveCursorTo(int lineIndex, int columnIndex)
@@ -145,12 +146,28 @@ namespace CodeHighlighter.Model
         public void SelectToken(int lineIndex, int columnIndex)
         {
             var selector = new TokenSelector();
-            var range = selector.GetToken(_tokens, lineIndex, columnIndex);
+            var range = selector.GetSelection(_tokens, lineIndex, columnIndex);
             _textSelection.Reset();
             _textSelection.StartLineIndex = lineIndex;
             _textSelection.StartCursorColumnIndex = range.StartCursorColumnIndex;
             _textSelection.EndLineIndex = lineIndex;
             _textSelection.EndCursorColumnIndex = range.EndCursorColumnIndex;
+        }
+
+        public void MoveToNextToken()
+        {
+            var navigator = new TokenNavigator();
+            var pos = navigator.MoveRight(_text, _tokens, _textCursor.LineIndex, _textCursor.ColumnIndex);
+            _textCursor.MoveTo(pos.LineIndex, pos.ColumnIndex);
+            SetSelection();
+        }
+
+        public void MoveToPrevToken()
+        {
+            var navigator = new TokenNavigator();
+            var pos = navigator.MoveLeft(_text, _tokens, _textCursor.LineIndex, _textCursor.ColumnIndex);
+            _textCursor.MoveTo(pos.LineIndex, pos.ColumnIndex);
+            SetSelection();
         }
 
         public void NewLine()

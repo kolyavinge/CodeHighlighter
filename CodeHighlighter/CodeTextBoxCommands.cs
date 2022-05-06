@@ -17,6 +17,8 @@ namespace CodeHighlighter
         public Command MoveCursorPageDownCommand { get; private set; }
         public Command ScrollLineUpCommand { get; private set; }
         public Command ScrollLineDownCommand { get; private set; }
+        public Command MoveToPrevTokenCommand { get; private set; }
+        public Command MoveToNextTokenCommand { get; private set; }
         public Command SelectAllCommand { get; private set; }
         public Command TextInputCommand { get; private set; }
         public Command NewLineCommand { get; private set; }
@@ -39,6 +41,8 @@ namespace CodeHighlighter
             MoveCursorPageDownCommand = new UninitializedCommand();
             ScrollLineUpCommand = new UninitializedCommand();
             ScrollLineDownCommand = new UninitializedCommand();
+            MoveToPrevTokenCommand = new UninitializedCommand();
+            MoveToNextTokenCommand = new UninitializedCommand();
             SelectAllCommand = new UninitializedCommand();
             TextInputCommand = new UninitializedCommand();
             NewLineCommand = new UninitializedCommand();
@@ -62,6 +66,8 @@ namespace CodeHighlighter
             MoveCursorPageDownCommand = new MoveCursorPageDownCommand(context);
             ScrollLineUpCommand = new ScrollLineUpCommand(context);
             ScrollLineDownCommand = new ScrollLineDownCommand(context);
+            MoveToPrevTokenCommand = new MoveToPrevTokenCommand(context);
+            MoveToNextTokenCommand = new MoveToNextTokenCommand(context);
             SelectAllCommand = new SelectAllCommand(context);
             TextInputCommand = new TextInputCommand(context);
             NewLineCommand = new NewLineCommand(context);
