@@ -176,13 +176,16 @@ namespace CodeHighlighter
         }
 
         public static readonly DependencyProperty CommandsProperty = DependencyProperty.Register(
-            "Commands", typeof(CodeTextBoxCommands), typeof(CodeTextBox), new PropertyMetadata(new CodeTextBoxCommands(), PropertyChangedCallback));
+            "Commands", typeof(CodeTextBoxCommands), typeof(CodeTextBox), new PropertyMetadata(PropertyChangedCallback));
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var codeTextBox = (CodeTextBox)d;
             var commands = (CodeTextBoxCommands)e.NewValue;
-            commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport));
+            if (commands != null)
+            {
+                commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport));
+            }
         }
         #endregion
 
@@ -219,6 +222,8 @@ namespace CodeHighlighter
             _textMeasures = new TextMeasures(_fontSettings);
             _viewport = new Viewport(this, _textMeasures);
             _textSelectionRenderLogic = new TextSelectionRenderLogic();
+            Commands = new CodeTextBoxCommands();
+            Commands.Init(new InputCommandContext(this, _model, _viewport));
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
         }
