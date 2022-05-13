@@ -3,9 +3,9 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model
 {
-    class TextIteratorTest
+    class ForwardTextIteratorTest
     {
-        private TextIterator _iterator;
+        private ForwardTextIterator _iterator;
 
         [Test]
         public void Empty()
@@ -113,10 +113,12 @@ namespace CodeHighlighter.Tests.Model
 
             _iterator.MoveNext();
             Assert.AreEqual('3', _iterator.Char);
+            Assert.AreEqual('\n', _iterator.NextChar);
             Assert.False(_iterator.Eof);
 
             _iterator.MoveNext();
             Assert.AreEqual('\n', _iterator.Char);
+            Assert.AreEqual('4', _iterator.NextChar);
             Assert.False(_iterator.Eof);
 
             _iterator.MoveNext();
@@ -231,14 +233,14 @@ namespace CodeHighlighter.Tests.Model
         {
             var text = new Text();
             text.SetText(textString);
-            _iterator = new TextIterator(text);
+            _iterator = new ForwardTextIterator(text);
         }
 
         private void SetText(string textString, int startLineIndex, int endLineIndex)
         {
             var text = new Text();
             text.SetText(textString);
-            _iterator = new TextIterator(text, startLineIndex, endLineIndex);
+            _iterator = new ForwardTextIterator(text, startLineIndex, endLineIndex);
         }
     }
 }

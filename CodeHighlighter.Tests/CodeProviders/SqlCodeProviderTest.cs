@@ -213,7 +213,7 @@ from MyTable'";
         {
             var text = new Text();
             text.SetText(textString);
-            return _provider.GetTokens(new TextIterator(text)).ToList();
+            return _provider.GetTokens(new ForwardTextIterator(text)).ToList();
         }
     }
 }

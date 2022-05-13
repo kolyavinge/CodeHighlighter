@@ -291,14 +291,14 @@ namespace CodeHighlighter.Model
 
         private void SetTokens()
         {
-            var codeProviderTokens = _codeProvider.GetTokens(new TextIterator(_text)).ToList();
+            var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text)).ToList();
             _tokens.SetTokens(codeProviderTokens, 0, _text.LinesCount);
             _tokenColors.SetColors(_codeProvider.GetColors());
         }
 
         private void UpdateTokensForLines(int startLineIndex, int count)
         {
-            var codeProviderTokens = _codeProvider.GetTokens(new TextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
+            var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
             _tokens.SetTokens(codeProviderTokens, startLineIndex, count);
         }
     }

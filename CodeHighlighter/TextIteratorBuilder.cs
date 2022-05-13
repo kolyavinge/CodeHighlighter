@@ -6,7 +6,7 @@ namespace CodeHighlighter
     {
         public static ITextIterator FromString(string text)
         {
-            return new TextIterator(new Text(text));
+            return new ForwardTextIterator(new Text(text));
         }
     }
 }
