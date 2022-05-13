@@ -22,7 +22,9 @@ namespace CodeHighlighter
         private readonly Viewport _viewport;
         private readonly FontSettings _fontSettings;
         private readonly TextMeasures _textMeasures;
+        private readonly TextRenderLogic _textRenderLogic;
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
+        private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
         #region IsReadOnly
         public bool IsReadOnly
@@ -44,6 +46,47 @@ namespace CodeHighlighter
 
         public static readonly DependencyProperty SelectionBrushProperty =
             DependencyProperty.Register("SelectionBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 })));
+        #endregion
+
+        #region HighlightBracketsBrush
+        public Brush HighlightPairBracketsBrush
+        {
+            get { return (Brush)GetValue(HighlightPairBracketsBrushProperty); }
+            set { SetValue(HighlightPairBracketsBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty HighlightPairBracketsBrushProperty =
+            DependencyProperty.Register("HighlightPairBracketsBrush", typeof(Brush), typeof(CodeTextBox));
+        #endregion
+
+        #region HighlightNoPairBracketBrush
+        public Brush HighlightNoPairBracketBrush
+        {
+            get { return (Brush)GetValue(HighlightNoPairBracketBrushProperty); }
+            set { SetValue(HighlightNoPairBracketBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty HighlightNoPairBracketBrushProperty =
+            DependencyProperty.Register("HighlightNoPairBracketBrush", typeof(Brush), typeof(CodeTextBox));
+        #endregion
+
+        #region HighlighteredBrackets
+        public string HighlighteredBrackets
+        {
+            get { return (string)GetValue(HighlighteredBracketsProperty); }
+            set { SetValue(HighlighteredBracketsProperty, value); }
+        }
+
+        public static readonly DependencyProperty HighlighteredBracketsProperty =
+            DependencyProperty.Register("HighlighteredBrackets", typeof(string), typeof(CodeTextBox), new PropertyMetadata(HighlighteredBracketsPropertyChangedCallback));
+
+        private static void HighlighteredBracketsPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            var highlighteredBrackets = (string)e.NewValue;
+            codeTextBox._highlightBracketsRenderLogic = new HighlightBracketsRenderLogic(
+                new BracketsHighlighter(highlighteredBrackets, codeTextBox._model.Text, codeTextBox._model.TextCursor), codeTextBox._textMeasures, codeTextBox);
+        }
         #endregion
 
         #region Property Text
@@ -221,7 +264,9 @@ namespace CodeHighlighter
             _fontSettings = new() { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
             _textMeasures = new TextMeasures(_fontSettings);
             _viewport = new Viewport(this, _textMeasures);
+            _textRenderLogic = new TextRenderLogic(_model, _fontSettings, _textMeasures, _viewport, this);
             _textSelectionRenderLogic = new TextSelectionRenderLogic();
+            _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
             Commands = new CodeTextBoxCommands();
             Commands.Init(new InputCommandContext(this, _model, _viewport));
             Cursor = Cursors.IBeam;
@@ -232,29 +277,9 @@ namespace CodeHighlighter
         {
             context.PushClip(new RectangleGeometry(new Rect(-1, -1, ActualWidth + 1, ActualHeight + 1)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
-            // selection
             _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
-            // tokens
-            var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-            var startLine = (int)(VerticalScrollBarValue / _textMeasures.LineHeight);
-            var linesCount = _viewport.GetLinesCountInViewport();
-            var endLine = Math.Min(startLine + linesCount, _model.Text.VisibleLinesCount);
-            var offsetY = -(VerticalScrollBarValue % _textMeasures.LineHeight);
-            for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
-            {
-                var offsetX = -HorizontalScrollBarValue;
-                var lineTokens = _model.Tokens.GetMergedTokens(lineIndex);
-                foreach (var token in lineTokens)
-                {
-                    var text = _model.Text.GetSubstring(lineIndex, token.ColumnIndex, token.Length);
-                    var brush = _model.TokenColors.GetColorBrushOrNull(token.Kind) ?? Foreground;
-                    var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, brush, 1.0);
-                    context.DrawText(formattedText, new Point(offsetX, offsetY));
-                    offsetX += formattedText.WidthIncludingTrailingWhitespace;
-                }
-                offsetY += _textMeasures.LineHeight;
-            }
-            // cursor
+            _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
+            _textRenderLogic.DrawText(context, Foreground);
             if (IsFocused)
             {
                 var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);

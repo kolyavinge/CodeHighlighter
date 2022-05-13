@@ -14,7 +14,7 @@ namespace CodeHighlighter.Input
 
         public void Execute()
         {
-            Execute(null);
+            Execute(null!);
         }
 
         public event EventHandler? CanExecuteChanged;
