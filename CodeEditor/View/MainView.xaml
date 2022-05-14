@@ -28,6 +28,7 @@
             HighlighteredBrackets="()[]"
             HighlightPairBracketsBrush="GreenYellow"
             HighlightNoPairBracketBrush="IndianRed"
+            CursorLineHighlightingBrush="LightGray"
             />
 
         <ScrollBar

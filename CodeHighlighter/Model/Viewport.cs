@@ -36,7 +36,7 @@ namespace CodeHighlighter.Model
             return (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
         }
 
-        public int CursorColumnIndex(Point cursorClickPosition)
+        public int GetCursorColumnIndex(Point cursorClickPosition)
         {
             return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
         }

@@ -24,6 +24,7 @@ namespace CodeHighlighter
         private readonly TextMeasures _textMeasures;
         private readonly TextRenderLogic _textRenderLogic;
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
+        private readonly CursorLineRenderLogic _cursorLineRenderLogic;
         private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
         #region IsReadOnly
@@ -87,6 +88,17 @@ namespace CodeHighlighter
             codeTextBox._highlightBracketsRenderLogic = new HighlightBracketsRenderLogic(
                 new BracketsHighlighter(highlighteredBrackets, codeTextBox._model.Text, codeTextBox._model.TextCursor), codeTextBox._textMeasures, codeTextBox);
         }
+        #endregion
+
+        #region CursorLineHighlightingBrush
+        public Brush CursorLineHighlightingBrush
+        {
+            get { return (Brush)GetValue(CursorLineHighlightingBrushProperty); }
+            set { SetValue(CursorLineHighlightingBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty CursorLineHighlightingBrushProperty =
+            DependencyProperty.Register("CursorLineHighlightingBrush", typeof(Brush), typeof(CodeTextBox));
         #endregion
 
         #region Property Text
@@ -266,6 +278,7 @@ namespace CodeHighlighter
             _viewport = new Viewport(this, _textMeasures);
             _textRenderLogic = new TextRenderLogic(_model, _fontSettings, _textMeasures, _viewport, this);
             _textSelectionRenderLogic = new TextSelectionRenderLogic();
+            _cursorLineRenderLogic = new CursorLineRenderLogic(_model.TextCursor, _textMeasures, this);
             _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
             Commands = new CodeTextBoxCommands();
             Commands.Init(new InputCommandContext(this, _model, _viewport));
@@ -277,6 +290,7 @@ namespace CodeHighlighter
         {
             context.PushClip(new RectangleGeometry(new Rect(-1, -1, ActualWidth + 1, ActualHeight + 1)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
+            _cursorLineRenderLogic.DrawCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
             _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
             _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
             _textRenderLogic.DrawText(context, Foreground);
@@ -308,7 +322,7 @@ namespace CodeHighlighter
             Focus();
             var positionInControl = e.GetPosition(this);
             var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-            var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+            var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
             _model.MoveCursorTo(lineIndex, columnIndex);
             InvalidateVisual();
         }
@@ -320,7 +334,7 @@ namespace CodeHighlighter
                 _model.StartSelection();
                 var positionInControl = e.GetPosition(this);
                 var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-                var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+                var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
                 _model.MoveCursorTo(lineIndex, columnIndex);
                 InvalidateVisual();
             }
@@ -341,7 +355,7 @@ namespace CodeHighlighter
         {
             var positionInControl = e.GetPosition(this);
             var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-            var columnIndex = _viewport.CursorColumnIndex(positionInControl);
+            var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
             _model.SelectToken(lineIndex, columnIndex);
             InvalidateVisual();
         }
