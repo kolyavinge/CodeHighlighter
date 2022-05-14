@@ -22,7 +22,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MoveRight()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
             var tokens = new List<Token>
             {
@@ -57,8 +57,8 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MoveRight_NextLine()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line("  xx  yzz  "));
-            _text.Setup(x => x.GetLine(1)).Returns(new Line("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(2);
             var tokens1 = new List<Token>
             {
@@ -84,7 +84,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MoveLeft()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
             var tokens = new List<Token>
             {
@@ -119,8 +119,8 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MoveLeft_PrevLine()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line("  xx  yzz  "));
-            _text.Setup(x => x.GetLine(1)).Returns(new Line("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+            _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(2);
             var tokens1 = new List<Token>
             {

@@ -24,7 +24,7 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void Empty()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line(""));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine(""));
             _text.SetupGet(x => x.LinesCount).Returns(1);
 
             GetResult(0, 0);
@@ -36,7 +36,7 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void Forward()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line("()"));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine("()"));
             _text.SetupGet(x => x.LinesCount).Returns(1);
 
             GetResult(0, 0);
@@ -58,7 +58,7 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void ForwardOneLine()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line(" ( ) "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine(" ( ) "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
 
             GetResult(0, 0);
@@ -95,8 +95,8 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void ForwardTwoLine()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line(" ( "));
-            _text.Setup(x => x.GetLine(1)).Returns(new Line(" ) "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine(" ( "));
+            _text.Setup(x => x.GetLine(1)).Returns(new TextLine(" ) "));
             _text.SetupGet(x => x.LinesCount).Returns(2);
 
             GetResult(0, 0);
@@ -143,7 +143,7 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void Forward_Open_NoPair()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line(" (( ) "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine(" (( ) "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
 
             GetResult(0, 1);
@@ -155,7 +155,7 @@ namespace CodeHighlighter.Tests.Rendering
         [Test]
         public void Forward_Close_NoPair()
         {
-            _text.Setup(x => x.GetLine(0)).Returns(new Line(" ( )) "));
+            _text.Setup(x => x.GetLine(0)).Returns(new TextLine(" ( )) "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
 
             GetResult(0, 4);

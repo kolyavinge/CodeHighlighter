@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model
 {
-    class Line : IEnumerable<char>
+    class TextLine : IEnumerable<char>
     {
         private readonly List<char> _symbs;
 
@@ -14,7 +14,7 @@ namespace CodeHighlighter.Model
 
         public char this[int i] => _symbs[i];
 
-        public Line(string str)
+        public TextLine(string str)
         {
             _symbs = (str ?? "").ToCharArray().ToList();
         }
@@ -29,12 +29,12 @@ namespace CodeHighlighter.Model
             _symbs.Insert(columnIndex, ch);
         }
 
-        public void AppendLine(Line line)
+        public void AppendLine(TextLine line)
         {
             _symbs.AddRange(line._symbs);
         }
 
-        public void AppendLine(Line appendedLine, int appendedLineColumnIndex, int appendedLineCount)
+        public void AppendLine(TextLine appendedLine, int appendedLineColumnIndex, int appendedLineCount)
         {
             var endColumnIndex = appendedLineColumnIndex + appendedLineCount - 1;
             for (int i = appendedLineColumnIndex; i <= endColumnIndex; i++)
@@ -43,7 +43,7 @@ namespace CodeHighlighter.Model
             }
         }
 
-        public void InsertLine(int columnIndex, Line appendedLine)
+        public void InsertLine(int columnIndex, TextLine appendedLine)
         {
             for (int i = 0; i < appendedLine.Length; i++)
             {

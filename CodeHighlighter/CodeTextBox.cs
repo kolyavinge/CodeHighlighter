@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using CodeHighlighter.Commands;
 using CodeHighlighter.Input;
 using CodeHighlighter.Model;
@@ -26,6 +27,7 @@ namespace CodeHighlighter
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
         private readonly CursorLineRenderLogic _cursorLineRenderLogic;
         private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
+        private Line? _cursorLine;
 
         #region IsReadOnly
         public bool IsReadOnly
@@ -250,6 +252,17 @@ namespace CodeHighlighter
             codeTextBox.InvalidateVisual();
         }
 
+        private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var codeTextBox = (CodeTextBox)d;
+            codeTextBox._fontSettings.FontFamily = codeTextBox.FontFamily;
+            codeTextBox._fontSettings.FontSize = codeTextBox.FontSize;
+            codeTextBox._fontSettings.FontStretch = codeTextBox.FontStretch;
+            codeTextBox._fontSettings.FontStyle = codeTextBox.FontStyle;
+            codeTextBox._fontSettings.FontWeight = codeTextBox.FontWeight;
+            codeTextBox._textMeasures.UpdateMeasures();
+        }
+
         static CodeTextBox()
         {
             FontSizeProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
@@ -257,17 +270,6 @@ namespace CodeHighlighter
             FontStyleProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
             FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
             FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
-        }
-
-        private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var control = (CodeTextBox)d;
-            control._fontSettings.FontFamily = control.FontFamily;
-            control._fontSettings.FontSize = control.FontSize;
-            control._fontSettings.FontStretch = control.FontStretch;
-            control._fontSettings.FontStyle = control.FontStyle;
-            control._fontSettings.FontWeight = control.FontWeight;
-            control._textMeasures.UpdateMeasures();
         }
 
         public CodeTextBox()
@@ -284,13 +286,36 @@ namespace CodeHighlighter
             Commands.Init(new InputCommandContext(this, _model, _viewport));
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
+            var template = new ControlTemplate(typeof(CodeTextBox));
+            template.VisualTree = new FrameworkElementFactory(typeof(Grid), "RootLayout");
+            template.VisualTree.AppendChild(new FrameworkElementFactory(typeof(Line), "CursorLine"));
+            Template = template;
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _cursorLine = (Line)Template.FindName("CursorLine", this);
+            _cursorLine.SnapsToDevicePixels = true;
+            _cursorLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
+            _cursorLine.Stroke = Foreground;
+            _cursorLine.StrokeThickness = 1.0;
+            var animation = new ObjectAnimationUsingKeyFrames();
+            animation.Duration = TimeSpan.FromSeconds(1.5);
+            animation.RepeatBehavior = RepeatBehavior.Forever;
+            animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Hidden, new TimeSpan(0, 0, 0, 0, 500)));
+            animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Visible, new TimeSpan(0, 0, 1)));
+            _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
         }
 
         protected override void OnRender(DrawingContext context)
         {
             context.PushClip(new RectangleGeometry(new Rect(-1, -1, ActualWidth + 1, ActualHeight + 1)));
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
-            _cursorLineRenderLogic.DrawCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
+            if (IsFocused)
+            {
+                _cursorLineRenderLogic.DrawCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
+            }
             _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
             _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
             _textRenderLogic.DrawText(context, Foreground);
@@ -299,12 +324,10 @@ namespace CodeHighlighter
                 var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
                 cursorAbsolutePoint.X -= HorizontalScrollBarValue;
                 cursorAbsolutePoint.Y -= VerticalScrollBarValue;
-                if (cursorAbsolutePoint.X >= 0 && cursorAbsolutePoint.Y >= 0)
-                {
-                    context.DrawLine(new Pen(Foreground, 2.0),
-                        new Point((int)cursorAbsolutePoint.X, (int)cursorAbsolutePoint.Y),
-                        new Point((int)cursorAbsolutePoint.X, (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight)));
-                }
+                _cursorLine!.X1 = (int)cursorAbsolutePoint.X;
+                _cursorLine!.Y1 = (int)(cursorAbsolutePoint.Y - 1);
+                _cursorLine!.X2 = (int)cursorAbsolutePoint.X;
+                _cursorLine!.Y2 = (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight + 1);
             }
             context.Pop();
         }
@@ -505,6 +528,10 @@ namespace CodeHighlighter
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
+            _cursorLine!.X1 = 0;
+            _cursorLine!.Y1 = 0;
+            _cursorLine!.X2 = 0;
+            _cursorLine!.Y2 = 0;
             InvalidateVisual();
         }
 

@@ -9,16 +9,16 @@ namespace CodeHighlighter.Model
         int LinesCount { get; }
         int VisibleLinesCount { get; }
         string GetSubstring(int lineIndex, int startIndex, int length);
-        Line GetLine(int lineIndex);
-        Line GetFirstLine();
-        Line GetLastLine();
+        TextLine GetLine(int lineIndex);
+        TextLine GetFirstLine();
+        TextLine GetLastLine();
         int GetMaxLineWidth();
         string ToString();
     }
 
     internal class Text : IText
     {
-        private readonly List<Line> _lines = new();
+        private readonly List<TextLine> _lines = new();
 
         public int LinesCount => _lines.Count;
 
@@ -34,7 +34,7 @@ namespace CodeHighlighter.Model
         public void SetText(string text)
         {
             _lines.Clear();
-            _lines.AddRange(text.Split('\n').Select(line => new Line(line.Replace("\r", ""))).ToList());
+            _lines.AddRange(text.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
         }
 
         public string GetSubstring(int lineIndex, int startIndex, int length)
@@ -42,11 +42,11 @@ namespace CodeHighlighter.Model
             return _lines[lineIndex].GetSubstring(startIndex, length);
         }
 
-        public Line GetLine(int lineIndex) => _lines[lineIndex];
+        public TextLine GetLine(int lineIndex) => _lines[lineIndex];
 
-        public Line GetFirstLine() => _lines.First();
+        public TextLine GetFirstLine() => _lines.First();
 
-        public Line GetLastLine() => _lines.Last();
+        public TextLine GetLastLine() => _lines.Last();
 
         public int GetMaxLineWidth()
         {
@@ -59,7 +59,7 @@ namespace CodeHighlighter.Model
             var line = _lines[lineIndex];
             var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
             line.RemoveRange(columnIndex, line.Length - columnIndex);
-            _lines.Insert(lineIndex + 1, new Line(remains));
+            _lines.Insert(lineIndex + 1, new TextLine(remains));
         }
 
         public void AppendChar(int lineIndex, int columnIndex, char ch)
@@ -163,13 +163,13 @@ namespace CodeHighlighter.Model
         public void DeleteLine(int lineIndex)
         {
             _lines.RemoveAt(lineIndex);
-            if (!_lines.Any()) _lines.Add(new Line(""));
+            if (!_lines.Any()) _lines.Add(new TextLine(""));
         }
 
         public void DeleteLines(int lineIndex, int count)
         {
             _lines.RemoveRange(lineIndex, count);
-            if (!_lines.Any()) _lines.Add(new Line(""));
+            if (!_lines.Any()) _lines.Add(new TextLine(""));
         }
 
         public override string ToString()
