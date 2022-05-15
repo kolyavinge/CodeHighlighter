@@ -179,7 +179,6 @@ namespace CodeHighlighter.Model
 
         public void NewLine()
         {
-            if (_textSelection.InProgress) throw new InvalidOperationException();
             if (_textSelection.IsExist) DeleteSelection();
             _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
             _tokens.InsertEmptyLine(_textCursor.LineIndex + 1);
@@ -190,7 +189,6 @@ namespace CodeHighlighter.Model
 
         public void AppendChar(char ch)
         {
-            if (_textSelection.InProgress) throw new InvalidOperationException();
             if (_textSelection.IsExist) DeleteSelection();
             _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
             _textCursor.MoveRight();

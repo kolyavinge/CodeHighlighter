@@ -36,7 +36,7 @@ namespace CodeHighlighter.Rendering
                 var lineTokens = _model.Tokens.GetMergedTokens(lineIndex);
                 foreach (var token in lineTokens)
                 {
-                    var text = _model.Text.GetSubstring(lineIndex, token.ColumnIndex, token.Length);
+                    var text = _model.Text.GetSubstring(lineIndex, token.StartColumnIndex, token.Length);
                     var brush = _model.TokenColors.GetColorBrushOrNull(token.Kind) ?? defaultForeground;
                     var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _fontSettings.FontSize, brush, 1.0);
                     context.DrawText(formattedText, new Point(offsetX, offsetY));

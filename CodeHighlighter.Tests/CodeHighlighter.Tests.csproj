@@ -18,8 +18,4 @@
 		<ProjectReference Include="..\CodeHighlighter\CodeHighlighter.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Controllers\" />
-	</ItemGroup>
-
 </Project>

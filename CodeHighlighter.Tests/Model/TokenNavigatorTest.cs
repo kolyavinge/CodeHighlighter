@@ -24,11 +24,11 @@ namespace CodeHighlighter.Tests.Model
         {
             _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
-            var tokens = new List<Token>
+            var tokens = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -60,17 +60,17 @@ namespace CodeHighlighter.Tests.Model
             _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(2);
-            var tokens1 = new List<Token>
+            var tokens1 = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
-            var tokens2 = new List<Token>
+            var tokens2 = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);
@@ -86,11 +86,11 @@ namespace CodeHighlighter.Tests.Model
         {
             _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(1);
-            var tokens = new List<Token>
+            var tokens = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -122,17 +122,17 @@ namespace CodeHighlighter.Tests.Model
             _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
             _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
             _text.SetupGet(x => x.LinesCount).Returns(2);
-            var tokens1 = new List<Token>
+            var tokens1 = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
-            var tokens2 = new List<Token>
+            var tokens2 = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);

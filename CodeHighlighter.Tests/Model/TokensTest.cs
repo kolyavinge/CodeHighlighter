@@ -62,28 +62,28 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MergeTokens()
         {
-            var tokens = new List<Token>
+            var tokens = new List<LineToken>
             {
-                new(0, 1, 2, 0),
-                new(0, 2, 2, 0),
-                new(0, 4, 1, 1),
-                new(0, 5, 2, 1),
-                new(0, 7, 3, 2),
+                new(1, 2, 0),
+                new(2, 2, 0),
+                new(4, 1, 1),
+                new(5, 2, 1),
+                new(7, 3, 2),
             };
 
             var result = _tokens.MergeTokens(tokens);
 
             Assert.AreEqual(3, result.Count);
 
-            Assert.AreEqual(0, result[0].ColumnIndex);
+            Assert.AreEqual(0, result[0].StartColumnIndex);
             Assert.AreEqual(4, result[0].Length);
             Assert.AreEqual(0, result[0].Kind);
 
-            Assert.AreEqual(4, result[1].ColumnIndex);
+            Assert.AreEqual(4, result[1].StartColumnIndex);
             Assert.AreEqual(3, result[1].Length);
             Assert.AreEqual(1, result[1].Kind);
 
-            Assert.AreEqual(7, result[2].ColumnIndex);
+            Assert.AreEqual(7, result[2].StartColumnIndex);
             Assert.AreEqual(3, result[2].Length);
             Assert.AreEqual(2, result[2].Kind);
         }

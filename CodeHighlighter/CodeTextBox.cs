@@ -341,12 +341,6 @@ namespace CodeHighlighter
             _mouseController.OnMouseMove(positionInControl, e.LeftButton);
         }
 
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
-            var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-            _mouseController.OnMouseUp(shiftPressed);
-        }
-
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             _mouseController.OnMouseWheel(e.Delta);

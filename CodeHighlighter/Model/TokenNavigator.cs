@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CodeHighlighter.Model
 {
@@ -30,23 +28,23 @@ namespace CodeHighlighter.Model
             var cursor = TokenCursorPosition.GetPosition(lineTokens, lineIndex, columnIndex);
             if (cursor.Position == TokenCursorPositionKind.StartLine && columnIndex == cursor.Right.StartColumnIndex)
             {
-                return GetNextCursorPosition(text, lineTokens, cursor.Right);
+                return GetNextCursorPosition(text, lineIndex, lineTokens, cursor.Right);
             }
             else if (cursor.Position == TokenCursorPositionKind.StartLine)
             {
-                return ToNewCursorPosition(cursor.Right);
+                return ToNewCursorPosition(lineIndex, cursor.Right);
             }
             else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && columnIndex == cursor.Right.StartColumnIndex)
             {
-                return GetNextCursorPosition(text, lineTokens, cursor.Right);
+                return GetNextCursorPosition(text, lineIndex, lineTokens, cursor.Right);
             }
             else if (cursor.Position == TokenCursorPositionKind.BetweenTokens)
             {
-                return ToNewCursorPosition(cursor.Right);
+                return ToNewCursorPosition(lineIndex, cursor.Right);
             }
             else if (cursor.Position == TokenCursorPositionKind.InToken)
             {
-                return GetNextCursorPosition(text, lineTokens, cursor.Right);
+                return GetNextCursorPosition(text, lineIndex, lineTokens, cursor.Right);
             }
             else // TokenCursorPositionKind.EndLine
             {
@@ -69,29 +67,29 @@ namespace CodeHighlighter.Model
             }
             else if (cursor.Position == TokenCursorPositionKind.BetweenTokens)
             {
-                return ToNewCursorPosition(cursor.Left);
+                return ToNewCursorPosition(lineIndex, cursor.Left);
             }
             else if (cursor.Position == TokenCursorPositionKind.InToken)
             {
-                return ToNewCursorPosition(cursor.Left);
+                return ToNewCursorPosition(lineIndex, cursor.Left);
             }
             else // TokenCursorPositionKind.EndLine
             {
-                return ToNewCursorPosition(cursor.Left);
+                return ToNewCursorPosition(lineIndex, cursor.Left);
             }
         }
 
-        private NewCursorPosition GetNextCursorPosition(IText text, List<Token> tokens, Token token)
+        private NewCursorPosition GetNextCursorPosition(IText text, int lineIndex, List<LineToken> lineTokens, LineToken token)
         {
-            var index = tokens.FindIndex(x => x.Equals(token));
-            if (index == -1 || index == tokens.Count - 1) return new(token.LineIndex, text.GetLine(token.LineIndex).Length);
-            var next = tokens[index + 1];
-            return new(next.LineIndex, next.StartColumnIndex);
+            var index = lineTokens.FindIndex(x => x.Equals(token));
+            if (index == -1 || index == lineTokens.Count - 1) return new(lineIndex, text.GetLine(lineIndex).Length);
+            var next = lineTokens[index + 1];
+            return new(lineIndex, next.StartColumnIndex);
         }
 
-        private NewCursorPosition ToNewCursorPosition(Token token)
+        private NewCursorPosition ToNewCursorPosition(int lineIndex, LineToken token)
         {
-            return new(token.LineIndex, token.StartColumnIndex);
+            return new(lineIndex, token.StartColumnIndex);
         }
     }
 }

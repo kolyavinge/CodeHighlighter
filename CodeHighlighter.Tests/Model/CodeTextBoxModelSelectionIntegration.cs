@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using CodeHighlighter.CodeProviders;
 using CodeHighlighter.Model;
 using NUnit.Framework;
@@ -174,35 +173,25 @@ namespace CodeHighlighter.Tests.Model
         }
 
         [Test]
-        public void SelectionWhileAppendChar_Error()
+        public void SelectionActiveAppendChar_DeleteSelection()
         {
-            AppendString("00000");
+            AppendString("000");
+            _model.MoveCursorStartLine();
             _model.ActivateSelection();
-            try
-            {
-                _model.AppendChar('0');
-                Assert.Fail();
-            }
-            catch (InvalidOperationException)
-            {
-                Assert.Pass();
-            }
+            _model.MoveCursorEndLine();
+            _model.AppendChar('0');
+            Assert.AreEqual("0", _model.Text.ToString());
         }
 
         [Test]
-        public void SelectionWhileNewLine_Error()
+        public void SelectionActiveNewLine_DeleteSelection()
         {
-            AppendString("00000");
+            AppendString("000");
+            _model.MoveCursorStartLine();
             _model.ActivateSelection();
-            try
-            {
-                _model.NewLine();
-                Assert.Fail();
-            }
-            catch (InvalidOperationException)
-            {
-                Assert.Pass();
-            }
+            _model.MoveCursorEndLine();
+            _model.NewLine();
+            Assert.AreEqual("\r\n", _model.Text.ToString());
         }
 
         [Test]

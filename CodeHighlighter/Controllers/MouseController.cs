@@ -47,14 +47,6 @@ namespace CodeHighlighter.Controllers
             }
         }
 
-        public void OnMouseUp(bool shiftPressed)
-        {
-            if (!shiftPressed)
-            {
-                _selectionActivator.CompleteSelection();
-            }
-        }
-
         public void OnMouseWheel(int delta)
         {
             _viewportContext.VerticalScrollBarValue -= delta;

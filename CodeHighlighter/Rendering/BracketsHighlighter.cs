@@ -10,8 +10,6 @@ namespace CodeHighlighter.Rendering
         private readonly IText _text;
         private readonly ITextCursor _textCursor;
         private readonly List<BracketPair> _bracketPairs = new();
-        private int _lastCursorLineIndex;
-        private int _lastCursorColumnIndex;
         private HighlightResult _lastResult;
 
         public BracketsHighlighter(string bracketsString, IText text, ITextCursor textCursor)
@@ -23,19 +21,10 @@ namespace CodeHighlighter.Rendering
             }
             _text = text;
             _textCursor = textCursor;
-            _lastCursorLineIndex = 0;
-            _lastCursorColumnIndex = -1;
         }
 
         public HighlightResult GetHighlightedBrackets()
         {
-            if (_textCursor.LineIndex == _lastCursorLineIndex && _textCursor.ColumnIndex == _lastCursorColumnIndex)
-            {
-                return _lastResult;
-            }
-
-            _lastCursorLineIndex = _textCursor.LineIndex;
-            _lastCursorColumnIndex = _textCursor.ColumnIndex;
             var cursorLineIndex = _textCursor.LineIndex;
             var cursorColumnIndex = _textCursor.ColumnIndex;
 

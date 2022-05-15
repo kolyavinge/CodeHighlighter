@@ -20,7 +20,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void GetToken_Empty()
         {
-            _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
+            _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken>());
             _tokens.SetupGet(x => x.LinesCount).Returns(0);
             Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
             Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -33,7 +33,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void GetToken_EmptyLine()
         {
-            _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token> { new Token() });
+            _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken> { new() });
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
             Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
             Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -47,11 +47,11 @@ namespace CodeHighlighter.Tests.Model
         public void GetToken()
         {
             // '  xx  yzz'
-            var tokens = new List<Token>
+            var tokens = new List<LineToken>
             {
-                new(0, 2, 2, 0), // x
-                new(0, 6, 1, 1), // y
-                new(0, 7, 2, 2), // z
+                new(2, 2, 0), // x
+                new(6, 1, 1), // y
+                new(7, 2, 2), // z
             };
             _tokens.SetupGet(x => x.LinesCount).Returns(1);
             _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);

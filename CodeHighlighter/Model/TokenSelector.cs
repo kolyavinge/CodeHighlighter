@@ -33,7 +33,7 @@
             }
         }
 
-        private SelectedRange ToSelectedRange(Token token)
+        private SelectedRange ToSelectedRange(LineToken token)
         {
             return new SelectedRange(token.StartColumnIndex, token.EndColumnIndex + 1);
         }

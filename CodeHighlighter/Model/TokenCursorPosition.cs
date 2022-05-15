@@ -14,17 +14,17 @@ namespace CodeHighlighter.Model
     internal struct TokenCursorPosition
     {
         public readonly TokenCursorPositionKind Position;
-        public readonly Token Left;
-        public readonly Token Right;
+        public readonly LineToken Left;
+        public readonly LineToken Right;
 
-        public TokenCursorPosition(TokenCursorPositionKind position, Token left, Token right)
+        public TokenCursorPosition(TokenCursorPositionKind position, LineToken left, LineToken right)
         {
             Position = position;
             Left = left;
             Right = right;
         }
 
-        public static TokenCursorPosition GetPosition(List<Token> lineTokens, int lineIndex, int columnIndex)
+        public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int lineIndex, int columnIndex)
         {
             if (!lineTokens.Any()) return default;
             if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)

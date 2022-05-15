@@ -6,14 +6,14 @@ namespace CodeHighlighter.Model
     internal interface ITokens
     {
         int LinesCount { get; }
-        List<Token> GetTokens(int lineIndex);
-        List<MergedToken> GetMergedTokens(int lineIndex);
+        List<LineToken> GetTokens(int lineIndex);
+        List<LineToken> GetMergedTokens(int lineIndex);
     }
 
     internal class Tokens : ITokens
     {
-        private readonly List<List<Token>> _tokens = new();
-        private readonly List<List<MergedToken>> _mergedTokens = new();
+        private readonly List<List<LineToken>> _tokens = new();
+        private readonly List<List<LineToken>> _mergedTokens = new();
 
         public int LinesCount => _tokens.Count;
 
@@ -21,12 +21,12 @@ namespace CodeHighlighter.Model
         {
             var groupedTokens = tokens
                 .GroupBy(x => x.LineIndex)
-                .ToDictionary(group => group.Key, group => group.ToList());
+                .ToDictionary(group => group.Key, group => group.Select(LineToken.FromCodeHighlighterToken).ToList());
 
             var length = startLineIndex + linesCount;
             for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
             {
-                var lineTokens = groupedTokens.ContainsKey(lineIndex) ? groupedTokens[lineIndex] : new List<Token>();
+                var lineTokens = groupedTokens.ContainsKey(lineIndex) ? groupedTokens[lineIndex] : new List<LineToken>();
                 if (lineIndex < _tokens.Count)
                 {
                     _tokens[lineIndex] = lineTokens;
@@ -40,9 +40,9 @@ namespace CodeHighlighter.Model
             }
         }
 
-        public List<MergedToken> MergeTokens(IEnumerable<Token> tokens)
+        public List<LineToken> MergeTokens(IEnumerable<LineToken> tokens)
         {
-            var result = new List<MergedToken>();
+            var result = new List<LineToken>();
             var tokensArray = tokens.ToArray();
             int columnIndex = 0;
             int length;
@@ -69,8 +69,8 @@ namespace CodeHighlighter.Model
 
         public void InsertEmptyLine(int lineIndex)
         {
-            _tokens.Insert(lineIndex, new List<Token>());
-            _mergedTokens.Insert(lineIndex, new List<MergedToken>());
+            _tokens.Insert(lineIndex, new List<LineToken>());
+            _mergedTokens.Insert(lineIndex, new List<LineToken>());
         }
 
         public void DeleteLine(int lineIndex)
@@ -86,28 +86,34 @@ namespace CodeHighlighter.Model
             _mergedTokens.RemoveRange(lineIndex, count);
         }
 
-        public List<Token> GetTokens(int lineIndex)
+        public List<LineToken> GetTokens(int lineIndex)
         {
             return _tokens[lineIndex];
         }
 
-        public List<MergedToken> GetMergedTokens(int lineIndex)
+        public List<LineToken> GetMergedTokens(int lineIndex)
         {
             return _mergedTokens[lineIndex];
         }
     }
 
-    internal struct MergedToken
+    internal struct LineToken
     {
-        public readonly int ColumnIndex;
+        public readonly int StartColumnIndex;
         public readonly int Length;
         public readonly byte Kind;
+        public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-        public MergedToken(int columnIndex, int length, byte kind)
+        public LineToken(int startColumnIndex, int length, byte kind)
         {
-            ColumnIndex = columnIndex;
+            StartColumnIndex = startColumnIndex;
             Length = length;
             Kind = kind;
+        }
+
+        public static LineToken FromCodeHighlighterToken(CodeHighlighter.Token token)
+        {
+            return new(token.StartColumnIndex, token.Length, token.Kind);
         }
     }
 }
