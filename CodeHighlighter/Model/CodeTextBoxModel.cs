@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model
 {
-    internal class CodeTextBoxModel
+    internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSelector, ICursorHandler
     {
         private readonly Text _text;
         private readonly TextCursor _textCursor;
@@ -117,12 +117,19 @@ namespace CodeHighlighter.Model
             _textCursor.MoveTextEnd();
         }
 
-        public void StartSelection()
+        public void ActivateSelection()
         {
-            _textSelection.InProgress = true;
+            if (!_textSelection.InProgress)
+            {
+                _textSelection.InProgress = true;
+                _textSelection.StartLineIndex = _textCursor.LineIndex;
+                _textSelection.StartCursorColumnIndex = _textCursor.ColumnIndex;
+                _textSelection.EndLineIndex = _textCursor.LineIndex;
+                _textSelection.EndCursorColumnIndex = _textCursor.ColumnIndex;
+            }
         }
 
-        public void EndSelection()
+        public void CompleteSelection()
         {
             _textSelection.InProgress = false;
         }
@@ -172,6 +179,7 @@ namespace CodeHighlighter.Model
 
         public void NewLine()
         {
+            if (_textSelection.InProgress) throw new InvalidOperationException();
             if (_textSelection.IsExist) DeleteSelection();
             _text.NewLine(_textCursor.LineIndex, _textCursor.ColumnIndex);
             _tokens.InsertEmptyLine(_textCursor.LineIndex + 1);
@@ -182,6 +190,7 @@ namespace CodeHighlighter.Model
 
         public void AppendChar(char ch)
         {
+            if (_textSelection.InProgress) throw new InvalidOperationException();
             if (_textSelection.IsExist) DeleteSelection();
             _text.AppendChar(_textCursor.LineIndex, _textCursor.ColumnIndex, ch);
             _textCursor.MoveRight();
@@ -301,5 +310,26 @@ namespace CodeHighlighter.Model
             var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
             _tokens.SetTokens(codeProviderTokens, startLineIndex, count);
         }
+    }
+
+    internal interface ITextSource
+    {
+        string GetSelectedText();
+    }
+
+    internal interface ITextSelectionActivator
+    {
+        void ActivateSelection();
+        void CompleteSelection();
+    }
+
+    internal interface ITokenSelector
+    {
+        void SelectToken(int lineIndex, int columnIndex);
+    }
+
+    internal interface ICursorHandler
+    {
+        void MoveCursorTo(int lineIndex, int columnIndex);
     }
 }

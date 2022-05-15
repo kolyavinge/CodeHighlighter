@@ -3,9 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using CodeHighlighter.Commands;
+using CodeHighlighter.Controllers;
 using CodeHighlighter.Input;
 using CodeHighlighter.Model;
 using CodeHighlighter.Rendering;
@@ -14,6 +13,7 @@ namespace CodeHighlighter
 {
     public interface ICodeTextBox
     {
+        bool Focus();
         void InvalidateVisual();
     }
 
@@ -25,9 +25,10 @@ namespace CodeHighlighter
         private readonly TextMeasures _textMeasures;
         private readonly TextRenderLogic _textRenderLogic;
         private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
-        private readonly CursorLineRenderLogic _cursorLineRenderLogic;
+        private readonly CursorRenderLogic _cursorRenderLogic;
+        private readonly KeyboardController _keyboardController;
+        private readonly MouseController _mouseController;
         private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
-        private Line? _cursorLine;
 
         #region IsReadOnly
         public bool IsReadOnly
@@ -280,10 +281,12 @@ namespace CodeHighlighter
             _viewport = new Viewport(this, _textMeasures);
             _textRenderLogic = new TextRenderLogic(_model, _fontSettings, _textMeasures, _viewport, this);
             _textSelectionRenderLogic = new TextSelectionRenderLogic();
-            _cursorLineRenderLogic = new CursorLineRenderLogic(_model.TextCursor, _textMeasures, this);
+            _cursorRenderLogic = new CursorRenderLogic(_model.TextCursor, _textMeasures, this);
             _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
             Commands = new CodeTextBoxCommands();
             Commands.Init(new InputCommandContext(this, _model, _viewport));
+            _keyboardController = new KeyboardController(Commands, _model, _model);
+            _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
             Cursor = Cursors.IBeam;
             FocusVisualStyle = null;
             var template = new ControlTemplate(typeof(CodeTextBox));
@@ -295,17 +298,8 @@ namespace CodeHighlighter
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _cursorLine = (Line)Template.FindName("CursorLine", this);
-            _cursorLine.SnapsToDevicePixels = true;
-            _cursorLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
-            _cursorLine.Stroke = Foreground;
-            _cursorLine.StrokeThickness = 1.0;
-            var animation = new ObjectAnimationUsingKeyFrames();
-            animation.Duration = TimeSpan.FromSeconds(1.5);
-            animation.RepeatBehavior = RepeatBehavior.Forever;
-            animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Hidden, new TimeSpan(0, 0, 0, 0, 500)));
-            animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Visible, new TimeSpan(0, 0, 1)));
-            _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
+            var cursorLine = (Line)Template.FindName("CursorLine", this);
+            _cursorRenderLogic.SetCursor(cursorLine, Foreground);
         }
 
         protected override void OnRender(DrawingContext context)
@@ -314,20 +308,14 @@ namespace CodeHighlighter
             context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
             if (IsFocused)
             {
-                _cursorLineRenderLogic.DrawCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
+                _cursorRenderLogic.DrawHighlightedCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
             }
             _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
             _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
             _textRenderLogic.DrawText(context, Foreground);
             if (IsFocused)
             {
-                var cursorAbsolutePoint = _model.TextCursor.GetAbsolutePosition(_textMeasures);
-                cursorAbsolutePoint.X -= HorizontalScrollBarValue;
-                cursorAbsolutePoint.Y -= VerticalScrollBarValue;
-                _cursorLine!.X1 = (int)cursorAbsolutePoint.X;
-                _cursorLine!.Y1 = (int)(cursorAbsolutePoint.Y - 1);
-                _cursorLine!.X2 = (int)cursorAbsolutePoint.X;
-                _cursorLine!.Y2 = (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight + 1);
+                _cursorRenderLogic.DrawCursor();
             }
             context.Pop();
         }
@@ -342,196 +330,50 @@ namespace CodeHighlighter
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            Focus();
             var positionInControl = e.GetPosition(this);
-            var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-            var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-            _model.MoveCursorTo(lineIndex, columnIndex);
-            InvalidateVisual();
+            var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            _mouseController.OnMouseDown(positionInControl, shiftPressed);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                _model.StartSelection();
-                var positionInControl = e.GetPosition(this);
-                var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-                var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-                _model.MoveCursorTo(lineIndex, columnIndex);
-                InvalidateVisual();
-            }
+            var positionInControl = e.GetPosition(this);
+            _mouseController.OnMouseMove(positionInControl, e.LeftButton);
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            _model.EndSelection();
+            var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+            _mouseController.OnMouseUp(shiftPressed);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            VerticalScrollBarValue -= e.Delta;
-            InvalidateVisual();
+            _mouseController.OnMouseWheel(e.Delta);
         }
 
         protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
         {
             var positionInControl = e.GetPosition(this);
-            var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-            var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-            _model.SelectToken(lineIndex, columnIndex);
-            InvalidateVisual();
+            _mouseController.OnMouseDoubleClick(positionInControl);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
             var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
-            // with control pressed
-            if (controlPressed && e.Key == Key.Up)
-            {
-                e.Handled = true;
-                Commands.ScrollLineUpCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.Down)
-            {
-                e.Handled = true;
-                Commands.ScrollLineDownCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.Left)
-            {
-                e.Handled = true;
-                Commands.MoveToPrevTokenCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.Right)
-            {
-                e.Handled = true;
-                Commands.MoveToNextTokenCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.Home)
-            {
-                Commands.MoveCursorTextBeginCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.End)
-            {
-                Commands.MoveCursorTextEndCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.A)
-            {
-                Commands.SelectAllCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.X)
-            {
-                if (IsReadOnly) return;
-                Clipboard.SetText(_model.GetSelectedText());
-                Commands.LeftDeleteCommand.Execute();
-            }
-            else if (controlPressed && e.Key == Key.C)
-            {
-                Clipboard.SetText(_model.GetSelectedText());
-            }
-            else if (controlPressed && e.Key == Key.V)
-            {
-                if (IsReadOnly) return;
-                Commands.InsertTextCommand.Execute(new InsertTextCommandParameter(Clipboard.GetText()));
-            }
-            else if (controlPressed && e.Key == Key.L)
-            {
-                if (IsReadOnly) return;
-                Commands.DeleteSelectedLinesCommand.Execute();
-            }
-            // without any modifiers
-            else if (e.Key == Key.Up)
-            {
-                e.Handled = true;
-                Commands.MoveCursorUpCommand.Execute();
-            }
-            else if (e.Key == Key.Down)
-            {
-                e.Handled = true;
-                Commands.MoveCursorDownCommand.Execute();
-            }
-            else if (e.Key == Key.Left)
-            {
-                e.Handled = true;
-                Commands.MoveCursorLeftCommand.Execute();
-            }
-            else if (e.Key == Key.Right)
-            {
-                e.Handled = true;
-                Commands.MoveCursorRightCommand.Execute();
-            }
-            else if (e.Key == Key.Home)
-            {
-                Commands.MoveCursorStartLineCommand.Execute();
-            }
-            else if (e.Key == Key.End)
-            {
-                Commands.MoveCursorEndLineCommand.Execute();
-            }
-            else if (e.Key == Key.PageUp)
-            {
-                Commands.MoveCursorPageUpCommand.Execute();
-            }
-            else if (e.Key == Key.PageDown)
-            {
-                Commands.MoveCursorPageDownCommand.Execute();
-            }
-            else if (e.Key == Key.Return)
-            {
-                if (IsReadOnly) return;
-                Commands.NewLineCommand.Execute();
-            }
-            else if (e.Key == Key.Back)
-            {
-                if (IsReadOnly) return;
-                Commands.LeftDeleteCommand.Execute();
-            }
-            else if (e.Key == Key.Delete)
-            {
-                if (IsReadOnly) return;
-                Commands.RightDeleteCommand.Execute();
-            }
-            else if (e.Key == Key.Tab)
-            {
-                _model.AppendChar('\t');
-            }
-            else if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
-            {
-                _model.StartSelection();
-            }
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            e.Handled = true;
-            var needToInvalidate = true;
-            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
-            {
-                _model.EndSelection();
-            }
-            else
-            {
-                needToInvalidate = false;
-            }
-            if (needToInvalidate)
-            {
-                InvalidateVisual();
-            }
+            var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+            e.Handled = _keyboardController.OnKeyDown(e.Key, controlPressed, shiftPressed, IsReadOnly);
         }
 
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
-            if (IsReadOnly) return;
-            Commands.TextInputCommand.Execute(new TextInputCommandParameter(e.Text));
+            _keyboardController.OnTextInput(e.Text, IsReadOnly);
         }
 
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
-            _cursorLine!.X1 = 0;
-            _cursorLine!.Y1 = 0;
-            _cursorLine!.X2 = 0;
-            _cursorLine!.Y2 = 0;
+            _cursorRenderLogic.HideCursor();
             InvalidateVisual();
         }
 

@@ -16,7 +16,7 @@ namespace CodeHighlighter.Commands
 
     internal class TextInputCommand : InputCommand
     {
-        private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b' });
+        private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
 
         public TextInputCommand(InputCommandContext context) : base(context) { }
 

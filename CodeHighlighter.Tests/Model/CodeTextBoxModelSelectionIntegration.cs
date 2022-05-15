@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CodeHighlighter.CodeProviders;
 using CodeHighlighter.Model;
 using NUnit.Framework;
@@ -22,9 +23,9 @@ namespace CodeHighlighter.Tests.Model
         {
             AppendString("0000000000");
             _model.MoveCursorStartLine();
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorEndLine();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
@@ -37,9 +38,9 @@ namespace CodeHighlighter.Tests.Model
         {
             AppendString("0000000000");
             _model.MoveCursorEndLine();
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorStartLine();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(10, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
@@ -54,9 +55,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("0000000000");
             _model.MoveCursorTo(0, 5);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorDown();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
@@ -71,9 +72,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("0000000000");
             _model.MoveCursorTo(1, 5);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorUp();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
@@ -88,9 +89,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("0000000000");
             _model.MoveCursorTo(0, 4);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(1, 9);
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(4, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
@@ -105,9 +106,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("0000000000");
             _model.MoveCursorTo(1, 9);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(0, 4);
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(9, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
@@ -148,15 +149,72 @@ namespace CodeHighlighter.Tests.Model
         }
 
         [Test]
+        public void SelectionAfterInputText()
+        {
+            AppendString("00000");
+            _model.NewLine();
+            _model.AppendChar('1');
+            _model.AppendChar('2');
+            _model.AppendChar('3');
+            _model.ActivateSelection();
+            _model.MoveCursorStartLine();
+            _model.CompleteSelection();
+            Assert.AreEqual("123", _model.GetSelectedText());
+        }
+
+        [Test]
+        public void SelectionAfterNewLine()
+        {
+            AppendString("00000");
+            _model.NewLine();
+            _model.ActivateSelection();
+            _model.MoveCursorUp();
+            _model.CompleteSelection();
+            Assert.AreEqual("00000\r\n", _model.GetSelectedText());
+        }
+
+        [Test]
+        public void SelectionWhileAppendChar_Error()
+        {
+            AppendString("00000");
+            _model.ActivateSelection();
+            try
+            {
+                _model.AppendChar('0');
+                Assert.Fail();
+            }
+            catch (InvalidOperationException)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void SelectionWhileNewLine_Error()
+        {
+            AppendString("00000");
+            _model.ActivateSelection();
+            try
+            {
+                _model.NewLine();
+                Assert.Fail();
+            }
+            catch (InvalidOperationException)
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
         public void DeleteSelection()
         {
             AppendString("0123456789");
             _model.NewLine();
             AppendString("9876543210");
             _model.MoveCursorTo(0, 3);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(1, 7);
-            _model.EndSelection();
+            _model.CompleteSelection();
             _model.LeftDelete();
 
             Assert.AreEqual("012210", _model.Text.ToString());
@@ -179,9 +237,9 @@ namespace CodeHighlighter.Tests.Model
         {
             AppendString("0123456789");
             _model.MoveCursorTo(0, 3);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(0, 8);
-            _model.EndSelection();
+            _model.CompleteSelection();
             var result = _model.GetSelectedText();
             Assert.AreEqual("34567", result);
         }
@@ -191,9 +249,9 @@ namespace CodeHighlighter.Tests.Model
         {
             AppendString("0123456789");
             _model.MoveCursorTo(0, 0);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(0, 10);
-            _model.EndSelection();
+            _model.CompleteSelection();
             var result = _model.GetSelectedText();
             Assert.AreEqual("0123456789", result);
         }
@@ -205,9 +263,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("0123456789");
             _model.MoveCursorTo(0, 3);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(1, 2);
-            _model.EndSelection();
+            _model.CompleteSelection();
             var result = _model.GetSelectedText();
             Assert.AreEqual("3456789\r\n01", result);
         }
@@ -326,9 +384,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("789");
             _model.MoveCursorTo(0, 2);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(1, 5);
-            _model.EndSelection();
+            _model.CompleteSelection();
 
             _model.DeleteSelectedLines();
             Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
@@ -346,9 +404,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("789");
             _model.MoveCursorTo(1, 2);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(2, 3);
-            _model.EndSelection();
+            _model.CompleteSelection();
 
             _model.DeleteSelectedLines();
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
@@ -367,9 +425,9 @@ namespace CodeHighlighter.Tests.Model
             _model.NewLine();
             AppendString("789");
             _model.MoveCursorTo(2, 3);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(1, 2);
-            _model.EndSelection();
+            _model.CompleteSelection();
 
             _model.DeleteSelectedLines();
             Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);

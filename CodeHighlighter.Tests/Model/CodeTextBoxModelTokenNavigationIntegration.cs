@@ -74,7 +74,7 @@ namespace CodeHighlighter.Tests.Model
         [Test]
         public void MoveToNextToken_Selection()
         {
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveToNextToken();
             _model.MoveToNextToken();
             _model.MoveToNextToken();
@@ -91,7 +91,7 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveToNextToken();
             _model.MoveToNextToken();
             _model.MoveToNextToken();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
@@ -157,7 +157,7 @@ namespace CodeHighlighter.Tests.Model
         {
             _model.MoveCursorTo(1, 22);
 
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveToPrevToken();
             _model.MoveToPrevToken();
             _model.MoveToPrevToken();
@@ -174,7 +174,7 @@ namespace CodeHighlighter.Tests.Model
             _model.MoveToPrevToken();
             _model.MoveToPrevToken();
             _model.MoveToPrevToken();
-            _model.EndSelection();
+            _model.CompleteSelection();
             Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
             Assert.AreEqual(22, _model.TextSelection.StartCursorColumnIndex);
             Assert.AreEqual(0, _model.TextSelection.EndLineIndex);

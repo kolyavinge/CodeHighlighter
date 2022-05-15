@@ -64,9 +64,9 @@ namespace CodeHighlighter.Tests.Model
         {
             AppendString("0123456789");
             _model.MoveCursorTo(0, 5);
-            _model.StartSelection();
+            _model.ActivateSelection();
             _model.MoveCursorTo(0, 7);
-            _model.EndSelection();
+            _model.CompleteSelection();
             _model.InsertText("XXX\nYYY\nZZZ");
             Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ789", _model.Text.ToString());
             Assert.AreEqual(2, _model.TextCursor.LineIndex);
