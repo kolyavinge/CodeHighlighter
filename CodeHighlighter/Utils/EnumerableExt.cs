@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace CodeHighlighter.Utils
+namespace CodeHighlighter.Utils;
+
+internal static class EnumerableExt
 {
-    internal static class EnumerableExt
+    public static void Each<T>(this IEnumerable<T> collection, Action<T> action)
     {
-        public static void Each<T>(this IEnumerable<T> collection, Action<T> action)
+        foreach (var item in collection)
         {
-            foreach (var item in collection)
-            {
-                action(item);
-            }
+            action(item);
         }
     }
 }

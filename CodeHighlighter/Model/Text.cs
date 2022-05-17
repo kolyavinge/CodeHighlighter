@@ -2,195 +2,194 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeHighlighter.Model
+namespace CodeHighlighter.Model;
+
+internal interface IText
 {
-    internal interface IText
+    int LinesCount { get; }
+    int VisibleLinesCount { get; }
+    string GetSubstring(int lineIndex, int startIndex, int length);
+    TextLine GetLine(int lineIndex);
+    TextLine GetFirstLine();
+    TextLine GetLastLine();
+    int GetMaxLineWidth();
+    string ToString();
+}
+
+internal class Text : IText
+{
+    private readonly List<TextLine> _lines = new();
+
+    public int LinesCount => _lines.Count;
+
+    public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
+
+    public Text() : this("") { }
+
+    public Text(string text)
     {
-        int LinesCount { get; }
-        int VisibleLinesCount { get; }
-        string GetSubstring(int lineIndex, int startIndex, int length);
-        TextLine GetLine(int lineIndex);
-        TextLine GetFirstLine();
-        TextLine GetLastLine();
-        int GetMaxLineWidth();
-        string ToString();
+        SetText(text);
     }
 
-    internal class Text : IText
+    public void SetText(string text)
     {
-        private readonly List<TextLine> _lines = new();
+        _lines.Clear();
+        _lines.AddRange(text.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
+    }
 
-        public int LinesCount => _lines.Count;
+    public string GetSubstring(int lineIndex, int startIndex, int length)
+    {
+        return _lines[lineIndex].GetSubstring(startIndex, length);
+    }
 
-        public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
+    public TextLine GetLine(int lineIndex) => _lines[lineIndex];
 
-        public Text() : this("") { }
+    public TextLine GetFirstLine() => _lines.First();
 
-        public Text(string text)
+    public TextLine GetLastLine() => _lines.Last();
+
+    public int GetMaxLineWidth()
+    {
+        if (!_lines.Any()) return 0;
+        return _lines.Select(x => x.Length).Max();
+    }
+
+    public void NewLine(int lineIndex, int columnIndex)
+    {
+        var line = _lines[lineIndex];
+        var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
+        line.RemoveRange(columnIndex, line.Length - columnIndex);
+        _lines.Insert(lineIndex + 1, new TextLine(remains));
+    }
+
+    public void AppendChar(int lineIndex, int columnIndex, char ch)
+    {
+        _lines[lineIndex].AppendChar(columnIndex, ch);
+    }
+
+    public void Insert(int lineIndex, int columnIndex, IText insertedText)
+    {
+        if (insertedText.LinesCount == 0) return;
+        if (insertedText.LinesCount == 1)
         {
-            SetText(text);
+            _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
         }
-
-        public void SetText(string text)
+        else
         {
-            _lines.Clear();
-            _lines.AddRange(text.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
+            NewLine(lineIndex, columnIndex);
+            _lines[lineIndex].AppendLine(insertedText.GetFirstLine());
+            for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
+            {
+                _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
+            }
+            _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
         }
+    }
 
-        public string GetSubstring(int lineIndex, int startIndex, int length)
+    public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
+    {
+        if (currentColumnIndex > 0)
         {
-            return _lines[lineIndex].GetSubstring(startIndex, length);
+            return (currentLineIndex, currentColumnIndex - 1);
         }
-
-        public TextLine GetLine(int lineIndex) => _lines[lineIndex];
-
-        public TextLine GetFirstLine() => _lines.First();
-
-        public TextLine GetLastLine() => _lines.Last();
-
-        public int GetMaxLineWidth()
+        else if (currentLineIndex > 0)
         {
-            if (!_lines.Any()) return 0;
-            return _lines.Select(x => x.Length).Max();
+            return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
         }
-
-        public void NewLine(int lineIndex, int columnIndex)
+        else
         {
-            var line = _lines[lineIndex];
-            var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
-            line.RemoveRange(columnIndex, line.Length - columnIndex);
-            _lines.Insert(lineIndex + 1, new TextLine(remains));
+            return (currentLineIndex, currentColumnIndex);
         }
+    }
 
-        public void AppendChar(int lineIndex, int columnIndex, char ch)
+    public DeleteResult LeftDelete(int lineIndex, int columnIndex)
+    {
+        if (columnIndex > 0)
         {
-            _lines[lineIndex].AppendChar(columnIndex, ch);
+            _lines[lineIndex].RemoveAt(columnIndex - 1);
         }
-
-        public void Insert(int lineIndex, int columnIndex, IText insertedText)
+        else if (lineIndex > 0)
         {
-            if (insertedText.LinesCount == 0) return;
-            if (insertedText.LinesCount == 1)
-            {
-                _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
-            }
-            else
-            {
-                NewLine(lineIndex, columnIndex);
-                _lines[lineIndex].AppendLine(insertedText.GetFirstLine());
-                for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
-                {
-                    _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
-                }
-                _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
-            }
-        }
-
-        public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
-        {
-            if (currentColumnIndex > 0)
-            {
-                return (currentLineIndex, currentColumnIndex - 1);
-            }
-            else if (currentLineIndex > 0)
-            {
-                return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
-            }
-            else
-            {
-                return (currentLineIndex, currentColumnIndex);
-            }
-        }
-
-        public DeleteResult LeftDelete(int lineIndex, int columnIndex)
-        {
-            if (columnIndex > 0)
-            {
-                _lines[lineIndex].RemoveAt(columnIndex - 1);
-            }
-            else if (lineIndex > 0)
-            {
-                _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
-                _lines.RemoveAt(lineIndex);
-                return new DeleteResult { IsLineDeleted = true };
-            }
-
-            return new DeleteResult { IsLineDeleted = false };
-        }
-
-        public DeleteResult RightDelete(int lineIndex, int columnIndex)
-        {
-            if (columnIndex < _lines[lineIndex].Length)
-            {
-                _lines[lineIndex].RemoveAt(columnIndex);
-            }
-            else if (lineIndex < _lines.Count - 1)
-            {
-                _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
-                _lines.RemoveAt(lineIndex + 1);
-                return new DeleteResult { IsLineDeleted = true };
-            }
-
-            return new DeleteResult { IsLineDeleted = false };
-        }
-
-        public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
-        {
-            var selectionLines = textSelection.GetSelectedLines(this).ToList();
-            if (selectionLines.Count == 1)
-            {
-                var selectionLine = selectionLines.First();
-                var line = _lines[selectionLine.LineIndex];
-                line.RemoveRange(selectionLine.LeftColumnIndex, selectionLine.RightColumnIndex - selectionLine.LeftColumnIndex);
-
-                return new DeleteSelectionResult();
-            }
-            else
-            {
-                var firstSelectionLine = selectionLines.First();
-                var lastSelectionLine = selectionLines.Last();
-                var firstLine = _lines[firstSelectionLine.LineIndex];
-                var lastLine = _lines[lastSelectionLine.LineIndex];
-                firstLine.RemoveRange(firstSelectionLine.LeftColumnIndex, firstSelectionLine.RightColumnIndex - firstSelectionLine.LeftColumnIndex);
-                firstLine.AppendLine(lastLine, lastSelectionLine.RightColumnIndex, lastLine.Length - lastSelectionLine.RightColumnIndex);
-                var secondSelectionLine = selectionLines.Skip(1).First();
-                _lines.RemoveRange(secondSelectionLine.LineIndex, selectionLines.Count - 1);
-
-                return new DeleteSelectionResult(secondSelectionLine.LineIndex, selectionLines.Count - 1);
-            }
-        }
-
-        public void DeleteLine(int lineIndex)
-        {
+            _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
             _lines.RemoveAt(lineIndex);
-            if (!_lines.Any()) _lines.Add(new TextLine(""));
+            return new DeleteResult { IsLineDeleted = true };
         }
 
-        public void DeleteLines(int lineIndex, int count)
+        return new DeleteResult { IsLineDeleted = false };
+    }
+
+    public DeleteResult RightDelete(int lineIndex, int columnIndex)
+    {
+        if (columnIndex < _lines[lineIndex].Length)
         {
-            _lines.RemoveRange(lineIndex, count);
-            if (!_lines.Any()) _lines.Add(new TextLine(""));
+            _lines[lineIndex].RemoveAt(columnIndex);
+        }
+        else if (lineIndex < _lines.Count - 1)
+        {
+            _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
+            _lines.RemoveAt(lineIndex + 1);
+            return new DeleteResult { IsLineDeleted = true };
         }
 
-        public override string ToString()
-        {
-            return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
-        }
+        return new DeleteResult { IsLineDeleted = false };
+    }
 
-        public struct DeleteResult
+    public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
+    {
+        var selectionLines = textSelection.GetSelectedLines(this).ToList();
+        if (selectionLines.Count == 1)
         {
-            public bool IsLineDeleted;
-        }
+            var selectionLine = selectionLines.First();
+            var line = _lines[selectionLine.LineIndex];
+            line.RemoveRange(selectionLine.LeftColumnIndex, selectionLine.RightColumnIndex - selectionLine.LeftColumnIndex);
 
-        public struct DeleteSelectionResult
+            return new DeleteSelectionResult();
+        }
+        else
         {
-            public readonly int FirstDeletedLineIndex;
-            public readonly int DeletedLinesCount;
-            public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
-            {
-                FirstDeletedLineIndex = firstDeletedLineIndex;
-                DeletedLinesCount = deletedLinesCount;
-            }
+            var firstSelectionLine = selectionLines.First();
+            var lastSelectionLine = selectionLines.Last();
+            var firstLine = _lines[firstSelectionLine.LineIndex];
+            var lastLine = _lines[lastSelectionLine.LineIndex];
+            firstLine.RemoveRange(firstSelectionLine.LeftColumnIndex, firstSelectionLine.RightColumnIndex - firstSelectionLine.LeftColumnIndex);
+            firstLine.AppendLine(lastLine, lastSelectionLine.RightColumnIndex, lastLine.Length - lastSelectionLine.RightColumnIndex);
+            var secondSelectionLine = selectionLines.Skip(1).First();
+            _lines.RemoveRange(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+
+            return new DeleteSelectionResult(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+        }
+    }
+
+    public void DeleteLine(int lineIndex)
+    {
+        _lines.RemoveAt(lineIndex);
+        if (!_lines.Any()) _lines.Add(new TextLine(""));
+    }
+
+    public void DeleteLines(int lineIndex, int count)
+    {
+        _lines.RemoveRange(lineIndex, count);
+        if (!_lines.Any()) _lines.Add(new TextLine(""));
+    }
+
+    public override string ToString()
+    {
+        return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
+    }
+
+    public struct DeleteResult
+    {
+        public bool IsLineDeleted;
+    }
+
+    public struct DeleteSelectionResult
+    {
+        public readonly int FirstDeletedLineIndex;
+        public readonly int DeletedLinesCount;
+        public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
+        {
+            FirstDeletedLineIndex = firstDeletedLineIndex;
+            DeletedLinesCount = deletedLinesCount;
         }
     }
 }

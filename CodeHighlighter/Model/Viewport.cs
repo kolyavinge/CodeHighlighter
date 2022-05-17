@@ -1,113 +1,112 @@
 ﻿using System.Windows;
 
-namespace CodeHighlighter.Model
+namespace CodeHighlighter.Model;
+
+interface IViewportContext
 {
-    interface IViewportContext
+    double ActualWidth { get; }
+    double ActualHeight { get; }
+    double VerticalScrollBarValue { get; set; }
+    double VerticalScrollBarMaximum { get; set; }
+    double HorizontalScrollBarValue { get; set; }
+    double HorizontalScrollBarMaximum { get; set; }
+}
+
+internal class Viewport
+{
+    private readonly IViewportContext _context;
+    private readonly ITextMeasures _textMeasures;
+
+    public Viewport(IViewportContext context, ITextMeasures textMeasures)
     {
-        double ActualWidth { get; }
-        double ActualHeight { get; }
-        double VerticalScrollBarValue { get; set; }
-        double VerticalScrollBarMaximum { get; set; }
-        double HorizontalScrollBarValue { get; set; }
-        double HorizontalScrollBarMaximum { get; set; }
+        _context = context;
+        _textMeasures = textMeasures;
     }
 
-    internal class Viewport
+    public int GetLinesCountInViewport()
     {
-        private readonly IViewportContext _context;
-        private readonly ITextMeasures _textMeasures;
+        var result = (int)(_context.ActualHeight / _textMeasures.LineHeight) + 1;
+        if (_context.ActualHeight % _textMeasures.LineHeight != 0) result++;
 
-        public Viewport(IViewportContext context, ITextMeasures textMeasures)
+        return result;
+    }
+
+    public int GetCursorLineIndex(Point cursorClickPosition)
+    {
+        return (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
+    }
+
+    public int GetCursorColumnIndex(Point cursorClickPosition)
+    {
+        return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
+    }
+
+    public void CorrectByCursorPosition(ITextCursor textCursor)
+    {
+        CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
+    }
+
+    public void CorrectByCursorPosition(Point cursorAbsolutePoint)
+    {
+        if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
         {
-            _context = context;
-            _textMeasures = textMeasures;
+            _context.HorizontalScrollBarValue = cursorAbsolutePoint.X;
+        }
+        else if (cursorAbsolutePoint.X + _textMeasures.LetterWidth > _context.HorizontalScrollBarValue + _context.ActualWidth)
+        {
+            _context.HorizontalScrollBarValue = cursorAbsolutePoint.X - _context.ActualWidth + _textMeasures.LetterWidth;
         }
 
-        public int GetLinesCountInViewport()
+        if (cursorAbsolutePoint.Y < _context.VerticalScrollBarValue)
         {
-            var result = (int)(_context.ActualHeight / _textMeasures.LineHeight) + 1;
-            if (_context.ActualHeight % _textMeasures.LineHeight != 0) result++;
-
-            return result;
+            _context.VerticalScrollBarValue = cursorAbsolutePoint.Y;
         }
-
-        public int GetCursorLineIndex(Point cursorClickPosition)
+        else if (cursorAbsolutePoint.Y + _textMeasures.LineHeight > _context.VerticalScrollBarValue + _context.ActualHeight)
         {
-            return (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
+            _context.VerticalScrollBarValue = cursorAbsolutePoint.Y - _context.ActualHeight + _textMeasures.LineHeight;
         }
+    }
 
-        public int GetCursorColumnIndex(Point cursorClickPosition)
+    public void UpdateScrollbarsMaximumValues(IText text)
+    {
+        var maxLineWidthInPixels = text.GetMaxLineWidth() * _textMeasures.LetterWidth;
+        _context.HorizontalScrollBarMaximum = _context.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
+        if (_context.HorizontalScrollBarMaximum == 0)
         {
-            return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
+            _context.HorizontalScrollBarValue = 0;
         }
+        _context.VerticalScrollBarMaximum = text.LinesCount * _textMeasures.LineHeight;
+    }
 
-        public void CorrectByCursorPosition(ITextCursor textCursor)
-        {
-            CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
-        }
+    public void ScrollLineUp()
+    {
+        _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineUp(_context.VerticalScrollBarValue, _textMeasures.LineHeight);
+    }
 
-        public void CorrectByCursorPosition(Point cursorAbsolutePoint)
-        {
-            if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
-            {
-                _context.HorizontalScrollBarValue = cursorAbsolutePoint.X;
-            }
-            else if (cursorAbsolutePoint.X + _textMeasures.LetterWidth > _context.HorizontalScrollBarValue + _context.ActualWidth)
-            {
-                _context.HorizontalScrollBarValue = cursorAbsolutePoint.X - _context.ActualWidth + _textMeasures.LetterWidth;
-            }
+    public static double GetVerticalOffsetAfterScrollLineUp(double verticalScrollBarValue, double lineHeight)
+    {
+        var offset = verticalScrollBarValue;
+        var delta = verticalScrollBarValue % lineHeight;
+        if (delta == 0) offset -= lineHeight;
+        else offset -= delta;
+        if (offset < 0) offset = 0;
 
-            if (cursorAbsolutePoint.Y < _context.VerticalScrollBarValue)
-            {
-                _context.VerticalScrollBarValue = cursorAbsolutePoint.Y;
-            }
-            else if (cursorAbsolutePoint.Y + _textMeasures.LineHeight > _context.VerticalScrollBarValue + _context.ActualHeight)
-            {
-                _context.VerticalScrollBarValue = cursorAbsolutePoint.Y - _context.ActualHeight + _textMeasures.LineHeight;
-            }
-        }
+        return offset;
+    }
 
-        public void UpdateScrollbarsMaximumValues(IText text)
-        {
-            var maxLineWidthInPixels = text.GetMaxLineWidth() * _textMeasures.LetterWidth;
-            _context.HorizontalScrollBarMaximum = _context.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
-            if (_context.HorizontalScrollBarMaximum == 0)
-            {
-                _context.HorizontalScrollBarValue = 0;
-            }
-            _context.VerticalScrollBarMaximum = text.LinesCount * _textMeasures.LineHeight;
-        }
+    public void ScrollLineDown()
+    {
+        _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineDown(_context.VerticalScrollBarValue, _context.VerticalScrollBarMaximum, _textMeasures.LineHeight);
+    }
 
-        public void ScrollLineUp()
-        {
-            _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineUp(_context.VerticalScrollBarValue, _textMeasures.LineHeight);
-        }
+    public static double GetVerticalOffsetAfterScrollLineDown(double verticalScrollBarValue, double verticalScrollBarMaximum, double lineHeight)
+    {
+        var offset = verticalScrollBarValue;
+        var delta = verticalScrollBarValue % lineHeight;
+        if (delta == 0) offset += lineHeight;
+        else offset += delta;
+        if (offset > verticalScrollBarMaximum) offset = verticalScrollBarMaximum;
 
-        public static double GetVerticalOffsetAfterScrollLineUp(double verticalScrollBarValue, double lineHeight)
-        {
-            var offset = verticalScrollBarValue;
-            var delta = verticalScrollBarValue % lineHeight;
-            if (delta == 0) offset -= lineHeight;
-            else offset -= delta;
-            if (offset < 0) offset = 0;
-
-            return offset;
-        }
-
-        public void ScrollLineDown()
-        {
-            _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineDown(_context.VerticalScrollBarValue, _context.VerticalScrollBarMaximum, _textMeasures.LineHeight);
-        }
-
-        public static double GetVerticalOffsetAfterScrollLineDown(double verticalScrollBarValue, double verticalScrollBarMaximum, double lineHeight)
-        {
-            var offset = verticalScrollBarValue;
-            var delta = verticalScrollBarValue % lineHeight;
-            if (delta == 0) offset += lineHeight;
-            else offset += delta;
-            if (offset > verticalScrollBarMaximum) offset = verticalScrollBarMaximum;
-
-            return offset;
-        }
+        return offset;
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeHighlighter.CodeProviders
+namespace CodeHighlighter.CodeProviders;
+
+internal class EmptyCodeProvider : ICodeProvider
 {
-    internal class EmptyCodeProvider : ICodeProvider
+    public IEnumerable<Token> GetTokens(ITextIterator textIterator)
     {
-        public IEnumerable<Token> GetTokens(ITextIterator textIterator)
-        {
-            return Enumerable.Empty<Token>();
-        }
-        public IEnumerable<TokenColor> GetColors()
-        {
-            return Enumerable.Empty<TokenColor>();
-        }
+        return Enumerable.Empty<Token>();
+    }
+    public IEnumerable<TokenColor> GetColors()
+    {
+        return Enumerable.Empty<TokenColor>();
     }
 }

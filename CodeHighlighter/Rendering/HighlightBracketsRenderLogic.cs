@@ -1,60 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 using CodeHighlighter.Model;
 using static CodeHighlighter.Rendering.BracketsHighlighter;
 
-namespace CodeHighlighter.Rendering
+namespace CodeHighlighter.Rendering;
+
+internal interface IHighlightBracketsRenderLogic
 {
-    internal interface IHighlightBracketsRenderLogic
+    void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush);
+}
+
+internal class HighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
+{
+    private readonly BracketsHighlighter _bracketsHighlighter;
+    private readonly ITextMeasures _textMeasures;
+    private readonly IViewportContext _viewportContext;
+
+    public HighlightBracketsRenderLogic(BracketsHighlighter bracketsHighlighter, ITextMeasures textMeasures, IViewportContext viewportContext)
     {
-        void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush);
+        _bracketsHighlighter = bracketsHighlighter;
+        _textMeasures = textMeasures;
+        _viewportContext = viewportContext;
     }
 
-    internal class HighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
+    public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
     {
-        private readonly BracketsHighlighter _bracketsHighlighter;
-        private readonly ITextMeasures _textMeasures;
-        private readonly IViewportContext _viewportContext;
-
-        public HighlightBracketsRenderLogic(BracketsHighlighter bracketsHighlighter, ITextMeasures textMeasures, IViewportContext viewportContext)
+        var brackets = _bracketsHighlighter.GetHighlightedBrackets();
+        if (brackets.Kind == HighlightKind.NoHighlight) return;
+        if (brackets.Kind == HighlightKind.Highlighted)
         {
-            _bracketsHighlighter = bracketsHighlighter;
-            _textMeasures = textMeasures;
-            _viewportContext = viewportContext;
+            context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Open));
+            context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Close));
         }
-
-        public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
+        else // NoPair
         {
-            var brackets = _bracketsHighlighter.GetHighlightedBrackets();
-            if (brackets.Kind == HighlightKind.NoHighlight) return;
-            if (brackets.Kind == HighlightKind.Highlighted)
-            {
-                context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Open));
-                context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Close));
-            }
-            else // NoPair
-            {
-                context.DrawRectangle(noPairBrush, null, GetBracketRect(brackets.Open));
-            }
-        }
-
-        private Rect GetBracketRect(BracketPosition bracketPosition)
-        {
-            return new(
-                bracketPosition.ColumnIndex * _textMeasures.LetterWidth - _viewportContext.HorizontalScrollBarValue,
-                bracketPosition.LineIndex * _textMeasures.LineHeight - _viewportContext.VerticalScrollBarValue,
-                _textMeasures.LetterWidth,
-                _textMeasures.LineHeight);
+            context.DrawRectangle(noPairBrush, null, GetBracketRect(brackets.Open));
         }
     }
 
-    internal class DummyHighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
+    private Rect GetBracketRect(BracketPosition bracketPosition)
     {
-        public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
-        {
-        }
+        return new(
+            bracketPosition.ColumnIndex * _textMeasures.LetterWidth - _viewportContext.HorizontalScrollBarValue,
+            bracketPosition.LineIndex * _textMeasures.LineHeight - _viewportContext.VerticalScrollBarValue,
+            _textMeasures.LetterWidth,
+            _textMeasures.LineHeight);
+    }
+}
+
+internal class DummyHighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
+{
+    public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
+    {
     }
 }

@@ -1,32 +1,31 @@
 ﻿using System;
 
-namespace CodeHighlighter
+namespace CodeHighlighter;
+
+public class TextHolder
 {
-    public class TextHolder
+    internal Func<string>? GetTextAction;
+
+    internal Action<string>? SetTextAction;
+
+    public TextHolder() { }
+
+    public TextHolder(string initialText)
     {
-        internal Func<string>? GetTextAction;
+        GetTextAction = () => initialText;
+    }
 
-        internal Action<string>? SetTextAction;
-
-        public TextHolder() { }
-
-        public TextHolder(string initialText)
+    public string TextValue
+    {
+        get
         {
-            GetTextAction = () => initialText;
+            if (GetTextAction == null) throw new InvalidOperationException("TextHolder is not initialyzed yet");
+            return GetTextAction();
         }
-
-        public string TextValue
+        set
         {
-            get
-            {
-                if (GetTextAction == null) throw new InvalidOperationException("TextHolder is not initialyzed yet");
-                return GetTextAction();
-            }
-            set
-            {
-                if (SetTextAction == null) throw new InvalidOperationException("TextHolder is not initialyzed yet");
-                SetTextAction(value);
-            }
+            if (SetTextAction == null) throw new InvalidOperationException("TextHolder is not initialyzed yet");
+            SetTextAction(value);
         }
     }
 }

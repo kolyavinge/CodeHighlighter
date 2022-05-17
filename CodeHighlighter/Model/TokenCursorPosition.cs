@@ -1,74 +1,73 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeHighlighter.Model
+namespace CodeHighlighter.Model;
+
+internal enum TokenCursorPositionKind
 {
-    internal enum TokenCursorPositionKind
+    InToken,
+    BetweenTokens,
+    StartLine,
+    EndLine,
+}
+
+internal struct TokenCursorPosition
+{
+    public readonly TokenCursorPositionKind Position;
+    public readonly LineToken Left;
+    public readonly LineToken Right;
+
+    public TokenCursorPosition(TokenCursorPositionKind position, LineToken left, LineToken right)
     {
-        InToken,
-        BetweenTokens,
-        StartLine,
-        EndLine,
+        Position = position;
+        Left = left;
+        Right = right;
     }
 
-    internal struct TokenCursorPosition
+    public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int lineIndex, int columnIndex)
     {
-        public readonly TokenCursorPositionKind Position;
-        public readonly LineToken Left;
-        public readonly LineToken Right;
-
-        public TokenCursorPosition(TokenCursorPositionKind position, LineToken left, LineToken right)
+        if (!lineTokens.Any()) return default;
+        if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
         {
-            Position = position;
-            Left = left;
-            Right = right;
+            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), default);
         }
-
-        public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int lineIndex, int columnIndex)
+        int index;
+        if ((index = lineTokens.FindIndex(x => x.StartColumnIndex < columnIndex && columnIndex < x.EndColumnIndex + 1)) != -1)
         {
-            if (!lineTokens.Any()) return default;
-            if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
+            return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
+        }
+        else if ((index = lineTokens.FindIndex(x => x.StartColumnIndex == columnIndex)) != -1)
+        {
+            if (index > 0)
             {
-                return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), default);
-            }
-            int index;
-            if ((index = lineTokens.FindIndex(x => x.StartColumnIndex < columnIndex && columnIndex < x.EndColumnIndex + 1)) != -1)
-            {
-                return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
-            }
-            else if ((index = lineTokens.FindIndex(x => x.StartColumnIndex == columnIndex)) != -1)
-            {
-                if (index > 0)
-                {
-                    return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index - 1], lineTokens[index]);
-                }
-                else
-                {
-                    return new(TokenCursorPositionKind.StartLine, default, lineTokens[index]);
-                }
-            }
-            else if ((index = lineTokens.FindIndex(x => x.EndColumnIndex + 1 == columnIndex)) != -1)
-            {
-                if (index < lineTokens.Count)
-                {
-                    return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index], lineTokens[index + 1]);
-                }
-                else
-                {
-                    return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
-                }
+                return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index - 1], lineTokens[index]);
             }
             else
             {
-                index = lineTokens.FindIndex(x => x.StartColumnIndex > columnIndex);
-                if (index == 0)
-                {
-                    return new(TokenCursorPositionKind.StartLine, default, lineTokens.First());
-                }
-                else
-                {
-                    return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index - 1], lineTokens[index]);
-                }
+                return new(TokenCursorPositionKind.StartLine, default, lineTokens[index]);
+            }
+        }
+        else if ((index = lineTokens.FindIndex(x => x.EndColumnIndex + 1 == columnIndex)) != -1)
+        {
+            if (index < lineTokens.Count)
+            {
+                return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index], lineTokens[index + 1]);
+            }
+            else
+            {
+                return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
+            }
+        }
+        else
+        {
+            index = lineTokens.FindIndex(x => x.StartColumnIndex > columnIndex);
+            if (index == 0)
+            {
+                return new(TokenCursorPositionKind.StartLine, default, lineTokens.First());
+            }
+            else
+            {
+                return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index - 1], lineTokens[index]);
             }
         }
     }

@@ -4,60 +4,59 @@ using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Controllers
+namespace CodeHighlighter.Tests.Controllers;
+
+internal class MouseControllerIntegration
 {
-    internal class MouseControllerIntegration
+    private Mock<ICodeTextBox> _codeTextBox;
+    private Mock<IViewportContext> _viewportContext;
+    private Mock<ITextMeasures> _textMeasures;
+    private Viewport _viewport;
+    private CodeTextBoxModel _model;
+    private MouseController _controller;
+
+    [SetUp]
+    public void Setup()
     {
-        private Mock<ICodeTextBox> _codeTextBox;
-        private Mock<IViewportContext> _viewportContext;
-        private Mock<ITextMeasures> _textMeasures;
-        private Viewport _viewport;
-        private CodeTextBoxModel _model;
-        private MouseController _controller;
+        _codeTextBox = new Mock<ICodeTextBox>();
+        _viewportContext = new Mock<IViewportContext>();
+        _textMeasures = new Mock<ITextMeasures>();
+        _textMeasures.SetupGet(x => x.LineHeight).Returns(10);
+        _textMeasures.SetupGet(x => x.LetterWidth).Returns(4);
+        _textMeasures.SetupGet(x => x.HalfLetterWidth).Returns(2);
+        _viewport = new Viewport(_viewportContext.Object, _textMeasures.Object);
+        _model = new CodeTextBoxModel();
+        _controller = new MouseController(_codeTextBox.Object, _model, _model, _model, _viewport, _viewportContext.Object);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _codeTextBox = new Mock<ICodeTextBox>();
-            _viewportContext = new Mock<IViewportContext>();
-            _textMeasures = new Mock<ITextMeasures>();
-            _textMeasures.SetupGet(x => x.LineHeight).Returns(10);
-            _textMeasures.SetupGet(x => x.LetterWidth).Returns(4);
-            _textMeasures.SetupGet(x => x.HalfLetterWidth).Returns(2);
-            _viewport = new Viewport(_viewportContext.Object, _textMeasures.Object);
-            _model = new CodeTextBoxModel();
-            _controller = new MouseController(_codeTextBox.Object, _model, _model, _model, _viewport, _viewportContext.Object);
-        }
+    [Test]
+    public void OnMouseDown()
+    {
+        /* 12345
+         * qwert
+         * asdfg
+         */
+        _model.SetText("12345\r\nqwert\r\nasdfg");
 
-        [Test]
-        public void OnMouseDown()
-        {
-            /* 12345
-             * qwert
-             * asdfg
-             */
-            _model.SetText("12345\r\nqwert\r\nasdfg");
+        _controller.OnMouseDown(new(0, 0), true);
+        _controller.OnMouseDown(new(100, 100), true);
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
 
-            _controller.OnMouseDown(new(0, 0), true);
-            _controller.OnMouseDown(new(100, 100), true);
-            Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
+        _controller.OnMouseDown(new(0, 0), false);
+        Assert.AreEqual("", _model.GetSelectedText());
+    }
 
-            _controller.OnMouseDown(new(0, 0), false);
-            Assert.AreEqual("", _model.GetSelectedText());
-        }
+    [Test]
+    public void OnMouseMove()
+    {
+        /* 12345
+         * qwert
+         * asdfg
+         */
+        _model.SetText("12345\r\nqwert\r\nasdfg");
 
-        [Test]
-        public void OnMouseMove()
-        {
-            /* 12345
-             * qwert
-             * asdfg
-             */
-            _model.SetText("12345\r\nqwert\r\nasdfg");
-
-            _controller.OnMouseMove(new(0, 0), MouseButtonState.Pressed);
-            _controller.OnMouseMove(new(100, 100), MouseButtonState.Pressed);
-            Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
-        }
+        _controller.OnMouseMove(new(0, 0), MouseButtonState.Pressed);
+        _controller.OnMouseMove(new(100, 100), MouseButtonState.Pressed);
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
     }
 }

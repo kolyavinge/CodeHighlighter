@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CodeHighlighter.Input
+namespace CodeHighlighter.Input;
+
+internal class UninitializedCommand : Command
 {
-    internal class UninitializedCommand : Command
+    public override void Execute(object parameter)
     {
-        public override void Execute(object parameter)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

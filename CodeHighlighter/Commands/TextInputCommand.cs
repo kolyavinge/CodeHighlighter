@@ -2,35 +2,34 @@
 using System.Linq;
 using CodeHighlighter.Input;
 
-namespace CodeHighlighter.Commands
+namespace CodeHighlighter.Commands;
+
+public class TextInputCommandParameter
 {
-    public class TextInputCommandParameter
-    {
-        public string InputText { get; }
+    public string InputText { get; }
 
-        public TextInputCommandParameter(string inputText)
-        {
-            InputText = inputText;
-        }
+    public TextInputCommandParameter(string inputText)
+    {
+        InputText = inputText;
     }
+}
 
-    internal class TextInputCommand : InputCommand
+internal class TextInputCommand : InputCommand
+{
+    private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
+
+    public TextInputCommand(InputCommandContext context) : base(context) { }
+
+    public override void Execute(object parameter)
     {
-        private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
-
-        public TextInputCommand(InputCommandContext context) : base(context) { }
-
-        public override void Execute(object parameter)
+        var p = (TextInputCommandParameter)parameter;
+        var text = p.InputText.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
+        if (!text.Any()) return;
+        foreach (var ch in text)
         {
-            var p = (TextInputCommandParameter)parameter;
-            var text = p.InputText.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
-            if (!text.Any()) return;
-            foreach (var ch in text)
-            {
-                _context.Model.AppendChar(ch);
-            }
-            _context.Viewport.CorrectByCursorPosition(_context.Model.TextCursor);
-            _context.TextBox.InvalidateVisual();
+            _context.Model.AppendChar(ch);
         }
+        _context.Viewport.CorrectByCursorPosition(_context.Model.TextCursor);
+        _context.TextBox.InvalidateVisual();
     }
 }

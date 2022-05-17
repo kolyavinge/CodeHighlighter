@@ -1,27 +1,26 @@
 ﻿using CodeHighlighter.Input;
 
-namespace CodeHighlighter.Commands
+namespace CodeHighlighter.Commands;
+
+public class InsertTextCommandParameter
 {
-    public class InsertTextCommandParameter
-    {
-        public string InsertedText { get; }
+    public string InsertedText { get; }
 
-        public InsertTextCommandParameter(string insertedText)
-        {
-            InsertedText = insertedText;
-        }
+    public InsertTextCommandParameter(string insertedText)
+    {
+        InsertedText = insertedText;
     }
+}
 
-    internal class InsertTextCommand : InputCommand
+internal class InsertTextCommand : InputCommand
+{
+    public InsertTextCommand(InputCommandContext context) : base(context) { }
+
+    public override void Execute(object parameter)
     {
-        public InsertTextCommand(InputCommandContext context) : base(context) { }
-
-        public override void Execute(object parameter)
-        {
-            var p = (InsertTextCommandParameter)parameter;
-            _context.Model.InsertText(p.InsertedText);
-            _context.Viewport.CorrectByCursorPosition(_context.Model.TextCursor);
-            _context.TextBox.InvalidateVisual();
-        }
+        var p = (InsertTextCommandParameter)parameter;
+        _context.Model.InsertText(p.InsertedText);
+        _context.Viewport.CorrectByCursorPosition(_context.Model.TextCursor);
+        _context.TextBox.InvalidateVisual();
     }
 }

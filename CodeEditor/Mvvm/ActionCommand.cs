@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace CodeEditor.Mvvm
+namespace CodeEditor.Mvvm;
+
+public class ActionCommand : ICommand
 {
-    public class ActionCommand : ICommand
+    private readonly Action _action;
+
+    public event EventHandler CanExecuteChanged;
+
+    public ActionCommand(Action action)
     {
-        private readonly Action _action;
+        _action = action;
+    }
 
-        public event EventHandler CanExecuteChanged;
+    public bool CanExecute(object parameter)
+    {
+        return true;
+    }
 
-        public ActionCommand(Action action)
-        {
-            _action = action;
-        }
-
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
-
-        public void Execute(object parameter)
-        {
-            _action();
-        }
+    public void Execute(object parameter)
+    {
+        _action();
     }
 }
