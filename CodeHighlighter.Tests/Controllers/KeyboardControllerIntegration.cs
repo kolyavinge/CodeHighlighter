@@ -11,7 +11,7 @@ internal class KeyboardControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private Mock<IViewportContext> _viewportContext;
-    private Mock<ITextMeasures> _textMeasures;
+    private TextMeasures _textMeasures;
     private Viewport _viewport;
     private CodeTextBoxModel _model;
     private CodeTextBoxCommands _commands;
@@ -22,11 +22,8 @@ internal class KeyboardControllerIntegration
     {
         _codeTextBox = new Mock<ICodeTextBox>();
         _viewportContext = new Mock<IViewportContext>();
-        _textMeasures = new Mock<ITextMeasures>();
-        _textMeasures.SetupGet(x => x.LineHeight).Returns(10);
-        _textMeasures.SetupGet(x => x.LetterWidth).Returns(4);
-        _textMeasures.SetupGet(x => x.HalfLetterWidth).Returns(2);
-        _viewport = new Viewport(_viewportContext.Object, _textMeasures.Object);
+        _textMeasures = new TextMeasures(10, 4);
+        _viewport = new Viewport(_viewportContext.Object, _textMeasures);
         _model = new CodeTextBoxModel();
         _commands = new CodeTextBoxCommands();
         _commands.Init(new InputCommandContext(_codeTextBox.Object, _model, _viewport));

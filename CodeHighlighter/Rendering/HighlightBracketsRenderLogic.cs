@@ -13,10 +13,10 @@ internal interface IHighlightBracketsRenderLogic
 internal class HighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
 {
     private readonly BracketsHighlighter _bracketsHighlighter;
-    private readonly ITextMeasures _textMeasures;
+    private readonly TextMeasures _textMeasures;
     private readonly IViewportContext _viewportContext;
 
-    public HighlightBracketsRenderLogic(BracketsHighlighter bracketsHighlighter, ITextMeasures textMeasures, IViewportContext viewportContext)
+    public HighlightBracketsRenderLogic(BracketsHighlighter bracketsHighlighter, TextMeasures textMeasures, IViewportContext viewportContext)
     {
         _bracketsHighlighter = bracketsHighlighter;
         _textMeasures = textMeasures;

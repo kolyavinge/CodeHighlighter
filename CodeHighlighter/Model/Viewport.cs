@@ -15,9 +15,9 @@ interface IViewportContext
 internal class Viewport
 {
     private readonly IViewportContext _context;
-    private readonly ITextMeasures _textMeasures;
+    private readonly TextMeasures _textMeasures;
 
-    public Viewport(IViewportContext context, ITextMeasures textMeasures)
+    public Viewport(IViewportContext context, TextMeasures textMeasures)
     {
         _context = context;
         _textMeasures = textMeasures;

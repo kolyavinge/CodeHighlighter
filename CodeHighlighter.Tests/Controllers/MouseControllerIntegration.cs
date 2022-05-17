@@ -10,7 +10,7 @@ internal class MouseControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private Mock<IViewportContext> _viewportContext;
-    private Mock<ITextMeasures> _textMeasures;
+    private TextMeasures _textMeasures;
     private Viewport _viewport;
     private CodeTextBoxModel _model;
     private MouseController _controller;
@@ -20,11 +20,8 @@ internal class MouseControllerIntegration
     {
         _codeTextBox = new Mock<ICodeTextBox>();
         _viewportContext = new Mock<IViewportContext>();
-        _textMeasures = new Mock<ITextMeasures>();
-        _textMeasures.SetupGet(x => x.LineHeight).Returns(10);
-        _textMeasures.SetupGet(x => x.LetterWidth).Returns(4);
-        _textMeasures.SetupGet(x => x.HalfLetterWidth).Returns(2);
-        _viewport = new Viewport(_viewportContext.Object, _textMeasures.Object);
+        _textMeasures = new TextMeasures(10, 4);
+        _viewport = new Viewport(_viewportContext.Object, _textMeasures);
         _model = new CodeTextBoxModel();
         _controller = new MouseController(_codeTextBox.Object, _model, _model, _model, _viewport, _viewportContext.Object);
     }

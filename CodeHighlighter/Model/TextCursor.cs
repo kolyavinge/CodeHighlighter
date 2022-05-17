@@ -6,7 +6,7 @@ internal interface ITextCursor
 {
     int LineIndex { get; }
     int ColumnIndex { get; }
-    Point GetAbsolutePosition(ITextMeasures textMeasures);
+    Point GetAbsolutePosition(TextMeasures textMeasures);
     (int, int) GetLineAndColumnIndex { get; }
 }
 
@@ -18,7 +18,7 @@ internal class TextCursor : ITextCursor
 
     public int ColumnIndex { get; private set; }
 
-    public Point GetAbsolutePosition(ITextMeasures textMeasures) => new(ColumnIndex * textMeasures.LetterWidth, LineIndex * textMeasures.LineHeight);
+    public Point GetAbsolutePosition(TextMeasures textMeasures) => new(ColumnIndex * textMeasures.LetterWidth, LineIndex * textMeasures.LineHeight);
 
     public (int, int) GetLineAndColumnIndex => (LineIndex, ColumnIndex);
 

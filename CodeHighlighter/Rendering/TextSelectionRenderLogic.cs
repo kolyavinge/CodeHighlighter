@@ -10,12 +10,12 @@ namespace CodeHighlighter.Rendering;
 internal class TextSelectionRenderLogic
 {
     public void DrawSelectedLines(
-        DrawingContext context, Brush brush, IEnumerable<TextSelectionLine> selectedLines, ITextMeasures textMeasures, IViewportContext viewportContext)
+        DrawingContext context, Brush brush, IEnumerable<TextSelectionLine> selectedLines, TextMeasures textMeasures, IViewportContext viewportContext)
     {
         GetCalculatedRects(selectedLines, textMeasures, viewportContext).Each(rect => context.DrawRectangle(brush, null, rect));
     }
 
-    public IEnumerable<Rect> GetCalculatedRects(IEnumerable<TextSelectionLine> selectedLines, ITextMeasures textMeasures, IViewportContext viewportContext)
+    public IEnumerable<Rect> GetCalculatedRects(IEnumerable<TextSelectionLine> selectedLines, TextMeasures textMeasures, IViewportContext viewportContext)
     {
         var selectedLinesList = selectedLines.ToList();
         if (!selectedLinesList.Any()) yield break;
