@@ -40,7 +40,7 @@ internal class Tokens : ITokens
         }
     }
 
-    public List<LineToken> MergeTokens(IEnumerable<LineToken> tokens)
+    public List<LineToken> MergeTokens(IReadOnlyCollection<LineToken> tokens)
     {
         var result = new List<LineToken>();
         var tokensArray = tokens.ToArray();
@@ -111,7 +111,7 @@ internal struct LineToken
         Kind = kind;
     }
 
-    public static LineToken FromCodeHighlighterToken(CodeHighlighter.Token token)
+    public static LineToken FromCodeHighlighterToken(Token token)
     {
         return new(token.StartColumnIndex, token.Length, token.Kind);
     }

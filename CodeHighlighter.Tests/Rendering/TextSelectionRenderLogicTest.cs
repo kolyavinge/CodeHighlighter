@@ -29,8 +29,7 @@ public class TextSelectionRenderLogicTest
     [Test]
     public void GetCalculatedRects_Empty()
     {
-        var selectedLines = new List<TextSelectionLine>();
-        var result = _logic.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
+        var result = _logic.GetCalculatedRects(new List<TextSelectionLine>(), _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(0, result.Count);
     }
 
@@ -39,7 +38,7 @@ public class TextSelectionRenderLogicTest
     {
         var selectedLines = new List<TextSelectionLine>
         {
-            new TextSelectionLine(1, 1, 5)
+            new(1, 1, 5)
         };
         var result = _logic.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(1, result.Count);
@@ -51,8 +50,8 @@ public class TextSelectionRenderLogicTest
     {
         var selectedLines = new List<TextSelectionLine>
         {
-            new TextSelectionLine(1, 1, 5),
-            new TextSelectionLine(1, 1, 5),
+            new(1, 1, 5),
+            new(1, 1, 5),
         };
         var result = _logic.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(2, result.Count);

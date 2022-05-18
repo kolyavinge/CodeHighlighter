@@ -239,7 +239,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext
     private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var codeTextBox = (CodeTextBox)d;
-        var commands = (CodeTextBoxCommands)e.NewValue;
+        var commands = (CodeTextBoxCommands?)e.NewValue;
         if (commands != null)
         {
             commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport));

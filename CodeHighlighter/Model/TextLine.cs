@@ -15,7 +15,7 @@ class TextLine : IEnumerable<char>
 
     public TextLine(string str)
     {
-        _symbs = (str ?? "").ToCharArray().ToList();
+        _symbs = str.ToCharArray().ToList();
     }
 
     public string GetSubstring(int startIndex, int length)

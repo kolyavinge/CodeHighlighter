@@ -7,21 +7,10 @@ public class ViewportTest
 {
     private const double _lineHeight = 10;
     private const double _verticalMaximum = 10 * _lineHeight;
-    //private Mock<IViewportContext> _viewportContext;
-    //private Mock<ITextMeasures> _measures;
-    //private Viewport _viewport;
 
     [SetUp]
     public void Setup()
     {
-        //_viewportContext = new Mock<IViewportContext>();
-        //_viewportContext.SetupGet(x => x.VerticalScrollBarValue).Returns(0);
-        //_viewportContext.SetupGet(x => x.VerticalScrollBarMaximum).Returns(10 * _lineHeight);
-
-        //_measures = new Mock<ITextMeasures>();
-        //_measures.SetupGet(x => x.LineHeight).Returns(_lineHeight);
-
-        //_viewport = new Viewport(_viewportContext.Object, _measures.Object);
     }
 
     [Test]

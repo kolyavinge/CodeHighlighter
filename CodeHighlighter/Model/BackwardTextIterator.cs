@@ -3,7 +3,6 @@
 internal class BackwardTextIterator : ITextIterator
 {
     private readonly IText _text;
-    private readonly int _startLineIndex;
 
     public char Char { get; private set; }
 
@@ -22,8 +21,6 @@ internal class BackwardTextIterator : ITextIterator
         }
     }
 
-    //private bool IsReturn => Char == '\n';
-
     public BackwardTextIterator(IText text) : this(text, 0, text.LinesCount - 1)
     {
     }
@@ -35,7 +32,6 @@ internal class BackwardTextIterator : ITextIterator
     public BackwardTextIterator(IText text, int startLineIndex, int startColumnIndex, int endLineIndex)
     {
         _text = text;
-        _startLineIndex = startLineIndex;
         LineIndex = endLineIndex;
         ColumnIndex = startColumnIndex;
         if (endLineIndex - startLineIndex >= 0)

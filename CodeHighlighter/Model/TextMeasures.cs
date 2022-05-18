@@ -15,6 +15,7 @@ internal class TextMeasures
         UpdateMeasures();
     }
 
+    // for unit tests only
     internal TextMeasures(double lineHeight, double letterWidth)
     {
         LineHeight = lineHeight;

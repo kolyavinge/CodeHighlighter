@@ -194,16 +194,19 @@ public class SqlCodeProvider : ICodeProvider
 
     private bool IsKeyword(char[] tokenNameArray, int tokenNameArrayIndex)
     {
+        // linear search !!
         return _keywords.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
     }
 
     private bool IsOperator(char[] tokenNameArray, int tokenNameArrayIndex)
     {
+        // linear search !!
         return _operators.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
     }
 
     private bool IsFunction(char[] tokenNameArray, int tokenNameArrayIndex)
     {
+        // linear search !!
         return _functions.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
     }
 
@@ -278,7 +281,7 @@ public class SqlCodeProvider : ICodeProvider
             return true;
         }
 
-        public int GetHashCode([DisallowNull] char[] obj)
+        public int GetHashCode(char[] obj)
         {
             return obj.Select(x => x.GetHashCode()).Sum();
         }
