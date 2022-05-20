@@ -50,6 +50,14 @@ internal class KeyboardController
             ActivateOrCompleteSelection(shiftPressed);
             _commands.MoveCursorTextEndCommand.Execute();
         }
+        else if (controlPressed && key == Key.Back)
+        {
+            _commands.DeleteLeftTokenCommand.Execute();
+        }
+        else if (controlPressed && key == Key.Delete)
+        {
+            _commands.DeleteRightTokenCommand.Execute();
+        }
         else if (controlPressed && key == Key.A)
         {
             _commands.SelectAllCommand.Execute();

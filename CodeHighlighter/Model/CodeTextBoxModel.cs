@@ -177,6 +177,40 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
         SetSelection();
     }
 
+    public void DeleteLeftToken()
+    {
+        if (_textSelection.IsExist)
+        {
+            LeftDelete();
+        }
+        else
+        {
+            var navigator = new TokenNavigator();
+            var pos = navigator.MoveLeft(_text, _tokens, _textCursor.LineIndex, _textCursor.ColumnIndex);
+            ActivateSelection();
+            MoveCursorTo(pos.LineIndex, pos.ColumnIndex);
+            CompleteSelection();
+            LeftDelete();
+        }
+    }
+
+    public void DeleteRightToken()
+    {
+        if (_textSelection.IsExist)
+        {
+            RightDelete();
+        }
+        else
+        {
+            var navigator = new TokenNavigator();
+            var pos = navigator.MoveRight(_text, _tokens, _textCursor.LineIndex, _textCursor.ColumnIndex);
+            ActivateSelection();
+            MoveCursorTo(pos.LineIndex, pos.ColumnIndex);
+            CompleteSelection();
+            LeftDelete();
+        }
+    }
+
     public void NewLine()
     {
         if (_textSelection.IsExist) DeleteSelection();

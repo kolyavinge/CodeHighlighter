@@ -21,6 +21,8 @@ public class CodeTextBoxCommands
     public Command ScrollLineDownCommand { get; private set; }
     public Command MoveToPrevTokenCommand { get; private set; }
     public Command MoveToNextTokenCommand { get; private set; }
+    public Command DeleteLeftTokenCommand { get; private set; }
+    public Command DeleteRightTokenCommand { get; private set; }
     public Command SelectAllCommand { get; private set; }
     public Command TextInputCommand { get; private set; }
     public Command NewLineCommand { get; private set; }
@@ -47,6 +49,8 @@ public class CodeTextBoxCommands
         ScrollLineDownCommand = new UninitializedCommand();
         MoveToPrevTokenCommand = new UninitializedCommand();
         MoveToNextTokenCommand = new UninitializedCommand();
+        DeleteLeftTokenCommand = new UninitializedCommand();
+        DeleteRightTokenCommand = new UninitializedCommand();
         SelectAllCommand = new UninitializedCommand();
         TextInputCommand = new UninitializedCommand();
         NewLineCommand = new UninitializedCommand();
@@ -74,6 +78,8 @@ public class CodeTextBoxCommands
         ScrollLineDownCommand = new ScrollLineDownCommand(context);
         MoveToPrevTokenCommand = new MoveToPrevTokenCommand(context);
         MoveToNextTokenCommand = new MoveToNextTokenCommand(context);
+        DeleteLeftTokenCommand = new DeleteLeftTokenCommand(context);
+        DeleteRightTokenCommand = new DeleteRightTokenCommand(context);
         SelectAllCommand = new SelectAllCommand(context);
         TextInputCommand = new TextInputCommand(context);
         NewLineCommand = new NewLineCommand(context);
