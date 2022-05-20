@@ -172,6 +172,13 @@ internal class Text : IText
         if (!_lines.Any()) _lines.Add(new TextLine(""));
     }
 
+    public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
+    {
+        var sourceLine = _lines[sourceLineIndex];
+        _lines.RemoveAt(sourceLineIndex);
+        _lines.Insert(destinationLineIndex, sourceLine);
+    }
+
     public override string ToString()
     {
         return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));

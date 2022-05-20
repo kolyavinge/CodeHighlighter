@@ -18,7 +18,7 @@ internal class KeyboardController
         _selectionActivator = selectionActivator;
     }
 
-    public bool OnKeyDown(Key key, bool controlPressed, bool shiftPressed, bool isReadOnly)
+    public bool OnKeyDown(Key key, bool controlPressed, bool altPressed, bool shiftPressed, bool isReadOnly)
     {
         var isHandled = true;
         // with control pressed
@@ -73,6 +73,15 @@ internal class KeyboardController
         {
             if (isReadOnly) return true;
             _commands.DeleteSelectedLinesCommand.Execute();
+        }
+        // with alt pressed
+        else if (altPressed && key == Key.Up)
+        {
+            _commands.MoveSelectedLinesUpCommand.Execute();
+        }
+        else if (altPressed && key == Key.Down)
+        {
+            _commands.MoveSelectedLinesDownCommand.Execute();
         }
         // without any modifiers
         else if (key == Key.Up)

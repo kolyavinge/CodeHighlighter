@@ -86,6 +86,17 @@ internal class Tokens : ITokens
         _mergedTokens.RemoveRange(lineIndex, count);
     }
 
+    public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
+    {
+        var lineTokens = _tokens[sourceLineIndex];
+        _tokens.RemoveAt(sourceLineIndex);
+        _tokens.Insert(destinationLineIndex, lineTokens);
+
+        var lineMergedTokens = _mergedTokens[sourceLineIndex];
+        _mergedTokens.RemoveAt(sourceLineIndex);
+        _mergedTokens.Insert(destinationLineIndex, lineMergedTokens);
+    }
+
     public List<LineToken> GetTokens(int lineIndex)
     {
         return _tokens[lineIndex];

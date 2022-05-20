@@ -113,16 +113,16 @@ internal class KeyboardControllerIntegration
 
     private void KeyDownWithoutShift(Key key)
     {
-        _controller.OnKeyDown(key, false, false, true);
+        _controller.OnKeyDown(key, false, false, false, true);
     }
 
     private void KeyDownWithShift(Key key)
     {
-        _controller.OnKeyDown(key, false, true, true);
+        _controller.OnKeyDown(key, false, false, true, true);
     }
 
     private void KeyDownWithShiftAndControl(Key key)
     {
-        _controller.OnKeyDown(key, true, true, true);
+        _controller.OnKeyDown(key, true, false, true, true);
     }
 }

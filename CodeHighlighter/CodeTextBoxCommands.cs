@@ -15,6 +15,8 @@ public class CodeTextBoxCommands
     public Command MoveCursorTextEndCommand { get; private set; }
     public Command MoveCursorPageUpCommand { get; private set; }
     public Command MoveCursorPageDownCommand { get; private set; }
+    public Command MoveSelectedLinesUpCommand { get; private set; }
+    public Command MoveSelectedLinesDownCommand { get; private set; }
     public Command ScrollLineUpCommand { get; private set; }
     public Command ScrollLineDownCommand { get; private set; }
     public Command MoveToPrevTokenCommand { get; private set; }
@@ -39,6 +41,8 @@ public class CodeTextBoxCommands
         MoveCursorTextEndCommand = new UninitializedCommand();
         MoveCursorPageUpCommand = new UninitializedCommand();
         MoveCursorPageDownCommand = new UninitializedCommand();
+        MoveSelectedLinesUpCommand = new UninitializedCommand();
+        MoveSelectedLinesDownCommand = new UninitializedCommand();
         ScrollLineUpCommand = new UninitializedCommand();
         ScrollLineDownCommand = new UninitializedCommand();
         MoveToPrevTokenCommand = new UninitializedCommand();
@@ -64,6 +68,8 @@ public class CodeTextBoxCommands
         MoveCursorTextEndCommand = new MoveCursorTextEndCommand(context);
         MoveCursorPageUpCommand = new MoveCursorPageUpCommand(context);
         MoveCursorPageDownCommand = new MoveCursorPageDownCommand(context);
+        MoveSelectedLinesUpCommand = new MoveSelectedLinesUpCommand(context);
+        MoveSelectedLinesDownCommand = new MoveSelectedLinesDownCommand(context);
         ScrollLineUpCommand = new ScrollLineUpCommand(context);
         ScrollLineDownCommand = new ScrollLineDownCommand(context);
         MoveToPrevTokenCommand = new MoveToPrevTokenCommand(context);

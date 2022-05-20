@@ -296,6 +296,52 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
         _textCursor.MoveTo(start.LineIndex, start.ColumnIndex);
     }
 
+    public void MoveSelectedLinesUp()
+    {
+        int sourceIndex, destinationIndex;
+        if (_textSelection.IsExist)
+        {
+            (var start, var end) = _textSelection.GetSortedPositions();
+            sourceIndex = start.LineIndex - 1;
+            if (sourceIndex < 0) return;
+            destinationIndex = end.LineIndex;
+        }
+        else
+        {
+            sourceIndex = _textCursor.LineIndex;
+            destinationIndex = sourceIndex - 1;
+            if (destinationIndex < 0) return;
+        }
+        _text.ReplaceLines(sourceIndex, destinationIndex);
+        _tokens.ReplaceLines(sourceIndex, destinationIndex);
+        _textCursor.MoveUp();
+        _textSelection.StartLineIndex--;
+        _textSelection.EndLineIndex--;
+    }
+
+    public void MoveSelectedLinesDown()
+    {
+        int sourceIndex, destinationIndex;
+        if (_textSelection.IsExist)
+        {
+            (var start, var end) = _textSelection.GetSortedPositions();
+            sourceIndex = end.LineIndex + 1;
+            if (sourceIndex >= _text.LinesCount) return;
+            destinationIndex = start.LineIndex;
+        }
+        else
+        {
+            sourceIndex = _textCursor.LineIndex;
+            destinationIndex = sourceIndex + 1;
+            if (destinationIndex >= _text.LinesCount) return;
+        }
+        _text.ReplaceLines(sourceIndex, destinationIndex);
+        _tokens.ReplaceLines(sourceIndex, destinationIndex);
+        _textCursor.MoveDown();
+        _textSelection.StartLineIndex++;
+        _textSelection.EndLineIndex++;
+    }
+
     private void SetTokens()
     {
         var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text)).ToList();

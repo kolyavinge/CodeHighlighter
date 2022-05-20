@@ -355,8 +355,10 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext
     protected override void OnKeyDown(KeyEventArgs e)
     {
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+        var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-        e.Handled = _keyboardController.OnKeyDown(e.Key, controlPressed, shiftPressed, IsReadOnly);
+        var key = e.Key == Key.System ? e.SystemKey : e.Key;
+        e.Handled = _keyboardController.OnKeyDown(key, controlPressed, altPressed, shiftPressed, IsReadOnly);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)

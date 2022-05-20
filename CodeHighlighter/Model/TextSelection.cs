@@ -4,10 +4,13 @@ namespace CodeHighlighter.Model;
 
 internal interface ITextSelection
 {
+    bool IsExist { get; }
     int StartLineIndex { get; }
     int StartCursorColumnIndex { get; }
     int EndLineIndex { get; }
     int EndCursorColumnIndex { get; }
+    (int, int) StartLineAndColumnIndex { get; }
+    (int, int) EndLineAndColumnIndex { get; }
     (TextSelectionPosition, TextSelectionPosition) GetSortedPositions();
     IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
 }
@@ -46,6 +49,9 @@ class TextSelection : ITextSelection
     public int StartCursorColumnIndex { get; set; }
     public int EndLineIndex { get; set; }
     public int EndCursorColumnIndex { get; set; }
+
+    public (int, int) StartLineAndColumnIndex => (StartLineIndex, StartCursorColumnIndex);
+    public (int, int) EndLineAndColumnIndex => (EndLineIndex, EndCursorColumnIndex);
 
     public TextSelection()
     {

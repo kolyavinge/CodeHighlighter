@@ -443,6 +443,132 @@ public class CodeTextBoxModelSelectionIntegration
         Assert.AreEqual(0, _model.Tokens.GetMergedTokens(0).Count);
     }
 
+    [Test]
+    public void MoveSelectedLinesUp_OneLine()
+    {
+        _model.SetText("123\n456\n789");
+        _model.MoveCursorTo(1, 2);
+
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
+        Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
+
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
+        Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
+    }
+
+    [Test]
+    public void MoveSelectedLinesUp_TwoLines_1()
+    {
+        _model.SetText("123\n456\n789");
+
+        _model.MoveCursorTo(1, 2);
+        _model.ActivateSelection();
+        _model.MoveCursorDown();
+        _model.CompleteSelection();
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
+        Assert.AreEqual((1, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((0, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
+        Assert.AreEqual((1, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((0, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+    }
+
+    [Test]
+    public void MoveSelectedLinesUp_TwoLines_2()
+    {
+        _model.SetText("123\n456\n789");
+
+        _model.MoveCursorTo(2, 2);
+        _model.ActivateSelection();
+        _model.MoveCursorUp();
+        _model.CompleteSelection();
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
+        Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((0, 2), _model.TextSelection.EndLineAndColumnIndex);
+
+        _model.MoveSelectedLinesUp();
+        Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
+        Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((0, 2), _model.TextSelection.EndLineAndColumnIndex);
+    }
+
+    [Test]
+    public void MoveSelectedLinesDown_OneLine()
+    {
+        _model.SetText("123\n456\n789");
+        _model.MoveCursorTo(1, 2);
+
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
+        Assert.AreEqual((2, 2), _model.TextCursor.GetLineAndColumnIndex);
+
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
+        Assert.AreEqual((2, 2), _model.TextCursor.GetLineAndColumnIndex);
+    }
+
+    [Test]
+    public void MoveSelectedLinesDown_TwoLines_1()
+    {
+        _model.SetText("123\n456\n789");
+
+        _model.MoveCursorTo(0, 2);
+        _model.ActivateSelection();
+        _model.MoveCursorDown();
+        _model.CompleteSelection();
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
+        Assert.AreEqual((2, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((2, 2), _model.TextSelection.EndLineAndColumnIndex);
+
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
+        Assert.AreEqual((2, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((2, 2), _model.TextSelection.EndLineAndColumnIndex);
+    }
+
+    [Test]
+    public void MoveSelectedLinesDown_TwoLines_2()
+    {
+        _model.SetText("123\n456\n789");
+
+        _model.MoveCursorTo(1, 2);
+        _model.ActivateSelection();
+        _model.MoveCursorUp();
+        _model.CompleteSelection();
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
+        Assert.AreEqual((1, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((2, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+
+        _model.MoveSelectedLinesDown();
+        Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
+        Assert.AreEqual((1, 2), _model.TextCursor.GetLineAndColumnIndex);
+        Assert.AreEqual(true, _model.TextSelection.IsExist);
+        Assert.AreEqual((2, 2), _model.TextSelection.StartLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+    }
+
     private void AppendString(string str)
     {
         str.ToList().ForEach(_model.AppendChar);

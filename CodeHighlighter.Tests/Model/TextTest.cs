@@ -323,6 +323,14 @@ public class TextTest
         Assert.AreEqual("", _text.ToString());
     }
 
+    [Test]
+    public void ReplaceLines()
+    {
+        SetText("123\n456\n789");
+        _text.ReplaceLines(0, 2);
+        Assert.AreEqual("456\r\n789\r\n123", _text.ToString());
+    }
+
     private void SetText(string textString)
     {
         _text.SetText(textString);
