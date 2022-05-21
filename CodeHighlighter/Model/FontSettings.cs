@@ -3,16 +3,7 @@ using System.Windows.Media;
 
 namespace CodeHighlighter.Model;
 
-internal interface IFontSettings
-{
-    double FontSize { get; }
-    FontFamily FontFamily { get; }
-    FontStyle FontStyle { get; }
-    FontWeight FontWeight { get; }
-    FontStretch FontStretch { get; }
-}
-
-internal class FontSettings : IFontSettings
+internal class FontSettings
 {
     public double FontSize { get; set; }
     public FontFamily FontFamily { get; set; }

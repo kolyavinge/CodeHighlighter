@@ -7,9 +7,9 @@ namespace CodeHighlighter.Model;
 
 internal class TextMeasures
 {
-    private readonly IFontSettings _fontSettings;
+    private readonly FontSettings _fontSettings;
 
-    public TextMeasures(IFontSettings fontSettings)
+    public TextMeasures(FontSettings fontSettings)
     {
         _fontSettings = fontSettings;
         UpdateMeasures();
@@ -20,6 +20,7 @@ internal class TextMeasures
     {
         LineHeight = lineHeight;
         LetterWidth = letterWidth;
+        _fontSettings = new();
     }
 
     public double LineHeight { get; private set; }
