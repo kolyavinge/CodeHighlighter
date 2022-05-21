@@ -376,6 +376,11 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
         _textSelection.EndLineIndex++;
     }
 
+    public void SetSelectedTextCase(TextCase textCase)
+    {
+        _text.SetSelectedTextCase(_textSelection, textCase);
+    }
+
     private void SetTokens()
     {
         var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text)).ToList();

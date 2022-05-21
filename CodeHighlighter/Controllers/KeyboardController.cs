@@ -21,8 +21,14 @@ internal class KeyboardController
     public bool OnKeyDown(Key key, bool controlPressed, bool altPressed, bool shiftPressed, bool isReadOnly)
     {
         var isHandled = true;
+        // with control and shift pressed
+        if (controlPressed && shiftPressed && key == Key.U)
+        {
+            if (isReadOnly) return true;
+            _commands.ToUpperCaseCommand.Execute();
+        }
         // with control pressed
-        if (controlPressed && key == Key.Up)
+        else if (controlPressed && key == Key.Up)
         {
             _commands.ScrollLineUpCommand.Execute();
         }
@@ -82,13 +88,20 @@ internal class KeyboardController
             if (isReadOnly) return true;
             _commands.DeleteSelectedLinesCommand.Execute();
         }
+        else if (controlPressed && key == Key.U)
+        {
+            if (isReadOnly) return true;
+            _commands.ToLowerCaseCommand.Execute();
+        }
         // with alt pressed
         else if (altPressed && key == Key.Up)
         {
+            if (isReadOnly) return true;
             _commands.MoveSelectedLinesUpCommand.Execute();
         }
         else if (altPressed && key == Key.Down)
         {
+            if (isReadOnly) return true;
             _commands.MoveSelectedLinesDownCommand.Execute();
         }
         // without any modifiers

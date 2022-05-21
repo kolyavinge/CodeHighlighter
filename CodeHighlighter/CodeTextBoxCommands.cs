@@ -30,6 +30,8 @@ public class CodeTextBoxCommands
     public Command DeleteSelectedLinesCommand { get; private set; }
     public Command LeftDeleteCommand { get; private set; }
     public Command RightDeleteCommand { get; private set; }
+    public Command ToUpperCaseCommand { get; private set; }
+    public Command ToLowerCaseCommand { get; private set; }
 
     public CodeTextBoxCommands()
     {
@@ -58,6 +60,8 @@ public class CodeTextBoxCommands
         DeleteSelectedLinesCommand = new UninitializedCommand();
         LeftDeleteCommand = new UninitializedCommand();
         RightDeleteCommand = new UninitializedCommand();
+        ToUpperCaseCommand = new UninitializedCommand();
+        ToLowerCaseCommand = new UninitializedCommand();
     }
 
     internal void Init(InputCommandContext context)
@@ -87,5 +91,7 @@ public class CodeTextBoxCommands
         DeleteSelectedLinesCommand = new DeleteSelectedLinesCommand(context);
         LeftDeleteCommand = new LeftDeleteCommand(context);
         RightDeleteCommand = new RightDeleteCommand(context);
+        ToUpperCaseCommand = new ToUpperCaseCommand(context);
+        ToLowerCaseCommand = new ToLowerCaseCommand(context);
     }
 }

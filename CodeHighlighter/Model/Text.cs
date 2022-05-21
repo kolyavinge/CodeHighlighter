@@ -136,27 +136,27 @@ internal class Text : IText
 
     public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
     {
-        var selectionLines = textSelection.GetSelectedLines(this).ToList();
-        if (selectionLines.Count == 1)
+        var selectedLines = textSelection.GetSelectedLines(this).ToList();
+        if (selectedLines.Count == 1)
         {
-            var selectionLine = selectionLines.First();
-            var line = _lines[selectionLine.LineIndex];
-            line.RemoveRange(selectionLine.LeftColumnIndex, selectionLine.RightColumnIndex - selectionLine.LeftColumnIndex);
+            var selectedLine = selectedLines.First();
+            var line = _lines[selectedLine.LineIndex];
+            line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
 
             return new DeleteSelectionResult();
         }
         else
         {
-            var firstSelectionLine = selectionLines.First();
-            var lastSelectionLine = selectionLines.Last();
-            var firstLine = _lines[firstSelectionLine.LineIndex];
-            var lastLine = _lines[lastSelectionLine.LineIndex];
-            firstLine.RemoveRange(firstSelectionLine.LeftColumnIndex, firstSelectionLine.RightColumnIndex - firstSelectionLine.LeftColumnIndex);
-            firstLine.AppendLine(lastLine, lastSelectionLine.RightColumnIndex, lastLine.Length - lastSelectionLine.RightColumnIndex);
-            var secondSelectionLine = selectionLines.Skip(1).First();
-            _lines.RemoveRange(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+            var firstSelectedLine = selectedLines.First();
+            var lastSelectedLine = selectedLines.Last();
+            var firstLine = _lines[firstSelectedLine.LineIndex];
+            var lastLine = _lines[lastSelectedLine.LineIndex];
+            firstLine.RemoveRange(firstSelectedLine.LeftColumnIndex, firstSelectedLine.RightColumnIndex - firstSelectedLine.LeftColumnIndex);
+            firstLine.AppendLine(lastLine, lastSelectedLine.RightColumnIndex, lastLine.Length - lastSelectedLine.RightColumnIndex);
+            var secondSelectedLine = selectedLines.Skip(1).First();
+            _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
 
-            return new DeleteSelectionResult(secondSelectionLine.LineIndex, selectionLines.Count - 1);
+            return new DeleteSelectionResult(secondSelectedLine.LineIndex, selectedLines.Count - 1);
         }
     }
 
@@ -177,6 +177,16 @@ internal class Text : IText
         var sourceLine = _lines[sourceLineIndex];
         _lines.RemoveAt(sourceLineIndex);
         _lines.Insert(destinationLineIndex, sourceLine);
+    }
+
+    public void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
+    {
+        var selectedLines = textSelection.GetSelectedLines(this).ToList();
+        foreach (var selectedLine in selectedLines)
+        {
+            var line = _lines[selectedLine.LineIndex];
+            line.SetCase(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex, textCase);
+        }
     }
 
     public override string ToString()

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
@@ -65,6 +66,18 @@ class TextLine : IEnumerable<char>
         _symbs.Clear();
     }
 
+    public void SetCase(int startColumnIndex, int length, TextCase textCase)
+    {
+        if (textCase == TextCase.Upper)
+        {
+            Enumerable.Range(startColumnIndex, length).Each(i => _symbs[i] = Char.ToUpper(_symbs[i]));
+        }
+        else
+        {
+            Enumerable.Range(startColumnIndex, length).Each(i => _symbs[i] = Char.ToLower(_symbs[i]));
+        }
+    }
+
     public override string ToString()
     {
         return String.Join("", _symbs);
@@ -74,3 +87,5 @@ class TextLine : IEnumerable<char>
 
     IEnumerator IEnumerable.GetEnumerator() => _symbs.GetEnumerator();
 }
+
+public enum TextCase { Upper, Lower }

@@ -331,6 +331,18 @@ public class TextTest
         Assert.AreEqual("456\r\n789\r\n123", _text.ToString());
     }
 
+    [Test]
+    public void SetSelectedTextCase()
+    {
+        SetText("abc\nxyz");
+        _text.SetSelectedTextCase(new TextSelection(0, 0, 1, 1), TextCase.Upper);
+        Assert.AreEqual("ABC\r\nXyz", _text.ToString());
+
+        SetText("ABC\nXYZ");
+        _text.SetSelectedTextCase(new TextSelection(0, 0, 1, 1), TextCase.Lower);
+        Assert.AreEqual("abc\r\nxYZ", _text.ToString());
+    }
+
     private void SetText(string textString)
     {
         _text.SetText(textString);
