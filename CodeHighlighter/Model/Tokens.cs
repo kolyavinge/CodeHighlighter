@@ -19,10 +19,18 @@ internal class Tokens : ITokens
 
     public void SetTokens(IEnumerable<Token> tokens, int startLineIndex, int linesCount)
     {
-        var groupedTokens = tokens
-            .GroupBy(x => x.LineIndex)
-            .ToDictionary(group => group.Key, group => group.Select(LineToken.FromCodeHighlighterToken).ToList());
-
+        var groupedTokens = new Dictionary<int, List<LineToken>>();
+        foreach (var token in tokens)
+        {
+            if (!groupedTokens.ContainsKey(token.LineIndex))
+            {
+                groupedTokens.Add(token.LineIndex, new List<LineToken> { LineToken.FromCodeHighlighterToken(token) });
+            }
+            else
+            {
+                groupedTokens[token.LineIndex].Add(LineToken.FromCodeHighlighterToken(token));
+            }
+        }
         var length = startLineIndex + linesCount;
         for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
         {

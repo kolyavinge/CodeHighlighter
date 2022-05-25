@@ -12,15 +12,15 @@ public class SqlCodeProvider : ICodeProvider
     private readonly HashSet<char> _delimiters = new(
         new[] { ' ', ',', '.', ';', '(', ')', '+', '-', '*', '/', '<', '>', '=' });
 
-    private readonly HashSet<char[]> _keywords;
-    private readonly HashSet<char[]> _functions;
-    private readonly HashSet<char[]> _operators;
+    private readonly HashSet<string> _keywords;
+    private readonly HashSet<string> _functions;
+    private readonly HashSet<string> _operators;
 
     public SqlCodeProvider()
     {
-        _keywords = new HashSet<char[]>(new KeywordsCollection().Select(x => x.ToArray()).ToList());
-        _functions = new HashSet<char[]>(new FunctionsCollection().Select(x => x.ToArray()).ToList());
-        _operators = new HashSet<char[]>(new OperatorsCollection().Select(x => x.ToArray()).ToList());
+        _keywords = new HashSet<string>(new KeywordsCollection().ToList(), StringComparer.OrdinalIgnoreCase);
+        _functions = new HashSet<string>(new FunctionsCollection().ToList(), StringComparer.OrdinalIgnoreCase);
+        _operators = new HashSet<string>(new OperatorsCollection().ToList(), StringComparer.OrdinalIgnoreCase);
     }
 
     public IEnumerable<Token> GetTokens(ITextIterator textIterator)
@@ -194,20 +194,20 @@ public class SqlCodeProvider : ICodeProvider
 
     private bool IsKeyword(char[] tokenNameArray, int tokenNameArrayIndex)
     {
-        // linear search !!
-        return _keywords.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
+        var result = new string(tokenNameArray, 0, tokenNameArrayIndex);
+        return _keywords.Contains(result);
     }
 
     private bool IsOperator(char[] tokenNameArray, int tokenNameArrayIndex)
     {
-        // linear search !!
-        return _operators.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
+        var result = new string(tokenNameArray, 0, tokenNameArrayIndex);
+        return _operators.Contains(result);
     }
 
     private bool IsFunction(char[] tokenNameArray, int tokenNameArrayIndex)
     {
-        // linear search !!
-        return _functions.Contains(tokenNameArray, new CharArrayEqualityComparer(tokenNameArrayIndex));
+        var result = new string(tokenNameArray, 0, tokenNameArrayIndex);
+        return _functions.Contains(result);
     }
 
     private bool IsVariable(char[] tokenNameArray)
