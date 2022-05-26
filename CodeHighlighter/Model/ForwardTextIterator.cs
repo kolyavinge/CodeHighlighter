@@ -4,14 +4,21 @@ internal class ForwardTextIterator : ITextIterator
 {
     private readonly IText _text;
     private readonly int _endLineIndex;
+    private TextLine _currentLine;
+    private int _currentLineLength;
+    private char _char;
+    private int _lineIndex;
+    private int _columnIndex;
+    private bool _eof;
+    private bool _isReturn;
 
-    public char Char { get; private set; }
+    public char Char => _char;
 
-    public int LineIndex { get; private set; }
+    public int LineIndex => _lineIndex;
 
-    public int ColumnIndex { get; private set; }
+    public int ColumnIndex => _columnIndex;
 
-    public bool Eof { get; private set; }
+    public bool Eof => _eof;
 
     public char NextChar
     {
@@ -21,8 +28,6 @@ internal class ForwardTextIterator : ITextIterator
             return nextChar;
         }
     }
-
-    private bool IsReturn => Char == '\n';
 
     public ForwardTextIterator(IText text) : this(text, 0, text.LinesCount - 1)
     {
@@ -36,47 +41,51 @@ internal class ForwardTextIterator : ITextIterator
     {
         _text = text;
         _endLineIndex = endLineIndex;
-        LineIndex = startLineIndex;
-        ColumnIndex = startColumnIndex;
+        _lineIndex = startLineIndex;
+        _columnIndex = startColumnIndex;
+        _currentLine = _text.GetLine(_lineIndex);
+        _currentLineLength = _currentLine.Length;
         if (endLineIndex - startLineIndex >= 0)
         {
             MoveNext();
         }
         else
         {
-            Eof = true;
+            _eof = true;
         }
     }
 
     public void MoveNext()
     {
         (char nextChar, int lineIndex, int columnIndex) = GetNextCharAndPosition();
-        Char = nextChar;
-        LineIndex = lineIndex;
-        ColumnIndex = columnIndex;
-        Eof = Char == 0;
+        _char = nextChar;
+        _lineIndex = lineIndex;
+        _columnIndex = columnIndex;
+        _eof = _char == 0;
+        _isReturn = _char == '\n';
     }
 
     private (char, int, int) GetNextCharAndPosition()
     {
-        var lineIndex = LineIndex;
-        var columnIndex = ColumnIndex;
-        if (Eof) return ((char)0, lineIndex, columnIndex);
-        if (IsReturn)
+        var lineIndex = _lineIndex;
+        var columnIndex = _columnIndex;
+        if (_eof) return ((char)0, lineIndex, columnIndex);
+        if (_isReturn)
         {
             lineIndex++;
             columnIndex = 0;
+            _currentLine = _text.GetLine(lineIndex);
+            _currentLineLength = _currentLine.Length;
         }
         else
         {
             columnIndex++;
         }
-        var line = _text.GetLine(lineIndex);
-        if (columnIndex < line.Length)
+        if (columnIndex < _currentLineLength)
         {
-            return (line[columnIndex], lineIndex, columnIndex);
+            return (_currentLine[columnIndex], lineIndex, columnIndex);
         }
-        else if (columnIndex == line.Length && lineIndex < _endLineIndex)
+        else if (columnIndex == _currentLineLength && lineIndex < _endLineIndex)
         {
             return ('\n', lineIndex, columnIndex);
         }

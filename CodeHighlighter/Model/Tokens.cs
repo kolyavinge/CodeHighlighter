@@ -22,13 +22,13 @@ internal class Tokens : ITokens
         var groupedTokens = new Dictionary<int, List<LineToken>>();
         foreach (var token in tokens)
         {
-            if (!groupedTokens.ContainsKey(token.LineIndex))
+            if (groupedTokens.TryGetValue(token.LineIndex, out var value))
             {
-                groupedTokens.Add(token.LineIndex, new List<LineToken> { LineToken.FromCodeHighlighterToken(token) });
+                value.Add(LineToken.FromCodeHighlighterToken(token));
             }
             else
             {
-                groupedTokens[token.LineIndex].Add(LineToken.FromCodeHighlighterToken(token));
+                groupedTokens.Add(token.LineIndex, new List<LineToken> { LineToken.FromCodeHighlighterToken(token) });
             }
         }
         var length = startLineIndex + linesCount;
@@ -48,22 +48,20 @@ internal class Tokens : ITokens
         }
     }
 
-    public List<LineToken> MergeTokens(IReadOnlyCollection<LineToken> tokens)
+    public List<LineToken> MergeTokens(List<LineToken> tokens)
     {
-        var result = new List<LineToken>();
-        var tokensArray = tokens.ToArray();
+        var result = new List<LineToken>(tokens.Count);
         int columnIndex = 0;
-        int length;
-        for (int i = 0; i < tokensArray.Length;)
+        for (int i = 0; i < tokens.Count;)
         {
-            var kind = tokensArray[i].Kind;
+            var kind = tokens[i].Kind;
             i++;
-            while (i < tokensArray.Length && kind == tokensArray[i].Kind) i++;
-            if (i < tokensArray.Length)
+            while (i < tokens.Count && kind == tokens[i].Kind) i++;
+            if (i < tokens.Count)
             {
-                length = tokensArray[i].StartColumnIndex - columnIndex;
+                var length = tokens[i].StartColumnIndex - columnIndex;
                 result.Add(new(columnIndex, length, kind));
-                columnIndex = tokensArray[i].StartColumnIndex;
+                columnIndex = tokens[i].StartColumnIndex;
             }
             else
             {
