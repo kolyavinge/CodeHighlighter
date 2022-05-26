@@ -199,10 +199,11 @@ internal class Text : IText
         public bool IsLineDeleted;
     }
 
-    public struct DeleteSelectionResult
+    public readonly struct DeleteSelectionResult
     {
         public readonly int FirstDeletedLineIndex;
         public readonly int DeletedLinesCount;
+
         public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
         {
             FirstDeletedLineIndex = firstDeletedLineIndex;

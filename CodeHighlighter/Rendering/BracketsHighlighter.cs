@@ -97,7 +97,7 @@ internal class BracketsHighlighter
         return _lastResult;
     }
 
-    struct BracketPair
+    readonly struct BracketPair
     {
         public readonly char Open;
         public readonly char Close;
@@ -108,7 +108,7 @@ internal class BracketsHighlighter
         }
     }
 
-    public struct BracketPosition
+    public readonly struct BracketPosition
     {
         public readonly int LineIndex;
         public readonly int ColumnIndex;
@@ -126,7 +126,7 @@ internal class BracketsHighlighter
         NoPair
     }
 
-    public struct HighlightResult
+    public readonly struct HighlightResult
     {
         public readonly BracketPosition Open;
         public readonly BracketPosition Close;

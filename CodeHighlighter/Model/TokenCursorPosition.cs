@@ -11,7 +11,7 @@ internal enum TokenCursorPositionKind
     EndLine,
 }
 
-internal struct TokenCursorPosition
+internal readonly struct TokenCursorPosition
 {
     public readonly TokenCursorPositionKind Position;
     public readonly LineToken Left;

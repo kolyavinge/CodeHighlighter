@@ -15,7 +15,7 @@ internal interface ITextSelection
     IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
 }
 
-internal struct TextSelectionPosition
+internal readonly struct TextSelectionPosition
 {
     public readonly int LineIndex;
     public readonly int ColumnIndex;
@@ -27,7 +27,7 @@ internal struct TextSelectionPosition
     }
 }
 
-internal struct TextSelectionLine
+internal readonly struct TextSelectionLine
 {
     public readonly int LineIndex;
     public readonly int LeftColumnIndex;

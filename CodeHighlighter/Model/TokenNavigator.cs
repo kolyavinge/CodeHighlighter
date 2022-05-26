@@ -4,7 +4,7 @@ namespace CodeHighlighter.Model;
 
 internal class TokenNavigator
 {
-    internal struct NewCursorPosition
+    internal readonly struct NewCursorPosition
     {
         public readonly int LineIndex;
         public readonly int ColumnIndex;

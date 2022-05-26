@@ -38,7 +38,7 @@ internal class TokenSelector
         return new SelectedRange(token.StartColumnIndex, token.EndColumnIndex + 1);
     }
 
-    public struct SelectedRange
+    public readonly struct SelectedRange
     {
         public readonly int StartCursorColumnIndex;
         public readonly int EndCursorColumnIndex;

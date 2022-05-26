@@ -114,7 +114,7 @@ internal class Tokens : ITokens
     }
 }
 
-internal struct LineToken
+internal readonly struct LineToken
 {
     public readonly int StartColumnIndex;
     public readonly int Length;

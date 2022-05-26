@@ -19,7 +19,7 @@ public interface ITextIterator
     void MoveNext();
 }
 
-public struct Token
+public readonly struct Token
 {
     public readonly int LineIndex;
     public readonly int StartColumnIndex;
@@ -36,7 +36,7 @@ public struct Token
     }
 }
 
-public struct TokenColor
+public readonly struct TokenColor
 {
     public readonly byte Kind;
     public readonly Color Color;
