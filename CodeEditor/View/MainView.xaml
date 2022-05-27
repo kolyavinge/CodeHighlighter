@@ -9,10 +9,12 @@
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1200">
     <Grid>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Copy text" Command="{Binding CopyTextCommand}" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
-            <Button Content="Insert line" Command="{Binding InsertLineCommand}" Margin="8,0,0,0" Width="100" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
-            <CheckBox x:Name="readOnlyCheckBox" Content="Read only" Margin="8,3,0,0" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="Copy text" Command="{Binding CopyTextCommand}" Width="100" />
+            <Button Content="Insert line" Command="{Binding InsertLineCommand}" Margin="8,0,0,0" Width="100" />
+            <CheckBox x:Name="readOnlyCheckBox" Content="Read only" Margin="8,3,0,0" />
+            <TextBlock Text="lines count: " Margin="16,2,0,0" />
+            <TextBlock Text="{Binding TextLinesCount, ElementName=codeTextBox}" Margin="0,2,0,0" />
         </StackPanel>
 
         <highlighter:CodeTextBox

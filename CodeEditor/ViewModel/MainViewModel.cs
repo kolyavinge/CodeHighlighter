@@ -22,7 +22,7 @@ public class MainViewModel
 
     public MainViewModel()
     {
-        TextHolder = new TextHolder(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\big_sql.txt"));
+        TextHolder = new TextHolder(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
         Commands = new CodeTextBoxCommands();
         CodeProvider = new SqlCodeProvider();
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,7 +18,7 @@ public interface ICodeTextBox
     void InvalidateVisual();
 }
 
-public class CodeTextBox : Control, ICodeTextBox, IViewportContext
+public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPropertyChanged
 {
     private readonly CodeTextBoxModel _model;
     private readonly Viewport _viewport;
@@ -273,6 +274,19 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext
         FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
     }
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    private int _textLinesCount;
+    public int TextLinesCount
+    {
+        get => _textLinesCount;
+        set
+        {
+            _textLinesCount = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TextLinesCount"));
+        }
+    }
+
     public CodeTextBox()
     {
         _model = new CodeTextBoxModel();
@@ -287,6 +301,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext
         Commands.Init(new InputCommandContext(this, _model, _viewport));
         _keyboardController = new KeyboardController(Commands, _model, _model);
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
+        var textEvents = new TextEvents(_model.Text);
+        textEvents.LinesCountChanged += (s, e) => TextLinesCount = e.LinesCount;
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));

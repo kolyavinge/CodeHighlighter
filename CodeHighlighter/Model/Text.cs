@@ -14,11 +14,14 @@ internal interface IText
     TextLine GetLastLine();
     int GetMaxLineWidth();
     string ToString();
+    event EventHandler? TextChanged;
 }
 
 internal class Text : IText
 {
     private readonly List<TextLine> _lines = new();
+
+    public event EventHandler? TextChanged;
 
     public int LinesCount => _lines.Count;
 
@@ -35,6 +38,7 @@ internal class Text : IText
     {
         _lines.Clear();
         _lines.AddRange(text.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
+        RaiseTextChanged();
     }
 
     public string GetSubstring(int lineIndex, int startIndex, int length)
@@ -60,11 +64,13 @@ internal class Text : IText
         var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
         line.RemoveRange(columnIndex, line.Length - columnIndex);
         _lines.Insert(lineIndex + 1, new TextLine(remains));
+        RaiseTextChanged();
     }
 
     public void AppendChar(int lineIndex, int columnIndex, char ch)
     {
         _lines[lineIndex].AppendChar(columnIndex, ch);
+        RaiseTextChanged();
     }
 
     public void Insert(int lineIndex, int columnIndex, IText insertedText)
@@ -73,6 +79,7 @@ internal class Text : IText
         if (insertedText.LinesCount == 1)
         {
             _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
+            RaiseTextChanged();
         }
         else
         {
@@ -83,6 +90,7 @@ internal class Text : IText
                 _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
             }
             _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
+            RaiseTextChanged();
         }
     }
 
@@ -107,11 +115,13 @@ internal class Text : IText
         if (columnIndex > 0)
         {
             _lines[lineIndex].RemoveAt(columnIndex - 1);
+            RaiseTextChanged();
         }
         else if (lineIndex > 0)
         {
             _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
             _lines.RemoveAt(lineIndex);
+            RaiseTextChanged();
             return new DeleteResult { IsLineDeleted = true };
         }
 
@@ -123,11 +133,13 @@ internal class Text : IText
         if (columnIndex < _lines[lineIndex].Length)
         {
             _lines[lineIndex].RemoveAt(columnIndex);
+            RaiseTextChanged();
         }
         else if (lineIndex < _lines.Count - 1)
         {
             _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
             _lines.RemoveAt(lineIndex + 1);
+            RaiseTextChanged();
             return new DeleteResult { IsLineDeleted = true };
         }
 
@@ -142,6 +154,7 @@ internal class Text : IText
             var selectedLine = selectedLines.First();
             var line = _lines[selectedLine.LineIndex];
             line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
+            RaiseTextChanged();
 
             return new DeleteSelectionResult();
         }
@@ -155,6 +168,7 @@ internal class Text : IText
             firstLine.AppendLine(lastLine, lastSelectedLine.RightColumnIndex, lastLine.Length - lastSelectedLine.RightColumnIndex);
             var secondSelectedLine = selectedLines.Skip(1).First();
             _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            RaiseTextChanged();
 
             return new DeleteSelectionResult(secondSelectedLine.LineIndex, selectedLines.Count - 1);
         }
@@ -164,12 +178,14 @@ internal class Text : IText
     {
         _lines.RemoveAt(lineIndex);
         if (!_lines.Any()) _lines.Add(new TextLine(""));
+        RaiseTextChanged();
     }
 
     public void DeleteLines(int lineIndex, int count)
     {
         _lines.RemoveRange(lineIndex, count);
         if (!_lines.Any()) _lines.Add(new TextLine(""));
+        RaiseTextChanged();
     }
 
     public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
@@ -177,6 +193,7 @@ internal class Text : IText
         var sourceLine = _lines[sourceLineIndex];
         _lines.RemoveAt(sourceLineIndex);
         _lines.Insert(destinationLineIndex, sourceLine);
+        RaiseTextChanged();
     }
 
     public void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
@@ -187,6 +204,11 @@ internal class Text : IText
             var line = _lines[selectedLine.LineIndex];
             line.SetCase(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex, textCase);
         }
+    }
+
+    private void RaiseTextChanged()
+    {
+        TextChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public override string ToString()
