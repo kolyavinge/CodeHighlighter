@@ -287,6 +287,17 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         }
     }
 
+    private double _textLineHeight;
+    public double TextLineHeight
+    {
+        get => _textLineHeight;
+        set
+        {
+            _textLineHeight = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TextLineHeight"));
+        }
+    }
+
     public CodeTextBox()
     {
         _model = new CodeTextBoxModel();
@@ -303,6 +314,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
         var textEvents = new TextEvents(_model.Text);
         textEvents.LinesCountChanged += (s, e) => TextLinesCount = e.LinesCount;
+        var textMeasuresEvents = new TextMeasuresEvents(_textMeasures);
+        textMeasuresEvents.LineHeightChanged += (s, e) => TextLineHeight = e.LineHeight;
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
