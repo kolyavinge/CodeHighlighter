@@ -14,7 +14,12 @@ internal class MouseController
     private readonly IViewportContext _viewportContext;
 
     public MouseController(
-        ICodeTextBox codeTextBox, ITokenSelector tokenSelector, ICursorHandler cursorHandler, ITextSelectionActivator selectionActivator, Viewport viewport, IViewportContext viewportContext)
+        ICodeTextBox codeTextBox,
+        ITokenSelector tokenSelector,
+        ICursorHandler cursorHandler,
+        ITextSelectionActivator selectionActivator,
+        Viewport viewport,
+        IViewportContext viewportContext)
     {
         _codeTextBox = codeTextBox;
         _tokenSelector = tokenSelector;

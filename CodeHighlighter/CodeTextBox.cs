@@ -314,6 +314,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
         var textEvents = new TextEvents(_model.Text);
         textEvents.LinesCountChanged += (s, e) => TextLinesCount = e.LinesCount;
+        TextLinesCount = 1;
         var textMeasuresEvents = new TextMeasuresEvents(_textMeasures);
         textMeasuresEvents.LineHeightChanged += (s, e) => TextLineHeight = e.LineHeight;
         Cursor = Cursors.IBeam;
@@ -362,12 +363,19 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         var positionInControl = e.GetPosition(this);
         var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
         _mouseController.OnMouseDown(positionInControl, shiftPressed);
+        Mouse.Capture(this);
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
         var positionInControl = e.GetPosition(this);
         _mouseController.OnMouseMove(positionInControl, e.LeftButton);
+    }
+
+    protected override void OnMouseUp(MouseButtonEventArgs e)
+    {
+        base.OnMouseUp(e);
+        Mouse.Capture(null);
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
