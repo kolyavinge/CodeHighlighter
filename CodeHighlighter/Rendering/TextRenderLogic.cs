@@ -32,15 +32,14 @@ internal class TextRenderLogic
         var offsetY = -(_viewportContext.VerticalScrollBarValue % _textMeasures.LineHeight);
         for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
         {
-            var offsetX = -_viewportContext.HorizontalScrollBarValue;
-            var lineTokens = _model.Tokens.GetMergedTokens(lineIndex);
+            var lineTokens = _model.Tokens.GetTokens(lineIndex);
             foreach (var token in lineTokens)
             {
                 var text = _model.Text.GetSubstring(lineIndex, token.StartColumnIndex, token.Length);
                 var brush = _model.TokenColors.GetColorBrushOrNull(token.Kind) ?? defaultForeground;
                 var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _fontSettings.FontSize, brush, 1.0);
+                var offsetX = -_viewportContext.HorizontalScrollBarValue + _textMeasures.LetterWidth * token.StartColumnIndex;
                 context.DrawText(formattedText, new Point(offsetX, offsetY));
-                offsetX += formattedText.WidthIncludingTrailingWhitespace;
             }
             offsetY += _textMeasures.LineHeight;
         }

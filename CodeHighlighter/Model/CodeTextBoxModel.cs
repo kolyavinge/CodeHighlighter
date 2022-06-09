@@ -324,7 +324,7 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
             else
             {
                 _text.GetLine(start.LineIndex).Clear();
-                _tokens.GetMergedTokens(start.LineIndex).Clear();
+                _tokens.GetTokens(start.LineIndex).Clear();
             }
         }
         _textCursor.MoveTo(start.LineIndex, start.ColumnIndex);

@@ -7,13 +7,11 @@ internal interface ITokens
 {
     int LinesCount { get; }
     List<LineToken> GetTokens(int lineIndex);
-    List<LineToken> GetMergedTokens(int lineIndex);
 }
 
 internal class Tokens : ITokens
 {
     private readonly List<List<LineToken>> _tokens = new();
-    private readonly List<List<LineToken>> _mergedTokens = new();
 
     public int LinesCount => _tokens.Count;
 
@@ -38,58 +36,28 @@ internal class Tokens : ITokens
             if (lineIndex < _tokens.Count)
             {
                 _tokens[lineIndex] = lineTokens;
-                _mergedTokens[lineIndex] = MergeTokens(lineTokens);
             }
             else
             {
                 _tokens.Add(lineTokens);
-                _mergedTokens.Add(MergeTokens(lineTokens));
             }
         }
-    }
-
-    public List<LineToken> MergeTokens(List<LineToken> tokens)
-    {
-        var result = new List<LineToken>(tokens.Count);
-        int columnIndex = 0;
-        for (int i = 0; i < tokens.Count;)
-        {
-            var kind = tokens[i].Kind;
-            i++;
-            while (i < tokens.Count && kind == tokens[i].Kind) i++;
-            if (i < tokens.Count)
-            {
-                var length = tokens[i].StartColumnIndex - columnIndex;
-                result.Add(new(columnIndex, length, kind));
-                columnIndex = tokens[i].StartColumnIndex;
-            }
-            else
-            {
-                var lineLength = tokens.Last().StartColumnIndex + tokens.Last().Length;
-                result.Add(new(columnIndex, lineLength - columnIndex, kind));
-            }
-        }
-
-        return result;
     }
 
     public void InsertEmptyLine(int lineIndex)
     {
         _tokens.Insert(lineIndex, new List<LineToken>());
-        _mergedTokens.Insert(lineIndex, new List<LineToken>());
     }
 
     public void DeleteLine(int lineIndex)
     {
         if (lineIndex == 0 && !_tokens.Any()) return;
         _tokens.RemoveAt(lineIndex);
-        _mergedTokens.RemoveAt(lineIndex);
     }
 
     public void DeleteLines(int lineIndex, int count)
     {
         _tokens.RemoveRange(lineIndex, count);
-        _mergedTokens.RemoveRange(lineIndex, count);
     }
 
     public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
@@ -97,20 +65,11 @@ internal class Tokens : ITokens
         var lineTokens = _tokens[sourceLineIndex];
         _tokens.RemoveAt(sourceLineIndex);
         _tokens.Insert(destinationLineIndex, lineTokens);
-
-        var lineMergedTokens = _mergedTokens[sourceLineIndex];
-        _mergedTokens.RemoveAt(sourceLineIndex);
-        _mergedTokens.Insert(destinationLineIndex, lineMergedTokens);
     }
 
     public List<LineToken> GetTokens(int lineIndex)
     {
         return _tokens[lineIndex];
-    }
-
-    public List<LineToken> GetMergedTokens(int lineIndex)
-    {
-        return _mergedTokens[lineIndex];
     }
 }
 

@@ -381,7 +381,7 @@ public class CodeTextBoxModelSelectionIntegration
         Assert.AreEqual((0, 2), _model.TextCursor.GetLineAndColumnIndex);
         Assert.AreEqual("789", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
-        Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
     }
 
     [Test]
@@ -401,8 +401,8 @@ public class CodeTextBoxModelSelectionIntegration
         Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
-        Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
-        Assert.AreEqual(0, _model.Tokens.GetMergedTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(0, _model.Tokens.GetTokens(1).Count);
     }
 
     [Test]
@@ -422,8 +422,8 @@ public class CodeTextBoxModelSelectionIntegration
         Assert.AreEqual((1, 0), _model.TextCursor.GetLineAndColumnIndex);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
-        Assert.AreEqual(1, _model.Tokens.GetMergedTokens(0).Count);
-        Assert.AreEqual(0, _model.Tokens.GetMergedTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(0, _model.Tokens.GetTokens(1).Count);
     }
 
     [Test]
@@ -440,7 +440,7 @@ public class CodeTextBoxModelSelectionIntegration
 
         Assert.AreEqual("", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
-        Assert.AreEqual(0, _model.Tokens.GetMergedTokens(0).Count);
+        Assert.AreEqual(0, _model.Tokens.GetTokens(0).Count);
     }
 
     [Test]
