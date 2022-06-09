@@ -6,7 +6,7 @@ internal class TokenSelector
     {
         if (lineIndex >= tokens.LinesCount) return default;
         var lineTokens = tokens.GetTokens(lineIndex);
-        var cursor = TokenCursorPosition.GetPosition(lineTokens, lineIndex, columnIndex);
+        var cursor = TokenCursorPosition.GetPosition(lineTokens, columnIndex);
         if (cursor.Position == TokenCursorPositionKind.StartLine)
         {
             return ToSelectedRange(cursor.Right);

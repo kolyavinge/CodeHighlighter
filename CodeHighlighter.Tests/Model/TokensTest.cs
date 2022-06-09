@@ -19,10 +19,10 @@ public class TokensTest
     {
         var tokens = new List<Token>
         {
-            new(0, 0, 2, 0),
-            new(0, 2, 1, 1),
-            new(2, 0, 1, 0),
-            new(2, 1, 2, 1),
+            new("", 0, 0, 2, 0),
+            new("", 0, 2, 1, 1),
+            new("", 2, 0, 1, 0),
+            new("", 2, 1, 2, 1),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
@@ -37,18 +37,18 @@ public class TokensTest
     {
         var tokens = new List<Token>
         {
-            new(0, 0, 2, 0),
-            new(0, 2, 1, 1),
-            new(2, 0, 1, 0),
-            new(2, 1, 2, 1),
+            new("", 0, 0, 2, 0),
+            new("", 0, 2, 1, 1),
+            new("", 2, 0, 1, 0),
+            new("", 2, 1, 2, 1),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
         tokens = new List<Token>
         {
-            new(0, 0, 3, 0),
-            new(1, 0, 1, 0),
-            new(1, 1, 2, 1),
+            new("", 0, 0, 3, 0),
+            new("", 1, 0, 1, 0),
+            new("", 1, 1, 2, 1),
         };
         _tokens.SetTokens(tokens, 0, 2);
 
@@ -71,17 +71,17 @@ public class TokensTest
     {
         var tokens = new List<Token>
         {
-            new(0, 0, 2, 0),
-            new(1, 2, 1, 1),
-            new(1, 3, 1, 1),
-            new(2, 0, 1, 0),
+            new("", 0, 0, 2, 0),
+            new("", 1, 2, 1, 1),
+            new("", 1, 3, 1, 1),
+            new("", 2, 0, 1, 0),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
         _tokens.ReplaceLines(0, 2);
 
-        Assert.AreEqual(new[] { new LineToken(2, 1, 1), new LineToken(3, 1, 1) }, _tokens.GetTokens(0));
-        Assert.AreEqual(new[] { new LineToken(0, 1, 0) }, _tokens.GetTokens(1));
-        Assert.AreEqual(new[] { new LineToken(0, 2, 0) }, _tokens.GetTokens(2));
+        Assert.AreEqual(new[] { new LineToken("", 2, 1, 1), new LineToken("", 3, 1, 1) }, _tokens.GetTokens(0));
+        Assert.AreEqual(new[] { new LineToken("", 0, 1, 0) }, _tokens.GetTokens(1));
+        Assert.AreEqual(new[] { new LineToken("", 0, 2, 0) }, _tokens.GetTokens(2));
     }
 }

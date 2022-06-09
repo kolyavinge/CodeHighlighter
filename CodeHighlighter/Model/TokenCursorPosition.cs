@@ -24,12 +24,12 @@ internal readonly struct TokenCursorPosition
         Right = right;
     }
 
-    public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int lineIndex, int columnIndex)
+    public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int columnIndex)
     {
         if (!lineTokens.Any()) return default;
         if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
         {
-            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), default);
+            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), LineToken.Default);
         }
         int index;
         if ((index = lineTokens.FindIndex(x => x.StartColumnIndex < columnIndex && columnIndex < x.EndColumnIndex + 1)) != -1)
@@ -44,7 +44,7 @@ internal readonly struct TokenCursorPosition
             }
             else
             {
-                return new(TokenCursorPositionKind.StartLine, default, lineTokens[index]);
+                return new(TokenCursorPositionKind.StartLine, LineToken.Default, lineTokens[index]);
             }
         }
         else if ((index = lineTokens.FindIndex(x => x.EndColumnIndex + 1 == columnIndex)) != -1)
@@ -63,7 +63,7 @@ internal readonly struct TokenCursorPosition
             index = lineTokens.FindIndex(x => x.StartColumnIndex > columnIndex);
             if (index == 0)
             {
-                return new(TokenCursorPositionKind.StartLine, default, lineTokens.First());
+                return new(TokenCursorPositionKind.StartLine, LineToken.Default, lineTokens.First());
             }
             else
             {

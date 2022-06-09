@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model;
@@ -73,15 +74,19 @@ internal class Tokens : ITokens
     }
 }
 
-internal readonly struct LineToken
+internal class LineToken
 {
+    public static readonly LineToken Default = new("", 0, 0, 0);
+
+    public readonly string Name;
     public readonly int StartColumnIndex;
     public readonly int Length;
     public readonly byte Kind;
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-    public LineToken(int startColumnIndex, int length, byte kind)
+    public LineToken(string name, int startColumnIndex, int length, byte kind)
     {
+        Name = name;
         StartColumnIndex = startColumnIndex;
         Length = length;
         Kind = kind;
@@ -89,6 +94,20 @@ internal readonly struct LineToken
 
     public static LineToken FromCodeHighlighterToken(Token token)
     {
-        return new(token.StartColumnIndex, token.Length, token.Kind);
+        return new(token.Name, token.StartColumnIndex, token.Length, token.Kind);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is LineToken token &&
+               Name == token.Name &&
+               StartColumnIndex == token.StartColumnIndex &&
+               Length == token.Length &&
+               Kind == token.Kind;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, StartColumnIndex, Length, Kind);
     }
 }

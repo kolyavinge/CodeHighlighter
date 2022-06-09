@@ -35,9 +35,8 @@ internal class TextRenderLogic
             var lineTokens = _model.Tokens.GetTokens(lineIndex);
             foreach (var token in lineTokens)
             {
-                var text = _model.Text.GetSubstring(lineIndex, token.StartColumnIndex, token.Length);
                 var brush = _model.TokenColors.GetColorBrushOrNull(token.Kind) ?? defaultForeground;
-                var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _fontSettings.FontSize, brush, 1.0);
+                var formattedText = new FormattedText(token.Name, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _fontSettings.FontSize, brush, 1.0);
                 var offsetX = -_viewportContext.HorizontalScrollBarValue + _textMeasures.LetterWidth * token.StartColumnIndex;
                 context.DrawText(formattedText, new Point(offsetX, offsetY));
             }

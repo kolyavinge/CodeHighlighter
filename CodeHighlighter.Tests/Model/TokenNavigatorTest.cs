@@ -26,9 +26,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -62,15 +62,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         var tokens2 = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);
@@ -88,9 +88,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -124,15 +124,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         var tokens2 = new List<LineToken>
         {
-            new(2, 2, 0), // x
-            new(6, 1, 1), // y
-            new(7, 2, 2), // z
+            new("xx", 2, 2, 0), // x
+            new("y", 6, 1, 1), // y
+            new("zz", 7, 2, 2), // z
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);
