@@ -7,6 +7,7 @@ namespace CodeHighlighter.Model;
 internal interface ITokens
 {
     int LinesCount { get; }
+    IEnumerable<LineToken> AllTokens { get; }
     List<LineToken> GetTokens(int lineIndex);
 }
 
@@ -68,6 +69,8 @@ internal class Tokens : ITokens
         _tokens.Insert(destinationLineIndex, lineTokens);
     }
 
+    public IEnumerable<LineToken> AllTokens => _tokens.SelectMany(x => x);
+
     public List<LineToken> GetTokens(int lineIndex)
     {
         return _tokens[lineIndex];
@@ -81,7 +84,7 @@ internal class LineToken
     public readonly string Name;
     public readonly int StartColumnIndex;
     public readonly int Length;
-    public readonly byte Kind;
+    public byte Kind;
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
     public LineToken(string name, int startColumnIndex, int length, byte kind)

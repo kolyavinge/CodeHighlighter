@@ -26,6 +26,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private readonly TextMeasures _textMeasures;
     private readonly TextRenderLogic _textRenderLogic;
     private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
+    private readonly TokenKindUpdater _tokenKindUpdater;
     private readonly CursorRenderLogic _cursorRenderLogic;
     private readonly KeyboardController _keyboardController;
     private readonly MouseController _mouseController;
@@ -306,6 +307,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _viewport = new Viewport(this, _textMeasures);
         _textRenderLogic = new TextRenderLogic(_model, _fontSettings, _textMeasures, _viewport, this);
         _textSelectionRenderLogic = new TextSelectionRenderLogic();
+        _tokenKindUpdater = new TokenKindUpdater(_model.Tokens);
         _cursorRenderLogic = new CursorRenderLogic(_model.TextCursor, _textMeasures, this);
         _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
         Commands = new CodeTextBoxCommands();
@@ -420,6 +422,14 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private void OnUpdateCodeProvider()
     {
         _model.SetCodeProvider(CodeProvider);
+        if (CodeProvider is ITokenKindUpdatable tokenKindUpdatable)
+        {
+            tokenKindUpdatable.TokenKindUpdated += (s, e) =>
+            {
+                _tokenKindUpdater.UpdateTokenKinds(e.UpdatedTokenKinds);
+                InvalidateVisual();
+            };
+        }
         _viewport.UpdateScrollbarsMaximumValues(_model.Text);
     }
 }
