@@ -33,7 +33,7 @@
             TextLineHeight="{Binding TextLineHeight, ElementName=codeTextBox}"
             Background="Linen"
             Foreground="DimGray"
-            Margin="0,24,0,0"
+            Margin="0,24,0,28"
             Width="50"
             HorizontalAlignment="Left"
             />

@@ -68,7 +68,7 @@ public class LineNumberPanel : Control
         // draw numbers
         var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
         var startLine = (int)(VerticalScrollBarValue / TextLineHeight);
-        var linesCount = (int)(ActualHeight / TextLineHeight);
+        var linesCount = (int)(ActualHeight / TextLineHeight) + 1;
         var endLine = Math.Min(startLine + linesCount, TextLinesCount);
         var offsetY = -(VerticalScrollBarValue % TextLineHeight);
         for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
