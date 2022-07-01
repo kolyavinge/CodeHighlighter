@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using CodeEditor.Mvvm;
@@ -20,6 +21,10 @@ public class MainViewModel
 
     public ICommand InsertLineCommand => new ActionCommand(InsertLine);
 
+    public string SelectedLineToGoto { get; set; }
+
+    public ICommand GotoLineCommand => new ActionCommand(GotoLine);
+
     public MainViewModel()
     {
         TextHolder = new TextHolder(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
@@ -37,5 +42,13 @@ public class MainViewModel
         Commands.MoveCursorTextEndCommand.Execute();
         Commands.NewLineCommand.Execute();
         Commands.InsertTextCommand.Execute(new InsertTextCommandParameter("new inserted line"));
+    }
+
+    private void GotoLine()
+    {
+        if (Int32.TryParse(SelectedLineToGoto, out int gotoLine))
+        {
+            Commands.GotoLineCommand.Execute(new GotoLineCommandParameter(gotoLine - 1));
+        }
     }
 }

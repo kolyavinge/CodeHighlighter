@@ -244,7 +244,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         var commands = (CodeTextBoxCommands?)e.NewValue;
         if (commands != null)
         {
-            commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport));
+            commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport, codeTextBox, codeTextBox._textMeasures));
         }
     }
     #endregion
@@ -311,7 +311,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _cursorRenderLogic = new CursorRenderLogic(_model.TextCursor, _textMeasures, this);
         _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
         Commands = new CodeTextBoxCommands();
-        Commands.Init(new InputCommandContext(this, _model, _viewport));
+        Commands.Init(new InputCommandContext(this, _model, _viewport, this, _textMeasures));
         _keyboardController = new KeyboardController(Commands, _model, _model);
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
         var textEvents = new TextEvents(_model.Text);

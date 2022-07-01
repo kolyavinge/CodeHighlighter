@@ -26,7 +26,7 @@ internal class KeyboardControllerIntegration
         _viewport = new Viewport(_viewportContext.Object, _textMeasures);
         _model = new CodeTextBoxModel();
         _commands = new CodeTextBoxCommands();
-        _commands.Init(new InputCommandContext(_codeTextBox.Object, _model, _viewport));
+        _commands.Init(new InputCommandContext(_codeTextBox.Object, _model, _viewport, _viewportContext.Object, _textMeasures));
         _controller = new KeyboardController(_commands, _model, _model);
     }
 
