@@ -32,6 +32,10 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private readonly MouseController _mouseController;
     private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
+    #region Events
+    public event EventHandler? TextChanged;
+    #endregion
+
     #region IsReadOnly
     public bool IsReadOnly
     {
@@ -314,6 +318,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         Commands.Init(new InputCommandContext(this, _model, _viewport, this, _textMeasures));
         _keyboardController = new KeyboardController(Commands, _model, _model);
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
+        _model.Text.TextChanged += (s, e) => TextChanged?.Invoke(this, EventArgs.Empty);
         var textEvents = new TextEvents(_model.Text);
         textEvents.LinesCountChanged += (s, e) => TextLinesCount = e.LinesCount;
         TextLinesCount = 1;
