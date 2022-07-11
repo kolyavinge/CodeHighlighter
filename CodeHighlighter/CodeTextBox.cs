@@ -33,7 +33,12 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
     #region Events
+    public event PropertyChangedEventHandler? PropertyChanged;
     public event EventHandler? TextChanged;
+    public event EventHandler? LinesCountChanged;
+    public event EventHandler? LineHeightChanged;
+    public event EventHandler? LetterWidthChanged;
+    public event EventHandler? CursorMoved;
     #endregion
 
     #region IsReadOnly
@@ -279,8 +284,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
     }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
-
     private int _textLinesCount;
     public int TextLinesCount
     {
@@ -303,6 +306,28 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         }
     }
 
+    private double _textLetterWidth;
+    public double TextLetterWidth
+    {
+        get => _textLetterWidth;
+        set
+        {
+            _textLetterWidth = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TextLetterWidth"));
+        }
+    }
+
+    private TextCursorPosition _textCursorPosition;
+    public TextCursorPosition TextCursorPosition
+    {
+        get => _textCursorPosition;
+        set
+        {
+            _textCursorPosition = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TextCursorPosition"));
+        }
+    }
+
     public CodeTextBox()
     {
         _model = new CodeTextBoxModel();
@@ -320,10 +345,12 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
         _model.Text.TextChanged += (s, e) => TextChanged?.Invoke(this, EventArgs.Empty);
         var textEvents = new TextEvents(_model.Text);
-        textEvents.LinesCountChanged += (s, e) => TextLinesCount = e.LinesCount;
+        textEvents.LinesCountChanged += (s, e) => { TextLinesCount = e.LinesCount; LinesCountChanged?.Invoke(this, EventArgs.Empty); };
         TextLinesCount = 1;
         var textMeasuresEvents = new TextMeasuresEvents(_textMeasures);
-        textMeasuresEvents.LineHeightChanged += (s, e) => TextLineHeight = e.LineHeight;
+        textMeasuresEvents.LineHeightChanged += (s, e) => { TextLineHeight = e.LineHeight; LineHeightChanged?.Invoke(this, EventArgs.Empty); };
+        textMeasuresEvents.LetterWidthChanged += (s, e) => { TextLetterWidth = e.LetterWidth; LetterWidthChanged?.Invoke(this, EventArgs.Empty); };
+        _model.TextCursor.CursorMoved += (s, e) => { TextCursorPosition = new(_model.TextCursor.LineIndex, _model.TextCursor.ColumnIndex); CursorMoved?.Invoke(this, EventArgs.Empty); };
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace CodeHighlighter.Model;
 
@@ -8,6 +9,7 @@ internal interface ITextCursor
     int ColumnIndex { get; }
     Point GetAbsolutePosition(TextMeasures textMeasures);
     (int, int) GetLineAndColumnIndex { get; }
+    event EventHandler CursorMoved;
 }
 
 internal class TextCursor : ITextCursor
@@ -22,6 +24,8 @@ internal class TextCursor : ITextCursor
 
     public (int, int) GetLineAndColumnIndex => (LineIndex, ColumnIndex);
 
+    public event EventHandler? CursorMoved;
+
     public TextCursor(Text text)
     {
         _text = text;
@@ -33,18 +37,21 @@ internal class TextCursor : ITextCursor
         LineIndex = lineIndex;
         ColumnIndex = columnIndex;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveUp()
     {
         LineIndex--;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveDown()
     {
         LineIndex++;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveLeft()
@@ -57,6 +64,7 @@ internal class TextCursor : ITextCursor
             ColumnIndex = int.MaxValue;
         }
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveRight()
@@ -69,42 +77,49 @@ internal class TextCursor : ITextCursor
             ColumnIndex = 0;
         }
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveStartLine()
     {
         ColumnIndex = 0;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveEndLine()
     {
         ColumnIndex = _text.GetLine(LineIndex).Length;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MovePageUp(int pageSize)
     {
         LineIndex -= pageSize;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MovePageDown(int pageSize)
     {
         LineIndex += pageSize;
         CorrectPosition();
+        RaiseCursorMoved();
     }
 
     public void MoveTextBegin()
     {
         ColumnIndex = 0;
         LineIndex = 0;
+        RaiseCursorMoved();
     }
 
     public void MoveTextEnd()
     {
         LineIndex = _text.LinesCount - 1;
         ColumnIndex = _text.GetLine(LineIndex).Length;
+        RaiseCursorMoved();
     }
 
     private void CorrectPosition()
@@ -113,5 +128,10 @@ internal class TextCursor : ITextCursor
         if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
         if (ColumnIndex < 0) ColumnIndex = 0;
         if (ColumnIndex > _text.GetLine(LineIndex).Length) ColumnIndex = _text.GetLine(LineIndex).Length;
+    }
+
+    private void RaiseCursorMoved()
+    {
+        CursorMoved?.Invoke(this, EventArgs.Empty);
     }
 }

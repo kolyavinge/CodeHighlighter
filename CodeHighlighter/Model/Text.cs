@@ -14,7 +14,7 @@ internal interface IText
     TextLine GetLastLine();
     int GetMaxLineWidth();
     string ToString();
-    event EventHandler? TextChanged;
+    event EventHandler TextChanged;
 }
 
 internal class Text : IText
