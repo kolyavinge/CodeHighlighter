@@ -19,6 +19,16 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
     public ITokens Tokens => _tokens;
     public ITokensColors TokenColors => _tokenColors;
 
+    public CodeTextBoxModel(Text text, TextCursor textCursor, TextSelection textSelection, Tokens tokens)
+    {
+        _text = text;
+        _textCursor = textCursor;
+        _textSelection = textSelection;
+        _tokens = tokens;
+        _tokenColors = new();
+        _codeProvider = new CodeProviders.EmptyCodeProvider();
+    }
+
     public CodeTextBoxModel()
     {
         _text = new();
@@ -37,7 +47,7 @@ internal class CodeTextBoxModel : ITextSource, ITextSelectionActivator, ITokenSe
 
     public void SetText(string text)
     {
-        _text.SetText(text);
+        _text.TextContent = text;
         SetTokens();
     }
 

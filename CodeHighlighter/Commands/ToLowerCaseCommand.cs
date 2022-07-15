@@ -8,7 +8,7 @@ internal class ToLowerCaseCommand : InputCommand
 
     public override void Execute(object parameter)
     {
-        _context.Model.SetSelectedTextCase(Model.TextCase.Lower);
+        _context.Model.SetSelectedTextCase(TextCase.Lower);
         _context.TextBox.InvalidateVisual();
     }
 }

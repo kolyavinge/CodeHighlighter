@@ -14,31 +14,38 @@ internal interface IText
     TextLine GetLastLine();
     int GetMaxLineWidth();
     string ToString();
+    event EventHandler? TextSet;
     event EventHandler? TextChanged;
 }
 
-internal class Text : IText
+internal class Text : IText, Contracts.IText
 {
     private readonly List<TextLine> _lines = new();
 
+    public event EventHandler? TextSet;
     public event EventHandler? TextChanged;
 
     public int LinesCount => _lines.Count;
 
     public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
 
+    public string TextContent
+    {
+        get => this.ToString();
+        set
+        {
+            _lines.Clear();
+            _lines.AddRange(value.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
+            TextSet?.Invoke(this, EventArgs.Empty);
+            RaiseTextChanged();
+        }
+    }
+
     public Text() : this("") { }
 
     public Text(string text)
     {
-        SetText(text);
-    }
-
-    public void SetText(string text)
-    {
-        _lines.Clear();
-        _lines.AddRange(text.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
-        RaiseTextChanged();
+        TextContent = text;
     }
 
     public string GetSubstring(int lineIndex, int startIndex, int length)
@@ -96,18 +103,9 @@ internal class Text : IText
 
     public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
     {
-        if (currentColumnIndex > 0)
-        {
-            return (currentLineIndex, currentColumnIndex - 1);
-        }
-        else if (currentLineIndex > 0)
-        {
-            return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
-        }
-        else
-        {
-            return (currentLineIndex, currentColumnIndex);
-        }
+        if (currentColumnIndex > 0) return (currentLineIndex, currentColumnIndex - 1);
+        else if (currentLineIndex > 0) return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
+        else return (currentLineIndex, currentColumnIndex);
     }
 
     public DeleteResult LeftDelete(int lineIndex, int columnIndex)

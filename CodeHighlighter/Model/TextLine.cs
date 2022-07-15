@@ -87,5 +87,3 @@ class TextLine : IEnumerable<char>
 
     IEnumerator IEnumerable.GetEnumerator() => _symbs.GetEnumerator();
 }
-
-public enum TextCase { Upper, Lower }

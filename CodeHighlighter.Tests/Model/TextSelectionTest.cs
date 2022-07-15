@@ -29,7 +29,7 @@ public class TextSelectionTest
     [Test]
     public void GetTextSelectionLines_1()
     {
-        _text.SetText("01234\n01234\n01234\n01234\n01234");
+        _text.TextContent = "01234\n01234\n01234\n01234\n01234";
         _textSelection.StartLineIndex = 0;
         _textSelection.StartCursorColumnIndex = 2;
         _textSelection.EndLineIndex = 3;
@@ -59,7 +59,7 @@ public class TextSelectionTest
     [Test]
     public void GetTextSelectionLines_2()
     {
-        _text.SetText("01234\n01234\n01234\n01234\n01234");
+        _text.TextContent = "01234\n01234\n01234\n01234\n01234";
         _textSelection.StartLineIndex = 3;
         _textSelection.StartCursorColumnIndex = 4;
         _textSelection.EndLineIndex = 0;
@@ -89,7 +89,7 @@ public class TextSelectionTest
     [Test]
     public void SelectAll()
     {
-        _text.SetText("");
+        _text.TextContent = "";
         _textSelection.StartLineIndex = 0;
         _textSelection.StartCursorColumnIndex = 0;
         _textSelection.EndLineIndex = 0;

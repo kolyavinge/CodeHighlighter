@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace CodeHighlighter.Model;
 
-internal class TextMeasures
+internal class TextMeasures : Contracts.ITextMeasures
 {
     private readonly FontSettings _fontSettings;
 
@@ -28,8 +28,6 @@ internal class TextMeasures
     public double LineHeight { get; private set; }
 
     public double LetterWidth { get; private set; }
-
-    public double HalfLetterWidth => LetterWidth / 2.0;
 
     public void UpdateMeasures()
     {

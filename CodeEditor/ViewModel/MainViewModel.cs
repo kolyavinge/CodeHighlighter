@@ -5,36 +5,44 @@ using System.Windows.Input;
 using CodeEditor.Mvvm;
 using CodeHighlighter;
 using CodeHighlighter.CodeProviders;
+using CodeHighlighter.Contracts;
 using CodeHighlighter.Commands;
 
 namespace CodeEditor.ViewModel;
 
 public class MainViewModel
 {
-    public TextHolder TextHolder { get; set; }
+    private CodeTextBoxModel? _model;
 
     public CodeTextBoxCommands Commands { get; set; }
 
     public ICodeProvider CodeProvider { get; set; }
 
+    public ICommand LoadedCommand => new ActionCommand<CodeTextBoxModel>(Loaded);
+
     public ICommand CopyTextCommand => new ActionCommand(CopyText);
 
     public ICommand InsertLineCommand => new ActionCommand(InsertLine);
 
-    public string SelectedLineToGoto { get; set; }
+    public string? SelectedLineToGoto { get; set; }
 
     public ICommand GotoLineCommand => new ActionCommand(GotoLine);
 
     public MainViewModel()
     {
-        TextHolder = new TextHolder(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
         Commands = new CodeTextBoxCommands();
         CodeProvider = new SqlCodeProvider();
     }
 
+    private void Loaded(CodeTextBoxModel model)
+    {
+        _model = model;
+        _model.Text.TextContent = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
+    }
+
     private void CopyText()
     {
-        Clipboard.SetText(TextHolder.TextValue);
+        Clipboard.SetText(_model!.Text.TextContent);
     }
 
     private void InsertLine()
@@ -46,7 +54,7 @@ public class MainViewModel
 
     private void GotoLine()
     {
-        if (Int32.TryParse(SelectedLineToGoto, out int gotoLine))
+        if (Int32.TryParse(SelectedLineToGoto ?? "", out int gotoLine))
         {
             Commands.GotoLineCommand.Execute(new GotoLineCommandParameter(gotoLine - 1));
         }

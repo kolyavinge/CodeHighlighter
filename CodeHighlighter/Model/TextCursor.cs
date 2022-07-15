@@ -10,9 +10,9 @@ internal interface ITextCursor
     (int, int) GetLineAndColumnIndex { get; }
 }
 
-internal class TextCursor : ITextCursor
+internal class TextCursor : ITextCursor, Contracts.ITextCursor
 {
-    private readonly Text _text;
+    private readonly IText _text;
 
     public int LineIndex { get; private set; }
 
@@ -22,7 +22,7 @@ internal class TextCursor : ITextCursor
 
     public (int, int) GetLineAndColumnIndex => (LineIndex, ColumnIndex);
 
-    public TextCursor(Text text)
+    public TextCursor(IText text)
     {
         _text = text;
         LineIndex = 0;
