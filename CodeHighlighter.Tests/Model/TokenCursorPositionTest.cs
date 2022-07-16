@@ -18,7 +18,7 @@ public class TokenCursorPositionTest
     public void GetPosition_EmptyTokens()
     {
         var result = TokenCursorPosition.GetPosition(_tokens, 0);
-        Assert.AreEqual(default(TokenCursorPosition), result);
+        Assert.AreEqual(TokenCursorPosition.Default, result);
     }
 
     [Test]

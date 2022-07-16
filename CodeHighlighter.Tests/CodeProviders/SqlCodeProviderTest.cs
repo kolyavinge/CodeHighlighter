@@ -212,7 +212,7 @@ from MyTable'";
     private List<Token> GetTokens(string textString)
     {
         var text = new Text();
-        text.SetText(textString);
+        text.TextContent = textString;
         return _provider.GetTokens(new ForwardTextIterator(text)).ToList();
     }
 }

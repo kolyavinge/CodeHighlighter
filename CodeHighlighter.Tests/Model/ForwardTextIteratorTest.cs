@@ -232,14 +232,14 @@ class ForwardTextIteratorTest
     private void SetText(string textString)
     {
         var text = new Text();
-        text.SetText(textString);
+        text.TextContent = textString;
         _iterator = new ForwardTextIterator(text);
     }
 
     private void SetText(string textString, int startLineIndex, int endLineIndex)
     {
         var text = new Text();
-        text.SetText(textString);
+        text.TextContent = textString;
         _iterator = new ForwardTextIterator(text, startLineIndex, endLineIndex);
     }
 }

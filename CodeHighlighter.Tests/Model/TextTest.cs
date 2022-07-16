@@ -349,7 +349,7 @@ public class TextTest
     [Test]
     public void SetText_RaiseTextChanged()
     {
-        _text.SetText("123");
+        _text.TextContent = "123";
         Assert.AreEqual(1, _textChangedCount);
     }
 
@@ -384,7 +384,7 @@ public class TextTest
     [Test]
     public void LeftDelete_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
 
         _text.LeftDelete(0, 0);
         Assert.AreEqual(1, _textChangedCount); // no changes
@@ -399,7 +399,7 @@ public class TextTest
     [Test]
     public void RightDelete_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
 
         _text.RightDelete(1, 0);
         Assert.AreEqual(2, _textChangedCount); // no changes
@@ -414,7 +414,7 @@ public class TextTest
     [Test]
     public void DeleteSelection_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
 
         _text.DeleteSelection(new TextSelection(0, 0, 0, 1));
         Assert.AreEqual(2, _textChangedCount);
@@ -426,7 +426,7 @@ public class TextTest
     [Test]
     public void DeleteLine_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
         _text.DeleteLine(0);
         Assert.AreEqual(2, _textChangedCount);
     }
@@ -434,7 +434,7 @@ public class TextTest
     [Test]
     public void DeleteLines_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
         _text.DeleteLines(0, 1);
         Assert.AreEqual(2, _textChangedCount);
     }
@@ -442,13 +442,13 @@ public class TextTest
     [Test]
     public void ReplaceLines_RaiseTextChanged()
     {
-        _text.SetText("123\n123");
+        _text.TextContent = "123\n123";
         _text.ReplaceLines(0, 1);
         Assert.AreEqual(2, _textChangedCount);
     }
 
     private void SetText(string textString)
     {
-        _text.SetText(textString);
+        _text.TextContent = textString;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Model;
@@ -11,8 +12,10 @@ internal enum TokenCursorPositionKind
     EndLine,
 }
 
-internal readonly struct TokenCursorPosition
+internal class TokenCursorPosition
 {
+    public static TokenCursorPosition Default => new(TokenCursorPositionKind.StartLine, LineToken.Default, LineToken.Default);
+
     public readonly TokenCursorPositionKind Position;
     public readonly LineToken Left;
     public readonly LineToken Right;
@@ -26,7 +29,7 @@ internal readonly struct TokenCursorPosition
 
     public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int columnIndex)
     {
-        if (!lineTokens.Any()) return default;
+        if (!lineTokens.Any()) return Default;
         if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
         {
             return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), LineToken.Default);
@@ -70,5 +73,18 @@ internal readonly struct TokenCursorPosition
                 return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index - 1], lineTokens[index]);
             }
         }
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TokenCursorPosition position &&
+               Position == position.Position &&
+               EqualityComparer<LineToken>.Default.Equals(Left, position.Left) &&
+               EqualityComparer<LineToken>.Default.Equals(Right, position.Right);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Position, Left, Right);
     }
 }

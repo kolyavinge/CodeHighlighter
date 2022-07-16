@@ -38,7 +38,7 @@ internal class Viewport
 
     public int GetCursorColumnIndex(Point cursorClickPosition)
     {
-        return (int)((cursorClickPosition.X + _textMeasures.HalfLetterWidth + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
+        return (int)((cursorClickPosition.X + _textMeasures.LetterWidth / 2.0 + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
     }
 
     public void CorrectByCursorPosition(ITextCursor textCursor)

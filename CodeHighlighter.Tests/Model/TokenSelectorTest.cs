@@ -33,7 +33,7 @@ public class TokenSelectorTest
     [Test]
     public void GetToken_EmptyLine()
     {
-        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken> { LineToken.Default });
+        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken>());
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));

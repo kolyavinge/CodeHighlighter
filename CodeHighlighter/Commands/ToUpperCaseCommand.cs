@@ -8,7 +8,7 @@ internal class ToUpperCaseCommand : InputCommand
 
     public override void Execute(object parameter)
     {
-        _context.Model.SetSelectedTextCase(Model.TextCase.Upper);
+        _context.Model.SetSelectedTextCase(TextCase.Upper);
         _context.TextBox.InvalidateVisual();
     }
 }
