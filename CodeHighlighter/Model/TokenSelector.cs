@@ -1,7 +1,16 @@
-﻿namespace CodeHighlighter.Model;
+﻿using System.Linq;
+
+namespace CodeHighlighter.Model;
 
 internal class TokenSelector
 {
+    public LineToken? GetTokenOnPosition(ITokens tokens, int lineIndex, int columnIndex)
+    {
+        if (lineIndex >= tokens.LinesCount) return default;
+        var lineTokens = tokens.GetTokens(lineIndex);
+        return lineTokens.LastOrDefault(x => x.StartColumnIndex <= columnIndex && columnIndex <= x.EndColumnIndex + 1);
+    }
+
     public SelectedRange GetSelection(ITokens tokens, int lineIndex, int columnIndex)
     {
         if (lineIndex >= tokens.LinesCount) return default;

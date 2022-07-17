@@ -12,7 +12,7 @@ internal interface ITextCursor
     event EventHandler CursorMoved;
 }
 
-internal class TextCursor : ITextCursor, Contracts.ITextCursor
+public class TextCursor : ITextCursor
 {
     private readonly IText _text;
 
@@ -26,7 +26,7 @@ internal class TextCursor : ITextCursor, Contracts.ITextCursor
 
     public event EventHandler? CursorMoved;
 
-    public TextCursor(IText text)
+    internal TextCursor(IText text)
     {
         _text = text;
         LineIndex = 0;

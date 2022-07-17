@@ -5,14 +5,14 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class CodeTextBoxModelCursorIntegration
+public class InputModelCursorIntegration
 {
-    private CodeTextBoxModel _model;
+    private InputModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = new CodeTextBoxModel();
+        _model = new InputModel();
         _model.SetCodeProvider(new SqlCodeProvider());
         _model.SetText("");
     }

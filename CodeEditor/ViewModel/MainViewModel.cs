@@ -5,20 +5,15 @@ using System.Windows.Input;
 using CodeEditor.Mvvm;
 using CodeHighlighter;
 using CodeHighlighter.CodeProviders;
-using CodeHighlighter.Contracts;
-using CodeHighlighter.Commands;
+using CodeHighlighter.Model;
 
 namespace CodeEditor.ViewModel;
 
 public class MainViewModel
 {
-    private CodeTextBoxModel? _model;
+    public CodeTextBoxModel CodeTextBoxModel { get; }
 
-    public CodeTextBoxCommands Commands { get; set; }
-
-    public ICodeProvider CodeProvider { get; set; }
-
-    public ICommand LoadedCommand => new ActionCommand<CodeTextBoxModel>(Loaded);
+    public ICodeProvider CodeProvider { get; }
 
     public ICommand CopyTextCommand => new ActionCommand(CopyText);
 
@@ -30,33 +25,29 @@ public class MainViewModel
 
     public MainViewModel()
     {
-        Commands = new CodeTextBoxCommands();
         CodeProvider = new SqlCodeProvider();
-    }
-
-    private void Loaded(CodeTextBoxModel model)
-    {
-        _model = model;
-        _model.Text.TextContent = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
+        CodeTextBoxModel = new CodeTextBoxModel();
+        CodeTextBoxModel.SetCodeProvider(CodeProvider);
+        CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
     }
 
     private void CopyText()
     {
-        Clipboard.SetText(_model!.Text.TextContent);
+        Clipboard.SetText(CodeTextBoxModel.Text.TextContent);
     }
 
     private void InsertLine()
     {
-        Commands.MoveCursorTextEndCommand.Execute();
-        Commands.NewLineCommand.Execute();
-        Commands.InsertTextCommand.Execute(new InsertTextCommandParameter("new inserted line"));
+        CodeTextBoxModel.MoveCursorTextEnd();
+        CodeTextBoxModel.NewLine();
+        CodeTextBoxModel.InsertText("new inserted line");
     }
 
     private void GotoLine()
     {
         if (Int32.TryParse(SelectedLineToGoto ?? "", out int gotoLine))
         {
-            Commands.GotoLineCommand.Execute(new GotoLineCommandParameter(gotoLine - 1));
+            CodeTextBoxModel.GotoLine(gotoLine - 1);
         }
     }
 }

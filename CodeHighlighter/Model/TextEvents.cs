@@ -13,10 +13,9 @@ internal class TextEvents
     {
         _text = text;
         _linesCount = _text.LinesCount;
-        _text.TextChanged += OnTextChanged;
     }
 
-    private void OnTextChanged(object? sender, EventArgs e)
+    public void OnTextChanged()
     {
         if (_text.LinesCount != _linesCount)
         {

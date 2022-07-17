@@ -174,7 +174,7 @@ public class SqlCodeProvider : ICodeProvider
                 tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
                 break;
             case State.End:
-                tokens.Add(new(new string(tokenNameArray,0,tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
                 break;
         }
 

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:highlighter="clr-namespace:CodeHighlighter;assembly=CodeHighlighter"
         mc:Ignorable="d"
         Title="MainView"
@@ -43,8 +42,7 @@
 
         <highlighter:CodeTextBox
             x:Name="codeTextBox"
-            Commands="{Binding Commands}"
-            CodeProvider="{Binding CodeProvider}"
+            Model="{Binding CodeTextBoxModel}"
             IsReadOnly="{Binding IsChecked, ElementName=readOnlyCheckBox, Mode=TwoWay}"
             FontFamily="Consolas"
             FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
@@ -55,11 +53,6 @@
             HighlightNoPairBracketBrush="IndianRed"
             CursorLineHighlightingBrush="Linen"
             >
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Loaded">
-                    <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding Model, ElementName=codeTextBox}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
         </highlighter:CodeTextBox>
 
         <ScrollBar

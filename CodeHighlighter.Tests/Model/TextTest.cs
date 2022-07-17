@@ -6,14 +6,11 @@ namespace CodeHighlighter.Tests.Model;
 public class TextTest
 {
     private Text _text;
-    private int _textChangedCount;
 
     [SetUp]
     public void Setup()
     {
         _text = new Text();
-        _text.TextChanged += (s, e) => _textChangedCount++;
-        _textChangedCount = 0;
     }
 
     [Test]
@@ -344,107 +341,6 @@ public class TextTest
         SetText("ABC\nXYZ");
         _text.SetSelectedTextCase(new TextSelection(0, 0, 1, 1), TextCase.Lower);
         Assert.AreEqual("abc\r\nxYZ", _text.ToString());
-    }
-
-    [Test]
-    public void SetText_RaiseTextChanged()
-    {
-        _text.TextContent = "123";
-        Assert.AreEqual(1, _textChangedCount);
-    }
-
-    [Test]
-    public void NewLine_RaiseTextChanged()
-    {
-        _text.NewLine(0, 0);
-        Assert.AreEqual(1, _textChangedCount);
-    }
-
-    [Test]
-    public void AppendChar_RaiseTextChanged()
-    {
-        _text.AppendChar(0, 0, '1');
-        Assert.AreEqual(1, _textChangedCount);
-    }
-
-    [Test]
-    public void Insert_OneLine_RaiseTextChanged()
-    {
-        _text.Insert(0, 0, new Text("123"));
-        Assert.AreEqual(1, _textChangedCount);
-    }
-
-    [Test]
-    public void Insert_TwoLines_RaiseTextChanged()
-    {
-        _text.Insert(0, 0, new Text("123\n123"));
-        Assert.AreEqual(2, _textChangedCount);
-    }
-
-    [Test]
-    public void LeftDelete_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-
-        _text.LeftDelete(0, 0);
-        Assert.AreEqual(1, _textChangedCount); // no changes
-
-        _text.LeftDelete(0, 1);
-        Assert.AreEqual(2, _textChangedCount);
-
-        _text.LeftDelete(1, 0);
-        Assert.AreEqual(3, _textChangedCount);
-    }
-
-    [Test]
-    public void RightDelete_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-
-        _text.RightDelete(1, 0);
-        Assert.AreEqual(2, _textChangedCount); // no changes
-
-        _text.RightDelete(0, 0);
-        Assert.AreEqual(3, _textChangedCount);
-
-        _text.RightDelete(1, 0);
-        Assert.AreEqual(4, _textChangedCount);
-    }
-
-    [Test]
-    public void DeleteSelection_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-
-        _text.DeleteSelection(new TextSelection(0, 0, 0, 1));
-        Assert.AreEqual(2, _textChangedCount);
-
-        _text.DeleteSelection(new TextSelection(0, 0, 1, 0));
-        Assert.AreEqual(3, _textChangedCount);
-    }
-
-    [Test]
-    public void DeleteLine_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-        _text.DeleteLine(0);
-        Assert.AreEqual(2, _textChangedCount);
-    }
-
-    [Test]
-    public void DeleteLines_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-        _text.DeleteLines(0, 1);
-        Assert.AreEqual(2, _textChangedCount);
-    }
-
-    [Test]
-    public void ReplaceLines_RaiseTextChanged()
-    {
-        _text.TextContent = "123\n123";
-        _text.ReplaceLines(0, 1);
-        Assert.AreEqual(2, _textChangedCount);
     }
 
     private void SetText(string textString)

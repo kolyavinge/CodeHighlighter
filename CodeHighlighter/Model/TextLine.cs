@@ -6,7 +6,7 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-class TextLine : IEnumerable<char>
+public class TextLine : IEnumerable<char>
 {
     private readonly List<char> _symbs;
 

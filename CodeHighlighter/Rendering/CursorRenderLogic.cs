@@ -9,17 +9,7 @@ namespace CodeHighlighter.Rendering;
 
 internal class CursorRenderLogic
 {
-    private readonly ITextCursor _textCursor;
-    private readonly TextMeasures _textMeasures;
-    private readonly IViewportContext _viewportContext;
-    private Line? _cursorLine;
-
-    public CursorRenderLogic(ITextCursor textCursor, TextMeasures textMeasures, IViewportContext viewportContext)
-    {
-        _textCursor = textCursor;
-        _textMeasures = textMeasures;
-        _viewportContext = viewportContext;
-    }
+    private Line _cursorLine = new();
 
     public void SetCursor(Line cursorLine, Brush foreground)
     {
@@ -36,31 +26,32 @@ internal class CursorRenderLogic
         _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
     }
 
-    public void DrawCursor()
+    public void DrawCursor(ITextCursor textCursor, TextMeasures textMeasures, IViewportContext viewportContext)
     {
-        var cursorAbsolutePoint = _textCursor.GetAbsolutePosition(_textMeasures);
-        cursorAbsolutePoint.X -= _viewportContext.HorizontalScrollBarValue;
-        cursorAbsolutePoint.Y -= _viewportContext.VerticalScrollBarValue;
-        _cursorLine!.X1 = (int)cursorAbsolutePoint.X;
-        _cursorLine!.Y1 = (int)(cursorAbsolutePoint.Y - 1);
-        _cursorLine!.X2 = (int)cursorAbsolutePoint.X;
-        _cursorLine!.Y2 = (int)(cursorAbsolutePoint.Y + _textMeasures.LineHeight + 1);
+        var cursorAbsolutePoint = textCursor.GetAbsolutePosition(textMeasures);
+        cursorAbsolutePoint.X -= viewportContext.HorizontalScrollBarValue;
+        cursorAbsolutePoint.Y -= viewportContext.VerticalScrollBarValue;
+        _cursorLine.X1 = (int)cursorAbsolutePoint.X + 1;  // +1 - cursor not clipping on the left edge
+        _cursorLine.Y1 = (int)(cursorAbsolutePoint.Y - 1);
+        _cursorLine.X2 = (int)cursorAbsolutePoint.X;
+        _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + textMeasures.LineHeight + 1);
     }
 
     public void HideCursor()
     {
-        _cursorLine!.X1 = 0;
-        _cursorLine!.Y1 = 0;
-        _cursorLine!.X2 = 0;
-        _cursorLine!.Y2 = 0;
+        _cursorLine.X1 = 0;
+        _cursorLine.Y1 = 0;
+        _cursorLine.X2 = 0;
+        _cursorLine.Y2 = 0;
     }
 
-    public void DrawHighlightedCursorLine(DrawingContext context, Brush background, double actualWidth)
+    public void DrawHighlightedCursorLine(
+        DrawingContext context, Brush background, double actualWidth, ITextCursor textCursor, TextMeasures textMeasures, IViewportContext viewportContext)
     {
         var x = 0.0;
-        var y = _textCursor.LineIndex * _textMeasures.LineHeight - _viewportContext.VerticalScrollBarValue;
+        var y = textCursor.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue;
         var width = actualWidth;
-        var height = _textMeasures.LineHeight;
+        var height = textMeasures.LineHeight;
         context.DrawRectangle(background, null, new(x, y, width, height));
     }
 }

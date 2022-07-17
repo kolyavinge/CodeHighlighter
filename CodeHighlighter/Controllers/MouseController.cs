@@ -6,63 +6,40 @@ namespace CodeHighlighter.Controllers;
 
 internal class MouseController
 {
-    private readonly ICodeTextBox _codeTextBox;
-    private readonly ITokenSelector _tokenSelector;
-    private readonly ICursorHandler _cursorHandler;
-    private readonly ITextSelectionActivator _selectionActivator;
-    private readonly Viewport _viewport;
-    private readonly IViewportContext _viewportContext;
-
-    public MouseController(
-        ICodeTextBox codeTextBox,
-        ITokenSelector tokenSelector,
-        ICursorHandler cursorHandler,
-        ITextSelectionActivator selectionActivator,
-        Viewport viewport,
-        IViewportContext viewportContext)
+    public void OnMouseDown(ICodeTextBox codeTextBox, Viewport viewport, ITextSelectionActivator selectionActivator, ICursorHandler cursorHandler, Point positionInControl, bool shiftPressed)
     {
-        _codeTextBox = codeTextBox;
-        _tokenSelector = tokenSelector;
-        _cursorHandler = cursorHandler;
-        _selectionActivator = selectionActivator;
-        _viewport = viewport;
-        _viewportContext = viewportContext;
+        codeTextBox.Focus();
+        var lineIndex = viewport.GetCursorLineIndex(positionInControl);
+        var columnIndex = viewport.GetCursorColumnIndex(positionInControl);
+        if (shiftPressed) selectionActivator.ActivateSelection();
+        else selectionActivator.CompleteSelection();
+        cursorHandler.MoveCursorTo(lineIndex, columnIndex);
+        codeTextBox.InvalidateVisual();
     }
 
-    public void OnMouseDown(Point positionInControl, bool shiftPressed)
-    {
-        _codeTextBox.Focus();
-        var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-        var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-        if (shiftPressed) _selectionActivator.ActivateSelection();
-        else _selectionActivator.CompleteSelection();
-        _cursorHandler.MoveCursorTo(lineIndex, columnIndex);
-        _codeTextBox.InvalidateVisual();
-    }
-
-    public void OnMouseMove(Point positionInControl, MouseButtonState leftButton)
+    public void OnMouseMove(ICodeTextBox codeTextBox, Viewport viewport, ITextSelectionActivator selectionActivator, ICursorHandler cursorHandler, Point positionInControl, MouseButtonState leftButton)
     {
         if (leftButton == MouseButtonState.Pressed)
         {
-            _selectionActivator.ActivateSelection();
-            var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-            var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-            _cursorHandler.MoveCursorTo(lineIndex, columnIndex);
-            _codeTextBox.InvalidateVisual();
+            selectionActivator.ActivateSelection();
+            var lineIndex = viewport.GetCursorLineIndex(positionInControl);
+            var columnIndex = viewport.GetCursorColumnIndex(positionInControl);
+            cursorHandler.MoveCursorTo(lineIndex, columnIndex);
+            codeTextBox.InvalidateVisual();
         }
     }
 
-    public void OnMouseWheel(int delta)
+    public void OnMouseWheel(ICodeTextBox codeTextBox, IViewportContext viewportContext, int delta)
     {
-        _viewportContext.VerticalScrollBarValue -= delta;
-        _codeTextBox.InvalidateVisual();
+        viewportContext.VerticalScrollBarValue -= delta;
+        codeTextBox.InvalidateVisual();
     }
 
-    public void OnMouseDoubleClick(Point positionInControl)
+    public void OnMouseDoubleClick(ICodeTextBox codeTextBox, Viewport viewport, ITokenSelector tokenSelector, Point positionInControl)
     {
-        var lineIndex = _viewport.GetCursorLineIndex(positionInControl);
-        var columnIndex = _viewport.GetCursorColumnIndex(positionInControl);
-        _tokenSelector.SelectToken(lineIndex, columnIndex);
-        _codeTextBox.InvalidateVisual();
+        var lineIndex = viewport.GetCursorLineIndex(positionInControl);
+        var columnIndex = viewport.GetCursorColumnIndex(positionInControl);
+        tokenSelector.SelectToken(lineIndex, columnIndex);
+        codeTextBox.InvalidateVisual();
     }
 }

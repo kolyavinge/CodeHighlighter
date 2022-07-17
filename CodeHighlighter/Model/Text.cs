@@ -14,16 +14,11 @@ internal interface IText
     TextLine GetLastLine();
     int GetMaxLineWidth();
     string ToString();
-    event EventHandler TextSet;
-    event EventHandler TextChanged;
 }
 
-internal class Text : IText, Contracts.IText
+public class Text : IText
 {
     private readonly List<TextLine> _lines = new();
-
-    public event EventHandler? TextSet;
-    public event EventHandler? TextChanged;
 
     public int LinesCount => _lines.Count;
 
@@ -31,19 +26,17 @@ internal class Text : IText, Contracts.IText
 
     public string TextContent
     {
-        get => this.ToString();
-        set
+        get => ToString();
+        internal set
         {
             _lines.Clear();
             _lines.AddRange(value.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());
-            TextSet?.Invoke(this, EventArgs.Empty);
-            RaiseTextChanged();
         }
     }
 
-    public Text() : this("") { }
+    internal Text() : this("") { }
 
-    public Text(string text)
+    internal Text(string text)
     {
         TextContent = text;
     }
@@ -65,28 +58,25 @@ internal class Text : IText, Contracts.IText
         return _lines.Select(x => x.Length).Max();
     }
 
-    public void NewLine(int lineIndex, int columnIndex)
+    internal void NewLine(int lineIndex, int columnIndex)
     {
         var line = _lines[lineIndex];
         var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
         line.RemoveRange(columnIndex, line.Length - columnIndex);
         _lines.Insert(lineIndex + 1, new TextLine(remains));
-        RaiseTextChanged();
     }
 
-    public void AppendChar(int lineIndex, int columnIndex, char ch)
+    internal void AppendChar(int lineIndex, int columnIndex, char ch)
     {
         _lines[lineIndex].AppendChar(columnIndex, ch);
-        RaiseTextChanged();
     }
 
-    public void Insert(int lineIndex, int columnIndex, IText insertedText)
+    internal void Insert(int lineIndex, int columnIndex, IText insertedText)
     {
         if (insertedText.LinesCount == 0) return;
         if (insertedText.LinesCount == 1)
         {
             _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
-            RaiseTextChanged();
         }
         else
         {
@@ -97,54 +87,49 @@ internal class Text : IText, Contracts.IText
                 _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
             }
             _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
-            RaiseTextChanged();
         }
     }
 
-    public (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
+    internal (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
     {
         if (currentColumnIndex > 0) return (currentLineIndex, currentColumnIndex - 1);
         else if (currentLineIndex > 0) return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
         else return (currentLineIndex, currentColumnIndex);
     }
 
-    public DeleteResult LeftDelete(int lineIndex, int columnIndex)
+    internal DeleteResult LeftDelete(int lineIndex, int columnIndex)
     {
         if (columnIndex > 0)
         {
             _lines[lineIndex].RemoveAt(columnIndex - 1);
-            RaiseTextChanged();
         }
         else if (lineIndex > 0)
         {
             _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
             _lines.RemoveAt(lineIndex);
-            RaiseTextChanged();
             return new DeleteResult { IsLineDeleted = true };
         }
 
         return new DeleteResult { IsLineDeleted = false };
     }
 
-    public DeleteResult RightDelete(int lineIndex, int columnIndex)
+    internal DeleteResult RightDelete(int lineIndex, int columnIndex)
     {
         if (columnIndex < _lines[lineIndex].Length)
         {
             _lines[lineIndex].RemoveAt(columnIndex);
-            RaiseTextChanged();
         }
         else if (lineIndex < _lines.Count - 1)
         {
             _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
             _lines.RemoveAt(lineIndex + 1);
-            RaiseTextChanged();
             return new DeleteResult { IsLineDeleted = true };
         }
 
         return new DeleteResult { IsLineDeleted = false };
     }
 
-    public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
+    internal DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
     {
         var selectedLines = textSelection.GetSelectedLines(this).ToList();
         if (selectedLines.Count == 1)
@@ -152,7 +137,6 @@ internal class Text : IText, Contracts.IText
             var selectedLine = selectedLines.First();
             var line = _lines[selectedLine.LineIndex];
             line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
-            RaiseTextChanged();
 
             return new DeleteSelectionResult();
         }
@@ -166,35 +150,31 @@ internal class Text : IText, Contracts.IText
             firstLine.AppendLine(lastLine, lastSelectedLine.RightColumnIndex, lastLine.Length - lastSelectedLine.RightColumnIndex);
             var secondSelectedLine = selectedLines.Skip(1).First();
             _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
-            RaiseTextChanged();
 
             return new DeleteSelectionResult(secondSelectedLine.LineIndex, selectedLines.Count - 1);
         }
     }
 
-    public void DeleteLine(int lineIndex)
+    internal void DeleteLine(int lineIndex)
     {
         _lines.RemoveAt(lineIndex);
         if (!_lines.Any()) _lines.Add(new TextLine(""));
-        RaiseTextChanged();
     }
 
-    public void DeleteLines(int lineIndex, int count)
+    internal void DeleteLines(int lineIndex, int count)
     {
         _lines.RemoveRange(lineIndex, count);
         if (!_lines.Any()) _lines.Add(new TextLine(""));
-        RaiseTextChanged();
     }
 
-    public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
+    internal void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
     {
         var sourceLine = _lines[sourceLineIndex];
         _lines.RemoveAt(sourceLineIndex);
         _lines.Insert(destinationLineIndex, sourceLine);
-        RaiseTextChanged();
     }
 
-    public void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
+    internal void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
     {
         var selectedLines = textSelection.GetSelectedLines(this).ToList();
         foreach (var selectedLine in selectedLines)
@@ -204,22 +184,17 @@ internal class Text : IText, Contracts.IText
         }
     }
 
-    private void RaiseTextChanged()
-    {
-        TextChanged?.Invoke(this, EventArgs.Empty);
-    }
-
     public override string ToString()
     {
         return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
     }
 
-    public struct DeleteResult
+    internal struct DeleteResult
     {
         public bool IsLineDeleted;
     }
 
-    public readonly struct DeleteSelectionResult
+    internal readonly struct DeleteSelectionResult
     {
         public readonly int FirstDeletedLineIndex;
         public readonly int DeletedLinesCount;

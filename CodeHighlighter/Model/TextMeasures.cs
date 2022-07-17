@@ -5,13 +5,13 @@ using System.Windows.Media;
 
 namespace CodeHighlighter.Model;
 
-internal class TextMeasures : Contracts.ITextMeasures
+public class TextMeasures
 {
     private readonly FontSettings _fontSettings;
 
     public event EventHandler? MeasuresUpdated;
 
-    public TextMeasures(FontSettings fontSettings)
+    internal TextMeasures(FontSettings fontSettings)
     {
         _fontSettings = fontSettings;
         UpdateMeasures();

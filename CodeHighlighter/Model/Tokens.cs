@@ -11,7 +11,7 @@ internal interface ITokens
     List<LineToken> GetTokens(int lineIndex);
 }
 
-internal class Tokens : ITokens
+public class Tokens : ITokens
 {
     private readonly List<List<LineToken>> _tokens = new();
 
@@ -75,16 +75,22 @@ internal class Tokens : ITokens
     {
         return _tokens[lineIndex];
     }
+
+    public LineToken? GetTokenOnPosition(int lineIndex, int columnIndex)
+    {
+        var selector = new TokenSelector();
+        return selector.GetTokenOnPosition(this, lineIndex, columnIndex);
+    }
 }
 
-internal class LineToken
+public class LineToken
 {
     public static readonly LineToken Default = new("", 0, 0, 0);
 
-    public readonly string Name;
-    public readonly int StartColumnIndex;
-    public readonly int Length;
-    public byte Kind;
+    public string Name { get; }
+    public int StartColumnIndex { get; }
+    public int Length { get; }
+    public byte Kind { get; set; }
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
     public LineToken(string name, int startColumnIndex, int length, byte kind)

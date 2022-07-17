@@ -1,44 +1,63 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using CodeHighlighter.Controllers;
-using CodeHighlighter.Input;
 using CodeHighlighter.Model;
 using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-internal interface ICodeTextBox
-{
-    bool Focus();
-    void InvalidateVisual();
-}
-
 public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPropertyChanged
 {
-    private readonly CodeTextBoxModel _model;
-    private readonly Viewport _viewport;
-    private readonly FontSettings _fontSettings;
-    private readonly TextMeasures _textMeasures;
     private readonly TextRenderLogic _textRenderLogic;
     private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
-    private readonly TokenKindUpdater _tokenKindUpdater;
     private readonly CursorRenderLogic _cursorRenderLogic;
     private readonly KeyboardController _keyboardController;
     private readonly MouseController _mouseController;
     private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
-    #region Events
     public event PropertyChangedEventHandler? PropertyChanged;
-    public event EventHandler? TextChanged;
-    public event EventHandler? LinesCountChanged;
-    public event EventHandler? LineHeightChanged;
-    public event EventHandler? LetterWidthChanged;
-    public event EventHandler? CursorMoved;
+
+    #region Model
+    public CodeTextBoxModel Model
+    {
+        get { return (CodeTextBoxModel)GetValue(ModelProperty); }
+        set { SetValue(ModelProperty, value); }
+    }
+
+    public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(CodeTextBoxModel), typeof(CodeTextBox), new PropertyMetadata(ModelPropertyChangedCallback));
+
+    private static void ModelPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var codeTextBox = (CodeTextBox)d;
+        var model = (CodeTextBoxModel)e.NewValue;
+        model.Init(codeTextBox, codeTextBox);
+        var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
+        textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
+        textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
+        var textEvents = new TextEvents(model.Text);
+        model.TextChanged += (s, e) => textEvents.OnTextChanged();
+        textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
+        codeTextBox.TextLinesCount = model.Text.LinesCount;
+        if (codeTextBox.HighlighteredBrackets != null)
+        {
+            codeTextBox._highlightBracketsRenderLogic = new HighlightBracketsRenderLogic(
+                new BracketsHighlighter(codeTextBox.HighlighteredBrackets, codeTextBox.Model.Text, codeTextBox.Model.TextCursor), codeTextBox.Model.TextMeasures, codeTextBox);
+        }
+        codeTextBox.Model.FontSettings.FontFamily = codeTextBox.FontFamily;
+        codeTextBox.Model.FontSettings.FontSize = codeTextBox.FontSize;
+        codeTextBox.Model.FontSettings.FontStretch = codeTextBox.FontStretch;
+        codeTextBox.Model.FontSettings.FontStyle = codeTextBox.FontStyle;
+        codeTextBox.Model.FontSettings.FontWeight = codeTextBox.FontWeight;
+        codeTextBox.Model.TextMeasures.UpdateMeasures();
+        codeTextBox.VerticalScrollBarViewportSize = codeTextBox.ActualHeight;
+        codeTextBox.HorizontalScrollBarViewportSize = codeTextBox.ActualWidth;
+        codeTextBox.Model.Viewport?.UpdateScrollbarsMaximumValues(codeTextBox.Model.Text);
+        codeTextBox.InvalidateVisual();
+    }
     #endregion
 
     #region IsReadOnly
@@ -93,15 +112,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     }
 
     public static readonly DependencyProperty HighlighteredBracketsProperty =
-        DependencyProperty.Register("HighlighteredBrackets", typeof(string), typeof(CodeTextBox), new PropertyMetadata(HighlighteredBracketsPropertyChangedCallback));
-
-    private static void HighlighteredBracketsPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var codeTextBox = (CodeTextBox)d;
-        var highlighteredBrackets = (string)e.NewValue;
-        codeTextBox._highlightBracketsRenderLogic = new HighlightBracketsRenderLogic(
-            new BracketsHighlighter(highlighteredBrackets, codeTextBox._model.Text, codeTextBox._model.TextCursor), codeTextBox._textMeasures, codeTextBox);
-    }
+        DependencyProperty.Register("HighlighteredBrackets", typeof(string), typeof(CodeTextBox));
     #endregion
 
     #region CursorLineHighlightingBrush
@@ -113,27 +124,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     public static readonly DependencyProperty CursorLineHighlightingBrushProperty =
         DependencyProperty.Register("CursorLineHighlightingBrush", typeof(Brush), typeof(CodeTextBox));
-    #endregion
-
-    #region CodeProvider
-    public ICodeProvider CodeProvider
-    {
-        get { return (ICodeProvider)GetValue(CodeProviderProperty); }
-        set { SetValue(CodeProviderProperty, value); }
-    }
-
-    public static readonly DependencyProperty CodeProviderProperty =
-        DependencyProperty.Register("CodeProvider", typeof(ICodeProvider), typeof(CodeTextBox), new PropertyMetadata(new CodeProviders.EmptyCodeProvider(), CodeProviderPropertyChangedCallback));
-
-    private static void CodeProviderPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var codeTextBox = (CodeTextBox)d;
-        if (e.NewValue != null)
-        {
-            codeTextBox.OnUpdateCodeProvider();
-            codeTextBox.InvalidateVisual();
-        }
-    }
     #endregion
 
     #region VerticalScrollBarValue
@@ -220,27 +210,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         DependencyProperty.Register("HorizontalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-    #region Commands
-    public CodeTextBoxCommands Commands
-    {
-        get { return (CodeTextBoxCommands)GetValue(CommandsProperty); }
-        set { SetValue(CommandsProperty, value); }
-    }
-
-    public static readonly DependencyProperty CommandsProperty = DependencyProperty.Register(
-        "Commands", typeof(CodeTextBoxCommands), typeof(CodeTextBox), new PropertyMetadata(PropertyChangedCallback));
-
-    private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        var codeTextBox = (CodeTextBox)d;
-        var commands = (CodeTextBoxCommands?)e.NewValue;
-        if (commands != null)
-        {
-            commands.Init(new InputCommandContext(codeTextBox, codeTextBox._model, codeTextBox._viewport, codeTextBox, codeTextBox._textMeasures));
-        }
-    }
-    #endregion
-
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var codeTextBox = (CodeTextBox)d;
@@ -250,12 +219,13 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var codeTextBox = (CodeTextBox)d;
-        codeTextBox._fontSettings.FontFamily = codeTextBox.FontFamily;
-        codeTextBox._fontSettings.FontSize = codeTextBox.FontSize;
-        codeTextBox._fontSettings.FontStretch = codeTextBox.FontStretch;
-        codeTextBox._fontSettings.FontStyle = codeTextBox.FontStyle;
-        codeTextBox._fontSettings.FontWeight = codeTextBox.FontWeight;
-        codeTextBox._textMeasures.UpdateMeasures();
+        if (codeTextBox.Model == null) return;
+        codeTextBox.Model.FontSettings.FontFamily = codeTextBox.FontFamily;
+        codeTextBox.Model.FontSettings.FontSize = codeTextBox.FontSize;
+        codeTextBox.Model.FontSettings.FontStretch = codeTextBox.FontStretch;
+        codeTextBox.Model.FontSettings.FontStyle = codeTextBox.FontStyle;
+        codeTextBox.Model.FontSettings.FontWeight = codeTextBox.FontWeight;
+        codeTextBox.Model.TextMeasures.UpdateMeasures();
     }
 
     static CodeTextBox()
@@ -266,8 +236,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
         FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
     }
-
-    public Contracts.CodeTextBoxModel Model { get; }
 
     private int _textLinesCount;
     public int TextLinesCount
@@ -302,45 +270,14 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         }
     }
 
-    private TextCursorPosition _textCursorPosition;
-    public TextCursorPosition TextCursorPosition
-    {
-        get => _textCursorPosition;
-        set
-        {
-            _textCursorPosition = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TextCursorPosition"));
-        }
-    }
-
     public CodeTextBox()
     {
-        var text = new Text();
-        var textCursor = new TextCursor(text);
-        var textSelection = new TextSelection();
-        var tokens = new Tokens();
-        _model = new CodeTextBoxModel(text, textCursor, textSelection, tokens);
-        _model.Text.TextSet += (s, e) => { OnUpdateCodeProvider(); InvalidateVisual(); };
-        _model.Text.TextChanged += (s, e) => TextChanged?.Invoke(this, EventArgs.Empty);
-        _model.TextCursor.CursorMoved += (s, e) => { TextCursorPosition = new(_model.TextCursor.LineIndex, _model.TextCursor.ColumnIndex); CursorMoved?.Invoke(this, EventArgs.Empty); };
-        _fontSettings = new FontSettings { FontSize = FontSize, FontFamily = FontFamily, FontStyle = FontStyle, FontWeight = FontWeight, FontStretch = FontStretch };
-        _textMeasures = new TextMeasures(_fontSettings);
-        _viewport = new Viewport(this, _textMeasures);
-        _textRenderLogic = new TextRenderLogic(_model, _fontSettings, _textMeasures, _viewport, this);
-        _textSelectionRenderLogic = new TextSelectionRenderLogic();
-        _tokenKindUpdater = new TokenKindUpdater(_model.Tokens);
-        _cursorRenderLogic = new CursorRenderLogic(_model.TextCursor, _textMeasures, this);
         _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
-        Commands = new CodeTextBoxCommands();
-        Commands.Init(new InputCommandContext(this, _model, _viewport, this, _textMeasures));
-        _keyboardController = new KeyboardController(Commands, _model, _model);
-        _mouseController = new MouseController(this, _model, _model, _model, _viewport, this);
-        Model = new Contracts.CodeTextBoxModel(text, textCursor, _textMeasures);
-        var textEvents = new TextEvents(_model.Text);
-        textEvents.LinesCountChanged += (s, e) => { TextLinesCount = e.LinesCount; LinesCountChanged?.Invoke(this, EventArgs.Empty); };
-        var textMeasuresEvents = new TextMeasuresEvents(_textMeasures);
-        textMeasuresEvents.LetterWidthChanged += (s, e) => { TextLetterWidth = e.LetterWidth; LetterWidthChanged?.Invoke(this, EventArgs.Empty); };
-        textMeasuresEvents.LineHeightChanged += (s, e) => { TextLineHeight = e.LineHeight; LineHeightChanged?.Invoke(this, EventArgs.Empty); };
+        _textRenderLogic = new TextRenderLogic();
+        _textSelectionRenderLogic = new TextSelectionRenderLogic();
+        _cursorRenderLogic = new CursorRenderLogic();
+        _keyboardController = new KeyboardController();
+        _mouseController = new MouseController();
         TextLinesCount = 1;
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
@@ -353,48 +290,54 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     public override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
+        var grid = (Grid)Template.FindName("RootLayout", this);
+        grid.ClipToBounds = true;
         var cursorLine = (Line)Template.FindName("CursorLine", this);
         _cursorRenderLogic.SetCursor(cursorLine, Foreground);
     }
 
     protected override void OnRender(DrawingContext context)
     {
+        if (Model == null) return;
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
         if (IsFocused)
         {
-            _cursorRenderLogic.DrawHighlightedCursorLine(context, CursorLineHighlightingBrush, ActualWidth);
+            _cursorRenderLogic.DrawHighlightedCursorLine(context, CursorLineHighlightingBrush, ActualWidth, Model.TextCursor, Model.TextMeasures, this);
         }
-        _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, _model.TextSelection.GetSelectedLines(_model.Text), _textMeasures, this);
+        _textSelectionRenderLogic.DrawSelectedLines(context, SelectionBrush, Model.TextSelection.GetSelectedLines(Model.Text), Model.TextMeasures, this);
         _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
-        _textRenderLogic.DrawText(context, Foreground);
+        _textRenderLogic.DrawText(context, Foreground, Model.InputModel, Model.FontSettings, Model.TextMeasures, Model.Viewport!, this);
         if (IsFocused)
         {
-            _cursorRenderLogic.DrawCursor();
+            _cursorRenderLogic.DrawCursor(Model.TextCursor, Model.TextMeasures, this);
         }
         context.Pop();
     }
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
+        if (Model == null) return;
         VerticalScrollBarViewportSize = sizeInfo.NewSize.Height;
         HorizontalScrollBarViewportSize = sizeInfo.NewSize.Width;
-        _viewport.UpdateScrollbarsMaximumValues(_model.Text);
+        Model.Viewport!.UpdateScrollbarsMaximumValues(Model.Text);
         InvalidateVisual();
     }
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
+        if (Model == null) return;
         var positionInControl = e.GetPosition(this);
         var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-        _mouseController.OnMouseDown(positionInControl, shiftPressed);
+        _mouseController.OnMouseDown(this, Model.Viewport!, Model.InputModel, Model.InputModel, positionInControl, shiftPressed);
         Mouse.Capture(this);
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
+        if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseMove(positionInControl, e.LeftButton);
+        _mouseController.OnMouseMove(this, Model.Viewport!, Model.InputModel, Model.InputModel, positionInControl, e.LeftButton);
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -405,27 +348,29 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
-        _mouseController.OnMouseWheel(e.Delta);
+        _mouseController.OnMouseWheel(this, this, e.Delta);
     }
 
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
     {
+        if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseDoubleClick(positionInControl);
+        _mouseController.OnMouseDoubleClick(this, Model.Viewport!, Model.InputModel, positionInControl);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
+        if (Model == null) return;
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
         var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        e.Handled = _keyboardController.OnKeyDown(key, controlPressed, altPressed, shiftPressed, IsReadOnly);
+        e.Handled = _keyboardController.OnKeyDown(Model, Model.InputModel, Model.InputModel, key, controlPressed, altPressed, shiftPressed, IsReadOnly);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)
     {
-        _keyboardController.OnTextInput(e.Text, IsReadOnly);
+        _keyboardController.OnTextInput(Model, e.Text, IsReadOnly);
     }
 
     protected override void OnLostFocus(RoutedEventArgs e)
@@ -433,19 +378,5 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         base.OnLostFocus(e);
         _cursorRenderLogic.HideCursor();
         InvalidateVisual();
-    }
-
-    private void OnUpdateCodeProvider()
-    {
-        _model.SetCodeProvider(CodeProvider);
-        if (CodeProvider is ITokenKindUpdatable tokenKindUpdatable)
-        {
-            tokenKindUpdatable.TokenKindUpdated += (s, e) =>
-            {
-                _tokenKindUpdater.UpdateTokenKinds(e.UpdatedTokenKinds);
-                InvalidateVisual();
-            };
-        }
-        _viewport.UpdateScrollbarsMaximumValues(_model.Text);
     }
 }
