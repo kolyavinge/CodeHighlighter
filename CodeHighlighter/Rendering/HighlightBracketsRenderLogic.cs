@@ -5,52 +5,32 @@ using static CodeHighlighter.Model.BracketsHighlighter;
 
 namespace CodeHighlighter.Rendering;
 
-internal interface IHighlightBracketsRenderLogic
+internal class HighlightBracketsRenderLogic
 {
-    void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush);
-}
-
-internal class HighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
-{
-    private readonly BracketsHighlighter _bracketsHighlighter;
-    private readonly TextMeasures _textMeasures;
-    private readonly IViewportContext _viewportContext;
-
-    public HighlightBracketsRenderLogic(BracketsHighlighter bracketsHighlighter, TextMeasures textMeasures, IViewportContext viewportContext)
+    public void DrawHighlightedBrackets(CodeTextBoxModel model, DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
     {
-        _bracketsHighlighter = bracketsHighlighter;
-        _textMeasures = textMeasures;
-        _viewportContext = viewportContext;
-    }
-
-    public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
-    {
-        var brackets = _bracketsHighlighter.GetHighlightedBrackets();
+        var brackets = model.BracketsHighlighter.GetHighlightedBrackets();
         if (brackets.Kind == HighlightKind.NoHighlight) return;
         if (brackets.Kind == HighlightKind.Highlighted)
         {
-            context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Open));
-            context.DrawRectangle(highlightingBrush, null, GetBracketRect(brackets.Close));
+            context.DrawRectangle(highlightingBrush, null, GetBracketRect(model, brackets.Open));
+            context.DrawRectangle(highlightingBrush, null, GetBracketRect(model, brackets.Close));
         }
         else // NoPair
         {
-            context.DrawRectangle(noPairBrush, null, GetBracketRect(brackets.Open));
+            context.DrawRectangle(noPairBrush, null, GetBracketRect(model, brackets.Open));
         }
     }
 
-    private Rect GetBracketRect(BracketPosition bracketPosition)
+    private Rect GetBracketRect(CodeTextBoxModel model, BracketPosition bracketPosition)
     {
-        return new(
-            bracketPosition.ColumnIndex * _textMeasures.LetterWidth - _viewportContext.HorizontalScrollBarValue,
-            bracketPosition.LineIndex * _textMeasures.LineHeight - _viewportContext.VerticalScrollBarValue,
-            _textMeasures.LetterWidth,
-            _textMeasures.LineHeight);
-    }
-}
+        var textMeasures = model.TextMeasures;
+        var viewportContext = model.ViewportContext;
 
-internal class DummyHighlightBracketsRenderLogic : IHighlightBracketsRenderLogic
-{
-    public void DrawHighlightedBrackets(DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
-    {
+        return new(
+            bracketPosition.ColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue,
+            bracketPosition.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue,
+            textMeasures.LetterWidth,
+            textMeasures.LineHeight);
     }
 }

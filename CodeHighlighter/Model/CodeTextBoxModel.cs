@@ -20,8 +20,9 @@ public class CodeTextBoxModel
     internal FontSettings FontSettings { get; }
     public TextMeasures TextMeasures { get; }
     internal InputModel InputModel { get; }
+    internal BracketsHighlighter BracketsHighlighter { get; }
 
-    public CodeTextBoxModel(ICodeProvider codeProvider)
+    public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
     {
         Text = new Text();
         TextCursor = new TextCursor(Text);
@@ -32,6 +33,7 @@ public class CodeTextBoxModel
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
+        BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "", Text, TextCursor);
         SetCodeProvider(codeProvider);
     }
 
@@ -282,4 +284,9 @@ public class CodeTextBoxModel
     }
 
     private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
+}
+
+public class CodeTextBoxModelAdditionalParams
+{
+    public string? HighlighteredBrackets { get; set; }
 }

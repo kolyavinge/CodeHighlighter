@@ -25,7 +25,7 @@ public class MainViewModel
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
-        CodeTextBoxModel = new CodeTextBoxModel(CodeProvider);
+        CodeTextBoxModel = new CodeTextBoxModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
     }
 

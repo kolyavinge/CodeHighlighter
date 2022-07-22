@@ -18,7 +18,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private readonly CursorRenderLogic _cursorRenderLogic;
     private readonly KeyboardController _keyboardController;
     private readonly MouseController _mouseController;
-    private IHighlightBracketsRenderLogic _highlightBracketsRenderLogic;
+    private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -35,23 +35,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     {
         var model = (CodeTextBoxModel)e.NewValue ?? throw new ArgumentNullException(nameof(Model));
         var codeTextBox = (CodeTextBox)d;
-        model.Init(codeTextBox, codeTextBox);
-        var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
-        textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
-        textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
-        var textEvents = new TextEvents(model.Text);
-        model.TextChanged += (s, e) => textEvents.OnTextChanged();
-        textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
-        codeTextBox.TextLinesCount = model.Text.LinesCount;
-        if (codeTextBox.HighlighteredBrackets != null)
-        {
-            codeTextBox._highlightBracketsRenderLogic = new HighlightBracketsRenderLogic(
-                new BracketsHighlighter(codeTextBox.HighlighteredBrackets, model.Text, model.TextCursor), model.TextMeasures, codeTextBox);
-        }
-        UpdateFontSettings(codeTextBox, model.FontSettings, model.TextMeasures);
-        codeTextBox.VerticalScrollBarViewportSize = codeTextBox.ActualHeight;
-        codeTextBox.HorizontalScrollBarViewportSize = codeTextBox.ActualWidth;
-        model.Viewport!.UpdateScrollbarsMaximumValues(model.Text);
+        InitModel(codeTextBox, model);
     }
     #endregion
 
@@ -97,17 +81,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     public static readonly DependencyProperty HighlightNoPairBracketBrushProperty =
         DependencyProperty.Register("HighlightNoPairBracketBrush", typeof(Brush), typeof(CodeTextBox));
-    #endregion
-
-    #region HighlighteredBrackets
-    public string HighlighteredBrackets
-    {
-        get { return (string)GetValue(HighlighteredBracketsProperty); }
-        set { SetValue(HighlighteredBracketsProperty, value); }
-    }
-
-    public static readonly DependencyProperty HighlighteredBracketsProperty =
-        DependencyProperty.Register("HighlighteredBrackets", typeof(string), typeof(CodeTextBox));
     #endregion
 
     #region CursorLineHighlightingBrush
@@ -205,6 +178,22 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         DependencyProperty.Register("HorizontalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
+    private static void InitModel(CodeTextBox codeTextBox, CodeTextBoxModel model)
+    {
+        model.Init(codeTextBox, codeTextBox);
+        var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
+        textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
+        textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
+        var textEvents = new TextEvents(model.Text);
+        model.TextChanged += (s, e) => textEvents.OnTextChanged();
+        textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
+        codeTextBox.TextLinesCount = model.Text.LinesCount;
+        UpdateFontSettings(codeTextBox, model.FontSettings, model.TextMeasures);
+        codeTextBox.VerticalScrollBarViewportSize = codeTextBox.ActualHeight;
+        codeTextBox.HorizontalScrollBarViewportSize = codeTextBox.ActualWidth;
+        model.Viewport.UpdateScrollbarsMaximumValues(model.Text);
+    }
+
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var codeTextBox = (CodeTextBox)d;
@@ -260,12 +249,12 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     public CodeTextBox()
     {
-        _highlightBracketsRenderLogic = new DummyHighlightBracketsRenderLogic();
         _textRenderLogic = new TextRenderLogic();
         _textSelectionRenderLogic = new TextSelectionRenderLogic();
         _cursorRenderLogic = new CursorRenderLogic();
         _keyboardController = new KeyboardController();
         _mouseController = new MouseController();
+        _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
@@ -293,7 +282,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
             _cursorRenderLogic.DrawHighlightedCursorLine(Model, context, CursorLineHighlightingBrush, ActualWidth);
         }
         _textSelectionRenderLogic.DrawSelectedLines(Model, context, SelectionBrush);
-        _highlightBracketsRenderLogic.DrawHighlightedBrackets(context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
+        _highlightBracketsRenderLogic.DrawHighlightedBrackets(Model, context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
         _textRenderLogic.DrawText(Model, context, Foreground);
         if (IsFocused)
         {

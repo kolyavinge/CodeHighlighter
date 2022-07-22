@@ -48,7 +48,6 @@
             FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
             Margin="58,24,38,28"
             Background="Azure"
-            HighlighteredBrackets="()[]"
             HighlightPairBracketsBrush="GreenYellow"
             HighlightNoPairBracketBrush="IndianRed"
             CursorLineHighlightingBrush="Linen"

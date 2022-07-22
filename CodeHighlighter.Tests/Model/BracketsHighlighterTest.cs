@@ -21,6 +21,20 @@ class BracketsHighlighterTest
     }
 
     [Test]
+    public void NoBracketsInHighlighter()
+    {
+        _highlighter = new BracketsHighlighter("", _text.Object, _textCursor.Object);
+
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("()"));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+
+        GetResult(0, 0);
+        Assert.AreEqual(HighlightKind.NoHighlight, _result.Kind);
+        Assert.AreEqual(default(BracketPosition), _result.Open);
+        Assert.AreEqual(default(BracketPosition), _result.Close);
+    }
+
+    [Test]
     public void Empty()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine(""));
