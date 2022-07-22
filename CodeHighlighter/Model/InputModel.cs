@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
@@ -26,7 +27,7 @@ internal class InputModel
         _textSelection = textSelection;
         _tokens = tokens;
         _tokenColors = new();
-        _codeProvider = new CodeProviders.EmptyCodeProvider();
+        _codeProvider = new EmptyCodeProvider();
     }
 
     internal InputModel()
@@ -36,7 +37,7 @@ internal class InputModel
         _textSelection = new();
         _tokens = new();
         _tokenColors = new();
-        _codeProvider = new CodeProviders.EmptyCodeProvider();
+        _codeProvider = new EmptyCodeProvider();
     }
 
     public void SetCodeProvider(ICodeProvider codeProvider)

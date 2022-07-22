@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
@@ -20,7 +21,7 @@ public class CodeTextBoxModel
     public TextMeasures TextMeasures { get; }
     internal InputModel InputModel { get; }
 
-    public CodeTextBoxModel()
+    public CodeTextBoxModel(ICodeProvider codeProvider)
     {
         Text = new Text();
         TextCursor = new TextCursor(Text);
@@ -31,6 +32,7 @@ public class CodeTextBoxModel
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
+        SetCodeProvider(codeProvider);
     }
 
     internal void Init(ICodeTextBox? codeTextBox, IViewportContext viewportContext)
@@ -40,7 +42,7 @@ public class CodeTextBoxModel
         Viewport = new Viewport(ViewportContext, TextMeasures);
     }
 
-    public void SetCodeProvider(ICodeProvider codeProvider)
+    private void SetCodeProvider(ICodeProvider codeProvider)
     {
         InputModel.SetCodeProvider(codeProvider);
         if (codeProvider is ITokenKindUpdatable tokenKindUpdatable)
@@ -52,7 +54,6 @@ public class CodeTextBoxModel
                 _codeTextBox?.InvalidateVisual();
             };
         }
-        Viewport.UpdateScrollbarsMaximumValues(Text);
     }
 
     public void SetText(string text)

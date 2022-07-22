@@ -3,8 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using CodeEditor.Mvvm;
-using CodeHighlighter;
-using CodeHighlighter.CodeProviders;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 
 namespace CodeEditor.ViewModel;
@@ -26,8 +25,7 @@ public class MainViewModel
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
-        CodeTextBoxModel = new CodeTextBoxModel();
-        CodeTextBoxModel.SetCodeProvider(CodeProvider);
+        CodeTextBoxModel = new CodeTextBoxModel(CodeProvider);
         CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
     }
 

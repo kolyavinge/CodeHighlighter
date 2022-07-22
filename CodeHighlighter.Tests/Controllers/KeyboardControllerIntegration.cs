@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ internal class KeyboardControllerIntegration
     [SetUp]
     public void Setup()
     {
-        _model = new CodeTextBoxModel();
+        _model = new CodeTextBoxModel(new EmptyCodeProvider());
         _controller = new KeyboardController();
     }
 

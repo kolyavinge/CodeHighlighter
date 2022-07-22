@@ -14,25 +14,25 @@ internal enum TokenCursorPositionKind
 
 internal class TokenCursorPosition
 {
-    public static TokenCursorPosition Default => new(TokenCursorPositionKind.StartLine, LineToken.Default, LineToken.Default);
+    public static TokenCursorPosition Default => new(TokenCursorPositionKind.StartLine, Token.Default, Token.Default);
 
     public readonly TokenCursorPositionKind Position;
-    public readonly LineToken Left;
-    public readonly LineToken Right;
+    public readonly Token Left;
+    public readonly Token Right;
 
-    public TokenCursorPosition(TokenCursorPositionKind position, LineToken left, LineToken right)
+    public TokenCursorPosition(TokenCursorPositionKind position, Token left, Token right)
     {
         Position = position;
         Left = left;
         Right = right;
     }
 
-    public static TokenCursorPosition GetPosition(List<LineToken> lineTokens, int columnIndex)
+    public static TokenCursorPosition GetPosition(List<Token> lineTokens, int columnIndex)
     {
         if (!lineTokens.Any()) return Default;
         if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
         {
-            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), LineToken.Default);
+            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), Token.Default);
         }
         int index;
         if ((index = lineTokens.FindIndex(x => x.StartColumnIndex < columnIndex && columnIndex < x.EndColumnIndex + 1)) != -1)
@@ -47,7 +47,7 @@ internal class TokenCursorPosition
             }
             else
             {
-                return new(TokenCursorPositionKind.StartLine, LineToken.Default, lineTokens[index]);
+                return new(TokenCursorPositionKind.StartLine, Token.Default, lineTokens[index]);
             }
         }
         else if ((index = lineTokens.FindIndex(x => x.EndColumnIndex + 1 == columnIndex)) != -1)
@@ -66,7 +66,7 @@ internal class TokenCursorPosition
             index = lineTokens.FindIndex(x => x.StartColumnIndex > columnIndex);
             if (index == 0)
             {
-                return new(TokenCursorPositionKind.StartLine, LineToken.Default, lineTokens.First());
+                return new(TokenCursorPositionKind.StartLine, Token.Default, lineTokens.First());
             }
             else
             {
@@ -79,8 +79,8 @@ internal class TokenCursorPosition
     {
         return obj is TokenCursorPosition position &&
                Position == position.Position &&
-               EqualityComparer<LineToken>.Default.Equals(Left, position.Left) &&
-               EqualityComparer<LineToken>.Default.Equals(Right, position.Right);
+               EqualityComparer<Token>.Default.Equals(Left, position.Left) &&
+               EqualityComparer<Token>.Default.Equals(Right, position.Right);
     }
 
     public override int GetHashCode()

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CodeHighlighter.CodeProviders;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.CodeProviders;
+namespace CodeHighlighter.Tests.CodeProvidering;
 
 public class SqlCodeProviderTest
 {
@@ -209,7 +209,7 @@ from MyTable'";
         tokens.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
     }
 
-    private List<Token> GetTokens(string textString)
+    private List<ICodeProvider.Token> GetTokens(string textString)
     {
         var text = new Text();
         text.TextContent = textString;

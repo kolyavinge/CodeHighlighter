@@ -24,7 +24,7 @@ internal class TokenNavigatorTest
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(1);
-        var tokens = new List<LineToken>
+        var tokens = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -60,13 +60,13 @@ internal class TokenNavigatorTest
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(2);
-        var tokens1 = new List<LineToken>
+        var tokens1 = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
             new("zz", 7, 2, 2), // z
         };
-        var tokens2 = new List<LineToken>
+        var tokens2 = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -86,7 +86,7 @@ internal class TokenNavigatorTest
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(1);
-        var tokens = new List<LineToken>
+        var tokens = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -122,13 +122,13 @@ internal class TokenNavigatorTest
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.Setup(x => x.GetLine(1)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(2);
-        var tokens1 = new List<LineToken>
+        var tokens1 = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
             new("zz", 7, 2, 2), // z
         };
-        var tokens2 = new List<LineToken>
+        var tokens2 = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y

@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.Model;
+﻿using CodeHighlighter.CodeProvidering;
+
+namespace CodeHighlighter.Model;
 
 internal class ForwardTextIterator : ITextIterator
 {

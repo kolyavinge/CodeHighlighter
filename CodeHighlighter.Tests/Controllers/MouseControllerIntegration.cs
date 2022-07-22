@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
 using Moq;
@@ -18,7 +19,7 @@ internal class MouseControllerIntegration
     {
         _codeTextBox = new Mock<ICodeTextBox>();
         _viewportContext = new Mock<IViewportContext>();
-        _model = new CodeTextBoxModel();
+        _model = new CodeTextBoxModel(new EmptyCodeProvider());
         _model.Init(_codeTextBox.Object, _viewportContext.Object);
         _controller = new MouseController();
     }

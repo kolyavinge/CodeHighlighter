@@ -1,4 +1,4 @@
-﻿using CodeHighlighter.CodeProviders;
+﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using NUnit.Framework;
 

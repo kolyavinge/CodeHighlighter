@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
+using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
@@ -12,7 +13,7 @@ internal class TokensColors : ITokensColors
 {
     private readonly Dictionary<byte, Brush> _colors = new();
 
-    public void SetColors(IEnumerable<TokenColor> tokenColors)
+    public void SetColors(IEnumerable<ICodeProvider.TokenColor> tokenColors)
     {
         _colors.Clear();
         foreach (var tokenColor in tokenColors)

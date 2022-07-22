@@ -6,7 +6,7 @@ namespace CodeHighlighter.Tests.Model;
 
 public class TokenCursorPositionTest
 {
-    private List<LineToken> _tokens;
+    private List<Token> _tokens;
 
     [SetUp]
     public void Setup()
@@ -25,7 +25,7 @@ public class TokenCursorPositionTest
     public void GetPosition()
     {
         // '  xx  yzz'
-        _tokens = new List<LineToken>
+        _tokens = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -33,13 +33,13 @@ public class TokenCursorPositionTest
         };
 
         var result = TokenCursorPosition.GetPosition(_tokens, 0);
-        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, LineToken.Default, new("xx", 2, 2, 0)), result);
+        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, Token.Default, new("xx", 2, 2, 0)), result);
 
         result = TokenCursorPosition.GetPosition(_tokens, 1);
-        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, LineToken.Default, new("xx", 2, 2, 0)), result);
+        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, Token.Default, new("xx", 2, 2, 0)), result);
 
         result = TokenCursorPosition.GetPosition(_tokens, 2);
-        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, LineToken.Default, new("xx", 2, 2, 0)), result);
+        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.StartLine, Token.Default, new("xx", 2, 2, 0)), result);
 
         result = TokenCursorPosition.GetPosition(_tokens, 3);
         Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.InToken, new("xx", 2, 2, 0), new("xx", 2, 2, 0)), result);
@@ -60,9 +60,9 @@ public class TokenCursorPositionTest
         Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.InToken, new("zz", 7, 2, 2), new("zz", 7, 2, 2)), result);
 
         result = TokenCursorPosition.GetPosition(_tokens, 9);
-        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.EndLine, new("zz", 7, 2, 2), LineToken.Default), result);
+        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.EndLine, new("zz", 7, 2, 2), Token.Default), result);
 
         result = TokenCursorPosition.GetPosition(_tokens, 10);
-        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.EndLine, new("zz", 7, 2, 2), LineToken.Default), result);
+        Assert.AreEqual(new TokenCursorPosition(TokenCursorPositionKind.EndLine, new("zz", 7, 2, 2), Token.Default), result);
     }
 }

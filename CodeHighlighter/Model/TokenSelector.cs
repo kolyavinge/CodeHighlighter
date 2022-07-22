@@ -4,7 +4,7 @@ namespace CodeHighlighter.Model;
 
 internal class TokenSelector
 {
-    public LineToken? GetTokenOnPosition(ITokens tokens, int lineIndex, int columnIndex)
+    public Token? GetTokenOnPosition(ITokens tokens, int lineIndex, int columnIndex)
     {
         if (lineIndex >= tokens.LinesCount) return default;
         var lineTokens = tokens.GetTokens(lineIndex);
@@ -42,7 +42,7 @@ internal class TokenSelector
         }
     }
 
-    private SelectedRange ToSelectedRange(LineToken token)
+    private SelectedRange ToSelectedRange(Token token)
     {
         return new SelectedRange(token.StartColumnIndex, token.EndColumnIndex + 1);
     }

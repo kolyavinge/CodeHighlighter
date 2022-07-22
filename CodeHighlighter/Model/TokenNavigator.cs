@@ -79,7 +79,7 @@ internal class TokenNavigator
         }
     }
 
-    private NewCursorPosition GetNextCursorPosition(IText text, int lineIndex, List<LineToken> lineTokens, LineToken token)
+    private NewCursorPosition GetNextCursorPosition(IText text, int lineIndex, List<Token> lineTokens, Token token)
     {
         var index = lineTokens.FindIndex(x => x.Equals(token));
         if (index == -1 || index == lineTokens.Count - 1) return new(lineIndex, text.GetLine(lineIndex).Length);
@@ -87,7 +87,7 @@ internal class TokenNavigator
         return new(lineIndex, next.StartColumnIndex);
     }
 
-    private NewCursorPosition ToNewCursorPosition(int lineIndex, LineToken token)
+    private NewCursorPosition ToNewCursorPosition(int lineIndex, Token token)
     {
         return new(lineIndex, token.StartColumnIndex);
     }

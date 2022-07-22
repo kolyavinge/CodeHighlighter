@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using NUnit.Framework;
 
@@ -17,7 +18,7 @@ public class TokensTest
     [Test]
     public void SetTokens_Init()
     {
-        var tokens = new List<Token>
+        var tokens = new List<ICodeProvider.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 0, 2, 1, 1),
@@ -35,7 +36,7 @@ public class TokensTest
     [Test]
     public void SetTokens_Replace()
     {
-        var tokens = new List<Token>
+        var tokens = new List<ICodeProvider.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 0, 2, 1, 1),
@@ -44,7 +45,7 @@ public class TokensTest
         };
         _tokens.SetTokens(tokens, 0, 3);
 
-        tokens = new List<Token>
+        tokens = new List<ICodeProvider.Token>
         {
             new("", 0, 0, 3, 0),
             new("", 1, 0, 1, 0),
@@ -69,7 +70,7 @@ public class TokensTest
     [Test]
     public void ReplaceLines()
     {
-        var tokens = new List<Token>
+        var tokens = new List<ICodeProvider.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 1, 2, 1, 1),
@@ -80,8 +81,8 @@ public class TokensTest
 
         _tokens.ReplaceLines(0, 2);
 
-        Assert.AreEqual(new[] { new LineToken("", 2, 1, 1), new LineToken("", 3, 1, 1) }, _tokens.GetTokens(0));
-        Assert.AreEqual(new[] { new LineToken("", 0, 1, 0) }, _tokens.GetTokens(1));
-        Assert.AreEqual(new[] { new LineToken("", 0, 2, 0) }, _tokens.GetTokens(2));
+        Assert.AreEqual(new[] { new Token("", 2, 1, 1), new Token("", 3, 1, 1) }, _tokens.GetTokens(0));
+        Assert.AreEqual(new[] { new Token("", 0, 1, 0) }, _tokens.GetTokens(1));
+        Assert.AreEqual(new[] { new Token("", 0, 2, 0) }, _tokens.GetTokens(2));
     }
 }

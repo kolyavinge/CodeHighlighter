@@ -21,7 +21,7 @@ public class TokenSelectorTest
     public void GetTokenOnPosition()
     {
         // '  xx  yzz'
-        var tokens = new List<LineToken>
+        var tokens = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -32,24 +32,24 @@ public class TokenSelectorTest
 
         Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, 0, 0));
         Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, 0, 1));
-        Assert.AreEqual(new LineToken("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 2));
-        Assert.AreEqual(new LineToken("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 3));
-        Assert.AreEqual(new LineToken("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 4));
+        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 2));
+        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 3));
+        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, 0, 4));
 
         Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, 0, 5));
 
-        Assert.AreEqual(new LineToken("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, 0, 6));
+        Assert.AreEqual(new Token("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, 0, 6));
 
-        Assert.AreEqual(new LineToken("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 7));
-        Assert.AreEqual(new LineToken("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 8));
-        Assert.AreEqual(new LineToken("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 9));
+        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 7));
+        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 8));
+        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 9));
         Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, 0, 50));
     }
 
     [Test]
     public void GetToken_Empty()
     {
-        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken>());
+        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
         _tokens.SetupGet(x => x.LinesCount).Returns(0);
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -62,7 +62,7 @@ public class TokenSelectorTest
     [Test]
     public void GetToken_EmptyLine()
     {
-        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<LineToken>());
+        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -76,7 +76,7 @@ public class TokenSelectorTest
     public void GetToken()
     {
         // '  xx  yzz'
-        var tokens = new List<LineToken>
+        var tokens = new List<Token>
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
