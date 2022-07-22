@@ -316,7 +316,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
         var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-        _mouseController.OnMouseDown(this, Model.Viewport, Model.InputModel, Model.InputModel, positionInControl, shiftPressed);
+        _mouseController.OnMouseDown(this, Model, positionInControl, shiftPressed);
         Mouse.Capture(this);
     }
 
@@ -324,7 +324,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     {
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseMove(this, Model.Viewport, Model.InputModel, Model.InputModel, positionInControl, e.LeftButton);
+        _mouseController.OnMouseMove(this, Model, positionInControl, e.LeftButton);
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -342,7 +342,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     {
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseDoubleClick(this, Model.Viewport, Model.InputModel, positionInControl);
+        _mouseController.OnMouseDoubleClick(this, Model, positionInControl);
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -352,7 +352,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        e.Handled = _keyboardController.OnKeyDown(Model, Model.InputModel, Model.InputModel, key, controlPressed, altPressed, shiftPressed, IsReadOnly);
+        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, altPressed, shiftPressed, IsReadOnly);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)

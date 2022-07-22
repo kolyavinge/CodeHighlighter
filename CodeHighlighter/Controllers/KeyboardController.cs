@@ -6,153 +6,152 @@ namespace CodeHighlighter.Controllers;
 
 internal class KeyboardController
 {
-    public bool OnKeyDown(
-        CodeTextBoxModel codeTextBoxModel, ITextSource textSource, ITextSelectionActivator selectionActivator, Key key, bool controlPressed, bool altPressed, bool shiftPressed, bool isReadOnly)
+    public bool OnKeyDown(CodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed, bool isReadOnly)
     {
         var isHandled = true;
         // with control and shift pressed
         if (controlPressed && shiftPressed && key == Key.U)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.ToUpperCase();
+            model.ToUpperCase();
         }
         // with control pressed
         else if (controlPressed && key == Key.Up)
         {
-            codeTextBoxModel.ScrollLineUp();
+            model.ScrollLineUp();
         }
         else if (controlPressed && key == Key.Down)
         {
-            codeTextBoxModel.ScrollLineDown();
+            model.ScrollLineDown();
         }
         else if (controlPressed && key == Key.Left)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveToPrevToken();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveToPrevToken();
         }
         else if (controlPressed && key == Key.Right)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveToNextToken();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveToNextToken();
         }
         else if (controlPressed && key == Key.Home)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorTextBegin();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorTextBegin();
         }
         else if (controlPressed && key == Key.End)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorTextEnd();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorTextEnd();
         }
         else if (controlPressed && key == Key.Back)
         {
-            codeTextBoxModel.DeleteLeftToken();
+            model.DeleteLeftToken();
         }
         else if (controlPressed && key == Key.Delete)
         {
-            codeTextBoxModel.DeleteRightToken();
+            model.DeleteRightToken();
         }
         else if (controlPressed && key == Key.A)
         {
-            codeTextBoxModel.SelectAll();
+            model.SelectAll();
         }
         else if (controlPressed && key == Key.X)
         {
             if (isReadOnly) return true;
-            Clipboard.SetText(textSource.GetSelectedText());
-            codeTextBoxModel.LeftDelete();
+            Clipboard.SetText(model.InputModel.GetSelectedText());
+            model.LeftDelete();
         }
         else if (controlPressed && key == Key.C)
         {
-            Clipboard.SetText(textSource.GetSelectedText());
+            Clipboard.SetText(model.InputModel.GetSelectedText());
         }
         else if (controlPressed && key == Key.V)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.InsertText(Clipboard.GetText());
+            model.InsertText(Clipboard.GetText());
         }
         else if (controlPressed && key == Key.L)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.DeleteSelectedLines();
+            model.DeleteSelectedLines();
         }
         else if (controlPressed && key == Key.U)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.ToLowerCase();
+            model.ToLowerCase();
         }
         // with alt pressed
         else if (altPressed && key == Key.Up)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.MoveSelectedLinesUp();
+            model.MoveSelectedLinesUp();
         }
         else if (altPressed && key == Key.Down)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.MoveSelectedLinesDown();
+            model.MoveSelectedLinesDown();
         }
         // without any modifiers
         else if (key == Key.Up)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorUp();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorUp();
         }
         else if (key == Key.Down)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorDown();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorDown();
         }
         else if (key == Key.Left)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorLeft();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorLeft();
         }
         else if (key == Key.Right)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorRight();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorRight();
         }
         else if (key == Key.Home)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorStartLine();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorStartLine();
         }
         else if (key == Key.End)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorEndLine();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorEndLine();
         }
         else if (key == Key.PageUp)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorPageUp();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorPageUp();
         }
         else if (key == Key.PageDown)
         {
-            ActivateOrCompleteSelection(selectionActivator, shiftPressed);
-            codeTextBoxModel.MoveCursorPageDown();
+            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            model.MoveCursorPageDown();
         }
         else if (key == Key.Return)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.NewLine();
+            model.NewLine();
         }
         else if (key == Key.Back)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.LeftDelete();
+            model.LeftDelete();
         }
         else if (key == Key.Delete)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.RightDelete();
+            model.RightDelete();
         }
         else if (key == Key.Tab)
         {
             if (isReadOnly) return true;
-            codeTextBoxModel.InsertText("    ");
+            model.InsertText("    ");
         }
         else
         {
@@ -168,9 +167,9 @@ internal class KeyboardController
         codeTextBoxModel.TextInput(inputText);
     }
 
-    private void ActivateOrCompleteSelection(ITextSelectionActivator selectionActivator, bool shiftPressed)
+    private void ActivateOrCompleteSelection(InputModel inputModel, bool shiftPressed)
     {
-        if (shiftPressed) selectionActivator.ActivateSelection();
-        else selectionActivator.CompleteSelection();
+        if (shiftPressed) inputModel.ActivateSelection();
+        else inputModel.CompleteSelection();
     }
 }

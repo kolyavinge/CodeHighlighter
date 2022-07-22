@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-internal class InputModel : ITextSource, ITextSelectionActivator, ITokenSelector, ICursorHandler
+internal class InputModel
 {
     private readonly Text _text;
     private readonly TextCursor _textCursor;
@@ -403,25 +403,4 @@ internal class InputModel : ITextSource, ITextSelectionActivator, ITokenSelector
         var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(_text, startLineIndex, startLineIndex + count - 1)).ToList();
         _tokens.SetTokens(codeProviderTokens, startLineIndex, count);
     }
-}
-
-internal interface ITextSource
-{
-    string GetSelectedText();
-}
-
-internal interface ITextSelectionActivator
-{
-    void ActivateSelection();
-    void CompleteSelection();
-}
-
-internal interface ITokenSelector
-{
-    void SelectToken(int lineIndex, int columnIndex);
-}
-
-internal interface ICursorHandler
-{
-    void MoveCursorTo(int lineIndex, int columnIndex);
 }

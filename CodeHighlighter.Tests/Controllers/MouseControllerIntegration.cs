@@ -10,9 +10,7 @@ internal class MouseControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private Mock<IViewportContext> _viewportContext;
-    private TextMeasures _textMeasures;
-    private Viewport _viewport;
-    private InputModel _model;
+    private CodeTextBoxModel _model;
     private MouseController _controller;
 
     [SetUp]
@@ -20,9 +18,8 @@ internal class MouseControllerIntegration
     {
         _codeTextBox = new Mock<ICodeTextBox>();
         _viewportContext = new Mock<IViewportContext>();
-        _textMeasures = new TextMeasures(10, 4);
-        _viewport = new Viewport(_viewportContext.Object, _textMeasures);
-        _model = new InputModel();
+        _model = new CodeTextBoxModel();
+        _model.Init(_codeTextBox.Object, _viewportContext.Object);
         _controller = new MouseController();
     }
 
@@ -35,12 +32,12 @@ internal class MouseControllerIntegration
          */
         _model.SetText("12345\r\nqwert\r\nasdfg");
 
-        _controller.OnMouseDown(_codeTextBox.Object, _viewport, _model, _model, new(0, 0), true);
-        _controller.OnMouseDown(_codeTextBox.Object, _viewport, _model, _model, new(100, 100), true);
-        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
+        _controller.OnMouseDown(_codeTextBox.Object, _model, new(0, 0), true);
+        _controller.OnMouseDown(_codeTextBox.Object, _model, new(100, 100), true);
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.InputModel.GetSelectedText());
 
-        _controller.OnMouseDown(_codeTextBox.Object, _viewport, _model, _model, new(0, 0), false);
-        Assert.AreEqual("", _model.GetSelectedText());
+        _controller.OnMouseDown(_codeTextBox.Object, _model, new(0, 0), false);
+        Assert.AreEqual("", _model.InputModel.GetSelectedText());
     }
 
     [Test]
@@ -52,8 +49,8 @@ internal class MouseControllerIntegration
          */
         _model.SetText("12345\r\nqwert\r\nasdfg");
 
-        _controller.OnMouseMove(_codeTextBox.Object, _viewport, _model, _model, new(0, 0), MouseButtonState.Pressed);
-        _controller.OnMouseMove(_codeTextBox.Object, _viewport, _model, _model, new(100, 100), MouseButtonState.Pressed);
-        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
+        _controller.OnMouseMove(_codeTextBox.Object, _model, new(0, 0), MouseButtonState.Pressed);
+        _controller.OnMouseMove(_codeTextBox.Object, _model, new(100, 100), MouseButtonState.Pressed);
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.InputModel.GetSelectedText());
     }
 }
