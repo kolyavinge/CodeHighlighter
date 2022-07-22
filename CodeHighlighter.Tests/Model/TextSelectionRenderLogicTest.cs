@@ -2,17 +2,16 @@
 using System.Linq;
 using System.Windows;
 using CodeHighlighter.Model;
-using CodeHighlighter.Rendering;
 using Moq;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Rendering;
+namespace CodeHighlighter.Tests.Model;
 
 public class TextSelectionRenderLogicTest
 {
     private TextMeasures _textMeasures;
     private Mock<IViewportContext> _viewportContext;
-    private TextSelectionRenderLogic _logic;
+    private TextSelectionRect _textSelectionRect;
 
     [SetUp]
     public void Setup()
@@ -23,13 +22,13 @@ public class TextSelectionRenderLogicTest
         _viewportContext.SetupGet(x => x.HorizontalScrollBarValue).Returns(7);
         _viewportContext.SetupGet(x => x.VerticalScrollBarValue).Returns(9);
 
-        _logic = new TextSelectionRenderLogic();
+        _textSelectionRect = new TextSelectionRect();
     }
 
     [Test]
     public void GetCalculatedRects_Empty()
     {
-        var result = _logic.GetCalculatedRects(new List<TextSelectionLine>(), _textMeasures, _viewportContext.Object).ToList();
+        var result = _textSelectionRect.GetCalculatedRects(new List<TextSelectionLine>(), _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(0, result.Count);
     }
 
@@ -40,7 +39,7 @@ public class TextSelectionRenderLogicTest
         {
             new(1, 1, 5)
         };
-        var result = _logic.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
+        var result = _textSelectionRect.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(1, result.Count);
         Assert.AreEqual(new Rect(2 - 7, 5 - 9, 2 * 4, 5), result[0]);
     }
@@ -53,7 +52,7 @@ public class TextSelectionRenderLogicTest
             new(1, 1, 5),
             new(1, 1, 5),
         };
-        var result = _logic.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
+        var result = _textSelectionRect.GetCalculatedRects(selectedLines, _textMeasures, _viewportContext.Object).ToList();
         Assert.AreEqual(2, result.Count);
         Assert.AreEqual(new Rect(2 - 7, 5 - 9, 2 * 5, 5), result[0]);
         Assert.AreEqual(new Rect(2 - 7, 5 - 9, 2 * 4, 5), result[1]);

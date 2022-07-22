@@ -29,7 +29,7 @@ internal class InputModel : ITextSource, ITextSelectionActivator, ITokenSelector
         _codeProvider = new CodeProviders.EmptyCodeProvider();
     }
 
-    public InputModel()
+    internal InputModel()
     {
         _text = new();
         _textCursor = new(_text);

@@ -9,6 +9,7 @@ namespace CodeHighlighter.Rendering;
 
 internal class CursorRenderLogic
 {
+    private static readonly double _cursorThickness = 1.0;
     private Line _cursorLine = new();
 
     public void SetCursor(Line cursorLine, Brush foreground)
@@ -17,7 +18,7 @@ internal class CursorRenderLogic
         _cursorLine.SnapsToDevicePixels = true;
         _cursorLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
         _cursorLine.Stroke = foreground;
-        _cursorLine.StrokeThickness = 1.0;
+        _cursorLine.StrokeThickness = _cursorThickness;
         var animation = new ObjectAnimationUsingKeyFrames();
         animation.Duration = TimeSpan.FromSeconds(1.5);
         animation.RepeatBehavior = RepeatBehavior.Forever;
@@ -26,12 +27,15 @@ internal class CursorRenderLogic
         _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
     }
 
-    public void DrawCursor(ITextCursor textCursor, TextMeasures textMeasures, IViewportContext viewportContext)
+    public void DrawCursor(CodeTextBoxModel model)
     {
+        var textCursor = model.TextCursor;
+        var textMeasures = model.TextMeasures;
+        var viewportContext = model.ViewportContext;
         var cursorAbsolutePoint = textCursor.GetAbsolutePosition(textMeasures);
         cursorAbsolutePoint.X -= viewportContext.HorizontalScrollBarValue;
         cursorAbsolutePoint.Y -= viewportContext.VerticalScrollBarValue;
-        _cursorLine.X1 = (int)cursorAbsolutePoint.X + 1;  // +1 - cursor not clipping on the left edge
+        _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor doesn't clipping on the left edge
         _cursorLine.Y1 = (int)(cursorAbsolutePoint.Y - 1);
         _cursorLine.X2 = (int)cursorAbsolutePoint.X;
         _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + textMeasures.LineHeight + 1);
@@ -45,9 +49,11 @@ internal class CursorRenderLogic
         _cursorLine.Y2 = 0;
     }
 
-    public void DrawHighlightedCursorLine(
-        DrawingContext context, Brush background, double actualWidth, ITextCursor textCursor, TextMeasures textMeasures, IViewportContext viewportContext)
+    public void DrawHighlightedCursorLine(CodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
     {
+        var textCursor = model.TextCursor;
+        var textMeasures = model.TextMeasures;
+        var viewportContext = model.ViewportContext;
         var x = 0.0;
         var y = textCursor.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue;
         var width = actualWidth;

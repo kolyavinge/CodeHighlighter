@@ -1,10 +1,9 @@
 ﻿using CodeHighlighter.Model;
-using CodeHighlighter.Rendering;
 using Moq;
 using NUnit.Framework;
-using static CodeHighlighter.Rendering.BracketsHighlighter;
+using static CodeHighlighter.Model.BracketsHighlighter;
 
-namespace CodeHighlighter.Tests.Rendering;
+namespace CodeHighlighter.Tests.Model;
 
 class BracketsHighlighterTest
 {

@@ -110,3 +110,13 @@ internal class Viewport
         return offset;
     }
 }
+
+internal class DummyViewportContext : IViewportContext
+{
+    public double ActualWidth { get; }
+    public double ActualHeight { get; }
+    public double VerticalScrollBarValue { get; set; }
+    public double VerticalScrollBarMaximum { get; set; }
+    public double HorizontalScrollBarValue { get; set; }
+    public double HorizontalScrollBarMaximum { get; set; }
+}

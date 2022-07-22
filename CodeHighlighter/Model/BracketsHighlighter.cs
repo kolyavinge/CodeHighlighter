@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.Model;
 
-namespace CodeHighlighter.Rendering;
+namespace CodeHighlighter.Model;
 
 internal class BracketsHighlighter
 {

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using CodeHighlighter.Model;
-using static CodeHighlighter.Rendering.BracketsHighlighter;
+using static CodeHighlighter.Model.BracketsHighlighter;
 
 namespace CodeHighlighter.Rendering;
 
