@@ -16,7 +16,7 @@ public class TextCursorTest
     [Test]
     public void InitPosition()
     {
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -24,35 +24,35 @@ public class TextCursorTest
     {
         _textCursor = new TextCursor(new Text(""));
         _textCursor.MoveTo(1, 1);
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
     public void MoveTo()
     {
         _textCursor.MoveTo(0, 0);
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(-1, 0);
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(0, -1);
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(100, 0);
-        Assert.AreEqual((2, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(0, 100);
-        Assert.AreEqual((0, 5), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 5), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(100, 100);
-        Assert.AreEqual((2, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(1, 1);
-        Assert.AreEqual((1, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(1, 100);
-        Assert.AreEqual((1, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 4), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -61,13 +61,13 @@ public class TextCursorTest
         _textCursor.MoveTo(2, 1);
 
         _textCursor.MoveUp();
-        Assert.AreEqual((1, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveUp();
-        Assert.AreEqual((0, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveUp();
-        Assert.AreEqual((0, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 1), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -76,13 +76,13 @@ public class TextCursorTest
         _textCursor.MoveTo(0, 1);
 
         _textCursor.MoveDown();
-        Assert.AreEqual((1, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveDown();
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveDown();
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -91,98 +91,98 @@ public class TextCursorTest
         _textCursor.MoveTo(2, 3);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((2, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((2, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((1, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 4), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((1, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((1, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((1, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((1, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 5), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 5), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 4), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveLeft();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
     public void MoveRight()
     {
         _textCursor.MoveRight();
-        Assert.AreEqual((0, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((0, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((0, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((0, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 4), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((0, 5), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 5), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((1, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((1, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((1, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((1, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((1, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 4), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((2, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((2, 2), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 2), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((2, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveRight();
-        Assert.AreEqual((2, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 3), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -190,30 +190,30 @@ public class TextCursorTest
     {
         _textCursor.MoveTo(0, 5);
         _textCursor.MoveStartLine();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
         _textCursor.MoveStartLine();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(1, 5);
         _textCursor.MoveStartLine();
-        Assert.AreEqual((1, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 0), _textCursor.LineAndColumnIndex);
         _textCursor.MoveStartLine();
-        Assert.AreEqual((1, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 0), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
     public void MoveEndLine()
     {
         _textCursor.MoveEndLine();
-        Assert.AreEqual((0, 5), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 5), _textCursor.LineAndColumnIndex);
         _textCursor.MoveEndLine();
-        Assert.AreEqual((0, 5), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 5), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTo(1, 0);
         _textCursor.MoveEndLine();
-        Assert.AreEqual((1, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 4), _textCursor.LineAndColumnIndex);
         _textCursor.MoveEndLine();
-        Assert.AreEqual((1, 4), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((1, 4), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -222,10 +222,10 @@ public class TextCursorTest
         _textCursor.MoveTo(2, 3);
 
         _textCursor.MovePageUp(2);
-        Assert.AreEqual((0, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MovePageUp(2);
-        Assert.AreEqual((0, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 3), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -234,10 +234,10 @@ public class TextCursorTest
         _textCursor.MoveTo(0, 1);
 
         _textCursor.MovePageDown(2);
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
 
         _textCursor.MovePageDown(2);
-        Assert.AreEqual((2, 1), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 1), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
@@ -246,19 +246,19 @@ public class TextCursorTest
         _textCursor.MoveTo(2, 3);
 
         _textCursor.MoveTextBegin();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTextBegin();
-        Assert.AreEqual((0, 0), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((0, 0), _textCursor.LineAndColumnIndex);
     }
 
     [Test]
     public void MoveTextEnd()
     {
         _textCursor.MoveTextEnd();
-        Assert.AreEqual((2, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 3), _textCursor.LineAndColumnIndex);
 
         _textCursor.MoveTextEnd();
-        Assert.AreEqual((2, 3), _textCursor.GetLineAndColumnIndex);
+        Assert.AreEqual((2, 3), _textCursor.LineAndColumnIndex);
     }
 }

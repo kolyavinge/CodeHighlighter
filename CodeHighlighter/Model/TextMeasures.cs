@@ -9,7 +9,7 @@ public class TextMeasures
 {
     private readonly FontSettings _fontSettings;
 
-    public event EventHandler? MeasuresUpdated;
+    internal event EventHandler? MeasuresUpdated;
 
     internal TextMeasures(FontSettings fontSettings)
     {
@@ -29,7 +29,7 @@ public class TextMeasures
 
     public double LetterWidth { get; private set; }
 
-    public void UpdateMeasures()
+    internal void UpdateMeasures()
     {
         var formattedText = new FormattedText("A", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, MakeTypeface(), _fontSettings.FontSize, Brushes.Black, 1.0);
         LineHeight = Math.Round(formattedText.Height);

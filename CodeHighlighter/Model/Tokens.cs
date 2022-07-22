@@ -18,7 +18,7 @@ public class Tokens : ITokens
 
     public int LinesCount => _tokens.Count;
 
-    public void SetTokens(IEnumerable<ICodeProvider.Token> tokens, int startLineIndex, int linesCount)
+    internal void SetTokens(IEnumerable<ICodeProvider.Token> tokens, int startLineIndex, int linesCount)
     {
         var groupedTokens = new Dictionary<int, List<Token>>();
         foreach (var token in tokens)
@@ -47,23 +47,23 @@ public class Tokens : ITokens
         }
     }
 
-    public void InsertEmptyLine(int lineIndex)
+    internal void InsertEmptyLine(int lineIndex)
     {
         _tokens.Insert(lineIndex, new List<Token>());
     }
 
-    public void DeleteLine(int lineIndex)
+    internal void DeleteLine(int lineIndex)
     {
         if (lineIndex == 0 && !_tokens.Any()) return;
         _tokens.RemoveAt(lineIndex);
     }
 
-    public void DeleteLines(int lineIndex, int count)
+    internal void DeleteLines(int lineIndex, int count)
     {
         _tokens.RemoveRange(lineIndex, count);
     }
 
-    public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
+    internal void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
     {
         var lineTokens = _tokens[sourceLineIndex];
         _tokens.RemoveAt(sourceLineIndex);

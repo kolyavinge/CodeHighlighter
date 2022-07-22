@@ -14,27 +14,27 @@ public class TextLine : IEnumerable<char>
 
     public char this[int i] => _symbs[i];
 
-    public TextLine(string str)
+    internal TextLine(string str)
     {
         _symbs = str.ToCharArray().ToList();
     }
 
-    public string GetSubstring(int startIndex, int length)
+    internal string GetSubstring(int startIndex, int length)
     {
         return new string(_symbs.Skip(startIndex).Take(length).ToArray());
     }
 
-    public void AppendChar(int columnIndex, char ch)
+    internal void AppendChar(int columnIndex, char ch)
     {
         _symbs.Insert(columnIndex, ch);
     }
 
-    public void AppendLine(TextLine line)
+    internal void AppendLine(TextLine line)
     {
         _symbs.AddRange(line._symbs);
     }
 
-    public void AppendLine(TextLine appendedLine, int appendedLineColumnIndex, int appendedLineCount)
+    internal void AppendLine(TextLine appendedLine, int appendedLineColumnIndex, int appendedLineCount)
     {
         var endColumnIndex = appendedLineColumnIndex + appendedLineCount - 1;
         for (int i = appendedLineColumnIndex; i <= endColumnIndex; i++)
@@ -43,7 +43,7 @@ public class TextLine : IEnumerable<char>
         }
     }
 
-    public void InsertLine(int columnIndex, TextLine appendedLine)
+    internal void InsertLine(int columnIndex, TextLine appendedLine)
     {
         for (int i = 0; i < appendedLine.Length; i++)
         {
@@ -51,22 +51,22 @@ public class TextLine : IEnumerable<char>
         }
     }
 
-    public void RemoveAt(int columnIndex)
+    internal void RemoveAt(int columnIndex)
     {
         _symbs.RemoveAt(columnIndex);
     }
 
-    public void RemoveRange(int columnIndex, int count)
+    internal void RemoveRange(int columnIndex, int count)
     {
         _symbs.RemoveRange(columnIndex, count);
     }
 
-    public void Clear()
+    internal void Clear()
     {
         _symbs.Clear();
     }
 
-    public void SetCase(int startColumnIndex, int length, TextCase textCase)
+    internal void SetCase(int startColumnIndex, int length, TextCase textCase)
     {
         if (textCase == TextCase.Upper)
         {

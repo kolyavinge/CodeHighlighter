@@ -7,13 +7,8 @@ namespace CodeHighlighter.Model;
 internal interface IText
 {
     int LinesCount { get; }
-    int VisibleLinesCount { get; }
-    string GetSubstring(int lineIndex, int startIndex, int length);
     TextLine GetLine(int lineIndex);
-    TextLine GetFirstLine();
-    TextLine GetLastLine();
     int GetMaxLineWidth();
-    string ToString();
 }
 
 public class Text : IText
@@ -71,7 +66,7 @@ public class Text : IText
         _lines[lineIndex].AppendChar(columnIndex, ch);
     }
 
-    internal void Insert(int lineIndex, int columnIndex, IText insertedText)
+    internal void Insert(int lineIndex, int columnIndex, Text insertedText)
     {
         if (insertedText.LinesCount == 0) return;
         if (insertedText.LinesCount == 1)
