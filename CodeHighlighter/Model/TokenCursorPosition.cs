@@ -27,7 +27,7 @@ internal class TokenCursorPosition
         Right = right;
     }
 
-    public static TokenCursorPosition GetPosition(List<Token> lineTokens, int columnIndex)
+    public static TokenCursorPosition GetPosition(TokenList lineTokens, int columnIndex)
     {
         if (!lineTokens.Any()) return Default;
         if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)

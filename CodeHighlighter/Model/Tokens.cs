@@ -9,18 +9,18 @@ internal interface ITokens
 {
     int LinesCount { get; }
     IEnumerable<Token> AllTokens { get; }
-    List<Token> GetTokens(int lineIndex);
+    TokenList GetTokens(int lineIndex);
 }
 
 public class Tokens : ITokens
 {
-    private readonly List<List<Token>> _tokens = new();
+    private readonly List<TokenList> _tokens = new();
 
     public int LinesCount => _tokens.Count;
 
     internal void SetTokens(IEnumerable<ICodeProvider.Token> tokens, int startLineIndex, int linesCount)
     {
-        var groupedTokens = new Dictionary<int, List<Token>>();
+        var groupedTokens = new Dictionary<int, TokenList>();
         foreach (var token in tokens)
         {
             if (groupedTokens.TryGetValue(token.LineIndex, out var value))
@@ -29,13 +29,13 @@ public class Tokens : ITokens
             }
             else
             {
-                groupedTokens.Add(token.LineIndex, new List<Token> { Token.FromCodeProviderToken(token) });
+                groupedTokens.Add(token.LineIndex, new TokenList { Token.FromCodeProviderToken(token) });
             }
         }
         var length = startLineIndex + linesCount;
         for (int lineIndex = startLineIndex; lineIndex < length; lineIndex++)
         {
-            var lineTokens = groupedTokens.ContainsKey(lineIndex) ? groupedTokens[lineIndex] : new List<Token>();
+            var lineTokens = groupedTokens.ContainsKey(lineIndex) ? groupedTokens[lineIndex] : new TokenList();
             if (lineIndex < _tokens.Count)
             {
                 _tokens[lineIndex] = lineTokens;
@@ -49,7 +49,7 @@ public class Tokens : ITokens
 
     internal void InsertEmptyLine(int lineIndex)
     {
-        _tokens.Insert(lineIndex, new List<Token>());
+        _tokens.Insert(lineIndex, new TokenList());
     }
 
     internal void DeleteLine(int lineIndex)
@@ -72,7 +72,7 @@ public class Tokens : ITokens
 
     public IEnumerable<Token> AllTokens => _tokens.SelectMany(x => x);
 
-    public List<Token> GetTokens(int lineIndex)
+    public TokenList GetTokens(int lineIndex)
     {
         return _tokens[lineIndex];
     }

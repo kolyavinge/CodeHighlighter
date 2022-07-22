@@ -21,7 +21,7 @@ public class TokenSelectorTest
     public void GetTokenOnPosition()
     {
         // '  xx  yzz'
-        var tokens = new List<Token>
+        var tokens = new TokenList
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
@@ -49,7 +49,7 @@ public class TokenSelectorTest
     [Test]
     public void GetToken_Empty()
     {
-        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
+        _tokens.Setup(x => x.GetTokens(0)).Returns(new TokenList());
         _tokens.SetupGet(x => x.LinesCount).Returns(0);
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -62,7 +62,7 @@ public class TokenSelectorTest
     [Test]
     public void GetToken_EmptyLine()
     {
-        _tokens.Setup(x => x.GetTokens(0)).Returns(new List<Token>());
+        _tokens.Setup(x => x.GetTokens(0)).Returns(new TokenList());
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 0));
         Assert.AreEqual(default(TokenSelector.SelectedRange), _selector.GetSelection(_tokens.Object, 0, 1));
@@ -76,7 +76,7 @@ public class TokenSelectorTest
     public void GetToken()
     {
         // '  xx  yzz'
-        var tokens = new List<Token>
+        var tokens = new TokenList
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y

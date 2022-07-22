@@ -6,7 +6,7 @@ namespace CodeHighlighter.Tests.Model;
 
 public class TokenCursorPositionTest
 {
-    private List<Token> _tokens;
+    private TokenList _tokens;
 
     [SetUp]
     public void Setup()
@@ -25,7 +25,7 @@ public class TokenCursorPositionTest
     public void GetPosition()
     {
         // '  xx  yzz'
-        _tokens = new List<Token>
+        _tokens = new TokenList
         {
             new("xx", 2, 2, 0), // x
             new("y", 6, 1, 1), // y
