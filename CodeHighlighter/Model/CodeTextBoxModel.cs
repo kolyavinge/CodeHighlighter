@@ -224,6 +224,19 @@ public class CodeTextBoxModel
         _codeTextBox?.InvalidateVisual();
     }
 
+    public void ReplaceText(int cursorStartLineIndex, int cursorStartColumnIndex, int cursorEndLineIndex, int cursorEndColumnIndex, string text)
+    {
+        InputModel.MoveCursorTo(cursorStartLineIndex, cursorStartColumnIndex);
+        InputModel.ActivateSelection();
+        InputModel.MoveCursorTo(cursorEndLineIndex, cursorEndColumnIndex);
+        InputModel.CompleteSelection();
+        InputModel.InsertText(text);
+        Viewport.CorrectByCursorPosition(TextCursor);
+        Viewport.UpdateScrollbarsMaximumValues(Text);
+        RaiseTextChanged();
+        _codeTextBox?.InvalidateVisual();
+    }
+
     public void NewLine()
     {
         InputModel.NewLine();
