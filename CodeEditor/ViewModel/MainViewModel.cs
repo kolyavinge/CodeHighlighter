@@ -32,7 +32,7 @@ public class MainViewModel
 
     private void CopyText()
     {
-        Clipboard.SetText(CodeTextBoxModel.Text.TextContent);
+        Clipboard.SetText(CodeTextBoxModel.Text.ToString());
     }
 
     private void InsertLine()

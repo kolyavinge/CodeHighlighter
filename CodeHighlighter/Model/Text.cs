@@ -19,10 +19,10 @@ public class Text : IText
 
     public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
 
-    public string TextContent
+    internal string TextContent
     {
         get => ToString();
-        internal set
+        set
         {
             _lines.Clear();
             _lines.AddRange(value.Split('\n').Select(line => new TextLine(line.Replace("\r", ""))).ToList());

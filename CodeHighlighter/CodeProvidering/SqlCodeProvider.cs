@@ -23,9 +23,9 @@ public class SqlCodeProvider : ICodeProvider
         _operators = new HashSet<string>(new OperatorsCollection().ToList(), StringComparer.OrdinalIgnoreCase);
     }
 
-    public IEnumerable<ICodeProvider.Token> GetTokens(ITextIterator textIterator)
+    public IEnumerable<Token> GetTokens(ITextIterator textIterator)
     {
-        var tokens = new List<ICodeProvider.Token>();
+        var tokens = new List<Token>();
         if (textIterator.Eof) return tokens;
         var tokenNameArray = new char[10 * 1024];
         int tokenNameArrayIndex = 0;
@@ -235,16 +235,16 @@ public class SqlCodeProvider : ICodeProvider
         return ch == '\n';
     }
 
-    public IEnumerable<ICodeProvider.TokenColor> GetColors()
+    public IEnumerable<TokenColor> GetColors()
     {
         return new[]
         {
-            new ICodeProvider.TokenColor((byte)TokenKind.Keyword, Colors.Blue),
-            new ICodeProvider.TokenColor((byte)TokenKind.Operator, Colors.DimGray),
-            new ICodeProvider.TokenColor((byte)TokenKind.Function, Colors.Magenta),
-            new ICodeProvider.TokenColor((byte)TokenKind.Variable, Colors.Brown),
-            new ICodeProvider.TokenColor((byte)TokenKind.String, Colors.Red),
-            new ICodeProvider.TokenColor((byte)TokenKind.Comment, Colors.Green),
+            new TokenColor((byte)TokenKind.Keyword, Colors.Blue),
+            new TokenColor((byte)TokenKind.Operator, Colors.DimGray),
+            new TokenColor((byte)TokenKind.Function, Colors.Magenta),
+            new TokenColor((byte)TokenKind.Variable, Colors.Brown),
+            new TokenColor((byte)TokenKind.String, Colors.Red),
+            new TokenColor((byte)TokenKind.Comment, Colors.Green),
         };
     }
 

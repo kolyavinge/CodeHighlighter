@@ -13,7 +13,7 @@ internal class TokensColors : ITokensColors
 {
     private readonly Dictionary<byte, Brush> _colors = new();
 
-    public void SetColors(IEnumerable<ICodeProvider.TokenColor> tokenColors)
+    public void SetColors(IEnumerable<TokenColor> tokenColors)
     {
         _colors.Clear();
         foreach (var tokenColor in tokenColors)

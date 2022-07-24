@@ -5,12 +5,12 @@ namespace CodeHighlighter.CodeProvidering;
 
 internal class EmptyCodeProvider : ICodeProvider
 {
-    public IEnumerable<ICodeProvider.Token> GetTokens(ITextIterator textIterator)
+    public IEnumerable<Token> GetTokens(ITextIterator textIterator)
     {
-        return Enumerable.Empty<ICodeProvider.Token>();
+        return Enumerable.Empty<Token>();
     }
-    public IEnumerable<ICodeProvider.TokenColor> GetColors()
+    public IEnumerable<TokenColor> GetColors()
     {
-        return Enumerable.Empty<ICodeProvider.TokenColor>();
+        return Enumerable.Empty<TokenColor>();
     }
 }

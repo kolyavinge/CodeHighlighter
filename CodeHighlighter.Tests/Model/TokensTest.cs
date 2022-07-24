@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using NUnit.Framework;
 
@@ -18,7 +17,7 @@ public class TokensTest
     [Test]
     public void SetTokens_Init()
     {
-        var tokens = new List<ICodeProvider.Token>
+        var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 0, 2, 1, 1),
@@ -36,7 +35,7 @@ public class TokensTest
     [Test]
     public void SetTokens_Replace()
     {
-        var tokens = new List<ICodeProvider.Token>
+        var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 0, 2, 1, 1),
@@ -45,7 +44,7 @@ public class TokensTest
         };
         _tokens.SetTokens(tokens, 0, 3);
 
-        tokens = new List<ICodeProvider.Token>
+        tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
             new("", 0, 0, 3, 0),
             new("", 1, 0, 1, 0),
@@ -70,7 +69,7 @@ public class TokensTest
     [Test]
     public void ReplaceLines()
     {
-        var tokens = new List<ICodeProvider.Token>
+        var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
             new("", 0, 0, 2, 0),
             new("", 1, 2, 1, 1),

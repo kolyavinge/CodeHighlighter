@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
@@ -18,7 +17,7 @@ public class Tokens : ITokens
 
     public int LinesCount => _tokens.Count;
 
-    internal void SetTokens(IEnumerable<ICodeProvider.Token> tokens, int startLineIndex, int linesCount)
+    internal void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount)
     {
         var groupedTokens = new Dictionary<int, TokenList>();
         foreach (var token in tokens)
@@ -94,7 +93,7 @@ public class Token
     public byte Kind { get; set; }
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-    public Token(string name, int startColumnIndex, int length, byte kind)
+    internal Token(string name, int startColumnIndex, int length, byte kind)
     {
         Name = name;
         StartColumnIndex = startColumnIndex;
@@ -102,7 +101,7 @@ public class Token
         Kind = kind;
     }
 
-    public static Token FromCodeProviderToken(ICodeProvider.Token token)
+    internal static Token FromCodeProviderToken(CodeProvidering.Token token)
     {
         return new(token.Name, token.StartColumnIndex, token.Length, token.Kind);
     }

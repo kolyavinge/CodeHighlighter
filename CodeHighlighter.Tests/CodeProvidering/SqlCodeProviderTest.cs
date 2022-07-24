@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeHighlighter.CodeProvidering;
-using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.CodeProvidering;
@@ -209,10 +208,10 @@ from MyTable'";
         tokens.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
     }
 
-    private List<ICodeProvider.Token> GetTokens(string textString)
+    private List<Token> GetTokens(string textString)
     {
-        var text = new Text();
+        var text = new CodeHighlighter.Model.Text();
         text.TextContent = textString;
-        return _provider.GetTokens(new ForwardTextIterator(text)).ToList();
+        return _provider.GetTokens(new CodeHighlighter.Model.ForwardTextIterator(text)).ToList();
     }
 }
