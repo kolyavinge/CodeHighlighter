@@ -40,7 +40,7 @@ public class TokenSelectorTest
 
         Assert.AreEqual(new Token("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, 0, 6));
 
-        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 7));
+        Assert.AreEqual(new Token("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, 0, 7));
         Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 8));
         Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, 0, 9));
         Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, 0, 50));
