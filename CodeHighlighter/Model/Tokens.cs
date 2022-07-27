@@ -17,6 +17,21 @@ public class Tokens : ITokens
 
     public int LinesCount => _tokens.Count;
 
+    public IEnumerable<Token> AllTokens => _tokens.SelectMany(x => x);
+
+    internal Tokens() { }
+
+    public TokenList GetTokens(int lineIndex)
+    {
+        return _tokens[lineIndex];
+    }
+
+    public Token? GetTokenOnPosition(int lineIndex, int columnIndex)
+    {
+        var selector = new TokenSelector();
+        return selector.GetTokenOnPosition(this, lineIndex, columnIndex);
+    }
+
     internal void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount)
     {
         var groupedTokens = new Dictionary<int, TokenList>();
@@ -67,19 +82,6 @@ public class Tokens : ITokens
         var lineTokens = _tokens[sourceLineIndex];
         _tokens.RemoveAt(sourceLineIndex);
         _tokens.Insert(destinationLineIndex, lineTokens);
-    }
-
-    public IEnumerable<Token> AllTokens => _tokens.SelectMany(x => x);
-
-    public TokenList GetTokens(int lineIndex)
-    {
-        return _tokens[lineIndex];
-    }
-
-    public Token? GetTokenOnPosition(int lineIndex, int columnIndex)
-    {
-        var selector = new TokenSelector();
-        return selector.GetTokenOnPosition(this, lineIndex, columnIndex);
     }
 }
 

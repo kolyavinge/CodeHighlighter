@@ -12,6 +12,8 @@ public class TokenList : IEnumerable<Token>, IReadOnlyCollection<Token>, IReadOn
 
     public Token this[int index] => _list[index];
 
+    internal TokenList() { }
+
     internal void Add(Token token) => _list.Add(token);
 
     internal int FindIndex(Predicate<Token> match) => _list.FindIndex(match);

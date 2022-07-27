@@ -6,18 +6,20 @@ namespace CodeHighlighter.Model;
 
 internal interface IText
 {
+    IEnumerable<TextLine> Lines { get; }
     int LinesCount { get; }
     TextLine GetLine(int lineIndex);
-    int GetMaxLineWidth();
 }
 
 public class Text : IText
 {
     private readonly List<TextLine> _lines = new();
 
+    public IEnumerable<TextLine> Lines => _lines;
+
     public int LinesCount => _lines.Count;
 
-    public int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
+    internal int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
 
     internal string TextContent
     {
@@ -36,22 +38,7 @@ public class Text : IText
         TextContent = text;
     }
 
-    public string GetSubstring(int lineIndex, int startIndex, int length)
-    {
-        return _lines[lineIndex].GetSubstring(startIndex, length);
-    }
-
     public TextLine GetLine(int lineIndex) => _lines[lineIndex];
-
-    public TextLine GetFirstLine() => _lines.First();
-
-    public TextLine GetLastLine() => _lines.Last();
-
-    public int GetMaxLineWidth()
-    {
-        if (!_lines.Any()) return 0;
-        return _lines.Select(x => x.Length).Max();
-    }
 
     internal void NewLine(int lineIndex, int columnIndex)
     {
@@ -71,17 +58,17 @@ public class Text : IText
         if (insertedText.LinesCount == 0) return;
         if (insertedText.LinesCount == 1)
         {
-            _lines[lineIndex].InsertLine(columnIndex, insertedText.GetFirstLine());
+            _lines[lineIndex].InsertLine(columnIndex, insertedText.Lines.First());
         }
         else
         {
             NewLine(lineIndex, columnIndex);
-            _lines[lineIndex].AppendLine(insertedText.GetFirstLine());
+            _lines[lineIndex].AppendLine(insertedText.Lines.First());
             for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
             {
                 _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
             }
-            _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.GetLastLine());
+            _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.Lines.Last());
         }
     }
 
@@ -199,5 +186,14 @@ public class Text : IText
             FirstDeletedLineIndex = firstDeletedLineIndex;
             DeletedLinesCount = deletedLinesCount;
         }
+    }
+}
+
+internal static class TextExt
+{
+    public static int GetMaxLineWidth(this IText text)
+    {
+        if (!text.Lines.Any()) return 0;
+        return text.Lines.Select(x => x.Length).Max();
     }
 }

@@ -14,11 +14,12 @@ public class CodeTextBoxModel
     public Text Text { get; }
     public Tokens Tokens { get; }
     public TextCursor TextCursor { get; }
+    public TextMeasures TextMeasures { get; }
+
     internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
     internal TextSelection TextSelection { get; }
     internal FontSettings FontSettings { get; }
-    public TextMeasures TextMeasures { get; }
     internal InputModel InputModel { get; }
     internal BracketsHighlighter BracketsHighlighter { get; }
 
@@ -26,10 +27,10 @@ public class CodeTextBoxModel
     {
         Text = new Text();
         TextCursor = new TextCursor(Text);
-        TextSelection = new TextSelection();
         Tokens = new Tokens();
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
+        TextSelection = new TextSelection();
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);

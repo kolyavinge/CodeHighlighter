@@ -241,7 +241,7 @@ internal class InputModel
         var selectedLines = new List<string>();
         foreach (var line in TextSelection.GetSelectedLines(Text))
         {
-            selectedLines.Add(Text.GetSubstring(line.LineIndex, line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
+            selectedLines.Add(Text.GetLine(line.LineIndex).GetSubstring(line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
         }
 
         return String.Join(Environment.NewLine, selectedLines);
@@ -254,11 +254,11 @@ internal class InputModel
         Text.Insert(TextCursor.LineIndex, TextCursor.ColumnIndex, insertedText);
         if (insertedText.LinesCount == 1)
         {
-            TextCursor.MoveTo(TextCursor.LineIndex, TextCursor.ColumnIndex + insertedText.GetLastLine().Length);
+            TextCursor.MoveTo(TextCursor.LineIndex, TextCursor.ColumnIndex + insertedText.Lines.Last().Length);
         }
         else
         {
-            TextCursor.MoveTo(TextCursor.LineIndex + insertedText.LinesCount - 1, insertedText.GetLastLine().Length);
+            TextCursor.MoveTo(TextCursor.LineIndex + insertedText.LinesCount - 1, insertedText.Lines.Last().Length);
         }
         UpdateTokensForLines(0, Text.LinesCount);
     }

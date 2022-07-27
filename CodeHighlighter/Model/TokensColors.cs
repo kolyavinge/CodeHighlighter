@@ -4,12 +4,7 @@ using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
-internal interface ITokensColors
-{
-    Brush? GetColorBrushOrNull(byte tokenKind);
-}
-
-internal class TokensColors : ITokensColors
+internal class TokensColors
 {
     private readonly Dictionary<byte, Brush> _colors = new();
 
