@@ -385,6 +385,8 @@ internal class InputModel
     public void SetSelectedTextCase(TextCase textCase)
     {
         Text.SetSelectedTextCase(TextSelection, textCase);
+        var (start, end) = TextSelection.GetSortedPositions();
+        UpdateTokensForLines(start.LineIndex, end.LineIndex - start.LineIndex + 1);
     }
 
     private void SetTokens()

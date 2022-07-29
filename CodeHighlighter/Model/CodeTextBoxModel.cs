@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.InputActions;
 
 namespace CodeHighlighter.Model;
 
@@ -67,235 +66,65 @@ public class CodeTextBoxModel
         _codeTextBox?.InvalidateVisual();
     }
 
-    public void MoveCursorLeft()
-    {
-        InputModel.MoveCursorLeft();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorLeft() => MoveCursorLeftInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorRight()
-    {
-        InputModel.MoveCursorRight();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorRight() => MoveCursorRightInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorUp()
-    {
-        InputModel.MoveCursorUp();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorUp() => MoveCursorUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorDown()
-    {
-        InputModel.MoveCursorDown();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorDown() => MoveCursorDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorStartLine()
-    {
-        InputModel.MoveCursorStartLine();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorStartLine() => MoveCursorStartLineInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorEndLine()
-    {
-        InputModel.MoveCursorEndLine();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorEndLine() => MoveCursorEndLineInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorTextBegin()
-    {
-        InputModel.MoveCursorTextBegin();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorTextBegin() => MoveCursorTextBeginInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorTextEnd()
-    {
-        InputModel.MoveCursorTextEnd();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorTextEnd() => MoveCursorTextEndInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorPageUp()
-    {
-        InputModel.MoveCursorPageUp(Viewport.GetLinesCountInViewport());
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorPageUp() => MoveCursorPageUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveCursorPageDown()
-    {
-        InputModel.MoveCursorPageDown(Viewport.GetLinesCountInViewport());
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveCursorPageDown() => MoveCursorPageDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveSelectedLinesUp()
-    {
-        InputModel.MoveSelectedLinesUp();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveSelectedLinesUp() => MoveSelectedLinesUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveSelectedLinesDown()
-    {
-        InputModel.MoveSelectedLinesDown();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveSelectedLinesDown() => MoveSelectedLinesDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void GotoLine(int lineIndex)
-    {
-        lineIndex = lineIndex < Text.LinesCount ? lineIndex : Text.LinesCount;
-        InputModel.MoveCursorTo(lineIndex, 0);
-        var offsetLine = lineIndex - (Viewport.GetLinesCountInViewport()) / 2;
-        if (offsetLine < 0) offsetLine = 0;
-        ViewportContext.VerticalScrollBarValue = offsetLine * TextMeasures.LineHeight;
-        _codeTextBox?.InvalidateVisual();
-        _codeTextBox?.Focus();
-    }
+    public void GotoLine(int lineIndex) => GotoLineInputAction.Instance.Do(lineIndex, InputModel, Text, TextMeasures, Viewport, ViewportContext, _codeTextBox);
 
-    public void ScrollLineUp()
-    {
-        Viewport.ScrollLineUp();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void ScrollLineUp() => ScrollLineUpInputAction.Instance.Do(Viewport, _codeTextBox);
 
-    public void ScrollLineDown()
-    {
-        Viewport.ScrollLineDown();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void ScrollLineDown() => ScrollLineDownInputAction.Instance.Do(Viewport, _codeTextBox);
 
-    public void MoveToPrevToken()
-    {
-        InputModel.MoveToPrevToken();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveToPrevToken() => MoveToPrevTokenInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void MoveToNextToken()
-    {
-        InputModel.MoveToNextToken();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void MoveToNextToken() => MoveToNextTokenInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    public void DeleteLeftToken()
-    {
-        InputModel.DeleteLeftToken();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void DeleteLeftToken() => DeleteLeftTokenInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void DeleteRightToken()
-    {
-        InputModel.DeleteRightToken();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void DeleteRightToken() => DeleteRightTokenInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void SelectAll()
-    {
-        InputModel.SelectAll();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void SelectAll() => SelectAllInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
 
-    private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
-    public void TextInput(string inputText)
-    {
-        var text = inputText.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
-        if (!text.Any()) return;
-        foreach (var ch in text) InputModel.AppendChar(ch);
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void TextInput(string inputText) => TextInputInputAction.Instance.Do(inputText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void ReplaceText(int cursorStartLineIndex, int cursorStartColumnIndex, int cursorEndLineIndex, int cursorEndColumnIndex, string text)
-    {
-        InputModel.MoveCursorTo(cursorStartLineIndex, cursorStartColumnIndex);
-        InputModel.ActivateSelection();
-        InputModel.MoveCursorTo(cursorEndLineIndex, cursorEndColumnIndex);
-        InputModel.CompleteSelection();
-        InputModel.InsertText(text);
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void ReplaceText(int cursorStartLineIndex, int cursorStartColumnIndex, int cursorEndLineIndex, int cursorEndColumnIndex, string insertedText)
+        => ReplaceTextInputAction.Instance.Do(
+            cursorStartLineIndex, cursorStartColumnIndex, cursorEndLineIndex, cursorEndColumnIndex, insertedText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void NewLine()
-    {
-        InputModel.NewLine();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void NewLine() => NewLineInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void InsertText(string insertedText)
-    {
-        InputModel.InsertText(insertedText);
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void InsertText(string insertedText) => InsertTextInputAction.Instance.Do(insertedText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void DeleteSelectedLines()
-    {
-        InputModel.DeleteSelectedLines();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void DeleteSelectedLines() => DeleteSelectedLinesInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void LeftDelete()
-    {
-        InputModel.LeftDelete();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void LeftDelete() => LeftDeleteInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void RightDelete()
-    {
-        InputModel.RightDelete();
-        Viewport.CorrectByCursorPosition(TextCursor);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void RightDelete() => RightDeleteInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
 
-    public void ToUpperCase()
-    {
-        InputModel.SetSelectedTextCase(TextCase.Upper);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void ToUpperCase() => ToUpperCaseInputAction.Instance.Do(InputModel, _codeTextBox, RaiseTextChanged);
 
-    public void ToLowerCase()
-    {
-        InputModel.SetSelectedTextCase(TextCase.Lower);
-        RaiseTextChanged();
-        _codeTextBox?.InvalidateVisual();
-    }
+    public void ToLowerCase() => ToLowerCaseInputAction.Instance.Do(InputModel, _codeTextBox, RaiseTextChanged);
 
     private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 }

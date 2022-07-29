@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CodeHighlighter.Model;
+﻿namespace CodeHighlighter.Model;
 
 internal class TokenNavigator
 {
