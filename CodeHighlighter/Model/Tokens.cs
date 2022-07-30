@@ -95,7 +95,7 @@ public class Token
     public byte Kind { get; set; }
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-    internal Token(string name, int startColumnIndex, int length, byte kind)
+    public Token(string name, int startColumnIndex, int length, byte kind)
     {
         Name = name;
         StartColumnIndex = startColumnIndex;
