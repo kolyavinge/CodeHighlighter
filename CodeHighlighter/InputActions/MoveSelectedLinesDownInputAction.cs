@@ -1,15 +1,13 @@
-﻿using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class MoveSelectedLinesDownInputAction
 {
     public static readonly MoveSelectedLinesDownInputAction Instance = new();
 
-    public void Do(InputModel inputModel, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox)
+    public void Do(InputActionContext context)
     {
-        inputModel.MoveSelectedLinesDown();
-        viewport.CorrectByCursorPosition(textCursor);
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.MoveSelectedLinesDown();
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

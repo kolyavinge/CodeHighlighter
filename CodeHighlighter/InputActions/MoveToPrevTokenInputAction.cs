@@ -1,15 +1,13 @@
-﻿using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class MoveToPrevTokenInputAction
 {
     public static readonly MoveToPrevTokenInputAction Instance = new();
 
-    public void Do(InputModel inputModel, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox)
+    public void Do(InputActionContext context)
     {
-        inputModel.MoveToPrevToken();
-        viewport.CorrectByCursorPosition(textCursor);
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.MoveToPrevToken();
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

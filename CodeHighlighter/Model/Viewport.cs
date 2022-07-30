@@ -46,7 +46,7 @@ internal class Viewport
         CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
     }
 
-    public void CorrectByCursorPosition(Point cursorAbsolutePoint)
+    private void CorrectByCursorPosition(Point cursorAbsolutePoint)
     {
         if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
         {

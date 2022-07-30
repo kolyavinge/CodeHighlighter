@@ -1,15 +1,13 @@
-﻿using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class MoveCursorLeftInputAction
 {
     public static readonly MoveCursorLeftInputAction Instance = new();
 
-    public void Do(InputModel inputModel, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox)
+    public void Do(InputActionContext context)
     {
-        inputModel.MoveCursorLeft();
-        viewport.CorrectByCursorPosition(textCursor);
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.MoveCursorLeft();
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

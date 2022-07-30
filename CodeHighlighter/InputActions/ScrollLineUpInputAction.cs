@@ -1,14 +1,12 @@
-﻿using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class ScrollLineUpInputAction
 {
     public static readonly ScrollLineUpInputAction Instance = new();
 
-    public void Do(Viewport viewport, ICodeTextBox? codeTextBox)
+    public void Do(InputActionContext context)
     {
-        viewport.ScrollLineUp();
-        codeTextBox?.InvalidateVisual();
+        context.Viewport.ScrollLineUp();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

@@ -6,6 +6,7 @@ namespace CodeHighlighter.Model;
 
 public class CodeTextBoxModel
 {
+    private readonly InputActionContext _inputActionContext;
     private ICodeTextBox? _codeTextBox;
 
     public event EventHandler? TextChanged;
@@ -34,6 +35,7 @@ public class CodeTextBoxModel
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "", Text, TextCursor);
+        _inputActionContext = new InputActionContext(InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, RaiseTextChanged);
         SetCodeProvider(codeProvider);
     }
 
@@ -42,6 +44,9 @@ public class CodeTextBoxModel
         _codeTextBox = codeTextBox;
         ViewportContext = viewportContext;
         Viewport = new Viewport(ViewportContext, TextMeasures);
+        _inputActionContext.CodeTextBox = _codeTextBox;
+        _inputActionContext.Viewport = Viewport;
+        _inputActionContext.ViewportContext = ViewportContext;
     }
 
     private void SetCodeProvider(ICodeProvider codeProvider)
@@ -66,65 +71,64 @@ public class CodeTextBoxModel
         _codeTextBox?.InvalidateVisual();
     }
 
-    public void MoveCursorLeft() => MoveCursorLeftInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorLeft() => MoveCursorLeftInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorRight() => MoveCursorRightInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorRight() => MoveCursorRightInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorUp() => MoveCursorUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorUp() => MoveCursorUpInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorDown() => MoveCursorDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorDown() => MoveCursorDownInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorStartLine() => MoveCursorStartLineInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorStartLine() => MoveCursorStartLineInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorEndLine() => MoveCursorEndLineInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorEndLine() => MoveCursorEndLineInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorTextBegin() => MoveCursorTextBeginInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorTextBegin() => MoveCursorTextBeginInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorTextEnd() => MoveCursorTextEndInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorTextEnd() => MoveCursorTextEndInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorPageUp() => MoveCursorPageUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorPageUp() => MoveCursorPageUpInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveCursorPageDown() => MoveCursorPageDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveCursorPageDown() => MoveCursorPageDownInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveSelectedLinesUp() => MoveSelectedLinesUpInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveSelectedLinesUp() => MoveSelectedLinesUpInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveSelectedLinesDown() => MoveSelectedLinesDownInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveSelectedLinesDown() => MoveSelectedLinesDownInputAction.Instance.Do(_inputActionContext);
 
-    public void GotoLine(int lineIndex) => GotoLineInputAction.Instance.Do(lineIndex, InputModel, Text, TextMeasures, Viewport, ViewportContext, _codeTextBox);
+    public void GotoLine(int lineIndex) => GotoLineInputAction.Instance.Do(_inputActionContext, lineIndex);
 
-    public void ScrollLineUp() => ScrollLineUpInputAction.Instance.Do(Viewport, _codeTextBox);
+    public void ScrollLineUp() => ScrollLineUpInputAction.Instance.Do(_inputActionContext);
 
-    public void ScrollLineDown() => ScrollLineDownInputAction.Instance.Do(Viewport, _codeTextBox);
+    public void ScrollLineDown() => ScrollLineDownInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveToPrevToken() => MoveToPrevTokenInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveToPrevToken() => MoveToPrevTokenInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveToNextToken() => MoveToNextTokenInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void MoveToNextToken() => MoveToNextTokenInputAction.Instance.Do(_inputActionContext);
 
-    public void DeleteLeftToken() => DeleteLeftTokenInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void DeleteLeftToken() => DeleteLeftTokenInputAction.Instance.Do(_inputActionContext);
 
-    public void DeleteRightToken() => DeleteRightTokenInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void DeleteRightToken() => DeleteRightTokenInputAction.Instance.Do(_inputActionContext);
 
-    public void SelectAll() => SelectAllInputAction.Instance.Do(InputModel, TextCursor, Viewport, _codeTextBox);
+    public void SelectAll() => SelectAllInputAction.Instance.Do(_inputActionContext);
 
-    public void TextInput(string inputText) => TextInputInputAction.Instance.Do(inputText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void TextInput(string inputText) => TextInputInputAction.Instance.Do(_inputActionContext, inputText);
 
     public void ReplaceText(int cursorStartLineIndex, int cursorStartColumnIndex, int cursorEndLineIndex, int cursorEndColumnIndex, string insertedText)
-        => ReplaceTextInputAction.Instance.Do(
-            cursorStartLineIndex, cursorStartColumnIndex, cursorEndLineIndex, cursorEndColumnIndex, insertedText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+        => ReplaceTextInputAction.Instance.Do(_inputActionContext, cursorStartLineIndex, cursorStartColumnIndex, cursorEndLineIndex, cursorEndColumnIndex, insertedText);
 
-    public void NewLine() => NewLineInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void NewLine() => NewLineInputAction.Instance.Do(_inputActionContext);
 
-    public void InsertText(string insertedText) => InsertTextInputAction.Instance.Do(insertedText, InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void InsertText(string insertedText) => InsertTextInputAction.Instance.Do(_inputActionContext, insertedText);
 
-    public void DeleteSelectedLines() => DeleteSelectedLinesInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void DeleteSelectedLines() => DeleteSelectedLinesInputAction.Instance.Do(_inputActionContext);
 
-    public void LeftDelete() => LeftDeleteInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void LeftDelete() => LeftDeleteInputAction.Instance.Do(_inputActionContext);
 
-    public void RightDelete() => RightDeleteInputAction.Instance.Do(InputModel, Text, TextCursor, Viewport, _codeTextBox, RaiseTextChanged);
+    public void RightDelete() => RightDeleteInputAction.Instance.Do(_inputActionContext);
 
-    public void ToUpperCase() => ToUpperCaseInputAction.Instance.Do(InputModel, _codeTextBox, RaiseTextChanged);
+    public void ToUpperCase() => ToUpperCaseInputAction.Instance.Do(_inputActionContext);
 
-    public void ToLowerCase() => ToLowerCaseInputAction.Instance.Do(InputModel, _codeTextBox, RaiseTextChanged);
+    public void ToLowerCase() => ToLowerCaseInputAction.Instance.Do(_inputActionContext);
 
     private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 }

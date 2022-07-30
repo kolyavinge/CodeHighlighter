@@ -1,16 +1,13 @@
-﻿using System;
-using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class ToUpperCaseInputAction
 {
     public static readonly ToUpperCaseInputAction Instance = new();
 
-    public void Do(InputModel inputModel, ICodeTextBox? codeTextBox, Action raiseTextChanged)
+    public void Do(InputActionContext context)
     {
-        inputModel.SetSelectedTextCase(TextCase.Upper);
-        raiseTextChanged();
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.SetSelectedTextCase(TextCase.Upper);
+        context.RaiseTextChanged();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

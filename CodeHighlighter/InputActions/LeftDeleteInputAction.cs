@@ -1,18 +1,15 @@
-﻿using System;
-using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class LeftDeleteInputAction
 {
     public static readonly LeftDeleteInputAction Instance = new();
 
-    public void Do(InputModel inputModel, Text text, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox, Action raiseTextChanged)
+    public void Do(InputActionContext context)
     {
-        inputModel.LeftDelete();
-        viewport.CorrectByCursorPosition(textCursor);
-        viewport.UpdateScrollbarsMaximumValues(text);
-        raiseTextChanged();
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.LeftDelete();
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
+        context.RaiseTextChanged();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

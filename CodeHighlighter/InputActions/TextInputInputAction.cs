@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
@@ -11,14 +9,14 @@ internal class TextInputInputAction
 
     private static readonly HashSet<char> _notAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
 
-    public void Do(string inputText, InputModel inputModel, Text text, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox, Action raiseTextChanged)
+    public void Do(InputActionContext context, string inputText)
     {
         var inputTextList = inputText.Where(ch => !_notAllowedSymbols.Contains(ch)).ToList();
         if (!inputTextList.Any()) return;
-        foreach (var ch in inputTextList) inputModel.AppendChar(ch);
-        viewport.CorrectByCursorPosition(textCursor);
-        viewport.UpdateScrollbarsMaximumValues(text);
-        raiseTextChanged();
-        codeTextBox?.InvalidateVisual();
+        foreach (var ch in inputTextList) context.InputModel.AppendChar(ch);
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
+        context.RaiseTextChanged();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

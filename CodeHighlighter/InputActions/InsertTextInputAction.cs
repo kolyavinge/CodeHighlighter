@@ -1,18 +1,15 @@
-﻿using System;
-using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class InsertTextInputAction
 {
     public static readonly InsertTextInputAction Instance = new();
 
-    public void Do(string insertedText, InputModel inputModel, Text text, TextCursor textCursor, Viewport viewport, ICodeTextBox? codeTextBox, Action raiseTextChanged)
+    public void Do(InputActionContext context, string insertedText)
     {
-        inputModel.InsertText(insertedText);
-        viewport.CorrectByCursorPosition(textCursor);
-        viewport.UpdateScrollbarsMaximumValues(text);
-        raiseTextChanged();
-        codeTextBox?.InvalidateVisual();
+        context.InputModel.InsertText(insertedText);
+        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
+        context.RaiseTextChanged();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }

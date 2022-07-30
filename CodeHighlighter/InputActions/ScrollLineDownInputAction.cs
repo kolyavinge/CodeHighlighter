@@ -1,14 +1,12 @@
-﻿using CodeHighlighter.Model;
-
-namespace CodeHighlighter.InputActions;
+﻿namespace CodeHighlighter.InputActions;
 
 internal class ScrollLineDownInputAction
 {
     public static readonly ScrollLineDownInputAction Instance = new();
 
-    public void Do(Viewport viewport, ICodeTextBox? codeTextBox)
+    public void Do(InputActionContext context)
     {
-        viewport.ScrollLineDown();
-        codeTextBox?.InvalidateVisual();
+        context.Viewport.ScrollLineDown();
+        context.CodeTextBox?.InvalidateVisual();
     }
 }
