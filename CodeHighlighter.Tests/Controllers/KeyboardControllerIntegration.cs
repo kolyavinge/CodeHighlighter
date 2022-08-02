@@ -26,7 +26,7 @@ internal class KeyboardControllerIntegration
          * asdfg
          */
         _model.InputModel.SetText("12345\r\nqwert\r\nasdfg");
-        _model.InputModel.MoveCursorTo(1, 3);
+        _model.InputModel.MoveCursorTo(new(1, 3));
 
         KeyDownWithShift(Key.Left);
         Assert.AreEqual("e", _model.InputModel.GetSelectedText());
@@ -40,11 +40,11 @@ internal class KeyboardControllerIntegration
         KeyDownWithShift(Key.End);
         Assert.AreEqual("rt", _model.InputModel.GetSelectedText());
 
-        _model.InputModel.MoveCursorTo(1, 3);
+        _model.InputModel.MoveCursorTo(new(1, 3));
         KeyDownWithShift(Key.Up);
         Assert.AreEqual("45\r\nqwe", _model.InputModel.GetSelectedText());
 
-        _model.InputModel.MoveCursorTo(1, 3);
+        _model.InputModel.MoveCursorTo(new(1, 3));
         KeyDownWithShift(Key.Down);
         Assert.AreEqual("rt\r\nasd", _model.InputModel.GetSelectedText());
 

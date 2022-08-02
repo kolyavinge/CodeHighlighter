@@ -24,7 +24,7 @@ public class InputModelCursorIntegration
         _model.NewLine();
         AppendString("0123456789");
 
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         _model.MoveCursorLeft();
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(4, _model.TextCursor.ColumnIndex);
@@ -93,7 +93,7 @@ public class InputModelCursorIntegration
     {
         AppendString("0123456789");
 
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
@@ -113,7 +113,7 @@ public class InputModelCursorIntegration
         _model.NewLine();
         AppendString("0123456789");
 
-        _model.MoveCursorTo(1, 5);
+        _model.MoveCursorTo(new(1, 5));
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
@@ -138,7 +138,7 @@ public class InputModelCursorIntegration
         AppendString("0123456789");
         _model.NewLine();
         AppendString("0123456789");
-        _model.MoveCursorTo(4, 5);
+        _model.MoveCursorTo(new(4, 5));
 
         _model.MoveCursorPageUp(3);
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
@@ -161,7 +161,7 @@ public class InputModelCursorIntegration
         AppendString("0123456789");
         _model.NewLine();
         AppendString("0123456789");
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
 
         _model.MoveCursorPageDown(3);
         Assert.AreEqual(3, _model.TextCursor.LineIndex);

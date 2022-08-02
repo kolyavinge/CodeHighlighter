@@ -25,9 +25,9 @@ public class InputModelSelectionIntegration
         _model.ActivateSelection();
         _model.MoveCursorEndLine();
         _model.CompleteSelection();
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(10, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -40,9 +40,9 @@ public class InputModelSelectionIntegration
         _model.ActivateSelection();
         _model.MoveCursorStartLine();
         _model.CompleteSelection();
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(10, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(0, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -53,13 +53,13 @@ public class InputModelSelectionIntegration
         AppendString("0000000000");
         _model.NewLine();
         AppendString("0000000000");
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         _model.ActivateSelection();
         _model.MoveCursorDown();
         _model.CompleteSelection();
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(1, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(5, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -70,13 +70,13 @@ public class InputModelSelectionIntegration
         AppendString("0000000000");
         _model.NewLine();
         AppendString("0000000000");
-        _model.MoveCursorTo(1, 5);
+        _model.MoveCursorTo(new(1, 5));
         _model.ActivateSelection();
         _model.MoveCursorUp();
         _model.CompleteSelection();
-        Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(1, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(5, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(5, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -87,13 +87,13 @@ public class InputModelSelectionIntegration
         AppendString("0000000000");
         _model.NewLine();
         AppendString("0000000000");
-        _model.MoveCursorTo(0, 4);
+        _model.MoveCursorTo(new(0, 4));
         _model.ActivateSelection();
-        _model.MoveCursorTo(1, 9);
+        _model.MoveCursorTo(new(1, 9));
         _model.CompleteSelection();
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(4, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(1, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(9, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -104,13 +104,13 @@ public class InputModelSelectionIntegration
         AppendString("0000000000");
         _model.NewLine();
         AppendString("0000000000");
-        _model.MoveCursorTo(1, 9);
+        _model.MoveCursorTo(new(1, 9));
         _model.ActivateSelection();
-        _model.MoveCursorTo(0, 4);
+        _model.MoveCursorTo(new(0, 4));
         _model.CompleteSelection();
-        Assert.AreEqual(1, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(1, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(9, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(4, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -122,9 +122,9 @@ public class InputModelSelectionIntegration
         _model.NewLine();
         AppendString("0000000000");
         _model.SelectAll();
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(1, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(1, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(10, _model.TextSelection.EndCursorColumnIndex);
         Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
@@ -134,7 +134,7 @@ public class InputModelSelectionIntegration
     {
         AppendString("0000000000");
         _model.SelectAll();
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         Assert.False(_model.TextSelection.GetSelectedLines(_model.Text).Any());
     }
 
@@ -200,9 +200,9 @@ public class InputModelSelectionIntegration
         AppendString("0123456789");
         _model.NewLine();
         AppendString("9876543210");
-        _model.MoveCursorTo(0, 3);
+        _model.MoveCursorTo(new(0, 3));
         _model.ActivateSelection();
-        _model.MoveCursorTo(1, 7);
+        _model.MoveCursorTo(new(1, 7));
         _model.CompleteSelection();
         _model.LeftDelete();
 
@@ -216,7 +216,7 @@ public class InputModelSelectionIntegration
     public void GetSelectedText_NoSelection()
     {
         AppendString("0123456789");
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         var result = _model.GetSelectedText();
         Assert.AreEqual("", result);
     }
@@ -225,9 +225,9 @@ public class InputModelSelectionIntegration
     public void GetSelectedText_OneLines()
     {
         AppendString("0123456789");
-        _model.MoveCursorTo(0, 3);
+        _model.MoveCursorTo(new(0, 3));
         _model.ActivateSelection();
-        _model.MoveCursorTo(0, 8);
+        _model.MoveCursorTo(new(0, 8));
         _model.CompleteSelection();
         var result = _model.GetSelectedText();
         Assert.AreEqual("34567", result);
@@ -237,9 +237,9 @@ public class InputModelSelectionIntegration
     public void GetSelectedText_OneLines_Whole()
     {
         AppendString("0123456789");
-        _model.MoveCursorTo(0, 0);
+        _model.MoveCursorTo(new(0, 0));
         _model.ActivateSelection();
-        _model.MoveCursorTo(0, 10);
+        _model.MoveCursorTo(new(0, 10));
         _model.CompleteSelection();
         var result = _model.GetSelectedText();
         Assert.AreEqual("0123456789", result);
@@ -251,9 +251,9 @@ public class InputModelSelectionIntegration
         AppendString("0123456789");
         _model.NewLine();
         AppendString("0123456789");
-        _model.MoveCursorTo(0, 3);
+        _model.MoveCursorTo(new(0, 3));
         _model.ActivateSelection();
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
         _model.CompleteSelection();
         var result = _model.GetSelectedText();
         Assert.AreEqual("3456789\r\n01", result);
@@ -275,28 +275,28 @@ public class InputModelSelectionIntegration
     {
         AppendString("SELECT Name FROM Table");
 
-        _model.SelectToken(0, 0);
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        _model.SelectToken(new(0, 0));
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(6, _model.TextSelection.EndCursorColumnIndex);
 
-        _model.SelectToken(0, 8);
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        _model.SelectToken(new(0, 8));
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(7, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(11, _model.TextSelection.EndCursorColumnIndex);
 
-        _model.SelectToken(0, 12);
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        _model.SelectToken(new(0, 12));
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(12, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(16, _model.TextSelection.EndCursorColumnIndex);
 
-        _model.SelectToken(0, 20);
-        Assert.AreEqual(0, _model.TextSelection.StartLineIndex);
+        _model.SelectToken(new(0, 20));
+        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
         Assert.AreEqual(17, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndLineIndex);
+        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
         Assert.AreEqual(22, _model.TextSelection.EndCursorColumnIndex);
     }
 
@@ -348,20 +348,20 @@ public class InputModelSelectionIntegration
         AppendString("45600");
         _model.NewLine();
         AppendString("789");
-        _model.MoveCursorTo(0, 3);
+        _model.MoveCursorTo(new(0, 3));
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual((0, 3), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 3), _model.TextCursor.Position);
 
-        _model.MoveCursorTo(0, 5);
+        _model.MoveCursorTo(new(0, 5));
         _model.DeleteSelectedLines();
-        Assert.AreEqual((0, 3), _model.TextCursor.LineAndColumnIndex);
-
-        _model.DeleteSelectedLines();
-        Assert.AreEqual((0, 0), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 3), _model.TextCursor.Position);
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual((0, 0), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+
+        _model.DeleteSelectedLines();
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
     }
 
     [Test]
@@ -372,13 +372,13 @@ public class InputModelSelectionIntegration
         AppendString("45600");
         _model.NewLine();
         AppendString("789");
-        _model.MoveCursorTo(0, 2);
+        _model.MoveCursorTo(new(0, 2));
         _model.ActivateSelection();
-        _model.MoveCursorTo(1, 5);
+        _model.MoveCursorTo(new(1, 5));
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual((0, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
         Assert.AreEqual("789", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -392,13 +392,13 @@ public class InputModelSelectionIntegration
         AppendString("45600");
         _model.NewLine();
         AppendString("789");
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
-        _model.MoveCursorTo(2, 3);
+        _model.MoveCursorTo(new(2, 3));
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual((1, 0), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 0), _model.TextCursor.Position);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -413,13 +413,13 @@ public class InputModelSelectionIntegration
         AppendString("45600");
         _model.NewLine();
         AppendString("789");
-        _model.MoveCursorTo(2, 3);
+        _model.MoveCursorTo(new(2, 3));
         _model.ActivateSelection();
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual((1, 0), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 0), _model.TextCursor.Position);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -447,15 +447,15 @@ public class InputModelSelectionIntegration
     public void MoveSelectedLinesUp_OneLine()
     {
         _model.SetText("123\n456\n789");
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
-        Assert.AreEqual((0, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
-        Assert.AreEqual((0, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
     }
 
     [Test]
@@ -463,23 +463,23 @@ public class InputModelSelectionIntegration
     {
         _model.SetText("123\n456\n789");
 
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
         _model.MoveCursorDown();
         _model.CompleteSelection();
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual((1, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((0, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual((1, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((0, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
     }
 
     [Test]
@@ -487,38 +487,38 @@ public class InputModelSelectionIntegration
     {
         _model.SetText("123\n456\n789");
 
-        _model.MoveCursorTo(2, 2);
+        _model.MoveCursorTo(new(2, 2));
         _model.ActivateSelection();
         _model.MoveCursorUp();
         _model.CompleteSelection();
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual((0, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((0, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual((0, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((0, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.EndPosition);
     }
 
     [Test]
     public void MoveSelectedLinesDown_OneLine()
     {
         _model.SetText("123\n456\n789");
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
-        Assert.AreEqual((2, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
-        Assert.AreEqual((2, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
     }
 
     [Test]
@@ -526,23 +526,23 @@ public class InputModelSelectionIntegration
     {
         _model.SetText("123\n456\n789");
 
-        _model.MoveCursorTo(0, 2);
+        _model.MoveCursorTo(new(0, 2));
         _model.ActivateSelection();
         _model.MoveCursorDown();
         _model.CompleteSelection();
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual((2, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((2, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual((2, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((1, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((2, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.EndPosition);
     }
 
     [Test]
@@ -550,23 +550,23 @@ public class InputModelSelectionIntegration
     {
         _model.SetText("123\n456\n789");
 
-        _model.MoveCursorTo(1, 2);
+        _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
         _model.MoveCursorUp();
         _model.CompleteSelection();
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual((1, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((2, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual((1, 2), _model.TextCursor.LineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
-        Assert.AreEqual((2, 2), _model.TextSelection.StartLineAndColumnIndex);
-        Assert.AreEqual((1, 2), _model.TextSelection.EndLineAndColumnIndex);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
     }
 
     private void AppendString(string str)

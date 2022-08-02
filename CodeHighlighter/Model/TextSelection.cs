@@ -5,26 +5,14 @@ namespace CodeHighlighter.Model;
 internal interface ITextSelection
 {
     bool IsExist { get; }
-    int StartLineIndex { get; }
+    int StartCursorLineIndex { get; }
     int StartCursorColumnIndex { get; }
-    int EndLineIndex { get; }
+    int EndCursorLineIndex { get; }
     int EndCursorColumnIndex { get; }
-    (int, int) StartLineAndColumnIndex { get; }
-    (int, int) EndLineAndColumnIndex { get; }
-    (TextSelectionPosition, TextSelectionPosition) GetSortedPositions();
+    CursorPosition StartPosition { get; }
+    CursorPosition EndPosition { get; }
+    (CursorPosition, CursorPosition) GetSortedPositions();
     IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
-}
-
-internal readonly struct TextSelectionPosition
-{
-    public readonly int LineIndex;
-    public readonly int ColumnIndex;
-
-    public TextSelectionPosition(int lineIndex, int columnIndex)
-    {
-        LineIndex = lineIndex;
-        ColumnIndex = columnIndex;
-    }
 }
 
 internal readonly struct TextSelectionLine
@@ -43,32 +31,28 @@ internal readonly struct TextSelectionLine
 
 class TextSelection : ITextSelection
 {
-    public bool IsExist => StartLineIndex != EndLineIndex || StartCursorColumnIndex != EndCursorColumnIndex;
+    public bool IsExist => StartCursorLineIndex != EndCursorLineIndex || StartCursorColumnIndex != EndCursorColumnIndex;
     public bool InProgress { get; set; }
-    public int StartLineIndex { get; set; }
+    public int StartCursorLineIndex { get; set; }
     public int StartCursorColumnIndex { get; set; }
-    public int EndLineIndex { get; set; }
+    public int EndCursorLineIndex { get; set; }
     public int EndCursorColumnIndex { get; set; }
 
-    public (int, int) StartLineAndColumnIndex => (StartLineIndex, StartCursorColumnIndex);
-    public (int, int) EndLineAndColumnIndex => (EndLineIndex, EndCursorColumnIndex);
+    public CursorPosition StartPosition => new(StartCursorLineIndex, StartCursorColumnIndex);
+    public CursorPosition EndPosition => new(EndCursorLineIndex, EndCursorColumnIndex);
 
-    public TextSelection()
+    public TextSelection(int startCursorLineIndex, int startColumnIndex, int endCursorLineIndex, int endColumnIndex)
     {
-    }
-
-    public TextSelection(int startLineIndex, int startColumnIndex, int endLineIndex, int endColumnIndex) : this()
-    {
-        StartLineIndex = startLineIndex;
+        StartCursorLineIndex = startCursorLineIndex;
         StartCursorColumnIndex = startColumnIndex;
-        EndLineIndex = endLineIndex;
+        EndCursorLineIndex = endCursorLineIndex;
         EndCursorColumnIndex = endColumnIndex;
     }
 
-    public (TextSelectionPosition, TextSelectionPosition) GetSortedPositions()
+    public (CursorPosition, CursorPosition) GetSortedPositions()
     {
-        var start = new TextSelectionPosition(StartLineIndex, StartCursorColumnIndex);
-        var end = new TextSelectionPosition(EndLineIndex, EndCursorColumnIndex);
+        var start = new CursorPosition(StartCursorLineIndex, StartCursorColumnIndex);
+        var end = new CursorPosition(EndCursorLineIndex, EndCursorColumnIndex);
         if (start.LineIndex < end.LineIndex) return (start, end);
         if (start.LineIndex > end.LineIndex) return (end, start);
         if (start.ColumnIndex < end.ColumnIndex) return (start, end);
@@ -78,7 +62,7 @@ class TextSelection : ITextSelection
     public IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
     {
         if (!IsExist) yield break;
-        (var start, var end) = GetSortedPositions();
+        var (start, end) = GetSortedPositions();
         if (start.LineIndex == end.LineIndex)
         {
             yield return new TextSelectionLine(start.LineIndex, start.ColumnIndex, end.ColumnIndex);
@@ -97,9 +81,9 @@ class TextSelection : ITextSelection
     public void Reset()
     {
         InProgress = false;
-        StartLineIndex = 0;
+        StartCursorLineIndex = 0;
         StartCursorColumnIndex = 0;
-        EndLineIndex = 0;
+        EndCursorLineIndex = 0;
         EndCursorColumnIndex = 0;
     }
 }

@@ -43,7 +43,7 @@ public class TextTest
     public void NewLine_First()
     {
         SetText("123");
-        _text.NewLine(0, 0);
+        _text.NewLine(new(0, 0));
         Assert.AreEqual("\r\n123", _text.ToString());
     }
 
@@ -51,7 +51,7 @@ public class TextTest
     public void NewLine_Middle()
     {
         SetText("123");
-        _text.NewLine(0, 2);
+        _text.NewLine(new(0, 2));
         Assert.AreEqual("12\r\n3", _text.ToString());
     }
 
@@ -59,7 +59,7 @@ public class TextTest
     public void NewLine_Last()
     {
         SetText("123");
-        _text.NewLine(0, 3);
+        _text.NewLine(new(0, 3));
         Assert.AreEqual("123\r\n", _text.ToString());
     }
 
@@ -67,7 +67,7 @@ public class TextTest
     public void AppendChar_First()
     {
         SetText("123");
-        _text.AppendChar(0, 0, 'a');
+        _text.AppendChar(new(0, 0), 'a');
         Assert.AreEqual("a123", _text.ToString());
     }
 
@@ -75,7 +75,7 @@ public class TextTest
     public void AppendChar_Middle()
     {
         SetText("123");
-        _text.AppendChar(0, 1, 'a');
+        _text.AppendChar(new(0, 1), 'a');
         Assert.AreEqual("1a23", _text.ToString());
     }
 
@@ -83,7 +83,7 @@ public class TextTest
     public void AppendChar_Last()
     {
         SetText("123");
-        _text.AppendChar(0, 3, 'a');
+        _text.AppendChar(new(0, 3), 'a');
         Assert.AreEqual("123a", _text.ToString());
     }
 
@@ -91,7 +91,7 @@ public class TextTest
     public void InsertOneLine_Begin()
     {
         SetText("345");
-        _text.Insert(0, 0, new Text("12"));
+        _text.Insert(new(0, 0), new Text("12"));
         Assert.AreEqual("12345", _text.ToString());
     }
 
@@ -99,7 +99,7 @@ public class TextTest
     public void InsertOneLine_Middle()
     {
         SetText("125");
-        _text.Insert(0, 2, new Text("34"));
+        _text.Insert(new(0, 2), new Text("34"));
         Assert.AreEqual("12345", _text.ToString());
     }
 
@@ -107,7 +107,7 @@ public class TextTest
     public void InsertOneLine_End()
     {
         SetText("123");
-        _text.Insert(0, 3, new Text("45"));
+        _text.Insert(new(0, 3), new Text("45"));
         Assert.AreEqual("12345", _text.ToString());
     }
 
@@ -115,7 +115,7 @@ public class TextTest
     public void InsertTwoLines_Begin()
     {
         SetText("45");
-        _text.Insert(0, 0, new Text("12\n3"));
+        _text.Insert(new(0, 0), new Text("12\n3"));
         Assert.AreEqual("12\r\n345", _text.ToString());
     }
 
@@ -123,7 +123,7 @@ public class TextTest
     public void InsertTwoLines_Middle()
     {
         SetText("125");
-        _text.Insert(0, 2, new Text("3\n4"));
+        _text.Insert(new(0, 2), new Text("3\n4"));
         Assert.AreEqual("123\r\n45", _text.ToString());
     }
 
@@ -131,7 +131,7 @@ public class TextTest
     public void InsertTwoLines_End()
     {
         SetText("12");
-        _text.Insert(0, 2, new Text("3\n45"));
+        _text.Insert(new(0, 2), new Text("3\n45"));
         Assert.AreEqual("123\r\n45", _text.ToString());
     }
 
@@ -139,7 +139,7 @@ public class TextTest
     public void InsertMultyLines_End()
     {
         SetText("18");
-        _text.Insert(0, 1, new Text("2\n34\n56\n7"));
+        _text.Insert(new(0, 1), new Text("2\n34\n56\n7"));
         Assert.AreEqual("12\r\n34\r\n56\r\n78", _text.ToString());
     }
 
@@ -147,7 +147,7 @@ public class TextTest
     public void LeftDelete_First()
     {
         SetText("123");
-        _text.LeftDelete(0, 0);
+        _text.LeftDelete(new(0, 0));
         Assert.AreEqual("123", _text.ToString());
     }
 
@@ -155,7 +155,7 @@ public class TextTest
     public void LeftDelete_Middle()
     {
         SetText("123");
-        _text.LeftDelete(0, 1);
+        _text.LeftDelete(new(0, 1));
         Assert.AreEqual("23", _text.ToString());
     }
 
@@ -163,7 +163,7 @@ public class TextTest
     public void LeftDelete_Last()
     {
         SetText("123");
-        _text.LeftDelete(0, 3);
+        _text.LeftDelete(new(0, 3));
         Assert.AreEqual("12", _text.ToString());
     }
 
@@ -171,7 +171,7 @@ public class TextTest
     public void LeftDelete_Return()
     {
         SetText("123\n456");
-        var result = _text.LeftDelete(1, 0);
+        var result = _text.LeftDelete(new(1, 0));
         Assert.AreEqual("123456", _text.ToString());
         Assert.True(result.IsLineDeleted);
     }
@@ -180,7 +180,7 @@ public class TextTest
     public void RightDelete_First()
     {
         SetText("123");
-        _text.RightDelete(0, 0);
+        _text.RightDelete(new(0, 0));
         Assert.AreEqual("23", _text.ToString());
     }
 
@@ -188,7 +188,7 @@ public class TextTest
     public void RightDelete_Middle()
     {
         SetText("123");
-        _text.RightDelete(0, 1);
+        _text.RightDelete(new(0, 1));
         Assert.AreEqual("13", _text.ToString());
     }
 
@@ -196,7 +196,7 @@ public class TextTest
     public void RightDelete_Last()
     {
         SetText("123");
-        _text.RightDelete(0, 2);
+        _text.RightDelete(new(0, 2));
         Assert.AreEqual("12", _text.ToString());
     }
 
@@ -204,7 +204,7 @@ public class TextTest
     public void RightDelete_EndLine()
     {
         SetText("123");
-        _text.RightDelete(0, 3);
+        _text.RightDelete(new(0, 3));
         Assert.AreEqual("123", _text.ToString());
     }
 
@@ -212,7 +212,7 @@ public class TextTest
     public void RightDelete_Return()
     {
         SetText("123\n456");
-        var result = _text.RightDelete(0, 3);
+        var result = _text.RightDelete(new(0, 3));
         Assert.AreEqual("123456", _text.ToString());
         Assert.True(result.IsLineDeleted);
     }

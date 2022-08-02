@@ -2,10 +2,23 @@
 
 namespace CodeHighlighter.Model;
 
+public readonly struct CursorPosition
+{
+    public readonly int LineIndex;
+    public readonly int ColumnIndex;
+
+    public CursorPosition(int lineIndex, int columnIndex)
+    {
+        LineIndex = lineIndex;
+        ColumnIndex = columnIndex;
+    }
+}
+
 internal interface ITextCursor
 {
     int LineIndex { get; }
     int ColumnIndex { get; }
+    CursorPosition Position { get; }
 }
 
 public class TextCursor : ITextCursor
@@ -16,7 +29,7 @@ public class TextCursor : ITextCursor
 
     public int ColumnIndex { get; private set; }
 
-    internal (int, int) LineAndColumnIndex => (LineIndex, ColumnIndex);
+    public CursorPosition Position => new(LineIndex, ColumnIndex);
 
     internal TextCursor(IText text)
     {
@@ -24,10 +37,10 @@ public class TextCursor : ITextCursor
         LineIndex = 0;
     }
 
-    internal void MoveTo(int lineIndex, int columnIndex)
+    internal void MoveTo(CursorPosition position)
     {
-        LineIndex = lineIndex;
-        ColumnIndex = columnIndex;
+        LineIndex = position.LineIndex;
+        ColumnIndex = position.ColumnIndex;
         CorrectPosition();
     }
 

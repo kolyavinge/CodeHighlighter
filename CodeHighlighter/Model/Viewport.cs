@@ -31,14 +31,11 @@ internal class Viewport
         return result;
     }
 
-    public int GetCursorLineIndex(Point cursorClickPosition)
+    public CursorPosition GetCursorPosition(Point cursorClickPosition)
     {
-        return (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
-    }
-
-    public int GetCursorColumnIndex(Point cursorClickPosition)
-    {
-        return (int)((cursorClickPosition.X + _textMeasures.LetterWidth / 2.0 + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
+        var lineIndex = (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
+        var columnIndex = (int)((cursorClickPosition.X + _textMeasures.LetterWidth / 2.0 + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
+        return new(lineIndex, columnIndex);
     }
 
     public void CorrectByCursorPosition(ITextCursor textCursor)

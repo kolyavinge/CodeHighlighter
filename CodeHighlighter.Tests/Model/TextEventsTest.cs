@@ -33,11 +33,11 @@ internal class TextEventsTest
     [Test]
     public void NewLine_RaiseTextChanged()
     {
-        _text.NewLine(0, 0);
+        _text.NewLine(new(0, 0));
         _events.OnTextChanged();
         Assert.AreEqual(2, _linesCount);
 
-        _text.NewLine(0, 0);
+        _text.NewLine(new(0, 0));
         _events.OnTextChanged();
         Assert.AreEqual(3, _linesCount);
     }
@@ -45,7 +45,7 @@ internal class TextEventsTest
     [Test]
     public void AppendChar_RaiseTextChanged()
     {
-        _text.AppendChar(0, 0, '1');
+        _text.AppendChar(new(0, 0), '1');
         _events.OnTextChanged();
         Assert.AreEqual(1, _linesCount);
     }
@@ -53,11 +53,11 @@ internal class TextEventsTest
     [Test]
     public void Insert_TwoLines_RaiseTextChanged()
     {
-        _text.Insert(0, 0, new Text("123"));
+        _text.Insert(new(0, 0), new Text("123"));
         _events.OnTextChanged();
         Assert.AreEqual(1, _linesCount);
 
-        _text.Insert(0, 0, new Text("\n123\n123"));
+        _text.Insert(new(0, 0), new Text("\n123\n123"));
         _events.OnTextChanged();
         Assert.AreEqual(3, _linesCount);
     }
@@ -66,7 +66,7 @@ internal class TextEventsTest
     public void LeftDelete_RaiseTextChanged()
     {
         _text.TextContent = "123\n123";
-        _text.LeftDelete(1, 0);
+        _text.LeftDelete(new(1, 0));
         _events.OnTextChanged();
         Assert.AreEqual(1, _linesCount);
     }
@@ -75,7 +75,7 @@ internal class TextEventsTest
     public void RightDelete_RaiseTextChanged()
     {
         _text.TextContent = "123\n123";
-        _text.RightDelete(0, 3);
+        _text.RightDelete(new(0, 3));
         _events.OnTextChanged();
         Assert.AreEqual(1, _linesCount);
     }

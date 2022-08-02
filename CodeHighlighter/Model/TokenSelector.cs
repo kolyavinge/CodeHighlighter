@@ -4,27 +4,27 @@ namespace CodeHighlighter.Model;
 
 internal class TokenSelector
 {
-    public Token? GetTokenOnPosition(ITokens tokens, int lineIndex, int columnIndex)
+    public Token? GetTokenOnPosition(ITokens tokens, CursorPosition position)
     {
-        if (lineIndex >= tokens.LinesCount) return default;
-        var lineTokens = tokens.GetTokens(lineIndex);
-        return lineTokens.FirstOrDefault(x => x.StartColumnIndex <= columnIndex && columnIndex <= x.EndColumnIndex + 1);
+        if (position.LineIndex >= tokens.LinesCount) return default;
+        var lineTokens = tokens.GetTokens(position.LineIndex);
+        return lineTokens.FirstOrDefault(x => x.StartColumnIndex <= position.ColumnIndex && position.ColumnIndex <= x.EndColumnIndex + 1);
     }
 
-    public SelectedRange GetSelection(ITokens tokens, int lineIndex, int columnIndex)
+    public SelectedRange GetSelection(ITokens tokens, CursorPosition position)
     {
-        if (lineIndex >= tokens.LinesCount) return default;
-        var lineTokens = tokens.GetTokens(lineIndex);
-        var cursor = TokenCursorPosition.GetPosition(lineTokens, columnIndex);
+        if (position.LineIndex >= tokens.LinesCount) return default;
+        var lineTokens = tokens.GetTokens(position.LineIndex);
+        var cursor = TokenCursorPosition.GetPosition(lineTokens, position.ColumnIndex);
         if (cursor.Position == TokenCursorPositionKind.StartLine)
         {
             return ToSelectedRange(cursor.Right);
         }
-        else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && columnIndex == cursor.Right.StartColumnIndex)
+        else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && position.ColumnIndex == cursor.Right.StartColumnIndex)
         {
             return ToSelectedRange(cursor.Right);
         }
-        else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && columnIndex == cursor.Left.EndColumnIndex + 1)
+        else if (cursor.Position == TokenCursorPositionKind.BetweenTokens && position.ColumnIndex == cursor.Left.EndColumnIndex + 1)
         {
             return ToSelectedRange(cursor.Left);
         }

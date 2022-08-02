@@ -30,7 +30,7 @@ public class CodeTextBoxModel
         Tokens = new Tokens();
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
-        TextSelection = new TextSelection();
+        TextSelection = new TextSelection(0, 0, 0, 0);
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
@@ -113,8 +113,8 @@ public class CodeTextBoxModel
 
     public void TextInput(string inputText) => TextInputInputAction.Instance.Do(_inputActionContext, inputText);
 
-    public void ReplaceText(int cursorStartLineIndex, int cursorStartColumnIndex, int cursorEndLineIndex, int cursorEndColumnIndex, string insertedText)
-        => ReplaceTextInputAction.Instance.Do(_inputActionContext, cursorStartLineIndex, cursorStartColumnIndex, cursorEndLineIndex, cursorEndColumnIndex, insertedText);
+    public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText)
+        => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);
 
     public void NewLine() => NewLineInputAction.Instance.Do(_inputActionContext);
 

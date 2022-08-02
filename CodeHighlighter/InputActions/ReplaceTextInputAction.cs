@@ -1,20 +1,16 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Model;
+
+namespace CodeHighlighter.InputActions;
 
 internal class ReplaceTextInputAction
 {
     public static readonly ReplaceTextInputAction Instance = new();
 
-    public void Do(
-        InputActionContext context,
-        int cursorStartLineIndex,
-        int cursorStartColumnIndex,
-        int cursorEndLineIndex,
-        int cursorEndColumnIndex,
-        string insertedText)
+    public void Do(InputActionContext context, CursorPosition start, CursorPosition end, string insertedText)
     {
-        context.InputModel.MoveCursorTo(cursorStartLineIndex, cursorStartColumnIndex);
+        context.InputModel.MoveCursorTo(start);
         context.InputModel.ActivateSelection();
-        context.InputModel.MoveCursorTo(cursorEndLineIndex, cursorEndColumnIndex);
+        context.InputModel.MoveCursorTo(end);
         context.InputModel.CompleteSelection();
         context.InputModel.InsertText(insertedText);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);

@@ -13,16 +13,16 @@ public class TextSelectionTest
     public void Setup()
     {
         _text = new Text();
-        _textSelection = new TextSelection();
+        _textSelection = new TextSelection(0, 0, 0, 0);
     }
 
 
     [Test]
     public void Init()
     {
-        Assert.AreEqual(0, _textSelection.StartLineIndex);
+        Assert.AreEqual(0, _textSelection.StartCursorLineIndex);
         Assert.AreEqual(0, _textSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _textSelection.EndLineIndex);
+        Assert.AreEqual(0, _textSelection.EndCursorLineIndex);
         Assert.AreEqual(0, _textSelection.EndCursorColumnIndex);
     }
 
@@ -30,9 +30,9 @@ public class TextSelectionTest
     public void GetTextSelectionLines_1()
     {
         _text.TextContent = "01234\n01234\n01234\n01234\n01234";
-        _textSelection.StartLineIndex = 0;
+        _textSelection.StartCursorLineIndex = 0;
         _textSelection.StartCursorColumnIndex = 2;
-        _textSelection.EndLineIndex = 3;
+        _textSelection.EndCursorLineIndex = 3;
         _textSelection.EndCursorColumnIndex = 4;
 
         var result = _textSelection.GetSelectedLines(_text).ToList();
@@ -60,9 +60,9 @@ public class TextSelectionTest
     public void GetTextSelectionLines_2()
     {
         _text.TextContent = "01234\n01234\n01234\n01234\n01234";
-        _textSelection.StartLineIndex = 3;
+        _textSelection.StartCursorLineIndex = 3;
         _textSelection.StartCursorColumnIndex = 4;
-        _textSelection.EndLineIndex = 0;
+        _textSelection.EndCursorLineIndex = 0;
         _textSelection.EndCursorColumnIndex = 2;
 
         var result = _textSelection.GetSelectedLines(_text).ToList();
@@ -90,9 +90,9 @@ public class TextSelectionTest
     public void SelectAll()
     {
         _text.TextContent = "";
-        _textSelection.StartLineIndex = 0;
+        _textSelection.StartCursorLineIndex = 0;
         _textSelection.StartCursorColumnIndex = 0;
-        _textSelection.EndLineIndex = 0;
+        _textSelection.EndCursorLineIndex = 0;
         _textSelection.EndCursorColumnIndex = 0;
 
         var result = _textSelection.GetSelectedLines(_text).ToList();

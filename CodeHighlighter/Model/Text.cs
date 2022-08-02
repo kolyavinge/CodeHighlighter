@@ -40,71 +40,71 @@ public class Text : IText
 
     public TextLine GetLine(int lineIndex) => _lines[lineIndex];
 
-    internal void NewLine(int lineIndex, int columnIndex)
+    internal void NewLine(CursorPosition position)
     {
-        var line = _lines[lineIndex];
-        var remains = line.GetSubstring(columnIndex, line.Length - columnIndex);
-        line.RemoveRange(columnIndex, line.Length - columnIndex);
-        _lines.Insert(lineIndex + 1, new TextLine(remains));
+        var line = _lines[position.LineIndex];
+        var remains = line.GetSubstring(position.ColumnIndex, line.Length - position.ColumnIndex);
+        line.RemoveRange(position.ColumnIndex, line.Length - position.ColumnIndex);
+        _lines.Insert(position.LineIndex + 1, new TextLine(remains));
     }
 
-    internal void AppendChar(int lineIndex, int columnIndex, char ch)
+    internal void AppendChar(CursorPosition position, char ch)
     {
-        _lines[lineIndex].AppendChar(columnIndex, ch);
+        _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
     }
 
-    internal void Insert(int lineIndex, int columnIndex, Text insertedText)
+    internal void Insert(CursorPosition position, Text insertedText)
     {
         if (insertedText.LinesCount == 0) return;
         if (insertedText.LinesCount == 1)
         {
-            _lines[lineIndex].InsertLine(columnIndex, insertedText.Lines.First());
+            _lines[position.LineIndex].InsertLine(position.ColumnIndex, insertedText.Lines.First());
         }
         else
         {
-            NewLine(lineIndex, columnIndex);
-            _lines[lineIndex].AppendLine(insertedText.Lines.First());
+            NewLine(position);
+            _lines[position.LineIndex].AppendLine(insertedText.Lines.First());
             for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
             {
-                _lines.Insert(lineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
+                _lines.Insert(position.LineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
             }
-            _lines[lineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.Lines.Last());
+            _lines[position.LineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.Lines.Last());
         }
     }
 
-    internal (int, int) GetCursorPositionAfterLeftDelete(int currentLineIndex, int currentColumnIndex)
+    internal CursorPosition GetCursorPositionAfterLeftDelete(CursorPosition current)
     {
-        if (currentColumnIndex > 0) return (currentLineIndex, currentColumnIndex - 1);
-        else if (currentLineIndex > 0) return (currentLineIndex - 1, _lines[currentLineIndex - 1].Length);
-        else return (currentLineIndex, currentColumnIndex);
+        if (current.ColumnIndex > 0) return new(current.LineIndex, current.ColumnIndex - 1);
+        else if (current.LineIndex > 0) return new(current.LineIndex - 1, _lines[current.LineIndex - 1].Length);
+        else return new(current.LineIndex, current.ColumnIndex);
     }
 
-    internal DeleteResult LeftDelete(int lineIndex, int columnIndex)
+    internal DeleteResult LeftDelete(CursorPosition position)
     {
-        if (columnIndex > 0)
+        if (position.ColumnIndex > 0)
         {
-            _lines[lineIndex].RemoveAt(columnIndex - 1);
+            _lines[position.LineIndex].RemoveAt(position.ColumnIndex - 1);
         }
-        else if (lineIndex > 0)
+        else if (position.LineIndex > 0)
         {
-            _lines[lineIndex - 1].AppendLine(_lines[lineIndex]);
-            _lines.RemoveAt(lineIndex);
+            _lines[position.LineIndex - 1].AppendLine(_lines[position.LineIndex]);
+            _lines.RemoveAt(position.LineIndex);
             return new DeleteResult { IsLineDeleted = true };
         }
 
         return new DeleteResult { IsLineDeleted = false };
     }
 
-    internal DeleteResult RightDelete(int lineIndex, int columnIndex)
+    internal DeleteResult RightDelete(CursorPosition position)
     {
-        if (columnIndex < _lines[lineIndex].Length)
+        if (position.ColumnIndex < _lines[position.LineIndex].Length)
         {
-            _lines[lineIndex].RemoveAt(columnIndex);
+            _lines[position.LineIndex].RemoveAt(position.ColumnIndex);
         }
-        else if (lineIndex < _lines.Count - 1)
+        else if (position.LineIndex < _lines.Count - 1)
         {
-            _lines[lineIndex].AppendLine(_lines[lineIndex + 1]);
-            _lines.RemoveAt(lineIndex + 1);
+            _lines[position.LineIndex].AppendLine(_lines[position.LineIndex + 1]);
+            _lines.RemoveAt(position.LineIndex + 1);
             return new DeleteResult { IsLineDeleted = true };
         }
 

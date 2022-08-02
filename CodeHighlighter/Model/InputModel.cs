@@ -29,7 +29,7 @@ internal class InputModel
     {
         Text = new();
         TextCursor = new(Text);
-        TextSelection = new();
+        TextSelection = new(0, 0, 0, 0);
         Tokens = new();
         TokenColors = new();
         _codeProvider = new EmptyCodeProvider();
@@ -47,9 +47,9 @@ internal class InputModel
         SetTokens();
     }
 
-    public void MoveCursorTo(int lineIndex, int columnIndex)
+    public void MoveCursorTo(CursorPosition position)
     {
-        TextCursor.MoveTo(lineIndex, columnIndex);
+        TextCursor.MoveTo(position);
         SetSelection();
     }
 
@@ -116,10 +116,10 @@ internal class InputModel
     public void SelectAll()
     {
         TextSelection.InProgress = false;
-        TextSelection.StartLineIndex = 0;
+        TextSelection.StartCursorLineIndex = 0;
         TextSelection.StartCursorColumnIndex = 0;
-        TextSelection.EndLineIndex = Text.LinesCount - 1;
-        TextSelection.EndCursorColumnIndex = Text.GetLine(TextSelection.EndLineIndex).Length;
+        TextSelection.EndCursorLineIndex = Text.LinesCount - 1;
+        TextSelection.EndCursorColumnIndex = Text.GetLine(TextSelection.EndCursorLineIndex).Length;
         TextCursor.MoveTextEnd();
     }
 
@@ -128,9 +128,9 @@ internal class InputModel
         if (!TextSelection.InProgress)
         {
             TextSelection.InProgress = true;
-            TextSelection.StartLineIndex = TextCursor.LineIndex;
+            TextSelection.StartCursorLineIndex = TextCursor.LineIndex;
             TextSelection.StartCursorColumnIndex = TextCursor.ColumnIndex;
-            TextSelection.EndLineIndex = TextCursor.LineIndex;
+            TextSelection.EndCursorLineIndex = TextCursor.LineIndex;
             TextSelection.EndCursorColumnIndex = TextCursor.ColumnIndex;
         }
     }
@@ -144,26 +144,26 @@ internal class InputModel
     {
         if (TextSelection.InProgress)
         {
-            TextSelection.EndLineIndex = TextCursor.LineIndex;
+            TextSelection.EndCursorLineIndex = TextCursor.LineIndex;
             TextSelection.EndCursorColumnIndex = TextCursor.ColumnIndex;
         }
         else
         {
-            TextSelection.StartLineIndex = TextCursor.LineIndex;
+            TextSelection.StartCursorLineIndex = TextCursor.LineIndex;
             TextSelection.StartCursorColumnIndex = TextCursor.ColumnIndex;
-            TextSelection.EndLineIndex = TextCursor.LineIndex;
+            TextSelection.EndCursorLineIndex = TextCursor.LineIndex;
             TextSelection.EndCursorColumnIndex = TextCursor.ColumnIndex;
         }
     }
 
-    public void SelectToken(int lineIndex, int columnIndex)
+    public void SelectToken(CursorPosition position)
     {
         var selector = new TokenSelector();
-        var range = selector.GetSelection(Tokens, lineIndex, columnIndex);
+        var range = selector.GetSelection(Tokens, position);
         TextSelection.Reset();
-        TextSelection.StartLineIndex = lineIndex;
+        TextSelection.StartCursorLineIndex = position.LineIndex;
         TextSelection.StartCursorColumnIndex = range.StartCursorColumnIndex;
-        TextSelection.EndLineIndex = lineIndex;
+        TextSelection.EndCursorLineIndex = position.LineIndex;
         TextSelection.EndCursorColumnIndex = range.EndCursorColumnIndex;
     }
 
@@ -171,7 +171,7 @@ internal class InputModel
     {
         var navigator = new TokenNavigator();
         var pos = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
-        TextCursor.MoveTo(pos.LineIndex, pos.ColumnIndex);
+        TextCursor.MoveTo(pos);
         SetSelection();
     }
 
@@ -179,7 +179,7 @@ internal class InputModel
     {
         var navigator = new TokenNavigator();
         var pos = navigator.MoveLeft(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
-        TextCursor.MoveTo(pos.LineIndex, pos.ColumnIndex);
+        TextCursor.MoveTo(pos);
         SetSelection();
     }
 
@@ -194,7 +194,7 @@ internal class InputModel
             var navigator = new TokenNavigator();
             var pos = navigator.MoveLeft(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
             ActivateSelection();
-            MoveCursorTo(pos.LineIndex, pos.ColumnIndex);
+            MoveCursorTo(pos);
             CompleteSelection();
             LeftDelete();
         }
@@ -211,7 +211,7 @@ internal class InputModel
             var navigator = new TokenNavigator();
             var pos = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
             ActivateSelection();
-            MoveCursorTo(pos.LineIndex, pos.ColumnIndex);
+            MoveCursorTo(pos);
             CompleteSelection();
             LeftDelete();
         }
@@ -220,7 +220,7 @@ internal class InputModel
     public void NewLine()
     {
         if (TextSelection.IsExist) DeleteSelection();
-        Text.NewLine(TextCursor.LineIndex, TextCursor.ColumnIndex);
+        Text.NewLine(TextCursor.Position);
         Tokens.InsertEmptyLine(TextCursor.LineIndex + 1);
         TextCursor.MoveDown();
         TextCursor.MoveStartLine();
@@ -230,7 +230,7 @@ internal class InputModel
     public void AppendChar(char ch)
     {
         if (TextSelection.IsExist) DeleteSelection();
-        Text.AppendChar(TextCursor.LineIndex, TextCursor.ColumnIndex, ch);
+        Text.AppendChar(TextCursor.Position, ch);
         TextCursor.MoveRight();
         UpdateTokensForLines(TextCursor.LineIndex, 1);
     }
@@ -251,14 +251,14 @@ internal class InputModel
     {
         var insertedText = new Text(text);
         if (TextSelection.IsExist) DeleteSelection();
-        Text.Insert(TextCursor.LineIndex, TextCursor.ColumnIndex, insertedText);
+        Text.Insert(TextCursor.Position, insertedText);
         if (insertedText.LinesCount == 1)
         {
-            TextCursor.MoveTo(TextCursor.LineIndex, TextCursor.ColumnIndex + insertedText.Lines.Last().Length);
+            TextCursor.MoveTo(new(TextCursor.LineIndex, TextCursor.ColumnIndex + insertedText.Lines.Last().Length));
         }
         else
         {
-            TextCursor.MoveTo(TextCursor.LineIndex + insertedText.LinesCount - 1, insertedText.Lines.Last().Length);
+            TextCursor.MoveTo(new(TextCursor.LineIndex + insertedText.LinesCount - 1, insertedText.Lines.Last().Length));
         }
         UpdateTokensForLines(0, Text.LinesCount);
     }
@@ -271,13 +271,13 @@ internal class InputModel
         }
         else
         {
-            (int newLineIndex, int newColumnIndex) = Text.GetCursorPositionAfterLeftDelete(TextCursor.LineIndex, TextCursor.ColumnIndex);
-            var deleteResult = Text.LeftDelete(TextCursor.LineIndex, TextCursor.ColumnIndex);
+            var newPosition = Text.GetCursorPositionAfterLeftDelete(TextCursor.Position);
+            var deleteResult = Text.LeftDelete(TextCursor.Position);
             if (deleteResult.IsLineDeleted)
             {
                 Tokens.DeleteLine(TextCursor.LineIndex);
             }
-            TextCursor.MoveTo(newLineIndex, newColumnIndex);
+            TextCursor.MoveTo(newPosition);
         }
         UpdateTokensForLines(TextCursor.LineIndex, 1);
     }
@@ -290,7 +290,7 @@ internal class InputModel
         }
         else
         {
-            var deleteResult = Text.RightDelete(TextCursor.LineIndex, TextCursor.ColumnIndex);
+            var deleteResult = Text.RightDelete(TextCursor.Position);
             if (deleteResult.IsLineDeleted)
             {
                 Tokens.DeleteLine(TextCursor.LineIndex + 1);
@@ -304,13 +304,13 @@ internal class InputModel
         var deleteResult = Text.DeleteSelection(TextSelection);
         Tokens.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
         var startCursorPosition = TextSelection.GetSortedPositions().Item1;
-        TextCursor.MoveTo(startCursorPosition.LineIndex, startCursorPosition.ColumnIndex);
+        TextCursor.MoveTo(startCursorPosition);
         TextSelection.Reset();
     }
 
     public void DeleteSelectedLines()
     {
-        TextSelectionPosition start, end;
+        CursorPosition start, end;
         if (TextSelection.IsExist)
         {
             (start, end) = TextSelection.GetSortedPositions();
@@ -318,7 +318,7 @@ internal class InputModel
         }
         else
         {
-            start = end = new TextSelectionPosition(TextCursor.LineIndex, TextCursor.ColumnIndex);
+            start = end = new CursorPosition(TextCursor.LineIndex, TextCursor.ColumnIndex);
         }
         for (int i = start.LineIndex; i <= end.LineIndex; i++)
         {
@@ -333,7 +333,7 @@ internal class InputModel
                 Tokens.GetTokens(start.LineIndex).Clear();
             }
         }
-        TextCursor.MoveTo(start.LineIndex, start.ColumnIndex);
+        TextCursor.MoveTo(start);
     }
 
     public void MoveSelectedLinesUp()
@@ -355,8 +355,8 @@ internal class InputModel
         Text.ReplaceLines(sourceIndex, destinationIndex);
         Tokens.ReplaceLines(sourceIndex, destinationIndex);
         TextCursor.MoveUp();
-        TextSelection.StartLineIndex--;
-        TextSelection.EndLineIndex--;
+        TextSelection.StartCursorLineIndex--;
+        TextSelection.EndCursorLineIndex--;
     }
 
     public void MoveSelectedLinesDown()
@@ -378,8 +378,8 @@ internal class InputModel
         Text.ReplaceLines(sourceIndex, destinationIndex);
         Tokens.ReplaceLines(sourceIndex, destinationIndex);
         TextCursor.MoveDown();
-        TextSelection.StartLineIndex++;
-        TextSelection.EndLineIndex++;
+        TextSelection.StartCursorLineIndex++;
+        TextSelection.EndCursorLineIndex++;
     }
 
     public void SetSelectedTextCase(TextCase textCase)

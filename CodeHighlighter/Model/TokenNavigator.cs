@@ -2,19 +2,7 @@
 
 internal class TokenNavigator
 {
-    internal readonly struct NewCursorPosition
-    {
-        public readonly int LineIndex;
-        public readonly int ColumnIndex;
-
-        public NewCursorPosition(int lineIndex, int columnIndex)
-        {
-            LineIndex = lineIndex;
-            ColumnIndex = columnIndex;
-        }
-    }
-
-    public NewCursorPosition MoveRight(IText text, ITokens tokens, int lineIndex, int columnIndex)
+    public CursorPosition MoveRight(IText text, ITokens tokens, int lineIndex, int columnIndex)
     {
         var line = text.GetLine(lineIndex);
         if (columnIndex == line.Length)
@@ -50,7 +38,7 @@ internal class TokenNavigator
         }
     }
 
-    public NewCursorPosition MoveLeft(IText text, ITokens tokens, int lineIndex, int columnIndex)
+    public CursorPosition MoveLeft(IText text, ITokens tokens, int lineIndex, int columnIndex)
     {
         if (columnIndex == 0)
         {
@@ -77,7 +65,7 @@ internal class TokenNavigator
         }
     }
 
-    private NewCursorPosition GetNextCursorPosition(IText text, int lineIndex, TokenList lineTokens, Token token)
+    private CursorPosition GetNextCursorPosition(IText text, int lineIndex, TokenList lineTokens, Token token)
     {
         var index = lineTokens.FindIndex(x => x.Equals(token));
         if (index == -1 || index == lineTokens.Count - 1) return new(lineIndex, text.GetLine(lineIndex).Length);
@@ -85,7 +73,7 @@ internal class TokenNavigator
         return new(lineIndex, next.StartColumnIndex);
     }
 
-    private NewCursorPosition ToNewCursorPosition(int lineIndex, Token token)
+    private CursorPosition ToNewCursorPosition(int lineIndex, Token token)
     {
         return new(lineIndex, token.StartColumnIndex);
     }
