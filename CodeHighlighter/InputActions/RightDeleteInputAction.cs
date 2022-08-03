@@ -1,15 +1,19 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Model;
+
+namespace CodeHighlighter.InputActions;
 
 internal class RightDeleteInputAction
 {
     public static readonly RightDeleteInputAction Instance = new();
 
-    public void Do(InputActionContext context)
+    public DeleteResult Do(InputActionContext context)
     {
-        context.InputModel.RightDelete();
+        var result = context.InputModel.RightDelete();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
         context.RaiseTextChanged();
         context.CodeTextBox?.InvalidateVisual();
+
+        return result;
     }
 }

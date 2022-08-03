@@ -51,7 +51,7 @@ public class InputModelSelectionIntegration
     public void SelectionFromFirstLineToSecond()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.MoveCursorTo(new(0, 5));
         _model.ActivateSelection();
@@ -68,7 +68,7 @@ public class InputModelSelectionIntegration
     public void SelectionFromSecondLineToFirst()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.MoveCursorTo(new(1, 5));
         _model.ActivateSelection();
@@ -85,7 +85,7 @@ public class InputModelSelectionIntegration
     public void SelectionByCursor1()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.MoveCursorTo(new(0, 4));
         _model.ActivateSelection();
@@ -102,7 +102,7 @@ public class InputModelSelectionIntegration
     public void SelectionByCursor2()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.MoveCursorTo(new(1, 9));
         _model.ActivateSelection();
@@ -119,7 +119,7 @@ public class InputModelSelectionIntegration
     public void SelectionAll()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.SelectAll();
         Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
@@ -151,7 +151,7 @@ public class InputModelSelectionIntegration
     public void SelectionAfterInputText()
     {
         AppendString("00000");
-        _model.NewLine();
+        _model.AppendNewLine();
         _model.AppendChar('1');
         _model.AppendChar('2');
         _model.AppendChar('3');
@@ -165,7 +165,7 @@ public class InputModelSelectionIntegration
     public void SelectionAfterNewLine()
     {
         AppendString("00000");
-        _model.NewLine();
+        _model.AppendNewLine();
         _model.ActivateSelection();
         _model.MoveCursorUp();
         _model.CompleteSelection();
@@ -190,15 +190,15 @@ public class InputModelSelectionIntegration
         _model.MoveCursorStartLine();
         _model.ActivateSelection();
         _model.MoveCursorEndLine();
-        _model.NewLine();
+        _model.AppendNewLine();
         Assert.AreEqual("\r\n", _model.Text.ToString());
     }
 
     [Test]
-    public void DeleteSelection()
+    public void DeleteSelection_LeftDelete()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("9876543210");
         _model.MoveCursorTo(new(0, 3));
         _model.ActivateSelection();
@@ -207,9 +207,27 @@ public class InputModelSelectionIntegration
         _model.LeftDelete();
 
         Assert.AreEqual("012210", _model.Text.ToString());
+        Assert.AreEqual(1, _model.Tokens.LinesCount);
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+    }
+
+    [Test]
+    public void DeleteSelection_RightDelete()
+    {
+        AppendString("0123456789");
+        _model.AppendNewLine();
+        AppendString("9876543210");
+        _model.MoveCursorTo(new(0, 3));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(1, 7));
+        _model.CompleteSelection();
+        _model.RightDelete();
+
+        Assert.AreEqual("012210", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
     }
 
     [Test]
@@ -249,7 +267,7 @@ public class InputModelSelectionIntegration
     public void GetSelectedText_MultyLines()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
         _model.MoveCursorTo(new(0, 3));
         _model.ActivateSelection();
@@ -263,7 +281,7 @@ public class InputModelSelectionIntegration
     public void GetSelectedText_MultyLines_Whole()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
         _model.SelectAll();
         var result = _model.GetSelectedText();
@@ -304,9 +322,9 @@ public class InputModelSelectionIntegration
     public void DeleteCurrentLine()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("456");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTextBegin();
 
@@ -327,9 +345,9 @@ public class InputModelSelectionIntegration
     public void DeleteLastLine_Clear()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("456");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTextEnd();
 
@@ -344,9 +362,9 @@ public class InputModelSelectionIntegration
     public void DeleteLines_Cursor()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("45600");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTo(new(0, 3));
 
@@ -368,9 +386,9 @@ public class InputModelSelectionIntegration
     public void DeleteLines_SelectionFirstTwoLines()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("45600");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTo(new(0, 2));
         _model.ActivateSelection();
@@ -388,9 +406,9 @@ public class InputModelSelectionIntegration
     public void DeleteLines_SelectionLastTwoLines_1()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("45600");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
@@ -409,9 +427,9 @@ public class InputModelSelectionIntegration
     public void DeleteLines_SelectionLastTwoLines_2()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("45600");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.MoveCursorTo(new(2, 3));
         _model.ActivateSelection();
@@ -430,9 +448,9 @@ public class InputModelSelectionIntegration
     public void DeleteLines_All()
     {
         AppendString("123");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("45600");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("789");
         _model.SelectAll();
 
@@ -571,6 +589,6 @@ public class InputModelSelectionIntegration
 
     private void AppendString(string str)
     {
-        str.ToList().ForEach(_model.AppendChar);
+        str.ToList().ForEach(ch => _model.AppendChar(ch));
     }
 }

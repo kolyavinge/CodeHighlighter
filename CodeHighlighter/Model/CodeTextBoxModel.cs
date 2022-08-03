@@ -116,7 +116,7 @@ public class CodeTextBoxModel
     public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText)
         => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);
 
-    public void NewLine() => NewLineInputAction.Instance.Do(_inputActionContext);
+    public void NewLine() => AppendNewLineInputAction.Instance.Do(_inputActionContext);
 
     public void InsertText(string insertedText) => InsertTextInputAction.Instance.Do(_inputActionContext, insertedText);
 

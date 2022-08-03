@@ -2,13 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class AppendCharInputAction
+internal class AppendNewLineInputAction
 {
-    public static readonly AppendCharInputAction Instance = new();
+    public static readonly AppendNewLineInputAction Instance = new();
 
-    public AppendCharResult Do(InputActionContext context, char ch)
+    public AppendNewLineResult Do(InputActionContext context)
     {
-        var result = context.InputModel.AppendChar(ch);
+        var result = context.InputModel.AppendNewLine();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
         context.RaiseTextChanged();

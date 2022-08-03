@@ -86,6 +86,6 @@ public class InputModelInsertionIntegration
 
     private void AppendString(string str)
     {
-        str.ToList().ForEach(_model.AppendChar);
+        str.ToList().ForEach(ch => _model.AppendChar(ch));
     }
 }

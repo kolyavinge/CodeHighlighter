@@ -40,7 +40,7 @@ public class Text : IText
 
     public TextLine GetLine(int lineIndex) => _lines[lineIndex];
 
-    internal void NewLine(CursorPosition position)
+    internal void AppendNewLine(CursorPosition position)
     {
         var line = _lines[position.LineIndex];
         var remains = line.GetSubstring(position.ColumnIndex, line.Length - position.ColumnIndex);
@@ -56,23 +56,29 @@ public class Text : IText
         _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
     }
 
-    internal void Insert(CursorPosition position, Text insertedText)
+    internal InsertResult Insert(CursorPosition position, Text insertedText)
     {
-        if (insertedText.LinesCount == 0) return;
+        if (insertedText.LinesCount == 0) return default;
+        CursorPosition endPosition;
         if (insertedText.LinesCount == 1)
         {
-            _lines[position.LineIndex].InsertLine(position.ColumnIndex, insertedText.Lines.First());
+            var line = insertedText.Lines.First();
+            _lines[position.LineIndex].InsertLine(position.ColumnIndex, line);
+            endPosition = new(position.LineIndex, position.ColumnIndex + line.Length);
         }
         else
         {
-            NewLine(position);
+            AppendNewLine(position);
             _lines[position.LineIndex].AppendLine(insertedText.Lines.First());
             for (int insertedLineIndex = 1; insertedLineIndex < insertedText.LinesCount - 1; insertedLineIndex++)
             {
                 _lines.Insert(position.LineIndex + insertedLineIndex, insertedText.GetLine(insertedLineIndex));
             }
             _lines[position.LineIndex + insertedText.LinesCount - 1].InsertLine(0, insertedText.Lines.Last());
+            endPosition = new(position.LineIndex + insertedText.LinesCount - 1, insertedText.Lines.Last().Length);
         }
+
+        return new(position, endPosition);
     }
 
     internal CursorPosition GetCursorPositionAfterLeftDelete(CursorPosition current)
@@ -82,36 +88,42 @@ public class Text : IText
         else return new(current.LineIndex, current.ColumnIndex);
     }
 
-    internal DeleteResult LeftDelete(CursorPosition position)
+    internal CharDeleteResult LeftDelete(CursorPosition position)
     {
         if (position.ColumnIndex > 0)
         {
+            var deletedChar = _lines[position.LineIndex][position.ColumnIndex - 1];
             _lines[position.LineIndex].RemoveAt(position.ColumnIndex - 1);
+
+            return new() { DeletedChar = deletedChar };
         }
         else if (position.LineIndex > 0)
         {
             _lines[position.LineIndex - 1].AppendLine(_lines[position.LineIndex]);
             _lines.RemoveAt(position.LineIndex);
-            return new DeleteResult { IsLineDeleted = true };
-        }
 
-        return new DeleteResult { IsLineDeleted = false };
+            return new() { DeletedChar = '\n', IsLineDeleted = true };
+        }
+        else return default;
     }
 
-    internal DeleteResult RightDelete(CursorPosition position)
+    internal CharDeleteResult RightDelete(CursorPosition position)
     {
         if (position.ColumnIndex < _lines[position.LineIndex].Length)
         {
+            var deletedChar = _lines[position.LineIndex][position.ColumnIndex];
             _lines[position.LineIndex].RemoveAt(position.ColumnIndex);
+
+            return new() { DeletedChar = deletedChar };
         }
         else if (position.LineIndex < _lines.Count - 1)
         {
             _lines[position.LineIndex].AppendLine(_lines[position.LineIndex + 1]);
             _lines.RemoveAt(position.LineIndex + 1);
-            return new DeleteResult { IsLineDeleted = true };
-        }
 
-        return new DeleteResult { IsLineDeleted = false };
+            return new() { DeletedChar = '\n', IsLineDeleted = true };
+        }
+        else return default;
     }
 
     internal DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
@@ -123,7 +135,7 @@ public class Text : IText
             var line = _lines[selectedLine.LineIndex];
             line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
 
-            return new DeleteSelectionResult();
+            return new();
         }
         else
         {
@@ -136,7 +148,7 @@ public class Text : IText
             var secondSelectedLine = selectedLines.Skip(1).First();
             _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
 
-            return new DeleteSelectionResult(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            return new(secondSelectedLine.LineIndex, selectedLines.Count - 1);
         }
     }
 
@@ -174,9 +186,23 @@ public class Text : IText
         return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
     }
 
-    internal struct DeleteResult
+    internal readonly struct InsertResult
     {
+        public readonly CursorPosition StartPosition;
+        public readonly CursorPosition EndPosition;
+
+        public InsertResult(CursorPosition startPosition, CursorPosition endPosition)
+        {
+            StartPosition = startPosition;
+            EndPosition = endPosition;
+        }
+    }
+
+    internal struct CharDeleteResult
+    {
+        public char DeletedChar;
         public bool IsLineDeleted;
+        public bool NoDeletion => DeletedChar == 0 && !IsLineDeleted;
     }
 
     internal readonly struct DeleteSelectionResult

@@ -1,13 +1,17 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Model;
+
+namespace CodeHighlighter.InputActions;
 
 internal class MoveSelectedLinesUpInputAction
 {
     public static readonly MoveSelectedLinesUpInputAction Instance = new();
 
-    public void Do(InputActionContext context)
+    public MoveSelectedLinesResult Do(InputActionContext context)
     {
-        context.InputModel.MoveSelectedLinesUp();
+        var result = context.InputModel.MoveSelectedLinesUp();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.CodeTextBox?.InvalidateVisual();
+
+        return result;
     }
 }

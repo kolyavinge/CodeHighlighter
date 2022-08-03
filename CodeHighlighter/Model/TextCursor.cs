@@ -12,6 +12,11 @@ public readonly struct CursorPosition
         LineIndex = lineIndex;
         ColumnIndex = columnIndex;
     }
+
+    public override string ToString()
+    {
+        return $"{LineIndex}:{ColumnIndex}";
+    }
 }
 
 internal interface ITextCursor

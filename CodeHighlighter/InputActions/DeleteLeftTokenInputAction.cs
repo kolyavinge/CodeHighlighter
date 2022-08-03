@@ -1,15 +1,19 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Model;
+
+namespace CodeHighlighter.InputActions;
 
 internal class DeleteLeftTokenInputAction
 {
     public static readonly DeleteLeftTokenInputAction Instance = new();
 
-    public void Do(InputActionContext context)
+    public DeleteTokenResult Do(InputActionContext context)
     {
-        context.InputModel.DeleteLeftToken();
+        var result = context.InputModel.DeleteLeftToken();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
         context.RaiseTextChanged();
         context.CodeTextBox?.InvalidateVisual();
+
+        return result;
     }
 }

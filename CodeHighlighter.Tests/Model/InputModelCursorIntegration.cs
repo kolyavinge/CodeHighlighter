@@ -21,7 +21,7 @@ public class InputModelCursorIntegration
     public void CursorMove()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
 
         _model.MoveCursorTo(new(0, 5));
@@ -68,7 +68,7 @@ public class InputModelCursorIntegration
     public void CursorLimitsRight()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
 
         _model.MoveCursorTextEnd();
@@ -110,7 +110,7 @@ public class InputModelCursorIntegration
     public void CursorLimitsDown()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
 
         _model.MoveCursorTo(new(1, 5));
@@ -130,13 +130,13 @@ public class InputModelCursorIntegration
     public void CursorPageUp()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
         _model.MoveCursorTo(new(4, 5));
 
@@ -153,13 +153,13 @@ public class InputModelCursorIntegration
     public void CursorPageDown()
     {
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0123456789");
         _model.MoveCursorTo(new(0, 5));
 
@@ -182,7 +182,7 @@ public class InputModelCursorIntegration
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(14, _model.TextCursor.ColumnIndex);
 
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("DECLARE @y FLOAT");
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(16, _model.TextCursor.ColumnIndex);
@@ -192,7 +192,7 @@ public class InputModelCursorIntegration
         _model.MoveCursorTextBegin();
         _model.MoveCursorRight();
         _model.MoveCursorRight();
-        _model.NewLine();
+        _model.AppendNewLine();
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(0, _model.TextCursor.ColumnIndex);
         Assert.AreEqual("DE\r\nCLARE @x INT\r\nDECLARE @y FLOAT", _model.Text.ToString());
@@ -203,7 +203,7 @@ public class InputModelCursorIntegration
         _model.MoveCursorTextBegin();
         _model.MoveCursorRight();
         _model.MoveCursorRight();
-        _model.NewLine();
+        _model.AppendNewLine();
         _model.MoveCursorTextBegin();
         _model.MoveCursorEndLine();
         _model.RightDelete();
@@ -242,7 +242,7 @@ public class InputModelCursorIntegration
     public void MoveCursorFromOneLineToAnother()
     {
         AppendString("0000000000");
-        _model.NewLine();
+        _model.AppendNewLine();
         AppendString("0000000000");
         _model.MoveCursorTextBegin();
         _model.MoveCursorEndLine();
@@ -261,6 +261,6 @@ public class InputModelCursorIntegration
 
     private void AppendString(string str)
     {
-        str.ToList().ForEach(_model.AppendChar);
+        str.ToList().ForEach(ch => _model.AppendChar(ch));
     }
 }

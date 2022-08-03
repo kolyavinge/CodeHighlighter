@@ -183,56 +183,72 @@ internal class InputModel
         SetSelection();
     }
 
-    public void DeleteLeftToken()
+    public DeleteTokenResult DeleteLeftToken()
     {
-        if (TextSelection.IsExist)
-        {
-            LeftDelete();
-        }
-        else
+        var oldCursorPosition = TextCursor.Position;
+        if (!TextSelection.IsExist)
         {
             var navigator = new TokenNavigator();
-            var pos = navigator.MoveLeft(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
+            var position = navigator.MoveLeft(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
             ActivateSelection();
-            MoveCursorTo(pos);
+            MoveCursorTo(position);
             CompleteSelection();
-            LeftDelete();
         }
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
+        var deleteResult = LeftDelete();
+        var newCursorPosition = TextCursor.Position;
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.NoDeletion);
     }
 
-    public void DeleteRightToken()
+    public DeleteTokenResult DeleteRightToken()
     {
-        if (TextSelection.IsExist)
-        {
-            RightDelete();
-        }
-        else
+        var oldCursorPosition = TextCursor.Position;
+        if (!TextSelection.IsExist)
         {
             var navigator = new TokenNavigator();
-            var pos = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
+            var position = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
             ActivateSelection();
-            MoveCursorTo(pos);
+            MoveCursorTo(position);
             CompleteSelection();
-            LeftDelete();
         }
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
+        var deleteResult = RightDelete();
+        var newCursorPosition = TextCursor.Position;
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.NoDeletion);
     }
 
-    public void NewLine()
+    public AppendNewLineResult AppendNewLine()
     {
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist) DeleteSelection();
-        Text.NewLine(TextCursor.Position);
+        Text.AppendNewLine(TextCursor.Position);
         Tokens.InsertEmptyLine(TextCursor.LineIndex + 1);
         TextCursor.MoveDown();
         TextCursor.MoveStartLine();
+        var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex - 1, 2);
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText);
     }
 
-    public void AppendChar(char ch)
+    public AppendCharResult AppendChar(char ch)
     {
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist) DeleteSelection();
         Text.AppendChar(TextCursor.Position, ch);
         TextCursor.MoveRight();
+        var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex, 1);
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, ch);
     }
 
     public string GetSelectedText()
@@ -247,24 +263,27 @@ internal class InputModel
         return String.Join(Environment.NewLine, selectedLines);
     }
 
-    public void InsertText(string text)
+    public InsertTextResult InsertText(string text)
     {
         var insertedText = new Text(text);
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist) DeleteSelection();
-        Text.Insert(TextCursor.Position, insertedText);
-        if (insertedText.LinesCount == 1)
-        {
-            TextCursor.MoveTo(new(TextCursor.LineIndex, TextCursor.ColumnIndex + insertedText.Lines.Last().Length));
-        }
-        else
-        {
-            TextCursor.MoveTo(new(TextCursor.LineIndex + insertedText.LinesCount - 1, insertedText.Lines.Last().Length));
-        }
+        var insertResult = Text.Insert(TextCursor.Position, insertedText);
+        TextCursor.MoveTo(insertResult.EndPosition);
+        var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(0, Text.LinesCount);
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, text);
     }
 
-    public void LeftDelete()
+    public DeleteResult LeftDelete()
     {
+        var charDeleteResult = default(Text.CharDeleteResult);
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist)
         {
             DeleteSelection();
@@ -272,31 +291,41 @@ internal class InputModel
         else
         {
             var newPosition = Text.GetCursorPositionAfterLeftDelete(TextCursor.Position);
-            var deleteResult = Text.LeftDelete(TextCursor.Position);
-            if (deleteResult.IsLineDeleted)
+            charDeleteResult = Text.LeftDelete(TextCursor.Position);
+            if (charDeleteResult.IsLineDeleted)
             {
                 Tokens.DeleteLine(TextCursor.LineIndex);
             }
             TextCursor.MoveTo(newPosition);
         }
+        var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex, 1);
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, charDeleteResult);
     }
 
-    public void RightDelete()
+    public DeleteResult RightDelete()
     {
+        var charDeleteResult = default(Text.CharDeleteResult);
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist)
         {
             DeleteSelection();
         }
         else
         {
-            var deleteResult = Text.RightDelete(TextCursor.Position);
-            if (deleteResult.IsLineDeleted)
+            charDeleteResult = Text.RightDelete(TextCursor.Position);
+            if (charDeleteResult.IsLineDeleted)
             {
                 Tokens.DeleteLine(TextCursor.LineIndex + 1);
             }
         }
+        var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex, 1);
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, charDeleteResult);
     }
 
     private void DeleteSelection()
@@ -308,78 +337,86 @@ internal class InputModel
         TextSelection.Reset();
     }
 
-    public void DeleteSelectedLines()
+    public DeleteSelectedLinesResult DeleteSelectedLines()
     {
-        CursorPosition start, end;
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         if (TextSelection.IsExist)
         {
-            (start, end) = TextSelection.GetSortedPositions();
             TextSelection.Reset();
         }
-        else
+        var deletedSelectedText = String.Join(Environment.NewLine, Enumerable.Range(selectionStart.LineIndex, selectionEnd.LineIndex - selectionStart.LineIndex + 1).Select(Text.GetLine));
+        for (int i = selectionStart.LineIndex; i <= selectionEnd.LineIndex; i++)
         {
-            start = end = new CursorPosition(TextCursor.LineIndex, TextCursor.ColumnIndex);
-        }
-        for (int i = start.LineIndex; i <= end.LineIndex; i++)
-        {
-            if (start.LineIndex < Text.LinesCount - 1)
+            if (selectionStart.LineIndex < Text.LinesCount - 1)
             {
-                Text.DeleteLine(start.LineIndex);
-                Tokens.DeleteLine(start.LineIndex);
+                Text.DeleteLine(selectionStart.LineIndex);
+                Tokens.DeleteLine(selectionStart.LineIndex);
             }
             else
             {
-                Text.GetLine(start.LineIndex).Clear();
-                Tokens.GetTokens(start.LineIndex).Clear();
+                Text.GetLine(selectionStart.LineIndex).Clear();
+                Tokens.GetTokens(selectionStart.LineIndex).Clear();
             }
         }
-        TextCursor.MoveTo(start);
+        TextCursor.MoveTo(selectionStart);
+        var newCursorPosition = TextCursor.Position;
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText);
     }
 
-    public void MoveSelectedLinesUp()
+    public MoveSelectedLinesResult MoveSelectedLinesUp()
     {
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         int sourceIndex, destinationIndex;
         if (TextSelection.IsExist)
         {
-            (var start, var end) = TextSelection.GetSortedPositions();
-            sourceIndex = start.LineIndex - 1;
-            if (sourceIndex < 0) return;
-            destinationIndex = end.LineIndex;
+            sourceIndex = selectionStart.LineIndex - 1;
+            if (sourceIndex < 0) return new(oldCursorPosition, oldCursorPosition, selectionStart, selectionEnd);
+            destinationIndex = selectionEnd.LineIndex;
         }
         else
         {
             sourceIndex = TextCursor.LineIndex;
             destinationIndex = sourceIndex - 1;
-            if (destinationIndex < 0) return;
+            if (destinationIndex < 0) return new(oldCursorPosition, oldCursorPosition, selectionStart, selectionEnd);
         }
         Text.ReplaceLines(sourceIndex, destinationIndex);
         Tokens.ReplaceLines(sourceIndex, destinationIndex);
         TextCursor.MoveUp();
         TextSelection.StartCursorLineIndex--;
         TextSelection.EndCursorLineIndex--;
+        var newCursorPosition = TextCursor.Position;
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd);
     }
 
-    public void MoveSelectedLinesDown()
+    public MoveSelectedLinesResult MoveSelectedLinesDown()
     {
+        var oldCursorPosition = TextCursor.Position;
+        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         int sourceIndex, destinationIndex;
         if (TextSelection.IsExist)
         {
-            (var start, var end) = TextSelection.GetSortedPositions();
-            sourceIndex = end.LineIndex + 1;
-            if (sourceIndex >= Text.LinesCount) return;
-            destinationIndex = start.LineIndex;
+            sourceIndex = selectionEnd.LineIndex + 1;
+            if (sourceIndex >= Text.LinesCount) return new(oldCursorPosition, oldCursorPosition, selectionStart, selectionEnd);
+            destinationIndex = selectionStart.LineIndex;
         }
         else
         {
             sourceIndex = TextCursor.LineIndex;
             destinationIndex = sourceIndex + 1;
-            if (destinationIndex >= Text.LinesCount) return;
+            if (destinationIndex >= Text.LinesCount) return new(oldCursorPosition, oldCursorPosition, selectionStart, selectionEnd);
         }
         Text.ReplaceLines(sourceIndex, destinationIndex);
         Tokens.ReplaceLines(sourceIndex, destinationIndex);
         TextCursor.MoveDown();
         TextSelection.StartCursorLineIndex++;
         TextSelection.EndCursorLineIndex++;
+        var newCursorPosition = TextCursor.Position;
+
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd);
     }
 
     public void SetSelectedTextCase(TextCase textCase)

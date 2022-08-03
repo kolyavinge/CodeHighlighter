@@ -33,11 +33,11 @@ internal class TextEventsTest
     [Test]
     public void NewLine_RaiseTextChanged()
     {
-        _text.NewLine(new(0, 0));
+        _text.AppendNewLine(new(0, 0));
         _events.OnTextChanged();
         Assert.AreEqual(2, _linesCount);
 
-        _text.NewLine(new(0, 0));
+        _text.AppendNewLine(new(0, 0));
         _events.OnTextChanged();
         Assert.AreEqual(3, _linesCount);
     }
