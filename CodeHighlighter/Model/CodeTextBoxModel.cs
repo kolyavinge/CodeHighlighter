@@ -111,7 +111,7 @@ public class CodeTextBoxModel
 
     public void SelectAll() => SelectAllInputAction.Instance.Do(_inputActionContext);
 
-    public void TextInput(string inputText) => TextInputInputAction.Instance.Do(_inputActionContext, inputText);
+    public void AppendChar(char ch) => AppendCharInputAction.Instance.Do(_inputActionContext, ch);
 
     public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText)
         => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);

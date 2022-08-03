@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using CodeHighlighter.Model;
 
@@ -164,7 +166,9 @@ internal class KeyboardController
     public void OnTextInput(CodeTextBoxModel codeTextBoxModel, string inputText, bool isReadOnly)
     {
         if (isReadOnly) return;
-        codeTextBoxModel.TextInput(inputText);
+        var inputTextList = inputText.Where(ch => !Text.NotAllowedSymbols.Contains(ch)).ToList();
+        if (!inputTextList.Any()) return;
+        foreach (var ch in inputText) codeTextBoxModel.AppendChar(ch);
     }
 
     private void ActivateOrCompleteSelection(InputModel inputModel, bool shiftPressed)

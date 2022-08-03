@@ -48,8 +48,11 @@ public class Text : IText
         _lines.Insert(position.LineIndex + 1, new TextLine(remains));
     }
 
+    internal static readonly HashSet<char> NotAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
+
     internal void AppendChar(CursorPosition position, char ch)
     {
+        if (NotAllowedSymbols.Contains(ch)) throw new ArgumentException(nameof(ch));
         _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
     }
 
