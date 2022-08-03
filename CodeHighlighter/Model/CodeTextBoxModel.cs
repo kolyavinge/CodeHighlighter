@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
 
 namespace CodeHighlighter.Model;
@@ -15,6 +16,7 @@ public class CodeTextBoxModel
     public Tokens Tokens { get; }
     public TextCursor TextCursor { get; }
     public TextMeasures TextMeasures { get; }
+    public History History { get; }
 
     internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
@@ -30,6 +32,7 @@ public class CodeTextBoxModel
         Tokens = new Tokens();
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
+        History = new History();
         TextSelection = new TextSelection(0, 0, 0, 0);
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
@@ -91,9 +94,9 @@ public class CodeTextBoxModel
 
     public void MoveCursorPageDown() => MoveCursorPageDownInputAction.Instance.Do(_inputActionContext);
 
-    public void MoveSelectedLinesUp() => MoveSelectedLinesUpInputAction.Instance.Do(_inputActionContext);
+    public void MoveSelectedLinesUp() => History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_inputActionContext));
 
-    public void MoveSelectedLinesDown() => MoveSelectedLinesDownInputAction.Instance.Do(_inputActionContext);
+    public void MoveSelectedLinesDown() => History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_inputActionContext));
 
     public void GotoLine(int lineIndex) => GotoLineInputAction.Instance.Do(_inputActionContext, lineIndex);
 
@@ -105,30 +108,29 @@ public class CodeTextBoxModel
 
     public void MoveToNextToken() => MoveToNextTokenInputAction.Instance.Do(_inputActionContext);
 
-    public void DeleteLeftToken() => DeleteLeftTokenInputAction.Instance.Do(_inputActionContext);
+    public void DeleteLeftToken() => History.AddAndDo(new DeleteLeftTokenHistoryAction(_inputActionContext));
 
-    public void DeleteRightToken() => DeleteRightTokenInputAction.Instance.Do(_inputActionContext);
+    public void DeleteRightToken() => History.AddAndDo(new DeleteRightTokenHistoryAction(_inputActionContext));
 
     public void SelectAll() => SelectAllInputAction.Instance.Do(_inputActionContext);
 
-    public void AppendChar(char ch) => AppendCharInputAction.Instance.Do(_inputActionContext, ch);
+    public void AppendChar(char ch) => History.AddAndDo(new AppendCharHistoryAction(_inputActionContext, ch));
 
-    public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText)
-        => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);
+    public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText) => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);
 
-    public void NewLine() => AppendNewLineInputAction.Instance.Do(_inputActionContext);
+    public void AppendNewLine() => History.AddAndDo(new AppendNewLineHistoryAction(_inputActionContext));
 
-    public void InsertText(string insertedText) => InsertTextInputAction.Instance.Do(_inputActionContext, insertedText);
+    public void InsertText(string insertedText) => History.AddAndDo(new InsertTextHistoryAction(_inputActionContext, insertedText));
 
-    public void DeleteSelectedLines() => DeleteSelectedLinesInputAction.Instance.Do(_inputActionContext);
+    public void DeleteSelectedLines() => History.AddAndDo(new DeleteSelectedLinesHistoryAction(_inputActionContext));
 
-    public void LeftDelete() => LeftDeleteInputAction.Instance.Do(_inputActionContext);
+    public void LeftDelete() => History.AddAndDo(new LeftDeleteHistoryAction(_inputActionContext));
 
-    public void RightDelete() => RightDeleteInputAction.Instance.Do(_inputActionContext);
+    public void RightDelete() => History.AddAndDo(new RightDeleteHistoryAction(_inputActionContext));
 
-    public void ToUpperCase() => ToUpperCaseInputAction.Instance.Do(_inputActionContext);
+    public void ToUpperCase() => History.AddAndDo(new ToUpperCaseHistoryAction(_inputActionContext));
 
-    public void ToLowerCase() => ToLowerCaseInputAction.Instance.Do(_inputActionContext);
+    public void ToLowerCase() => History.AddAndDo(new ToLowerCaseHistoryAction(_inputActionContext));
 
     private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 }

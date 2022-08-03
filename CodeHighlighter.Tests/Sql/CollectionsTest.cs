@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Sql;
 
-public class CollectionsTest
+internal class CollectionsTest
 {
     [Test]
     public void CollectionsAreUnique()

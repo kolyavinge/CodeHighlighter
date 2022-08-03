@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TextTest
+internal class TextTest
 {
     private Text _text;
 
@@ -88,6 +88,17 @@ public class TextTest
     }
 
     [Test]
+    public void InsertOneLine_Empty()
+    {
+        SetText("345");
+        var result = _text.Insert(new(0, 0), new Text(""));
+        Assert.AreEqual("345", _text.ToString());
+        Assert.AreEqual(new CursorPosition(0, 0), result.StartPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.EndPosition);
+        Assert.False(result.HasInserted);
+    }
+
+    [Test]
     public void InsertOneLine_Begin()
     {
         SetText("345");
@@ -95,6 +106,7 @@ public class TextTest
         Assert.AreEqual("12345", _text.ToString());
         Assert.AreEqual(new CursorPosition(0, 0), result.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 2), result.EndPosition);
+        Assert.True(result.HasInserted);
     }
 
     [Test]
@@ -105,6 +117,7 @@ public class TextTest
         Assert.AreEqual("12345", _text.ToString());
         Assert.AreEqual(new CursorPosition(0, 2), result.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 4), result.EndPosition);
+        Assert.True(result.HasInserted);
     }
 
     [Test]
@@ -115,6 +128,7 @@ public class TextTest
         Assert.AreEqual("12345", _text.ToString());
         Assert.AreEqual(new CursorPosition(0, 3), result.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 5), result.EndPosition);
+        Assert.True(result.HasInserted);
     }
 
     [Test]
@@ -165,7 +179,7 @@ public class TextTest
         Assert.AreEqual("123", _text.ToString());
         Assert.AreEqual(0, result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.True(result.NoDeletion);
+        Assert.False(result.HasDeleted);
     }
 
     [Test]
@@ -176,7 +190,7 @@ public class TextTest
         Assert.AreEqual("23", _text.ToString());
         Assert.AreEqual('1', result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -187,7 +201,7 @@ public class TextTest
         Assert.AreEqual("12", _text.ToString());
         Assert.AreEqual('3', result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -198,7 +212,7 @@ public class TextTest
         Assert.AreEqual("123456", _text.ToString());
         Assert.AreEqual('\n', result.DeletedChar);
         Assert.True(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -209,7 +223,7 @@ public class TextTest
         Assert.AreEqual("23", _text.ToString());
         Assert.AreEqual('1', result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -220,7 +234,7 @@ public class TextTest
         Assert.AreEqual("13", _text.ToString());
         Assert.AreEqual('2', result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -231,7 +245,7 @@ public class TextTest
         Assert.AreEqual("12", _text.ToString());
         Assert.AreEqual('3', result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -242,7 +256,7 @@ public class TextTest
         Assert.AreEqual("123", _text.ToString());
         Assert.AreEqual(0, result.DeletedChar);
         Assert.False(result.IsLineDeleted);
-        Assert.True(result.NoDeletion);
+        Assert.False(result.HasDeleted);
     }
 
     [Test]
@@ -253,7 +267,7 @@ public class TextTest
         Assert.AreEqual("123456", _text.ToString());
         Assert.True(result.IsLineDeleted);
         Assert.AreEqual('\n', result.DeletedChar);
-        Assert.False(result.NoDeletion);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]

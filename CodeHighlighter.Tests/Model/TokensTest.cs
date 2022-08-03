@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TokensTest
+internal class TokensTest
 {
     private Tokens _tokens;
 

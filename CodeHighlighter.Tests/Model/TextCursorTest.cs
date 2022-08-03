@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TextCursorTest
+internal class TextCursorTest
 {
     private TextCursor _textCursor;
 

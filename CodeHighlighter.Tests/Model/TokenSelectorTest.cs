@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TokenSelectorTest
+internal class TokenSelectorTest
 {
     private Mock<ITokens> _tokens;
     private TokenSelector _selector;

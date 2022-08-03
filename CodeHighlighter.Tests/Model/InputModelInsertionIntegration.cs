@@ -5,14 +5,14 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class InputModelInsertionIntegration
+internal class InputModelInsertionIntegration
 {
     private InputModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = new InputModel();
+        _model = InputModel.MakeDefault();
         _model.SetCodeProvider(new SqlCodeProvider());
         _model.SetText("");
     }

@@ -191,6 +191,8 @@ public class Text : IText
         public readonly CursorPosition StartPosition;
         public readonly CursorPosition EndPosition;
 
+        public bool HasInserted => !StartPosition.Equals(EndPosition);
+
         public InsertResult(CursorPosition startPosition, CursorPosition endPosition)
         {
             StartPosition = startPosition;
@@ -202,7 +204,7 @@ public class Text : IText
     {
         public char DeletedChar;
         public bool IsLineDeleted;
-        public bool NoDeletion => DeletedChar == 0 && !IsLineDeleted;
+        public bool HasDeleted => DeletedChar != 0 || IsLineDeleted;
     }
 
     internal readonly struct DeleteSelectionResult

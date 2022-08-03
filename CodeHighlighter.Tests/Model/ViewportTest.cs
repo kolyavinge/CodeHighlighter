@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class ViewportTest
+internal class ViewportTest
 {
     private const double _lineHeight = 10;
     private const double _verticalMaximum = 10 * _lineHeight;

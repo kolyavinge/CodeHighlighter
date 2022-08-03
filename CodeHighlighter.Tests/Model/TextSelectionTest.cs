@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TextSelectionTest
+internal class TextSelectionTest
 {
     private Text _text;
     private TextSelection _textSelection;

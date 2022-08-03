@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TokenCursorPositionTest
+internal class TokenCursorPositionTest
 {
     private TokenList _tokens;
 

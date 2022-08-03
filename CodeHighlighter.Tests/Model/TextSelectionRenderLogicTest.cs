@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class TextSelectionRenderLogicTest
+internal class TextSelectionRenderLogicTest
 {
     private TextMeasures _textMeasures;
     private Mock<IViewportContext> _viewportContext;

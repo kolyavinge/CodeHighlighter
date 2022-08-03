@@ -22,6 +22,10 @@ public class MainViewModel
 
     public ICommand GotoLineCommand => new ActionCommand(GotoLine);
 
+    public ICommand RedoCommand => new ActionCommand(Redo);
+
+    public ICommand UndoCommand => new ActionCommand(Undo);
+
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
@@ -37,7 +41,7 @@ public class MainViewModel
     private void InsertLine()
     {
         CodeTextBoxModel.MoveCursorTextEnd();
-        CodeTextBoxModel.NewLine();
+        CodeTextBoxModel.AppendNewLine();
         CodeTextBoxModel.InsertText("new inserted line");
     }
 
@@ -47,5 +51,15 @@ public class MainViewModel
         {
             CodeTextBoxModel.GotoLine(gotoLine - 1);
         }
+    }
+
+    private void Redo()
+    {
+        CodeTextBoxModel.History.Redo();
+    }
+
+    private void Undo()
+    {
+        CodeTextBoxModel.History.Undo();
     }
 }

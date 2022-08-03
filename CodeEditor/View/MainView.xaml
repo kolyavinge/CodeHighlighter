@@ -8,6 +8,10 @@
         Title="MainView"
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1200">
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding DataContext.RedoCommand, ElementName=codeTextBox}" />
+        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding DataContext.UndoCommand, ElementName=codeTextBox}" />
+    </Window.InputBindings>
     <Grid>
         <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
             <ComboBox Name="fontSizeComboBox" SelectedIndex="3">

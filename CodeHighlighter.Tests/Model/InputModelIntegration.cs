@@ -12,7 +12,7 @@ internal class InputModelIntegration
     [SetUp]
     public void Setup()
     {
-        _model = new InputModel();
+        _model = InputModel.MakeDefault();
         _model.SetCodeProvider(new SqlCodeProvider());
         _model.SetText("");
     }
@@ -77,6 +77,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.AreEqual('0', result.CharCharDeleteResult.DeletedChar);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -96,6 +97,27 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 3), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 7), result.SelectionEnd);
         Assert.AreEqual("3456789\r\n9876543", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+    }
+
+    [Test]
+    public void LeftDelete_WithSelection_DeleteEmptyLine()
+    {
+        AppendString("0123456789");
+        _model.AppendNewLine();
+        AppendString("9876543210");
+        _model.MoveCursorTo(new(0, 10));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(1, 0));
+        _model.CompleteSelection();
+        var result = _model.LeftDelete();
+
+        Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 10), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 10), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 0), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -111,6 +133,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.AreEqual('0', result.CharCharDeleteResult.DeletedChar);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -130,6 +153,27 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 3), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 7), result.SelectionEnd);
         Assert.AreEqual("3456789\r\n9876543", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+    }
+
+    [Test]
+    public void RightDelete_WithSelection_DeleteEmptyLine()
+    {
+        AppendString("0123456789");
+        _model.AppendNewLine();
+        AppendString("9876543210");
+        _model.MoveCursorTo(new(0, 10));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(1, 0));
+        _model.CompleteSelection();
+        var result = _model.RightDelete();
+
+        Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 10), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 10), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 0), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -142,7 +186,10 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual(new CursorPosition(0, 0), result.InsertStartPosition);
+        Assert.AreEqual(new CursorPosition(2, 3), result.InsertEndPosition);
         Assert.AreEqual("XXX\nYYY\nZZZ", result.InsertedText);
+        Assert.True(result.HasInserted);
     }
 
     [Test]
@@ -160,7 +207,26 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 5), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
         Assert.AreEqual("56", result.DeletedSelectedText);
+        Assert.AreEqual(new CursorPosition(0, 5), result.InsertStartPosition);
+        Assert.AreEqual(new CursorPosition(2, 3), result.InsertEndPosition);
         Assert.AreEqual("XXX\nYYY\nZZZ", result.InsertedText);
+        Assert.True(result.HasInserted);
+    }
+
+    [Test]
+    public void InsertText_Empty()
+    {
+        var result = _model.InsertText("");
+
+        Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual(new CursorPosition(0, 0), result.InsertStartPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.InsertEndPosition);
+        Assert.AreEqual("", result.InsertedText);
+        Assert.False(result.HasInserted);
     }
 
     [Test]
@@ -204,7 +270,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("FROM", result.DeletedSelectedText);
-        Assert.False(result.NoDelection);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -219,7 +285,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.True(result.NoDelection);
+        Assert.False(result.HasDeleted);
     }
 
     [Test]
@@ -237,7 +303,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("SELECT FROM", result.DeletedSelectedText);
-        Assert.False(result.NoDelection);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -252,7 +318,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("FROM", result.DeletedSelectedText);
-        Assert.False(result.NoDelection);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -267,7 +333,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.True(result.NoDelection);
+        Assert.False(result.HasDeleted);
     }
 
     [Test]
@@ -285,7 +351,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("SELECT FROM", result.DeletedSelectedText);
-        Assert.False(result.NoDelection);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -305,7 +371,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.False(result.NoMoving);
+        Assert.True(result.HasMoved);
     }
 
     [Test]
@@ -320,7 +386,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.True(result.NoMoving);
+        Assert.False(result.HasMoved);
     }
 
     [Test]
@@ -343,7 +409,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.False(result.NoMoving);
+        Assert.True(result.HasMoved);
     }
 
     [Test]
@@ -363,7 +429,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.False(result.NoMoving);
+        Assert.True(result.HasMoved);
     }
 
     [Test]
@@ -378,7 +444,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.True(result.NoMoving);
+        Assert.False(result.HasMoved);
     }
 
     [Test]
@@ -401,7 +467,7 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.False(result.NoMoving);
+        Assert.True(result.HasMoved);
     }
 
     [Test]
@@ -417,11 +483,11 @@ internal class InputModelIntegration
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
-        Assert.AreEqual(new CursorPosition(1, 1), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 0), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
-        Assert.AreEqual("111", result.DeletedSelectedText);
-        Assert.False(result.NoDeletion);
+        Assert.AreEqual("111\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -434,7 +500,24 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.True(result.NoDeletion);
+        Assert.False(result.HasDeleted);
+    }
+
+    [Test]
+    public void DeleteSelectedLines_EmptyLine()
+    {
+        AppendString("000");
+        _model.AppendNewLine();
+        _model.AppendNewLine();
+        _model.MoveCursorTo(new(1, 0));
+        var result = _model.DeleteSelectedLines();
+
+        Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 0), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 0), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 0), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
     }
 
     [Test]
@@ -453,11 +536,62 @@ internal class InputModelIntegration
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
-        Assert.AreEqual(new CursorPosition(0, 1), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 1), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
-        Assert.AreEqual("000\r\n111", result.DeletedSelectedText);
-        Assert.False(result.NoDeletion);
+        Assert.AreEqual("000\r\n111\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+    }
+
+    [Test]
+    public void DeleteSelectedLines_LastLine()
+    {
+        AppendString("000");
+        _model.AppendNewLine();
+        AppendString("111");
+        _model.AppendNewLine();
+        AppendString("222");
+        _model.MoveCursorTo(new(2, 1));
+        var result = _model.DeleteSelectedLines();
+
+        Assert.AreEqual(new CursorPosition(2, 1), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(2, 0), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(2, 1), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(2, 1), result.SelectionEnd);
+        Assert.AreEqual("222", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+    }
+
+    [Test]
+    public void SetSelectedTextCase()
+    {
+        AppendString("AAA");
+        _model.SelectAll();
+        var result = _model.SetSelectedTextCase(TextCase.Lower);
+
+        Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 3), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 3), result.SelectionEnd);
+        Assert.AreEqual("AAA", result.DeletedSelectedText);
+        Assert.AreEqual("aaa", result.ChangedText);
+        Assert.True(result.HasChanged);
+    }
+
+    [Test]
+    public void SetSelectedTextCase_NoChanges()
+    {
+        AppendString("AAA");
+        _model.MoveCursorStartLine();
+        var result = _model.SetSelectedTextCase(TextCase.Lower);
+
+        Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual("", result.ChangedText);
+        Assert.False(result.HasChanged);
     }
 
     private void AppendString(string str)

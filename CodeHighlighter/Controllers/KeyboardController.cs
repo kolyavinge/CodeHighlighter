@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using CodeHighlighter.Model;
@@ -138,7 +137,7 @@ internal class KeyboardController
         else if (key == Key.Return)
         {
             if (isReadOnly) return true;
-            model.NewLine();
+            model.AppendNewLine();
         }
         else if (key == Key.Back)
         {

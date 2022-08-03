@@ -5,14 +5,14 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-public class InputModelSelectionIntegration
+internal class InputModelSelectionIntegration
 {
     private InputModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = new InputModel();
+        _model = InputModel.MakeDefault();
         _model.SetCodeProvider(new SqlCodeProvider());
         _model.SetText("");
     }
@@ -369,11 +369,11 @@ public class InputModelSelectionIntegration
         _model.MoveCursorTo(new(0, 3));
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 3), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
 
         _model.MoveCursorTo(new(0, 5));
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 3), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
 
         _model.DeleteSelectedLines();
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
@@ -396,7 +396,7 @@ public class InputModelSelectionIntegration
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
         Assert.AreEqual("789", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);

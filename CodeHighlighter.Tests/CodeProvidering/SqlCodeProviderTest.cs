@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.CodeProvidering;
 
-public class SqlCodeProviderTest
+internal class SqlCodeProviderTest
 {
     private SqlCodeProvider _provider;
 
