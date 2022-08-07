@@ -1,3 +1,3 @@
-﻿namespace CodeHighlighter;
+﻿namespace CodeHighlighter.Model;
 
 public enum TextCase { Upper, Lower }

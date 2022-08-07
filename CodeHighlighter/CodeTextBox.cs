@@ -39,17 +39,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     }
     #endregion
 
-    #region IsReadOnly
-    public bool IsReadOnly
-    {
-        get { return (bool)GetValue(IsReadOnlyProperty); }
-        set { SetValue(IsReadOnlyProperty, value); }
-    }
-
-    public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register(
-        "IsReadOnly", typeof(bool), typeof(CodeTextBox), new PropertyMetadata(false));
-    #endregion
-
     #region SelectionBrush
     public Brush SelectionBrush
     {
@@ -341,13 +330,13 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, altPressed, shiftPressed, IsReadOnly);
+        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, altPressed, shiftPressed);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)
     {
         if (Model == null) return;
-        _keyboardController.OnTextInput(Model, e.Text, IsReadOnly);
+        _keyboardController.OnTextInput(Model, e.Text);
     }
 
     protected override void OnLostFocus(RoutedEventArgs e)

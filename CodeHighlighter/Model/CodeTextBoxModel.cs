@@ -18,6 +18,7 @@ public class CodeTextBoxModel
     public TextMeasures TextMeasures { get; }
     public TextSelection TextSelection { get; }
     public History History { get; }
+    public bool IsReadOnly { get; set; }
 
     internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
@@ -38,6 +39,7 @@ public class CodeTextBoxModel
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "", Text, TextCursor);
+        IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _historyActionContext = new HistoryActionContext(InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, RaiseTextChanged);
         SetCodeProvider(codeProvider);
     }
@@ -136,11 +138,13 @@ public class CodeTextBoxModel
 
     public void MoveSelectedLinesUp()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_historyActionContext));
     }
 
     public void MoveSelectedLinesDown()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_historyActionContext));
     }
 
@@ -175,59 +179,69 @@ public class CodeTextBoxModel
         _codeTextBox?.InvalidateVisual();
     }
 
-    public void DeleteLeftToken()
-    {
-        History.AddAndDo(new DeleteLeftTokenHistoryAction(_historyActionContext));
-    }
-
-    public void DeleteRightToken()
-    {
-        History.AddAndDo(new DeleteRightTokenHistoryAction(_historyActionContext));
-    }
-
     public void SelectAll()
     {
         SelectAllInputAction.Instance.Do(_historyActionContext);
         _codeTextBox?.InvalidateVisual();
     }
 
+    public void DeleteLeftToken()
+    {
+        if (IsReadOnly) return;
+        History.AddAndDo(new DeleteLeftTokenHistoryAction(_historyActionContext));
+    }
+
+    public void DeleteRightToken()
+    {
+        if (IsReadOnly) return;
+        History.AddAndDo(new DeleteRightTokenHistoryAction(_historyActionContext));
+    }
+
     public void AppendChar(char ch)
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new AppendCharHistoryAction(_historyActionContext, ch));
     }
 
     public void AppendNewLine()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new AppendNewLineHistoryAction(_historyActionContext));
     }
 
     public void InsertText(string insertedText)
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new InsertTextHistoryAction(_historyActionContext, insertedText));
     }
 
     public void DeleteSelectedLines()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new DeleteSelectedLinesHistoryAction(_historyActionContext));
     }
 
     public void LeftDelete()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new LeftDeleteHistoryAction(_historyActionContext));
     }
 
     public void RightDelete()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new RightDeleteHistoryAction(_historyActionContext));
     }
 
     public void ToUpperCase()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new ToUpperCaseHistoryAction(_historyActionContext));
     }
 
     public void ToLowerCase()
     {
+        if (IsReadOnly) return;
         History.AddAndDo(new ToLowerCaseHistoryAction(_historyActionContext));
     }
 
@@ -237,4 +251,5 @@ public class CodeTextBoxModel
 public class CodeTextBoxModelAdditionalParams
 {
     public string? HighlighteredBrackets { get; set; }
+    public bool IsReadOnly { get; set; }
 }

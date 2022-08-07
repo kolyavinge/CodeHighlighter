@@ -7,13 +7,12 @@ namespace CodeHighlighter.Controllers;
 
 internal class KeyboardController
 {
-    public bool OnKeyDown(CodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed, bool isReadOnly)
+    public bool OnKeyDown(CodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed)
     {
         var isHandled = true;
         // with control and shift pressed
-        if (controlPressed && shiftPressed && key == Key.U)
+        if (controlPressed && shiftPressed && key == Key.U) // remove !
         {
-            if (isReadOnly) return true;
             model.ToUpperCase();
         }
         // with control pressed
@@ -59,7 +58,6 @@ internal class KeyboardController
         }
         else if (controlPressed && key == Key.X)
         {
-            if (isReadOnly) return true;
             Clipboard.SetText(model.InputModel.GetSelectedText());
             model.LeftDelete();
         }
@@ -69,28 +67,23 @@ internal class KeyboardController
         }
         else if (controlPressed && key == Key.V)
         {
-            if (isReadOnly) return true;
             model.InsertText(Clipboard.GetText());
         }
-        else if (controlPressed && key == Key.L)
+        else if (controlPressed && key == Key.L) // remove !
         {
-            if (isReadOnly) return true;
             model.DeleteSelectedLines();
         }
-        else if (controlPressed && key == Key.U)
+        else if (controlPressed && key == Key.U) // remove !
         {
-            if (isReadOnly) return true;
             model.ToLowerCase();
         }
         // with alt pressed
-        else if (altPressed && key == Key.Up)
+        else if (altPressed && key == Key.Up) // remove !
         {
-            if (isReadOnly) return true;
             model.MoveSelectedLinesUp();
         }
-        else if (altPressed && key == Key.Down)
+        else if (altPressed && key == Key.Down) // remove !
         {
-            if (isReadOnly) return true;
             model.MoveSelectedLinesDown();
         }
         // without any modifiers
@@ -136,22 +129,18 @@ internal class KeyboardController
         }
         else if (key == Key.Return)
         {
-            if (isReadOnly) return true;
             model.AppendNewLine();
         }
         else if (key == Key.Back)
         {
-            if (isReadOnly) return true;
             model.LeftDelete();
         }
         else if (key == Key.Delete)
         {
-            if (isReadOnly) return true;
             model.RightDelete();
         }
         else if (key == Key.Tab)
         {
-            if (isReadOnly) return true;
             model.InsertText("    ");
         }
         else
@@ -162,9 +151,8 @@ internal class KeyboardController
         return isHandled;
     }
 
-    public void OnTextInput(CodeTextBoxModel codeTextBoxModel, string inputText, bool isReadOnly)
+    public void OnTextInput(CodeTextBoxModel codeTextBoxModel, string inputText)
     {
-        if (isReadOnly) return;
         var inputTextList = inputText.Where(ch => !Text.NotAllowedSymbols.Contains(ch)).ToList();
         if (!inputTextList.Any()) return;
         foreach (var ch in inputText) codeTextBoxModel.AppendChar(ch);

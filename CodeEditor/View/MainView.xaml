@@ -24,7 +24,7 @@
             </ComboBox>
             <Button Content="Copy text" Command="{Binding CopyTextCommand}" Margin="8,0,0,0" Width="100" />
             <Button Content="Insert line" Command="{Binding InsertLineCommand}" Margin="8,0,0,0" Width="100" />
-            <CheckBox x:Name="readOnlyCheckBox" Content="Read only" Margin="8,3,0,0" />
+            <CheckBox IsChecked="{Binding IsReadOnly}" Content="Read only" Margin="8,3,0,0" />
             <TextBlock Text="lines count: " Margin="16,2,0,0" />
             <TextBlock Text="{Binding TextLinesCount, ElementName=codeTextBox}" Margin="0,2,0,0" />
             <Button Command="{Binding GotoLineCommand}" Content="Goto line" Margin="8,0,0,0" />
@@ -47,7 +47,6 @@
         <highlighter:CodeTextBox
             x:Name="codeTextBox"
             Model="{Binding CodeTextBoxModel}"
-            IsReadOnly="{Binding IsChecked, ElementName=readOnlyCheckBox, Mode=TwoWay}"
             FontFamily="Consolas"
             FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
             Margin="58,24,38,28"

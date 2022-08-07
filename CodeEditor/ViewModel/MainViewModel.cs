@@ -26,6 +26,13 @@ public class MainViewModel
 
     public ICommand UndoCommand => new ActionCommand(Undo);
 
+    private bool _isReadOnly;
+    public bool IsReadOnly
+    {
+        get => _isReadOnly;
+        set { _isReadOnly = value; CodeTextBoxModel.IsReadOnly = value; }
+    }
+
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
