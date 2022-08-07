@@ -126,7 +126,7 @@ public class Text : IText
         else return default;
     }
 
-    internal DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
+    internal DeleteSelectionResult DeleteSelection(TextSelection textSelection)
     {
         var selectedLines = textSelection.GetSelectedLines(this).ToList();
         if (selectedLines.Count == 1)
@@ -171,7 +171,7 @@ public class Text : IText
         _lines.Insert(destinationLineIndex, sourceLine);
     }
 
-    internal void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
+    internal void SetSelectedTextCase(TextSelection textSelection, TextCase textCase)
     {
         var selectedLines = textSelection.GetSelectedLines(this).ToList();
         foreach (var selectedLine in selectedLines)

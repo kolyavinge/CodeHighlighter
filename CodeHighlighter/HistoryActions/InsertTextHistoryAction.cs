@@ -23,12 +23,13 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
         ResetSelection();
         if (_result!.IsSelectionExist)
         {
-            ReplaceTextInputAction.Instance.Do(_context, _result.SelectionStart, new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + _insertedText.Length), _result.DeletedSelectedText);
+            _context.TextSelection.Set(_result.SelectionStart, new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + _insertedText.Length));
+            InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
         }
         else
         {
-            SetCursorToStartPosition();
-            ReplaceTextInputAction.Instance.Do(_context, _result.InsertStartPosition, _result.InsertEndPosition, "");
+            _context.TextSelection.Set(_result.InsertStartPosition, _result.InsertEndPosition);
+            InsertTextInputAction.Instance.Do(_context, "");
         }
         SetCursorToStartPosition();
     }

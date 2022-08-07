@@ -16,11 +16,11 @@ public class CodeTextBoxModel
     public Tokens Tokens { get; }
     public TextCursor TextCursor { get; }
     public TextMeasures TextMeasures { get; }
+    public TextSelection TextSelection { get; }
     public History History { get; }
 
     internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
-    internal TextSelection TextSelection { get; }
     internal FontSettings FontSettings { get; }
     internal InputModel InputModel { get; }
     internal BracketsHighlighter BracketsHighlighter { get; }
@@ -115,8 +115,6 @@ public class CodeTextBoxModel
     public void SelectAll() => SelectAllInputAction.Instance.Do(_inputActionContext);
 
     public void AppendChar(char ch) => History.AddAndDo(new AppendCharHistoryAction(_inputActionContext, ch));
-
-    public void ReplaceText(CursorPosition start, CursorPosition end, string insertedText) => ReplaceTextInputAction.Instance.Do(_inputActionContext, start, end, insertedText);
 
     public void AppendNewLine() => History.AddAndDo(new AppendNewLineHistoryAction(_inputActionContext));
 

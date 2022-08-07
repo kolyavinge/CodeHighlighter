@@ -2,19 +2,6 @@
 
 namespace CodeHighlighter.Model;
 
-internal interface ITextSelection
-{
-    bool IsExist { get; }
-    int StartCursorLineIndex { get; }
-    int StartCursorColumnIndex { get; }
-    int EndCursorLineIndex { get; }
-    int EndCursorColumnIndex { get; }
-    CursorPosition StartPosition { get; }
-    CursorPosition EndPosition { get; }
-    (CursorPosition, CursorPosition) GetSortedPositions();
-    IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
-}
-
 internal readonly struct TextSelectionLine
 {
     public readonly int LineIndex;
@@ -29,19 +16,19 @@ internal readonly struct TextSelectionLine
     }
 }
 
-class TextSelection : ITextSelection
+public class TextSelection
 {
     public bool IsExist => StartCursorLineIndex != EndCursorLineIndex || StartCursorColumnIndex != EndCursorColumnIndex;
-    public bool InProgress { get; set; }
-    public int StartCursorLineIndex { get; set; }
-    public int StartCursorColumnIndex { get; set; }
-    public int EndCursorLineIndex { get; set; }
-    public int EndCursorColumnIndex { get; set; }
+    internal bool InProgress { get; set; }
+    internal int StartCursorLineIndex { get; set; }
+    internal int StartCursorColumnIndex { get; set; }
+    internal int EndCursorLineIndex { get; set; }
+    internal int EndCursorColumnIndex { get; set; }
 
     public CursorPosition StartPosition => new(StartCursorLineIndex, StartCursorColumnIndex);
     public CursorPosition EndPosition => new(EndCursorLineIndex, EndCursorColumnIndex);
 
-    public TextSelection(int startCursorLineIndex, int startColumnIndex, int endCursorLineIndex, int endColumnIndex)
+    internal TextSelection(int startCursorLineIndex, int startColumnIndex, int endCursorLineIndex, int endColumnIndex)
     {
         StartCursorLineIndex = startCursorLineIndex;
         StartCursorColumnIndex = startColumnIndex;
@@ -49,7 +36,16 @@ class TextSelection : ITextSelection
         EndCursorColumnIndex = endColumnIndex;
     }
 
-    public (CursorPosition, CursorPosition) GetSortedPositions()
+    public void Set(CursorPosition selectionStart, CursorPosition selectionEnd)
+    {
+        InProgress = false;
+        StartCursorLineIndex = selectionStart.LineIndex;
+        StartCursorColumnIndex = selectionStart.ColumnIndex;
+        EndCursorLineIndex = selectionEnd.LineIndex;
+        EndCursorColumnIndex = selectionEnd.ColumnIndex;
+    }
+
+    internal (CursorPosition, CursorPosition) GetSortedPositions()
     {
         var start = new CursorPosition(StartCursorLineIndex, StartCursorColumnIndex);
         var end = new CursorPosition(EndCursorLineIndex, EndCursorColumnIndex);
@@ -59,7 +55,7 @@ class TextSelection : ITextSelection
         return (end, start);
     }
 
-    public IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
+    internal IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
     {
         if (!IsExist) yield break;
         var (start, end) = GetSortedPositions();
@@ -78,7 +74,7 @@ class TextSelection : ITextSelection
         }
     }
 
-    public void Reset()
+    internal void Reset()
     {
         InProgress = false;
         StartCursorLineIndex = 0;
