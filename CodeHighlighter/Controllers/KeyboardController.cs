@@ -10,13 +10,8 @@ internal class KeyboardController
     public bool OnKeyDown(CodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed)
     {
         var isHandled = true;
-        // with control and shift pressed
-        if (controlPressed && shiftPressed && key == Key.U) // remove !
-        {
-            model.ToUpperCase();
-        }
         // with control pressed
-        else if (controlPressed && key == Key.Up)
+        if (controlPressed && key == Key.Up)
         {
             model.ScrollLineUp();
         }
@@ -68,23 +63,6 @@ internal class KeyboardController
         else if (controlPressed && key == Key.V)
         {
             model.InsertText(Clipboard.GetText());
-        }
-        else if (controlPressed && key == Key.L) // remove !
-        {
-            model.DeleteSelectedLines();
-        }
-        else if (controlPressed && key == Key.U) // remove !
-        {
-            model.ToLowerCase();
-        }
-        // with alt pressed
-        else if (altPressed && key == Key.Up) // remove !
-        {
-            model.MoveSelectedLinesUp();
-        }
-        else if (altPressed && key == Key.Down) // remove !
-        {
-            model.MoveSelectedLinesDown();
         }
         // without any modifiers
         else if (key == Key.Up)

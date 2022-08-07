@@ -22,9 +22,7 @@ public class MainViewModel
 
     public ICommand GotoLineCommand => new ActionCommand(GotoLine);
 
-    public ICommand RedoCommand => new ActionCommand(Redo);
-
-    public ICommand UndoCommand => new ActionCommand(Undo);
+    public ICommand KeyDownCommand { get; }
 
     private bool _isReadOnly;
     public bool IsReadOnly
@@ -38,6 +36,7 @@ public class MainViewModel
         CodeProvider = new SqlCodeProvider();
         CodeTextBoxModel = new CodeTextBoxModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
+        KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 
     private void CopyText()
@@ -60,13 +59,46 @@ public class MainViewModel
         }
     }
 
-    private void Redo()
+    private void KeyDown(KeyEventArgs e)
     {
-        CodeTextBoxModel.History.Redo();
-    }
-
-    private void Undo()
-    {
-        CodeTextBoxModel.History.Undo();
+        var key = e.Key == Key.System ? e.SystemKey : e.Key;
+        var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+        var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+        var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+        if (controlPressed && !altPressed && !shiftPressed && key == Key.L)
+        {
+            CodeTextBoxModel.DeleteSelectedLines();
+            e.Handled = true;
+        }
+        else if (controlPressed && !altPressed && !shiftPressed && key == Key.Z)
+        {
+            CodeTextBoxModel.History.Undo();
+            e.Handled = true;
+        }
+        else if (controlPressed && !altPressed && !shiftPressed && key == Key.Y)
+        {
+            CodeTextBoxModel.History.Redo();
+            e.Handled = true;
+        }
+        else if (controlPressed && !altPressed && shiftPressed && key == Key.U)
+        {
+            CodeTextBoxModel.ToUpperCase();
+            e.Handled = true;
+        }
+        else if (controlPressed && !altPressed && !shiftPressed && key == Key.U)
+        {
+            CodeTextBoxModel.ToLowerCase();
+            e.Handled = true;
+        }
+        else if (!controlPressed && altPressed && !shiftPressed && key == Key.Up)
+        {
+            CodeTextBoxModel.MoveSelectedLinesUp();
+            e.Handled = true;
+        }
+        else if (!controlPressed && altPressed && !shiftPressed && key == Key.Down)
+        {
+            CodeTextBoxModel.MoveSelectedLinesDown();
+            e.Handled = true;
+        }
     }
 }

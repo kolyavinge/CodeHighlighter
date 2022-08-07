@@ -3,15 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:highlighter="clr-namespace:CodeHighlighter;assembly=CodeHighlighter"
+        xmlns:highlighter="clr-namespace:CodeHighlighter;assembly=CodeHighlighter" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="MainView"
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1200">
-    <Window.InputBindings>
-        <KeyBinding Modifiers="Ctrl" Key="Y" Command="{Binding DataContext.RedoCommand, ElementName=codeTextBox}" />
-        <KeyBinding Modifiers="Ctrl" Key="Z" Command="{Binding DataContext.UndoCommand, ElementName=codeTextBox}" />
-    </Window.InputBindings>
     <Grid>
         <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
             <ComboBox Name="fontSizeComboBox" SelectedIndex="3">
@@ -41,8 +37,7 @@
             Foreground="DimGray"
             Margin="0,24,0,28"
             Width="50"
-            HorizontalAlignment="Left"
-            />
+            HorizontalAlignment="Left" />
 
         <highlighter:CodeTextBox
             x:Name="codeTextBox"
@@ -53,8 +48,12 @@
             Background="Azure"
             HighlightPairBracketsBrush="GreenYellow"
             HighlightNoPairBracketBrush="IndianRed"
-            CursorLineHighlightingBrush="Linen"
-            >
+            CursorLineHighlightingBrush="Linen">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="PreviewKeyDown">
+                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         </highlighter:CodeTextBox>
 
         <ScrollBar
@@ -66,8 +65,7 @@
             Width="28"
             Margin="0,8,0,17"
             HorizontalAlignment="Right"
-            Cursor="Arrow"
-            />
+            Cursor="Arrow" />
 
         <ScrollBar
             x:Name="horizontalScrollBar"
@@ -76,7 +74,6 @@
             Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
             ViewportSize="{Binding HorizontalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
             VerticalAlignment="Bottom"
-            Cursor="Arrow"
-            />
+            Cursor="Arrow" />
     </Grid>
 </Window>
