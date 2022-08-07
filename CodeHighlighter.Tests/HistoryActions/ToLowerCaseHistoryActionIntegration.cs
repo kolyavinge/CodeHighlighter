@@ -20,6 +20,7 @@ internal class ToLowerCaseHistoryActionIntegration : BaseHistoryActionIntegratio
     {
         _context.InputModel.MoveCursorStartLine();
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -41,5 +42,7 @@ internal class ToLowerCaseHistoryActionIntegration : BaseHistoryActionIntegratio
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("TExt\r\na", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

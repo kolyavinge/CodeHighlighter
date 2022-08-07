@@ -8,6 +8,5 @@ internal class MoveCursorPageUpInputAction
     {
         context.InputModel.MoveCursorPageUp(context.Viewport.GetLinesCountInViewport());
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.CodeTextBox?.InvalidateVisual();
     }
 }

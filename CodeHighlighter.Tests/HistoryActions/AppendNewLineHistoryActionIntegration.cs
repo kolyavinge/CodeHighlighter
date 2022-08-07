@@ -32,6 +32,8 @@ internal class AppendNewLineHistoryActionIntegration : BaseHistoryActionIntegrat
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("t\r\next", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -53,5 +55,7 @@ internal class AppendNewLineHistoryActionIntegration : BaseHistoryActionIntegrat
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("t\r\nxt", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

@@ -8,6 +8,5 @@ internal class MoveCursorTextEndInputAction
     {
         context.InputModel.MoveCursorTextEnd();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.CodeTextBox?.InvalidateVisual();
     }
 }

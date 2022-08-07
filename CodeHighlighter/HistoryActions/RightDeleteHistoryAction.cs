@@ -6,13 +6,15 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
 {
-    public RightDeleteHistoryAction(InputActionContext context) : base(context)
+    public RightDeleteHistoryAction(HistoryActionContext context) : base(context)
     {
     }
 
     public override bool Do()
     {
         _result = RightDeleteInputAction.Instance.Do(_context);
+        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+
         return _result.HasDeleted;
     }
 
@@ -23,6 +25,7 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
         var deletedSelectedText = !String.IsNullOrWhiteSpace(_result!.DeletedSelectedText) ? _result!.DeletedSelectedText : _result.CharCharDeleteResult.DeletedChar.ToString();
         InsertTextInputAction.Instance.Do(_context, deletedSelectedText);
         SetCursorToStartPosition();
+        _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
@@ -37,5 +40,6 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
             SetCursorToStartPosition();
         }
         RightDeleteInputAction.Instance.Do(_context);
+        _context.CodeTextBox?.InvalidateVisual();
     }
 }

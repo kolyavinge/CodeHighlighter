@@ -20,6 +20,7 @@ internal class DeleteLeftTokenHistoryActionIntegration : BaseHistoryActionIntegr
     {
         _context.InputModel.MoveCursorTo(new(0, 0));
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -39,6 +40,8 @@ internal class DeleteLeftTokenHistoryActionIntegration : BaseHistoryActionIntegr
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("t\r\n123", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -58,6 +61,8 @@ internal class DeleteLeftTokenHistoryActionIntegration : BaseHistoryActionIntegr
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text123", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -79,5 +84,7 @@ internal class DeleteLeftTokenHistoryActionIntegration : BaseHistoryActionIntegr
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("tex23", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

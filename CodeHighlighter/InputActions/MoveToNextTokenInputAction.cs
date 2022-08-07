@@ -8,6 +8,5 @@ internal class MoveToNextTokenInputAction
     {
         context.InputModel.MoveToNextToken();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.CodeTextBox?.InvalidateVisual();
     }
 }

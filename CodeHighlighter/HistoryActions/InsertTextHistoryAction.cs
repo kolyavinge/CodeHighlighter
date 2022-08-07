@@ -7,7 +7,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
 {
     private readonly string _insertedText;
 
-    public InsertTextHistoryAction(InputActionContext context, string insertedText) : base(context)
+    public InsertTextHistoryAction(HistoryActionContext context, string insertedText) : base(context)
     {
         _insertedText = insertedText;
     }
@@ -15,6 +15,8 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
     public override bool Do()
     {
         _result = InsertTextInputAction.Instance.Do(_context, _insertedText);
+        if (_result.HasInserted) _context.CodeTextBox?.InvalidateVisual();
+
         return _result.HasInserted;
     }
 
@@ -32,6 +34,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             InsertTextInputAction.Instance.Do(_context, "");
         }
         SetCursorToStartPosition();
+        _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
@@ -46,5 +49,6 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             SetCursorToStartPosition();
         }
         InsertTextInputAction.Instance.Do(_context, _insertedText);
+        _context.CodeTextBox?.InvalidateVisual();
     }
 }

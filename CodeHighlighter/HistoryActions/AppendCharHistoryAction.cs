@@ -7,7 +7,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
 {
     private readonly char _appendedChar;
 
-    public AppendCharHistoryAction(InputActionContext context, char appendedChar) : base(context)
+    public AppendCharHistoryAction(HistoryActionContext context, char appendedChar) : base(context)
     {
         _appendedChar = appendedChar;
     }
@@ -15,6 +15,8 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
     public override bool Do()
     {
         _result = AppendCharInputAction.Instance.Do(_context, _appendedChar);
+        _context.CodeTextBox?.InvalidateVisual();
+
         return true;
     }
 
@@ -32,6 +34,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
             RightDeleteInputAction.Instance.Do(_context);
         }
         SetCursorToStartPosition();
+        _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
@@ -46,5 +49,6 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
             SetCursorToStartPosition();
         }
         AppendCharInputAction.Instance.Do(_context, _appendedChar);
+        _context.CodeTextBox?.InvalidateVisual();
     }
 }

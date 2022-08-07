@@ -10,7 +10,6 @@ internal class ToUpperCaseInputAction
     {
         var result = context.InputModel.SetSelectedTextCase(TextCase.Upper);
         context.RaiseTextChanged();
-        context.CodeTextBox?.InvalidateVisual();
 
         return result;
     }

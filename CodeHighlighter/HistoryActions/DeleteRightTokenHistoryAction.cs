@@ -5,13 +5,15 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResult>
 {
-    public DeleteRightTokenHistoryAction(InputActionContext context) : base(context)
+    public DeleteRightTokenHistoryAction(HistoryActionContext context) : base(context)
     {
     }
 
     public override bool Do()
     {
         _result = DeleteRightTokenInputAction.Instance.Do(_context);
+        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+
         return _result.HasDeleted;
     }
 
@@ -21,6 +23,7 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
         SetCursorToEndPosition();
         InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
         SetCursorToStartPosition();
+        _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
@@ -35,5 +38,6 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
             SetCursorToStartPosition();
         }
         DeleteRightTokenInputAction.Instance.Do(_context);
+        _context.CodeTextBox?.InvalidateVisual();
     }
 }

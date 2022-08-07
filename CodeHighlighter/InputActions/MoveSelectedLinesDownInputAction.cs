@@ -10,7 +10,6 @@ internal class MoveSelectedLinesDownInputAction
     {
         var result = context.InputModel.MoveSelectedLinesDown();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.CodeTextBox?.InvalidateVisual();
 
         return result;
     }

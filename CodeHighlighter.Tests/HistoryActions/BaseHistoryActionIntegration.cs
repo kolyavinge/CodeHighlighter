@@ -1,5 +1,5 @@
 ﻿using System;
-using CodeHighlighter.InputActions;
+using CodeHighlighter.HistoryActions;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
@@ -16,7 +16,8 @@ internal class BaseHistoryActionIntegration
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly Action _raiseTextChanged;
-    protected InputActionContext _context;
+    protected Mock<ICodeTextBox> _codeTextBox;
+    protected HistoryActionContext _context;
 
     protected BaseHistoryActionIntegration()
     {
@@ -33,6 +34,8 @@ internal class BaseHistoryActionIntegration
     protected void MakeContext()
     {
         _context = new(_inputModel, _text, _textCursor, _textMeasures, _textSelection, _viewport, _viewportContext.Object, _raiseTextChanged);
+        _codeTextBox = new();
+        _context.CodeTextBox = _codeTextBox.Object;
     }
 
     protected void MakeUncompleteSelection()
@@ -51,5 +54,15 @@ internal class BaseHistoryActionIntegration
     {
         Assert.AreEqual(position.LineIndex, _context.TextCursor.LineIndex);
         Assert.AreEqual(position.ColumnIndex, _context.TextCursor.ColumnIndex);
+    }
+
+    protected void InvalidateVisualCallNever()
+    {
+        _codeTextBox.Verify(x => x.InvalidateVisual(), Times.Never());
+    }
+
+    protected void InvalidateVisualCallThreeTimes()
+    {
+        _codeTextBox.Verify(x => x.InvalidateVisual(), Times.Exactly(3));
     }
 }

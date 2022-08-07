@@ -8,6 +8,5 @@ internal class SelectAllInputAction
     {
         context.InputModel.SelectAll();
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.CodeTextBox?.InvalidateVisual();
     }
 }

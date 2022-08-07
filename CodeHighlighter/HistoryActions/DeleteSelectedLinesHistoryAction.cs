@@ -5,13 +5,15 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelectedLinesResult>
 {
-    public DeleteSelectedLinesHistoryAction(InputActionContext context) : base(context)
+    public DeleteSelectedLinesHistoryAction(HistoryActionContext context) : base(context)
     {
     }
 
     public override bool Do()
     {
         _result = DeleteSelectedLinesInputAction.Instance.Do(_context);
+        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+
         return _result.HasDeleted;
     }
 
@@ -28,6 +30,7 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
         }
         InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
         SetCursorToStartPosition();
+        _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
@@ -42,5 +45,6 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
             SetCursorToStartPosition();
         }
         DeleteSelectedLinesInputAction.Instance.Do(_context);
+        _context.CodeTextBox?.InvalidateVisual();
     }
 }

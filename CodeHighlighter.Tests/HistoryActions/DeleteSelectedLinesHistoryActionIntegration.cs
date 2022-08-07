@@ -20,6 +20,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     {
         _context.InputModel.SetText("");
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -39,6 +40,8 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("for 1\r\n123", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -58,6 +61,8 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\nfor 1\r\n", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -79,6 +84,8 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\n", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -101,5 +108,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\n456\r\n789", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

@@ -22,6 +22,7 @@ internal class InsertTextHistoryActionIntegrationIntegration : BaseHistoryAction
     {
         _action = new InsertTextHistoryAction(_context, "");
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -41,6 +42,8 @@ internal class InsertTextHistoryActionIntegrationIntegration : BaseHistoryAction
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text123\r\nfor 1", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -62,5 +65,7 @@ internal class InsertTextHistoryActionIntegrationIntegration : BaseHistoryAction
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\n123 1", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

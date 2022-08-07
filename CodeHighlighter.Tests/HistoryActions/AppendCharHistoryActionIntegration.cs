@@ -34,6 +34,8 @@ internal class AppendCharHistoryActionIntegration : BaseHistoryActionIntegration
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("textA\r\nfor 1", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -55,5 +57,7 @@ internal class AppendCharHistoryActionIntegration : BaseHistoryActionIntegration
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\nA 1", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

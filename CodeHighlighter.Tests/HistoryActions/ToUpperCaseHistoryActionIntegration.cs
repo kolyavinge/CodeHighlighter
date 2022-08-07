@@ -20,6 +20,7 @@ internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegratio
     {
         _context.InputModel.MoveCursorStartLine();
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -41,5 +42,7 @@ internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegratio
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("teXT\r\nA", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 }

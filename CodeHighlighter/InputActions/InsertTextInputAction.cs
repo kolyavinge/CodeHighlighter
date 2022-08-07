@@ -12,7 +12,6 @@ internal class InsertTextInputAction
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
         context.RaiseTextChanged();
-        context.CodeTextBox?.InvalidateVisual();
 
         return insertResult;
     }

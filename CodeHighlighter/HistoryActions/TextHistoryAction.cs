@@ -5,10 +5,10 @@ namespace CodeHighlighter.HistoryActions;
 
 internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where TEditTextResult : EditTextResult
 {
-    protected readonly InputActionContext _context;
+    protected readonly HistoryActionContext _context;
     protected TEditTextResult? _result;
 
-    protected TextHistoryAction(InputActionContext context)
+    protected TextHistoryAction(HistoryActionContext context)
     {
         _context = context;
     }
@@ -30,28 +30,20 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
 
     protected void RestoreSelection()
     {
-        _context.TextSelection.InProgress = false;
-        _context.TextSelection.StartCursorLineIndex = _result!.SelectionStart.LineIndex;
-        _context.TextSelection.StartCursorColumnIndex = _result!.SelectionStart.ColumnIndex;
-        _context.TextSelection.EndCursorLineIndex = _result.SelectionEnd.LineIndex;
-        _context.TextSelection.EndCursorColumnIndex = _result.SelectionEnd.ColumnIndex;
+        _context.TextSelection.Set(_result!.SelectionStart, _result.SelectionEnd);
     }
 
     protected void RestoreSelectionLineUp()
     {
-        _context.TextSelection.InProgress = false;
-        _context.TextSelection.StartCursorLineIndex = _result!.SelectionStart.LineIndex - 1;
-        _context.TextSelection.StartCursorColumnIndex = _result!.SelectionStart.ColumnIndex;
-        _context.TextSelection.EndCursorLineIndex = _result.SelectionEnd.LineIndex - 1;
-        _context.TextSelection.EndCursorColumnIndex = _result.SelectionEnd.ColumnIndex;
+        _context.TextSelection.Set(
+            new(_result!.SelectionStart.LineIndex - 1, _result!.SelectionStart.ColumnIndex),
+            new(_result.SelectionEnd.LineIndex - 1, _result.SelectionEnd.ColumnIndex));
     }
 
     protected void RestoreSelectionLineDown()
     {
-        _context.TextSelection.InProgress = false;
-        _context.TextSelection.StartCursorLineIndex = _result!.SelectionStart.LineIndex + 1;
-        _context.TextSelection.StartCursorColumnIndex = _result!.SelectionStart.ColumnIndex;
-        _context.TextSelection.EndCursorLineIndex = _result.SelectionEnd.LineIndex + 1;
-        _context.TextSelection.EndCursorColumnIndex = _result.SelectionEnd.ColumnIndex;
+        _context.TextSelection.Set(
+            new(_result!.SelectionStart.LineIndex + 1, _result!.SelectionStart.ColumnIndex),
+            new(_result.SelectionEnd.LineIndex + 1, _result.SelectionEnd.ColumnIndex));
     }
 }

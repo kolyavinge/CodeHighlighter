@@ -11,7 +11,5 @@ internal class GotoLineInputAction
         var offsetLine = lineIndex - context.Viewport.GetLinesCountInViewport() / 2;
         if (offsetLine < 0) offsetLine = 0;
         context.ViewportContext.VerticalScrollBarValue = offsetLine * context.TextMeasures.LineHeight;
-        context.CodeTextBox?.InvalidateVisual();
-        context.CodeTextBox?.Focus();
     }
 }

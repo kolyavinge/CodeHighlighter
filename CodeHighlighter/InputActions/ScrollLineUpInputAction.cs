@@ -7,6 +7,5 @@ internal class ScrollLineUpInputAction
     public void Do(InputActionContext context)
     {
         context.Viewport.ScrollLineUp();
-        context.CodeTextBox?.InvalidateVisual();
     }
 }

@@ -10,7 +10,6 @@ internal class ToLowerCaseInputAction
     {
         var result = context.InputModel.SetSelectedTextCase(TextCase.Lower);
         context.RaiseTextChanged();
-        context.CodeTextBox?.InvalidateVisual();
 
         return result;
     }

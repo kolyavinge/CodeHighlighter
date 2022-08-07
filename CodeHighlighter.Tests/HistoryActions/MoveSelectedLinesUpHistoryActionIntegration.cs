@@ -21,6 +21,7 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     {
         _context.InputModel.MoveCursorTo(new(0, 0));
         Assert.False(_action.Do());
+        InvalidateVisualCallNever();
     }
 
     [Test]
@@ -40,6 +41,8 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("111\r\n000\r\n222", _text.ToString());
+
+        InvalidateVisualCallThreeTimes();
     }
 
     [Test]
@@ -63,5 +66,7 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
         Assert.AreEqual("111\r\n222\r\n000", _text.ToString());
         Assert.AreEqual(new CursorPosition(0, 3), _context.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 1), _context.TextSelection.EndPosition);
+
+        InvalidateVisualCallThreeTimes();
     }
 }

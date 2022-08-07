@@ -13,7 +13,6 @@ internal class InputActionContext
     public Viewport Viewport { get; set; }
     public IViewportContext ViewportContext { get; set; }
     public Action RaiseTextChanged { get; }
-    public ICodeTextBox? CodeTextBox { get; set; }
 
     public InputActionContext(
         InputModel inputModel,

@@ -7,7 +7,7 @@ namespace CodeHighlighter.Model;
 
 public class CodeTextBoxModel
 {
-    private readonly InputActionContext _inputActionContext;
+    private readonly HistoryActionContext _historyActionContext;
     private ICodeTextBox? _codeTextBox;
 
     public event EventHandler? TextChanged;
@@ -38,7 +38,7 @@ public class CodeTextBoxModel
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "", Text, TextCursor);
-        _inputActionContext = new InputActionContext(InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, RaiseTextChanged);
+        _historyActionContext = new HistoryActionContext(InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, RaiseTextChanged);
         SetCodeProvider(codeProvider);
     }
 
@@ -47,9 +47,9 @@ public class CodeTextBoxModel
         _codeTextBox = codeTextBox;
         ViewportContext = viewportContext;
         Viewport = new Viewport(ViewportContext, TextMeasures);
-        _inputActionContext.CodeTextBox = _codeTextBox;
-        _inputActionContext.Viewport = Viewport;
-        _inputActionContext.ViewportContext = ViewportContext;
+        _historyActionContext.CodeTextBox = _codeTextBox;
+        _historyActionContext.Viewport = Viewport;
+        _historyActionContext.ViewportContext = ViewportContext;
     }
 
     private void SetCodeProvider(ICodeProvider codeProvider)
@@ -74,61 +74,162 @@ public class CodeTextBoxModel
         _codeTextBox?.InvalidateVisual();
     }
 
-    public void MoveCursorLeft() => MoveCursorLeftInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorLeft()
+    {
+        MoveCursorLeftInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorRight() => MoveCursorRightInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorRight()
+    {
+        MoveCursorRightInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorUp() => MoveCursorUpInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorUp()
+    {
+        MoveCursorUpInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorDown() => MoveCursorDownInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorDown()
+    {
+        MoveCursorDownInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorStartLine() => MoveCursorStartLineInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorStartLine()
+    {
+        MoveCursorStartLineInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorEndLine() => MoveCursorEndLineInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorEndLine()
+    {
+        MoveCursorEndLineInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorTextBegin() => MoveCursorTextBeginInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorTextBegin()
+    {
+        MoveCursorTextBeginInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorTextEnd() => MoveCursorTextEndInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorTextEnd()
+    {
+        MoveCursorTextEndInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorPageUp() => MoveCursorPageUpInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorPageUp()
+    {
+        MoveCursorPageUpInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveCursorPageDown() => MoveCursorPageDownInputAction.Instance.Do(_inputActionContext);
+    public void MoveCursorPageDown()
+    {
+        MoveCursorPageDownInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveSelectedLinesUp() => History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_inputActionContext));
+    public void MoveSelectedLinesUp()
+    {
+        History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_historyActionContext));
+    }
 
-    public void MoveSelectedLinesDown() => History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_inputActionContext));
+    public void MoveSelectedLinesDown()
+    {
+        History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_historyActionContext));
+    }
 
-    public void GotoLine(int lineIndex) => GotoLineInputAction.Instance.Do(_inputActionContext, lineIndex);
+    public void GotoLine(int lineIndex)
+    {
+        GotoLineInputAction.Instance.Do(_historyActionContext, lineIndex);
+        _codeTextBox?.InvalidateVisual();
+        _codeTextBox?.Focus();
+    }
 
-    public void ScrollLineUp() => ScrollLineUpInputAction.Instance.Do(_inputActionContext);
+    public void ScrollLineUp()
+    {
+        ScrollLineUpInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void ScrollLineDown() => ScrollLineDownInputAction.Instance.Do(_inputActionContext);
+    public void ScrollLineDown()
+    {
+        ScrollLineDownInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveToPrevToken() => MoveToPrevTokenInputAction.Instance.Do(_inputActionContext);
+    public void MoveToPrevToken()
+    {
+        MoveToPrevTokenInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void MoveToNextToken() => MoveToNextTokenInputAction.Instance.Do(_inputActionContext);
+    public void MoveToNextToken()
+    {
+        MoveToNextTokenInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void DeleteLeftToken() => History.AddAndDo(new DeleteLeftTokenHistoryAction(_inputActionContext));
+    public void DeleteLeftToken()
+    {
+        History.AddAndDo(new DeleteLeftTokenHistoryAction(_historyActionContext));
+    }
 
-    public void DeleteRightToken() => History.AddAndDo(new DeleteRightTokenHistoryAction(_inputActionContext));
+    public void DeleteRightToken()
+    {
+        History.AddAndDo(new DeleteRightTokenHistoryAction(_historyActionContext));
+    }
 
-    public void SelectAll() => SelectAllInputAction.Instance.Do(_inputActionContext);
+    public void SelectAll()
+    {
+        SelectAllInputAction.Instance.Do(_historyActionContext);
+        _codeTextBox?.InvalidateVisual();
+    }
 
-    public void AppendChar(char ch) => History.AddAndDo(new AppendCharHistoryAction(_inputActionContext, ch));
+    public void AppendChar(char ch)
+    {
+        History.AddAndDo(new AppendCharHistoryAction(_historyActionContext, ch));
+    }
 
-    public void AppendNewLine() => History.AddAndDo(new AppendNewLineHistoryAction(_inputActionContext));
+    public void AppendNewLine()
+    {
+        History.AddAndDo(new AppendNewLineHistoryAction(_historyActionContext));
+    }
 
-    public void InsertText(string insertedText) => History.AddAndDo(new InsertTextHistoryAction(_inputActionContext, insertedText));
+    public void InsertText(string insertedText)
+    {
+        History.AddAndDo(new InsertTextHistoryAction(_historyActionContext, insertedText));
+    }
 
-    public void DeleteSelectedLines() => History.AddAndDo(new DeleteSelectedLinesHistoryAction(_inputActionContext));
+    public void DeleteSelectedLines()
+    {
+        History.AddAndDo(new DeleteSelectedLinesHistoryAction(_historyActionContext));
+    }
 
-    public void LeftDelete() => History.AddAndDo(new LeftDeleteHistoryAction(_inputActionContext));
+    public void LeftDelete()
+    {
+        History.AddAndDo(new LeftDeleteHistoryAction(_historyActionContext));
+    }
 
-    public void RightDelete() => History.AddAndDo(new RightDeleteHistoryAction(_inputActionContext));
+    public void RightDelete()
+    {
+        History.AddAndDo(new RightDeleteHistoryAction(_historyActionContext));
+    }
 
-    public void ToUpperCase() => History.AddAndDo(new ToUpperCaseHistoryAction(_inputActionContext));
+    public void ToUpperCase()
+    {
+        History.AddAndDo(new ToUpperCaseHistoryAction(_historyActionContext));
+    }
 
-    public void ToLowerCase() => History.AddAndDo(new ToLowerCaseHistoryAction(_inputActionContext));
+    public void ToLowerCase()
+    {
+        History.AddAndDo(new ToLowerCaseHistoryAction(_historyActionContext));
+    }
 
     private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 }

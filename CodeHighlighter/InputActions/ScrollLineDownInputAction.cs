@@ -7,6 +7,5 @@ internal class ScrollLineDownInputAction
     public void Do(InputActionContext context)
     {
         context.Viewport.ScrollLineDown();
-        context.CodeTextBox?.InvalidateVisual();
     }
 }
