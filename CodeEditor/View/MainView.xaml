@@ -27,53 +27,64 @@
             <TextBox Text="{Binding SelectedLineToGoto}" Margin="8,0,0,0" Width="50" />
         </StackPanel>
 
-        <highlighter:LineNumberPanel
-            FontFamily="Consolas"
-            FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
-            VerticalScrollBarValue="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
-            TextLinesCount="{Binding TextLinesCount, ElementName=codeTextBox}"
-            TextLineHeight="{Binding TextLineHeight, ElementName=codeTextBox}"
-            Background="Linen"
-            Foreground="DimGray"
-            Margin="0,24,0,28"
-            Width="50"
-            HorizontalAlignment="Left" />
+        <Grid Margin="0,24,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <highlighter:CodeTextBox
-            x:Name="codeTextBox"
-            Model="{Binding CodeTextBoxModel}"
-            FontFamily="Consolas"
-            FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
-            Margin="58,24,38,28"
-            Background="Azure"
-            HighlightPairBracketsBrush="GreenYellow"
-            HighlightNoPairBracketBrush="IndianRed"
-            CursorLineHighlightingBrush="Linen">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="PreviewKeyDown">
-                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </highlighter:CodeTextBox>
+            <highlighter:LineNumberPanel
+                Grid.Column="0"
+                Margin="0,0,0,18"
+                HorizontalAlignment="Left"
+                FontFamily="Consolas"
+                FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
+                VerticalScrollBarValue="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+                TextLinesCount="{Binding TextLinesCount, ElementName=codeTextBox}"
+                TextLineHeight="{Binding TextLineHeight, ElementName=codeTextBox}"
+                Background="Linen"
+                Foreground="DimGray"
+                MinWidth="50" />
 
-        <ScrollBar
-            x:Name="verticalScrollBar"
-            Orientation="Vertical"
-            Maximum="{Binding VerticalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
-            Value="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
-            ViewportSize="{Binding VerticalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
-            Width="28"
-            Margin="0,8,0,17"
-            HorizontalAlignment="Right"
-            Cursor="Arrow" />
+            <highlighter:CodeTextBox
+                Grid.Column="1"
+                x:Name="codeTextBox"
+                Model="{Binding CodeTextBoxModel}"
+                FontFamily="Consolas"
+                FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
+                Margin="4,0,0,0"
+                Background="Azure"
+                HighlightPairBracketsBrush="GreenYellow"
+                HighlightNoPairBracketBrush="IndianRed"
+                CursorLineHighlightingBrush="Linen">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewKeyDown">
+                        <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </highlighter:CodeTextBox>
 
-        <ScrollBar
-            x:Name="horizontalScrollBar"
-            Orientation="Horizontal"
-            Maximum="{Binding HorizontalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
-            Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
-            ViewportSize="{Binding HorizontalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
-            VerticalAlignment="Bottom"
-            Cursor="Arrow" />
+            <ScrollBar
+                Grid.Column="1"
+                x:Name="verticalScrollBar"
+                Orientation="Vertical"
+                Maximum="{Binding VerticalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
+                Value="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+                ViewportSize="{Binding VerticalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+                Width="28"
+                Margin="0,8,0,17"
+                HorizontalAlignment="Right"
+                Cursor="Arrow" />
+
+            <ScrollBar
+                Grid.Column="1"
+                x:Name="horizontalScrollBar"
+                Orientation="Horizontal"
+                Maximum="{Binding HorizontalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
+                Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+                ViewportSize="{Binding HorizontalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+                VerticalAlignment="Bottom"
+                Cursor="Arrow" />
+        </Grid>
     </Grid>
 </Window>
