@@ -70,7 +70,7 @@
                 Orientation="Vertical"
                 Maximum="{Binding VerticalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
                 Value="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
-                ViewportSize="{Binding VerticalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+                ViewportSize="{Binding ViewportHeight, ElementName=codeTextBox, Mode=TwoWay}"
                 Width="28"
                 Margin="0,8,0,17"
                 HorizontalAlignment="Right"
@@ -82,7 +82,7 @@
                 Orientation="Horizontal"
                 Maximum="{Binding HorizontalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
                 Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
-                ViewportSize="{Binding HorizontalScrollBarViewportSize, ElementName=codeTextBox, Mode=TwoWay}"
+                ViewportSize="{Binding ViewportWidth, ElementName=codeTextBox, Mode=TwoWay}"
                 VerticalAlignment="Bottom"
                 Cursor="Arrow" />
         </Grid>

@@ -114,16 +114,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         DependencyProperty.Register("VerticalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-    #region VerticalScrollBarViewportSize
-    public double VerticalScrollBarViewportSize
-    {
-        get { return (double)GetValue(VerticalScrollBarViewportSizeProperty); }
-        set { SetValue(VerticalScrollBarViewportSizeProperty, value); }
-    }
-
-    public static readonly DependencyProperty VerticalScrollBarViewportSizeProperty =
-        DependencyProperty.Register("VerticalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
-    #endregion
 
     #region HorizontalScrollBarValue
     public double HorizontalScrollBarValue
@@ -156,15 +146,26 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         DependencyProperty.Register("HorizontalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-    #region HorizontalScrollBarViewportSize
-    public double HorizontalScrollBarViewportSize
+    #region ViewportWidth
+    public double ViewportWidth
     {
-        get { return (double)GetValue(HorizontalScrollBarViewportSizeProperty); }
-        set { SetValue(HorizontalScrollBarViewportSizeProperty, value); }
+        get { return (double)GetValue(ViewportWidthProperty); }
+        set { SetValue(ViewportWidthProperty, value); }
     }
 
-    public static readonly DependencyProperty HorizontalScrollBarViewportSizeProperty =
-        DependencyProperty.Register("HorizontalScrollBarViewportSize", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+    public static readonly DependencyProperty ViewportWidthProperty =
+        DependencyProperty.Register("ViewportWidth", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+    #endregion
+
+    #region ViewportHeight
+    public double ViewportHeight
+    {
+        get { return (double)GetValue(ViewportHeightProperty); }
+        set { SetValue(ViewportHeightProperty, value); }
+    }
+
+    public static readonly DependencyProperty ViewportHeightProperty =
+        DependencyProperty.Register("ViewportHeight", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
     private static void InitModel(CodeTextBox codeTextBox, CodeTextBoxModel model)
@@ -178,8 +179,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
         codeTextBox.TextLinesCount = model.Text.LinesCount;
         UpdateFontSettings(codeTextBox, model.FontSettings, model.TextMeasures);
-        codeTextBox.VerticalScrollBarViewportSize = codeTextBox.ActualHeight;
-        codeTextBox.HorizontalScrollBarViewportSize = codeTextBox.ActualWidth;
+        codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
+        codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
         model.Viewport.UpdateScrollbarsMaximumValues(model.Text);
     }
 
@@ -283,8 +284,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
         if (Model == null) return;
-        VerticalScrollBarViewportSize = sizeInfo.NewSize.Height;
-        HorizontalScrollBarViewportSize = sizeInfo.NewSize.Width;
+        ViewportHeight = sizeInfo.NewSize.Height;
+        ViewportWidth = sizeInfo.NewSize.Width;
         Model.Viewport.UpdateScrollbarsMaximumValues(Model.Text);
         InvalidateVisual();
     }
