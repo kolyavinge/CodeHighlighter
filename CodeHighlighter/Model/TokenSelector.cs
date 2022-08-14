@@ -4,18 +4,12 @@ namespace CodeHighlighter.Model;
 
 internal class TokenSelector
 {
-    public Token? GetTokenOnPosition(ITokens tokens, CursorPosition position)
-    {
-        if (position.LineIndex >= tokens.LinesCount) return default;
-        var lineTokens = tokens.GetTokens(position.LineIndex);
-        return lineTokens.FirstOrDefault(x => x.StartColumnIndex <= position.ColumnIndex && position.ColumnIndex <= x.EndColumnIndex + 1);
-    }
-
     public SelectedRange GetSelection(ITokens tokens, CursorPosition position)
     {
         if (position.LineIndex >= tokens.LinesCount) return default;
         var lineTokens = tokens.GetTokens(position.LineIndex);
-        var cursor = TokenCursorPosition.GetPosition(lineTokens, position.ColumnIndex);
+        var logic = new TokenCursorPositionLogic();
+        var cursor = logic.GetPositionExt(lineTokens, position.ColumnIndex);
         if (cursor.Position == TokenCursorPositionKind.StartLine)
         {
             return ToSelectedRange(cursor.Right);

@@ -17,36 +17,7 @@ internal class TokenSelectorTest
     }
 
     [Test]
-    public void GetTokenOnPosition()
-    {
-        // '  xx  yzz'
-        var tokens = new TokenList
-        {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
-        };
-        _tokens.SetupGet(x => x.LinesCount).Returns(1);
-        _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
-
-        Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, new(0, 0)));
-        Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, new(0, 1)));
-        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, new(0, 2)));
-        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, new(0, 3)));
-        Assert.AreEqual(new Token("xx", 2, 2, 0), _selector.GetTokenOnPosition(_tokens.Object, new(0, 4)));
-
-        Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, new(0, 5)));
-
-        Assert.AreEqual(new Token("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, new(0, 6)));
-
-        Assert.AreEqual(new Token("y", 6, 1, 1), _selector.GetTokenOnPosition(_tokens.Object, new(0, 7)));
-        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, new(0, 8)));
-        Assert.AreEqual(new Token("zz", 7, 2, 2), _selector.GetTokenOnPosition(_tokens.Object, new(0, 9)));
-        Assert.AreEqual(null, _selector.GetTokenOnPosition(_tokens.Object, new(0, 50)));
-    }
-
-    [Test]
-    public void GetToken_Empty()
+    public void GetSelection_Empty()
     {
         _tokens.Setup(x => x.GetTokens(0)).Returns(new TokenList());
         _tokens.SetupGet(x => x.LinesCount).Returns(0);
@@ -59,7 +30,7 @@ internal class TokenSelectorTest
     }
 
     [Test]
-    public void GetToken_EmptyLine()
+    public void GetSelection_EmptyLine()
     {
         _tokens.Setup(x => x.GetTokens(0)).Returns(new TokenList());
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
@@ -72,7 +43,7 @@ internal class TokenSelectorTest
     }
 
     [Test]
-    public void GetToken()
+    public void GetSelection()
     {
         // '  xx  yzz'
         var tokens = new TokenList

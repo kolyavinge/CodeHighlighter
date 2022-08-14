@@ -114,7 +114,6 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         DependencyProperty.Register("VerticalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-
     #region HorizontalScrollBarValue
     public double HorizontalScrollBarValue
     {

@@ -11,7 +11,8 @@ internal class TokenNavigator
             else return new(lineIndex, columnIndex);
         }
         var lineTokens = tokens.GetTokens(lineIndex);
-        var cursor = TokenCursorPosition.GetPosition(lineTokens, columnIndex);
+        var logic = new TokenCursorPositionLogic();
+        var cursor = logic.GetPositionExt(lineTokens, columnIndex);
         if (cursor.Position == TokenCursorPositionKind.StartLine && columnIndex == cursor.Right.StartColumnIndex)
         {
             return GetNextCursorPosition(text, lineIndex, lineTokens, cursor.Right);
@@ -46,7 +47,8 @@ internal class TokenNavigator
             else return new(lineIndex, columnIndex);
         }
         var lineTokens = tokens.GetTokens(lineIndex);
-        var cursor = TokenCursorPosition.GetPosition(lineTokens, columnIndex);
+        var logic = new TokenCursorPositionLogic();
+        var cursor = logic.GetPositionExt(lineTokens, columnIndex);
         if (cursor.Position == TokenCursorPositionKind.StartLine)
         {
             return new(lineIndex, 0);

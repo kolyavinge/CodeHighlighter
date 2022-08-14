@@ -26,10 +26,11 @@ public class Tokens : ITokens
         return _tokens[lineIndex];
     }
 
-    public Token? GetTokenOnPosition(CursorPosition position)
+    public TokenCursorPosition? GetTokenOnPosition(CursorPosition position)
     {
-        var selector = new TokenSelector();
-        return selector.GetTokenOnPosition(this, position);
+        var lineTokens = _tokens[position.LineIndex];
+        var logic = new TokenCursorPositionLogic();
+        return logic.GetPosition(lineTokens, position.ColumnIndex);
     }
 
     internal void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount)
