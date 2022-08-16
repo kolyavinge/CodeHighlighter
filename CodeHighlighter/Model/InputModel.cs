@@ -445,7 +445,7 @@ internal class InputModel
 
     private void SetTokens()
     {
-        var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(Text)).ToList();
+        var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(Text, 0, Text.LinesCount - 1)).ToList();
         Tokens.SetTokens(codeProviderTokens, 0, Text.LinesCount);
         TokenColors.SetColors(_codeProvider.GetColors());
     }

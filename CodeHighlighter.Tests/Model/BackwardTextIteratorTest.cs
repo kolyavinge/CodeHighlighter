@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using System;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
@@ -6,6 +7,48 @@ namespace CodeHighlighter.Tests.Model;
 class BackwardTextIteratorTest
 {
     private BackwardTextIterator _iterator;
+
+    [Test]
+    public void NegativeStartLineIndex_Error()
+    {
+        try
+        {
+            new BackwardTextIterator(new Text(), -1, 10);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("startLineIndex", e.Message);
+        }
+    }
+
+    [Test]
+    public void NegativeEndLineIndex_Error()
+    {
+        try
+        {
+            new BackwardTextIterator(new Text(), 0, -1);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("endLineIndex", e.Message);
+        }
+    }
+
+    [Test]
+    public void NegativeStartLineIndexGreaterThenEndLineIndex_Error()
+    {
+        try
+        {
+            new BackwardTextIterator(new Text(), 10, 2);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("endLineIndex must be greater then startLineIndex", e.Message);
+        }
+    }
 
     [Test]
     public void Empty()
@@ -208,7 +251,7 @@ class BackwardTextIteratorTest
     }
 
     [Test]
-    public void OnlyTwoLine()
+    public void OnlyFirstTwoLines()
     {
         SetText("1\n2\n3", 0, 1);
 
@@ -226,11 +269,30 @@ class BackwardTextIteratorTest
         Assert.True(_iterator.Eof);
     }
 
+    [Test]
+    public void OnlyLastTwoLines()
+    {
+        SetText("1\n2\n3", 1, 2);
+
+        Assert.AreEqual('3', _iterator.Char);
+
+        _iterator.MoveNext();
+        Assert.AreEqual('\n', _iterator.Char);
+
+        _iterator.MoveNext();
+        Assert.AreEqual('2', _iterator.Char);
+
+        _iterator.MoveNext();
+        Assert.AreEqual(0, _iterator.Char);
+        Assert.AreEqual(1, _iterator.LineIndex);
+        Assert.True(_iterator.Eof);
+    }
+
     private void SetText(string textString)
     {
         var text = new Text();
         text.TextContent = textString;
-        _iterator = new BackwardTextIterator(text);
+        _iterator = new BackwardTextIterator(text, 0, text.LinesCount - 1);
     }
 
     private void SetText(string textString, int startLineIndex, int endLineIndex)

@@ -221,6 +221,6 @@ from MyTable'";
     {
         var text = new CodeHighlighter.Model.Text();
         text.TextContent = textString;
-        return _provider.GetTokens(new CodeHighlighter.Model.ForwardTextIterator(text)).ToList();
+        return _provider.GetTokens(new CodeHighlighter.Model.ForwardTextIterator(text, 0, text.LinesCount - 1)).ToList();
     }
 }

@@ -109,6 +109,7 @@ public static class TextIteratorBuilder
 {
     public static ITextIterator FromString(string text)
     {
-        return new ForwardTextIterator(new Text(text));
+        var t = new Text(text);
+        return new ForwardTextIterator(t, 0, t.LinesCount - 1);
     }
 }

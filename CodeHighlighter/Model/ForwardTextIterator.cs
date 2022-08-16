@@ -26,18 +26,12 @@ internal class ForwardTextIterator : ITextIterator
     {
         get
         {
-            (char nextChar, int lineIndex, int columnIndex) = GetNextCharAndPosition();
+            var (nextChar, lineIndex, columnIndex) = GetNextCharAndPosition();
             return nextChar;
         }
     }
 
-    public ForwardTextIterator(IText text) : this(text, 0, text.LinesCount - 1)
-    {
-    }
-
-    public ForwardTextIterator(IText text, int startLineIndex, int endLineIndex) : this(text, startLineIndex, -1, endLineIndex)
-    {
-    }
+    public ForwardTextIterator(IText text, int startLineIndex, int endLineIndex) : this(text, startLineIndex, -1, endLineIndex) { }
 
     public ForwardTextIterator(IText text, int startLineIndex, int startColumnIndex, int endLineIndex)
     {

@@ -5,6 +5,7 @@ namespace CodeHighlighter.Model;
 internal class BackwardTextIterator : ITextIterator
 {
     private readonly IText _text;
+    private readonly int _startLineIndex;
     private TextLine _currentLine;
     private int _currentLineLength;
     private char _char;
@@ -24,18 +25,12 @@ internal class BackwardTextIterator : ITextIterator
     {
         get
         {
-            (char nextChar, int lineIndex, int columnIndex) = GetNextCharAndPosition();
+            var (nextChar, lineIndex, columnIndex) = GetNextCharAndPosition();
             return nextChar;
         }
     }
 
-    public BackwardTextIterator(IText text) : this(text, 0, text.LinesCount - 1)
-    {
-    }
-
-    public BackwardTextIterator(IText text, int startLineIndex, int endLineIndex) : this(text, startLineIndex, text.GetLine(text.LinesCount - 1).Length, endLineIndex)
-    {
-    }
+    public BackwardTextIterator(IText text, int startLineIndex, int endLineIndex) : this(text, startLineIndex, text.GetLine(text.LinesCount - 1).Length, endLineIndex) { }
 
     public BackwardTextIterator(IText text, int startLineIndex, int startColumnIndex, int endLineIndex)
     {
@@ -43,6 +38,7 @@ internal class BackwardTextIterator : ITextIterator
         if (endLineIndex < 0) throw new ArgumentException(nameof(endLineIndex));
         if (endLineIndex < startLineIndex) throw new ArgumentException("endLineIndex must be greater then startLineIndex");
         _text = text;
+        _startLineIndex = startLineIndex;
         _lineIndex = endLineIndex;
         _columnIndex = startColumnIndex;
         _currentLine = _text.GetLine(_lineIndex);
@@ -69,7 +65,7 @@ internal class BackwardTextIterator : ITextIterator
         {
             return (_currentLine[columnIndex], lineIndex, columnIndex);
         }
-        else if (columnIndex == -1 && lineIndex > 0)
+        else if (columnIndex == -1 && lineIndex > _startLineIndex)
         {
             lineIndex--;
             _currentLine = _text.GetLine(lineIndex);
