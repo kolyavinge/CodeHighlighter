@@ -1,5 +1,4 @@
-﻿using System;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
 

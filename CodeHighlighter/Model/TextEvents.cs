@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CodeHighlighter.Model;
+﻿namespace CodeHighlighter.Model;
 
 internal class TextEvents
 {

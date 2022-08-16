@@ -1,5 +1,4 @@
-﻿using System;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 

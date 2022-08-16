@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace CodeHighlighter.Model;
+﻿namespace CodeHighlighter.Model;
 
 internal class TokenSelector
 {
