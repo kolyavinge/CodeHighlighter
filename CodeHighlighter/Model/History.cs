@@ -5,9 +5,9 @@ namespace CodeHighlighter.Model;
 
 internal interface IHistoryAction
 {
-    abstract bool Do();
-    abstract void Undo();
-    abstract void Redo();
+    bool Do();
+    void Undo();
+    void Redo();
 }
 
 internal abstract class HistoryAction : IHistoryAction

@@ -5,12 +5,7 @@ namespace CodeHighlighter.CodeProvidering;
 
 internal class EmptyCodeProvider : ICodeProvider
 {
-    public IEnumerable<Token> GetTokens(ITextIterator textIterator)
-    {
-        return Enumerable.Empty<Token>();
-    }
-    public IEnumerable<TokenColor> GetColors()
-    {
-        return Enumerable.Empty<TokenColor>();
-    }
+    public IEnumerable<Token> GetTokens(ITextIterator textIterator) => Enumerable.Empty<Token>();
+
+    public IEnumerable<TokenColor> GetColors() => Enumerable.Empty<TokenColor>();
 }

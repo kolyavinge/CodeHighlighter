@@ -28,20 +28,14 @@ public class Token
         Kind = kind;
     }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is Token token &&
-               Name == token.Name &&
-               LineIndex == token.LineIndex &&
-               StartColumnIndex == token.StartColumnIndex &&
-               Length == token.Length &&
-               Kind == token.Kind;
-    }
+    public override bool Equals(object? obj) => obj is Token token &&
+        Name == token.Name &&
+        LineIndex == token.LineIndex &&
+        StartColumnIndex == token.StartColumnIndex &&
+        Length == token.Length &&
+        Kind == token.Kind;
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, LineIndex, StartColumnIndex, Length, Kind);
-    }
+    public override int GetHashCode() => HashCode.Combine(Name, LineIndex, StartColumnIndex, Length, Kind);
 }
 
 public readonly struct TokenColor
@@ -82,17 +76,11 @@ public class UpdatedTokenKind
         Kind = kind;
     }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is UpdatedTokenKind kind &&
-               Name == kind.Name &&
-               Kind == kind.Kind;
-    }
+    public override bool Equals(object? obj) => obj is UpdatedTokenKind kind &&
+        Name == kind.Name &&
+        Kind == kind.Kind;
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Kind);
-    }
+    public override int GetHashCode() => HashCode.Combine(Name, Kind);
 }
 
 public interface ITextIterator

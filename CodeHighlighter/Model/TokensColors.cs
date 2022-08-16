@@ -17,8 +17,5 @@ internal class TokensColors
         }
     }
 
-    public Brush? GetColorBrushOrNull(byte tokenKind)
-    {
-        return _colors.ContainsKey(tokenKind) ? _colors[tokenKind] : null;
-    }
+    public Brush? GetColorBrushOrNull(byte tokenKind) => _colors.ContainsKey(tokenKind) ? _colors[tokenKind] : null;
 }

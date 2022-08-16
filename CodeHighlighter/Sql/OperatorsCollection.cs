@@ -13,16 +13,10 @@ internal class OperatorsCollection : IEnumerable<string>
         "NULL",
         "IN",
         "IS",
-        "EXISTS",
+        "EXISTS"
     };
 
-    public IEnumerator<string> GetEnumerator()
-    {
-        return _keywords.GetEnumerator();
-    }
+    public IEnumerator<string> GetEnumerator() => _keywords.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return _keywords.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => _keywords.GetEnumerator();
 }

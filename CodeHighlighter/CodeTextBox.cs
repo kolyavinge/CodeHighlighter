@@ -24,8 +24,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region Model
     public CodeTextBoxModel? Model
     {
-        get { return (CodeTextBoxModel?)GetValue(ModelProperty); }
-        set { SetValue(ModelProperty, value); }
+        get => (CodeTextBoxModel?)GetValue(ModelProperty);
+        set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(CodeTextBoxModel), typeof(CodeTextBox), new PropertyMetadata(ModelPropertyChangedCallback));
@@ -41,8 +41,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region SelectionBrush
     public Brush SelectionBrush
     {
-        get { return (Brush)GetValue(SelectionBrushProperty); }
-        set { SetValue(SelectionBrushProperty, value); }
+        get => (Brush)GetValue(SelectionBrushProperty);
+        set => SetValue(SelectionBrushProperty, value);
     }
 
     public static readonly DependencyProperty SelectionBrushProperty =
@@ -52,8 +52,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region HighlightBracketsBrush
     public Brush HighlightPairBracketsBrush
     {
-        get { return (Brush)GetValue(HighlightPairBracketsBrushProperty); }
-        set { SetValue(HighlightPairBracketsBrushProperty, value); }
+        get => (Brush)GetValue(HighlightPairBracketsBrushProperty);
+        set => SetValue(HighlightPairBracketsBrushProperty, value);
     }
 
     public static readonly DependencyProperty HighlightPairBracketsBrushProperty =
@@ -63,8 +63,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region HighlightNoPairBracketBrush
     public Brush HighlightNoPairBracketBrush
     {
-        get { return (Brush)GetValue(HighlightNoPairBracketBrushProperty); }
-        set { SetValue(HighlightNoPairBracketBrushProperty, value); }
+        get => (Brush)GetValue(HighlightNoPairBracketBrushProperty);
+        set => SetValue(HighlightNoPairBracketBrushProperty, value);
     }
 
     public static readonly DependencyProperty HighlightNoPairBracketBrushProperty =
@@ -74,8 +74,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region CursorLineHighlightingBrush
     public Brush CursorLineHighlightingBrush
     {
-        get { return (Brush)GetValue(CursorLineHighlightingBrushProperty); }
-        set { SetValue(CursorLineHighlightingBrushProperty, value); }
+        get => (Brush)GetValue(CursorLineHighlightingBrushProperty);
+        set => SetValue(CursorLineHighlightingBrushProperty, value);
     }
 
     public static readonly DependencyProperty CursorLineHighlightingBrushProperty =
@@ -85,8 +85,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region VerticalScrollBarValue
     public double VerticalScrollBarValue
     {
-        get { return (double)GetValue(VerticalScrollBarValueProperty); }
-        set { SetValue(VerticalScrollBarValueProperty, value); }
+        get => (double)GetValue(VerticalScrollBarValueProperty);
+        set => SetValue(VerticalScrollBarValueProperty, value);
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
@@ -105,8 +105,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region VerticalScrollBarMaximum
     public double VerticalScrollBarMaximum
     {
-        get { return (double)GetValue(VerticalScrollBarMaximumProperty); }
-        set { SetValue(VerticalScrollBarMaximumProperty, value); }
+        get => (double)GetValue(VerticalScrollBarMaximumProperty);
+        set => SetValue(VerticalScrollBarMaximumProperty, value);
     }
 
     public static readonly DependencyProperty VerticalScrollBarMaximumProperty =
@@ -116,8 +116,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region HorizontalScrollBarValue
     public double HorizontalScrollBarValue
     {
-        get { return (double)GetValue(HorizontalScrollBarValueProperty); }
-        set { SetValue(HorizontalScrollBarValueProperty, value); }
+        get => (double)GetValue(HorizontalScrollBarValueProperty);
+        set => SetValue(HorizontalScrollBarValueProperty, value);
     }
 
     public static readonly DependencyProperty HorizontalScrollBarValueProperty =
@@ -136,8 +136,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region HorizontalScrollBarMaximum
     public double HorizontalScrollBarMaximum
     {
-        get { return (double)GetValue(HorizontalScrollBarMaximumProperty); }
-        set { SetValue(HorizontalScrollBarMaximumProperty, value); }
+        get => (double)GetValue(HorizontalScrollBarMaximumProperty);
+        set => SetValue(HorizontalScrollBarMaximumProperty, value);
     }
 
     public static readonly DependencyProperty HorizontalScrollBarMaximumProperty =
@@ -147,8 +147,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region ViewportWidth
     public double ViewportWidth
     {
-        get { return (double)GetValue(ViewportWidthProperty); }
-        set { SetValue(ViewportWidthProperty, value); }
+        get => (double)GetValue(ViewportWidthProperty);
+        set => SetValue(ViewportWidthProperty, value);
     }
 
     public static readonly DependencyProperty ViewportWidthProperty =
@@ -158,8 +158,8 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     #region ViewportHeight
     public double ViewportHeight
     {
-        get { return (double)GetValue(ViewportHeightProperty); }
-        set { SetValue(ViewportHeightProperty, value); }
+        get => (double)GetValue(ViewportHeightProperty);
+        set => SetValue(ViewportHeightProperty, value);
     }
 
     public static readonly DependencyProperty ViewportHeightProperty =

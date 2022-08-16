@@ -20,7 +20,7 @@ public class TextLine : IEnumerable<char>
 
     internal string GetSubstring(int startIndex, int length)
     {
-        return new string(_symbs.Skip(startIndex).Take(length).ToArray());
+        return new(_symbs.Skip(startIndex).Take(length).ToArray());
     }
 
     internal void AppendChar(int columnIndex, char ch)
@@ -77,10 +77,7 @@ public class TextLine : IEnumerable<char>
         }
     }
 
-    public override string ToString()
-    {
-        return String.Join("", _symbs);
-    }
+    public override string ToString() => String.Join("", _symbs);
 
     public IEnumerator<char> GetEnumerator() => _symbs.GetEnumerator();
 

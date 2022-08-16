@@ -106,16 +106,10 @@ internal class FunctionsCollection : IEnumerable<string>
         "SCOPE_IDENTITY",
         "ERROR_MESSAGE",
         "DB_NAME",
-        "OBJECT_NAME",
+        "OBJECT_NAME"
     };
 
-    public IEnumerator<string> GetEnumerator()
-    {
-        return _functions.GetEnumerator();
-    }
+    public IEnumerator<string> GetEnumerator() => _functions.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return _functions.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => _functions.GetEnumerator();
 }

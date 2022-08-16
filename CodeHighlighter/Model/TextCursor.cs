@@ -13,10 +13,7 @@ public readonly struct CursorPosition
         ColumnIndex = columnIndex;
     }
 
-    public override string ToString()
-    {
-        return $"{LineIndex}:{ColumnIndex}";
-    }
+    public override string ToString() => $"{LineIndex}:{ColumnIndex}";
 }
 
 internal interface ITextCursor
@@ -132,8 +129,6 @@ public class TextCursor : ITextCursor
 
 internal static class TextCursorExt
 {
-    public static Point GetAbsolutePosition(this ITextCursor textCursor, TextMeasures textMeasures)
-    {
-        return new(textCursor.ColumnIndex * textMeasures.LetterWidth, textCursor.LineIndex * textMeasures.LineHeight);
-    }
+    public static Point GetAbsolutePosition(this ITextCursor cursor, TextMeasures measures) =>
+        new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);
 }

@@ -10,8 +10,8 @@ public class LineNumberPanel : Control
     #region VerticalScrollBarValue
     public double VerticalScrollBarValue
     {
-        get { return (double)GetValue(VerticalScrollBarValueProperty); }
-        set { SetValue(VerticalScrollBarValueProperty, value); }
+        get => (double)GetValue(VerticalScrollBarValueProperty);
+        set => SetValue(VerticalScrollBarValueProperty, value);
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
@@ -28,8 +28,8 @@ public class LineNumberPanel : Control
     #region TextLinesCount
     public int TextLinesCount
     {
-        get { return (int)GetValue(TextLinesCountProperty); }
-        set { SetValue(TextLinesCountProperty, value); }
+        get => (int)GetValue(TextLinesCountProperty);
+        set => SetValue(TextLinesCountProperty, value);
     }
 
     public static readonly DependencyProperty TextLinesCountProperty =
@@ -45,8 +45,8 @@ public class LineNumberPanel : Control
     #region TextLineHeight
     public double TextLineHeight
     {
-        get { return (double)GetValue(TextLineHeightProperty); }
-        set { SetValue(TextLineHeightProperty, value); }
+        get => (double)GetValue(TextLineHeightProperty);
+        set => SetValue(TextLineHeightProperty, value);
     }
 
     public static readonly DependencyProperty TextLineHeightProperty =

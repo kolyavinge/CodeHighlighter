@@ -37,7 +37,10 @@ public class Text : IText
         TextContent = text;
     }
 
-    public TextLine GetLine(int lineIndex) => _lines[lineIndex];
+    public TextLine GetLine(int lineIndex)
+    {
+        return _lines[lineIndex];
+    }
 
     internal void AppendNewLine(CursorPosition position)
     {
@@ -47,7 +50,7 @@ public class Text : IText
         _lines.Insert(position.LineIndex + 1, new TextLine(remains));
     }
 
-    internal static readonly HashSet<char> NotAllowedSymbols = new(new[] { '\n', '\r', '\b', '\u001B' });
+    internal static readonly IReadOnlyCollection<char> NotAllowedSymbols = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
 
     internal void AppendChar(CursorPosition position, char ch)
     {
@@ -180,16 +183,12 @@ public class Text : IText
         }
     }
 
-    public override string ToString()
-    {
-        return String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
-    }
+    public override string ToString() => String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
 
     internal readonly struct InsertResult
     {
         public readonly CursorPosition StartPosition;
         public readonly CursorPosition EndPosition;
-
         public bool HasInserted => !StartPosition.Equals(EndPosition);
 
         public InsertResult(CursorPosition startPosition, CursorPosition endPosition)
@@ -221,8 +220,5 @@ public class Text : IText
 
 internal static class TextExt
 {
-    public static int GetMaxLineWidth(this IText text)
-    {
-        return text.Lines.Select(x => x.Length).Max();
-    }
+    public static int GetMaxLineWidth(this IText text) => text.Lines.Select(x => x.Length).Max();
 }

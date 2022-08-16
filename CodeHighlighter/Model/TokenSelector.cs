@@ -34,10 +34,7 @@ internal class TokenSelector
         }
     }
 
-    private SelectedRange ToSelectedRange(Token token)
-    {
-        return new SelectedRange(token.StartColumnIndex, token.EndColumnIndex + 1);
-    }
+    private SelectedRange ToSelectedRange(Token token) => new(token.StartColumnIndex, token.EndColumnIndex + 1);
 
     public readonly struct SelectedRange
     {

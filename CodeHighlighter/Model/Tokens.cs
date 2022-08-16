@@ -103,22 +103,13 @@ public class Token
         Kind = kind;
     }
 
-    internal static Token FromCodeProviderToken(CodeProvidering.Token token)
-    {
-        return new(token.Name, token.StartColumnIndex, token.Length, token.Kind);
-    }
+    internal static Token FromCodeProviderToken(CodeProvidering.Token token) => new(token.Name, token.StartColumnIndex, token.Length, token.Kind);
 
-    public override bool Equals(object? obj)
-    {
-        return obj is Token token &&
-               Name == token.Name &&
-               StartColumnIndex == token.StartColumnIndex &&
-               Length == token.Length &&
-               Kind == token.Kind;
-    }
+    public override bool Equals(object? obj) => obj is Token token &&
+        Name == token.Name &&
+        StartColumnIndex == token.StartColumnIndex &&
+        Length == token.Length &&
+        Kind == token.Kind;
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, StartColumnIndex, Length, Kind);
-    }
+    public override int GetHashCode() => HashCode.Combine(Name, StartColumnIndex, Length, Kind);
 }

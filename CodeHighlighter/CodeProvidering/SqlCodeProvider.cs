@@ -205,34 +205,17 @@ public class SqlCodeProvider : ICodeProvider
         return _functions.Contains(result);
     }
 
-    private bool IsVariable(char[] tokenNameArray)
-    {
-        return tokenNameArray[0] == '@';
-    }
+    private bool IsVariable(char[] tokenNameArray) => tokenNameArray[0] == '@';
 
-    private bool IsIdentifier(char[] tokenNameArray)
-    {
-        return Char.IsLetter(tokenNameArray[0]) || tokenNameArray[0] == '_' || tokenNameArray[0] == '#';
-    }
+    private bool IsIdentifier(char[] tokenNameArray) => Char.IsLetter(tokenNameArray[0]) || tokenNameArray[0] == '_' || tokenNameArray[0] == '#';
 
-    private bool IsDelimiter(char ch)
-    {
-        return _delimiters.Contains(ch);
-    }
+    private bool IsDelimiter(char ch) => _delimiters.Contains(ch);
 
-    private bool IsSpace(char ch)
-    {
-        return ch == ' ' || ch == '\t';
-    }
+    private bool IsSpace(char ch) => ch == ' ' || ch == '\t';
 
-    private bool IsReturn(char ch)
-    {
-        return ch == '\n';
-    }
+    private bool IsReturn(char ch) => ch == '\n';
 
-    public IEnumerable<TokenColor> GetColors()
-    {
-        return new[]
+    public IEnumerable<TokenColor> GetColors() => new[]
         {
             new TokenColor((byte)TokenKind.Keyword, Colors.Blue),
             new TokenColor((byte)TokenKind.Operator, Colors.DimGray),
@@ -241,7 +224,6 @@ public class SqlCodeProvider : ICodeProvider
             new TokenColor((byte)TokenKind.String, Colors.Red),
             new TokenColor((byte)TokenKind.Comment, Colors.Green),
         };
-    }
 
     enum State
     {

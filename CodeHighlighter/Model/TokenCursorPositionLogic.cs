@@ -14,17 +14,11 @@ public class TokenCursorPosition
         NeighbourToken = neighbourToken;
     }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is TokenCursorPosition position &&
-               EqualityComparer<Token>.Default.Equals(TokenOnPosition, position.TokenOnPosition) &&
-               EqualityComparer<Token>.Default.Equals(NeighbourToken, position.NeighbourToken);
-    }
+    public override bool Equals(object? obj) => obj is TokenCursorPosition position &&
+        EqualityComparer<Token>.Default.Equals(TokenOnPosition, position.TokenOnPosition) &&
+        EqualityComparer<Token>.Default.Equals(NeighbourToken, position.NeighbourToken);
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(TokenOnPosition, NeighbourToken);
-    }
+    public override int GetHashCode() => HashCode.Combine(TokenOnPosition, NeighbourToken);
 }
 
 internal enum TokenCursorPositionKind
@@ -50,18 +44,12 @@ internal class TokenCursorPositionExt
         Right = right;
     }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is TokenCursorPositionExt position &&
-               Position == position.Position &&
-               EqualityComparer<Token>.Default.Equals(Left, position.Left) &&
-               EqualityComparer<Token>.Default.Equals(Right, position.Right);
-    }
+    public override bool Equals(object? obj) => obj is TokenCursorPositionExt position &&
+        Position == position.Position &&
+        EqualityComparer<Token>.Default.Equals(Left, position.Left) &&
+        EqualityComparer<Token>.Default.Equals(Right, position.Right);
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Position, Left, Right);
-    }
+    public override int GetHashCode() => HashCode.Combine(Position, Left, Right);
 }
 
 internal class TokenCursorPositionLogic

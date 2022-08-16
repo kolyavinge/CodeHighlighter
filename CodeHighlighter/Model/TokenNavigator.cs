@@ -75,8 +75,5 @@ internal class TokenNavigator
         return new(lineIndex, next.StartColumnIndex);
     }
 
-    private CursorPosition ToNewCursorPosition(int lineIndex, Token token)
-    {
-        return new(lineIndex, token.StartColumnIndex);
-    }
+    private CursorPosition ToNewCursorPosition(int lineIndex, Token token) => new(lineIndex, token.StartColumnIndex);
 }
