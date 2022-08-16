@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Media;
 using CodeHighlighter.Sql;
@@ -130,7 +129,7 @@ public class SqlCodeProvider : ICodeProvider
                     textIterator.MoveNext();
                     goto case State.Comment;
                 }
-            case State.String: // string
+            case State.String:
                 if (textIterator.Eof) goto case State.End;
                 if (textIterator.Char == '\'')
                 {
@@ -150,10 +149,7 @@ public class SqlCodeProvider : ICodeProvider
                 if (textIterator.Eof) goto case State.End;
                 if (IsReturn(textIterator.Char))
                 {
-                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
-                    tokenNameArrayIndex = 0;
-                    textIterator.MoveNext();
-                    goto case State.General;
+                    goto case State.EndUnknownToken;
                 }
                 else if (textIterator.Char == ']')
                 {
@@ -258,34 +254,6 @@ public class SqlCodeProvider : ICodeProvider
         EndUnknownToken,
         End
     }
-
-    class CharArrayEqualityComparer : IEqualityComparer<char[]>
-    {
-        private readonly int _arrayLength;
-
-        public CharArrayEqualityComparer(int arrayLength)
-        {
-            _arrayLength = arrayLength;
-        }
-
-        public bool Equals([AllowNull] char[] x, [AllowNull] char[] y)
-        {
-            if (x == null || y == null) return false;
-            var length = Math.Min(x.Length, y.Length);
-            if (length != _arrayLength) return false;
-            for (int i = 0; i < length; i++)
-            {
-                if (Char.ToUpper(x[i]) != Char.ToUpper(y[i])) return false;
-            }
-
-            return true;
-        }
-
-        public int GetHashCode(char[] obj)
-        {
-            return obj.Select(x => x.GetHashCode()).Sum();
-        }
-    }
 }
 
 internal enum TokenKind : byte
@@ -294,10 +262,7 @@ internal enum TokenKind : byte
     Keyword,
     Operator,
     Function,
-    Method,
-    Property,
     Variable,
-    Constant,
     String,
     Comment,
     Delimiter,

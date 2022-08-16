@@ -20,6 +20,16 @@ internal class TextCursorTest
     }
 
     [Test]
+    public void PositionToString()
+    {
+        Assert.AreEqual("0:0", _textCursor.Position.ToString());
+        _textCursor.MoveTo(new(1, 1));
+        Assert.AreEqual("1:1", _textCursor.Position.ToString());
+        _textCursor.MoveTo(new(2, 3));
+        Assert.AreEqual("2:3", _textCursor.Position.ToString());
+    }
+
+    [Test]
     public void MoveToEmptyText()
     {
         _textCursor = new TextCursor(new Text(""));

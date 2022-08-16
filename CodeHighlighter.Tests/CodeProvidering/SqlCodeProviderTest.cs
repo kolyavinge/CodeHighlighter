@@ -127,6 +127,15 @@ internal class SqlCodeProviderTest
     }
 
     [Test]
+    public void ReturnAfterIdentifier()
+    {
+        var text = "select * from [MyTable\n]";
+        var tokens = GetTokens(text);
+        Assert.AreEqual(4, tokens.Count);
+        Assert.AreEqual((byte)TokenKind.Other, tokens[3].Kind);
+    }
+
+    [Test]
     public void Comments()
     {
         var text = "select * from MyTable -- comments";

@@ -19,15 +19,15 @@ internal class TokenNavigatorTest
     }
 
     [Test]
-    public void MoveRight()
+    public void MoveRight_FromStartLine()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -54,6 +54,63 @@ internal class TokenNavigatorTest
     }
 
     [Test]
+    public void MoveRight_BetweenTokens()
+    {
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+        var tokens = new TokenList
+        {
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
+        };
+        _tokens.SetupGet(x => x.LinesCount).Returns(1);
+        _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
+
+        var result = _navigator.MoveRight(_text.Object, _tokens.Object, 0, 5);
+        Assert.AreEqual(0, result.LineIndex);
+        Assert.AreEqual(6, result.ColumnIndex);
+    }
+
+    [Test]
+    public void MoveRight_InToken()
+    {
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+        var tokens = new TokenList
+        {
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
+        };
+        _tokens.SetupGet(x => x.LinesCount).Returns(1);
+        _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
+
+        var result = _navigator.MoveRight(_text.Object, _tokens.Object, 0, 3);
+        Assert.AreEqual(0, result.LineIndex);
+        Assert.AreEqual(6, result.ColumnIndex);
+    }
+
+    [Test]
+    public void MoveRight_EndLine()
+    {
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+        var tokens = new TokenList
+        {
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
+        };
+        _tokens.SetupGet(x => x.LinesCount).Returns(1);
+        _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
+
+        var result = _navigator.MoveRight(_text.Object, _tokens.Object, 0, 10);
+        Assert.AreEqual(0, result.LineIndex);
+        Assert.AreEqual(11, result.ColumnIndex);
+    }
+
+    [Test]
     public void MoveRight_NextLine()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
@@ -61,15 +118,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         var tokens2 = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);
@@ -81,15 +138,15 @@ internal class TokenNavigatorTest
     }
 
     [Test]
-    public void MoveLeft()
+    public void MoveLeft_FromEndLine()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -116,6 +173,25 @@ internal class TokenNavigatorTest
     }
 
     [Test]
+    public void MoveLeft_InToken()
+    {
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+        var tokens = new TokenList
+        {
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
+        };
+        _tokens.SetupGet(x => x.LinesCount).Returns(1);
+        _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
+
+        var result = _navigator.MoveLeft(_text.Object, _tokens.Object, 0, 8);
+        Assert.AreEqual(0, result.LineIndex);
+        Assert.AreEqual(7, result.ColumnIndex);
+    }
+
+    [Test]
     public void MoveLeft_PrevLine()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("  xx  yzz  "));
@@ -123,15 +199,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         var tokens2 = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 2, 0),
+            new("y", 6, 1, 1),
+            new("zz", 7, 2, 2)
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);

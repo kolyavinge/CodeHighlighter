@@ -30,7 +30,7 @@ internal class TokenCursorPositionLogicTest
         {
             new("xx", 2, 2, 0),
             new("y", 6, 1, 1),
-            new("zz", 7, 2, 2),
+            new("zz", 7, 2, 2)
         };
 
         Assert.AreEqual(null, _logic.GetPosition(_tokens, 0));
@@ -61,7 +61,7 @@ internal class TokenCursorPositionLogicTest
         {
             new("xx", 2, 2, 0),
             new("y", 6, 1, 1),
-            new("zz", 7, 2, 2),
+            new("zz", 7, 2, 2)
         };
 
         var result = _logic.GetPositionExt(_tokens, 0);

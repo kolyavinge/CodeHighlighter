@@ -91,9 +91,9 @@ internal class TokenCursorPositionLogic
     public TokenCursorPositionExt GetPositionExt(TokenList lineTokens, int columnIndex)
     {
         if (!lineTokens.Any()) return TokenCursorPositionExt.Default;
-        if (columnIndex >= lineTokens.LastOrDefault().EndColumnIndex + 1)
+        if (columnIndex >= lineTokens.Last().EndColumnIndex + 1)
         {
-            return new(TokenCursorPositionKind.EndLine, lineTokens.LastOrDefault(), Token.Default);
+            return new(TokenCursorPositionKind.EndLine, lineTokens.Last(), Token.Default);
         }
         int index;
         if ((index = lineTokens.FindIndex(x => x.StartColumnIndex < columnIndex && columnIndex < x.EndColumnIndex + 1)) != -1)
@@ -119,6 +119,7 @@ internal class TokenCursorPositionLogic
             }
             else
             {
+                // never occured - might be deleted
                 return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
             }
         }

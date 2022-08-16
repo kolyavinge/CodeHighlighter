@@ -245,13 +245,7 @@ internal class KeywordsCollection : IEnumerable<string>
         "YMD",
     };
 
-    public IEnumerator<string> GetEnumerator()
-    {
-        return _keywords.GetEnumerator();
-    }
+    public IEnumerator<string> GetEnumerator() => _keywords.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return _keywords.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

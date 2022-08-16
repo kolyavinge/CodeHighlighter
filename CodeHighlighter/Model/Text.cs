@@ -58,7 +58,7 @@ public class Text : IText
 
     internal InsertResult Insert(CursorPosition position, Text insertedText)
     {
-        if (insertedText.LinesCount == 0) return default;
+        if (insertedText.VisibleLinesCount == 0) return default;
         CursorPosition endPosition;
         if (insertedText.LinesCount == 1)
         {
@@ -224,7 +224,6 @@ internal static class TextExt
 {
     public static int GetMaxLineWidth(this IText text)
     {
-        if (!text.Lines.Any()) return 0;
         return text.Lines.Select(x => x.Length).Max();
     }
 }

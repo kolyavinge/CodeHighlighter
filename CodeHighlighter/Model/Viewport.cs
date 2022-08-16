@@ -110,8 +110,8 @@ internal class Viewport
 
 internal class DummyViewportContext : IViewportContext
 {
-    public double ActualWidth { get; }
-    public double ActualHeight { get; }
+    public double ActualWidth => 0;
+    public double ActualHeight => 0;
     public double VerticalScrollBarValue { get; set; }
     public double VerticalScrollBarMaximum { get; set; }
     public double HorizontalScrollBarValue { get; set; }

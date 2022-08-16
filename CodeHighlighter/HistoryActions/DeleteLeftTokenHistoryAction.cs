@@ -32,7 +32,7 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
         {
             RestoreSelection();
         }
-        else
+        else // else might be deleted
         {
             ResetSelection();
             SetCursorToStartPosition();

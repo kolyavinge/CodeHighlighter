@@ -1,4 +1,6 @@
-﻿using CodeHighlighter.Model;
+﻿using System;
+using System.Linq;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
@@ -19,6 +21,14 @@ internal class TextTest
         Assert.AreEqual("", _text.ToString());
         Assert.AreEqual(1, _text.LinesCount);
         Assert.AreEqual(0, _text.VisibleLinesCount);
+    }
+
+    [Test]
+    public void TextContent()
+    {
+        _text.TextContent = "123\r\n456";
+        Assert.AreEqual("123\r\n456", _text.TextContent);
+        Assert.AreEqual("123\r\n456", _text.ToString());
     }
 
     [Test]
@@ -85,6 +95,50 @@ internal class TextTest
         SetText("123");
         _text.AppendChar(new(0, 3), 'a');
         Assert.AreEqual("123a", _text.ToString());
+    }
+
+    [Test]
+    public void AppendChar_NotAllowedSymbols()
+    {
+        try
+        {
+            _text.AppendChar(new(0, 0), '\n');
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\r');
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\b');
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\u001B');
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
     }
 
     [Test]
@@ -374,6 +428,16 @@ internal class TextTest
         Assert.AreEqual("", _text.ToString());
         _text.DeleteLine(0);
         Assert.AreEqual("", _text.ToString());
+    }
+
+    [Test]
+    public void DeleteLines()
+    {
+        SetText("123\n456");
+        _text.DeleteLines(0, 2);
+        Assert.AreEqual("", _text.ToString());
+        Assert.AreEqual(1, _text.Lines.Count());
+        Assert.AreEqual(0, _text.Lines.First().Length);
     }
 
     [Test]

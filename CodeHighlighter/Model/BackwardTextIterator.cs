@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.CodeProvidering;
+﻿using System;
+using CodeHighlighter.CodeProvidering;
 
 namespace CodeHighlighter.Model;
 
@@ -39,19 +40,15 @@ internal class BackwardTextIterator : ITextIterator
 
     public BackwardTextIterator(IText text, int startLineIndex, int startColumnIndex, int endLineIndex)
     {
+        if (startLineIndex < 0) throw new ArgumentException(nameof(startLineIndex));
+        if (endLineIndex < 0) throw new ArgumentException(nameof(endLineIndex));
+        if (endLineIndex < startLineIndex) throw new ArgumentException("endLineIndex must be greater then startLineIndex");
         _text = text;
         _lineIndex = endLineIndex;
         _columnIndex = startColumnIndex;
         _currentLine = _text.GetLine(_lineIndex);
         _currentLineLength = _currentLine.Length;
-        if (endLineIndex - startLineIndex >= 0)
-        {
-            MoveNext();
-        }
-        else
-        {
-            _eof = true;
-        }
+        MoveNext();
     }
 
     public void MoveNext()
