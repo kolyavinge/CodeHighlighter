@@ -34,7 +34,7 @@ internal class CursorRenderLogic
         var cursorAbsolutePoint = textCursor.GetAbsolutePosition(textMeasures);
         cursorAbsolutePoint.X -= viewportContext.HorizontalScrollBarValue;
         cursorAbsolutePoint.Y -= viewportContext.VerticalScrollBarValue;
-        _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor doesn't clipping on the left edge
+        _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor is not cropped to the left
         _cursorLine.Y1 = (int)(cursorAbsolutePoint.Y - 1);
         _cursorLine.X2 = (int)cursorAbsolutePoint.X;
         _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + textMeasures.LineHeight + 1);

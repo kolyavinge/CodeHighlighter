@@ -4,14 +4,14 @@ namespace CodeHighlighter.InputActions;
 
 internal class InputActionContext
 {
-    public InputModel InputModel { get; }
-    public Text Text { get; }
-    public TextCursor TextCursor { get; }
-    public TextMeasures TextMeasures { get; }
-    public TextSelection TextSelection { get; }
-    public Viewport Viewport { get; set; }
-    public IViewportContext ViewportContext { get; set; }
-    public Action RaiseTextChanged { get; }
+    public readonly InputModel InputModel;
+    public readonly Text Text;
+    public readonly TextCursor TextCursor;
+    public readonly TextMeasures TextMeasures;
+    public readonly TextSelection TextSelection;
+    public Viewport Viewport;
+    public IViewportContext ViewportContext;
+    public readonly Action RaiseTextChanged;
 
     public InputActionContext(
         InputModel inputModel,

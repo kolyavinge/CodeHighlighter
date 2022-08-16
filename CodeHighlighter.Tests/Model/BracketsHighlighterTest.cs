@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using System;
+using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
 using static CodeHighlighter.Model.BracketsHighlighter;
@@ -18,6 +19,20 @@ class BracketsHighlighterTest
         _text = new Mock<IText>();
         _textCursor = new Mock<ITextCursor>();
         _highlighter = new BracketsHighlighter("()", _text.Object, _textCursor.Object);
+    }
+
+    [Test]
+    public void BracketsStringContainsOddBracketsCount()
+    {
+        try
+        {
+            _highlighter = new BracketsHighlighter("(", _text.Object, _textCursor.Object);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("bracketsString", e.Message);
+        }
     }
 
     [Test]

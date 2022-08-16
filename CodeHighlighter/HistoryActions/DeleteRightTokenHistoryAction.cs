@@ -28,15 +28,7 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
 
     public override void Redo()
     {
-        if (_result!.IsSelectionExist)
-        {
-            RestoreSelection();
-        }
-        else // else might be deleted
-        {
-            ResetSelection();
-            SetCursorToStartPosition();
-        }
+        RestoreSelection();
         DeleteRightTokenInputAction.Instance.Do(_context);
         _context.CodeTextBox?.InvalidateVisual();
     }

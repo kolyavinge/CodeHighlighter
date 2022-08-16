@@ -100,15 +100,7 @@ internal class TokenCursorPositionLogic
         }
         else if ((index = lineTokens.FindIndex(x => x.EndColumnIndex + 1 == columnIndex)) != -1)
         {
-            if (index < lineTokens.Count)
-            {
-                return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index], lineTokens[index + 1]);
-            }
-            else
-            {
-                // never occured - might be deleted
-                return new(TokenCursorPositionKind.InToken, lineTokens[index], lineTokens[index]);
-            }
+            return new(TokenCursorPositionKind.BetweenTokens, lineTokens[index], lineTokens[index + 1]);
         }
         else
         {
