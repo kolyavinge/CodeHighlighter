@@ -6,10 +6,28 @@ internal class GotoLineInputAction
 
     public void Do(InputActionContext context, int lineIndex)
     {
-        lineIndex = lineIndex < context.Text.LinesCount ? lineIndex : context.Text.LinesCount;
+        if (lineIndex < 0) throw new ArgumentException(nameof(lineIndex));
+        lineIndex = CalculateLineIndex(lineIndex, context.Text.LinesCount);
+        var offsetLine = CalculateOffsetLine(lineIndex, context.Viewport.GetLinesCountInViewport());
         context.InputModel.MoveCursorTo(new(lineIndex, 0));
-        var offsetLine = lineIndex - context.Viewport.GetLinesCountInViewport() / 2;
+        context.ViewportContext.VerticalScrollBarValue = CalculateVerticalScrollBarValue(offsetLine, context.TextMeasures.LineHeight);
+    }
+
+    public int CalculateLineIndex(int lineIndex, int textLinesCount)
+    {
+        return lineIndex < textLinesCount ? lineIndex : textLinesCount;
+    }
+
+    public int CalculateOffsetLine(int lineIndex, int linesCountInViewport)
+    {
+        var offsetLine = lineIndex - linesCountInViewport / 2;
         if (offsetLine < 0) offsetLine = 0;
-        context.ViewportContext.VerticalScrollBarValue = offsetLine * context.TextMeasures.LineHeight;
+
+        return offsetLine;
+    }
+
+    public double CalculateVerticalScrollBarValue(int offsetLine, double lineHeight)
+    {
+        return offsetLine * lineHeight;
     }
 }

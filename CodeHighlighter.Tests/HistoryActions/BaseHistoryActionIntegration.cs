@@ -27,7 +27,7 @@ internal class BaseHistoryActionIntegration
         _textSelection = new(0, 0, 0, 0);
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
-        _raiseTextChanged = new Action(() => { });
+        _raiseTextChanged = () => { };
         _inputModel = new(_text, _textCursor, _textSelection, new());
     }
 
