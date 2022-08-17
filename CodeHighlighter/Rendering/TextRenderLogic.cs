@@ -18,7 +18,7 @@ internal class TextRenderLogic
         var typeface = new Typeface(fontSettings.FontFamily, fontSettings.FontStyle, fontSettings.FontWeight, fontSettings.FontStretch);
         var startLine = (int)(viewportContext.VerticalScrollBarValue / textMeasures.LineHeight);
         var linesCount = viewport.GetLinesCountInViewport();
-        var endLine = Math.Min(startLine + linesCount, inputModel.Text.VisibleLinesCount);
+        var endLine = Math.Min(startLine + linesCount, inputModel.Text.LinesCount);
         var offsetY = -(viewportContext.VerticalScrollBarValue % textMeasures.LineHeight);
         for (var lineIndex = startLine; lineIndex < endLine; lineIndex++)
         {

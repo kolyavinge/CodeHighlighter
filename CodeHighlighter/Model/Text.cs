@@ -7,6 +7,7 @@ internal interface IText
 {
     IEnumerable<TextLine> Lines { get; }
     int LinesCount { get; }
+    bool IsEmpty { get; }
     TextLine GetLine(int lineIndex);
 }
 
@@ -18,7 +19,7 @@ public class Text : IText
 
     public int LinesCount => _lines.Count;
 
-    internal int VisibleLinesCount => _lines.Count == 1 && !_lines[0].Any() ? 0 : _lines.Count;
+    public bool IsEmpty => _lines.Count == 1 && !_lines[0].Any();
 
     internal string TextContent
     {
@@ -60,7 +61,7 @@ public class Text : IText
 
     internal InsertResult Insert(CursorPosition position, Text insertedText)
     {
-        if (insertedText.VisibleLinesCount == 0) return default;
+        if (insertedText.IsEmpty) return default;
         CursorPosition endPosition;
         if (insertedText.LinesCount == 1)
         {

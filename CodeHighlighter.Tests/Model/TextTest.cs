@@ -20,7 +20,6 @@ internal class TextTest
     {
         Assert.AreEqual("", _text.ToString());
         Assert.AreEqual(1, _text.LinesCount);
-        Assert.AreEqual(0, _text.VisibleLinesCount);
     }
 
     [Test]
@@ -37,7 +36,6 @@ internal class TextTest
         SetText("");
         Assert.AreEqual("", _text.ToString());
         Assert.AreEqual(1, _text.LinesCount);
-        Assert.AreEqual(0, _text.VisibleLinesCount);
     }
 
     [Test]
@@ -46,7 +44,6 @@ internal class TextTest
         SetText(" ");
         Assert.AreEqual(" ", _text.ToString());
         Assert.AreEqual(1, _text.LinesCount);
-        Assert.AreEqual(1, _text.VisibleLinesCount);
     }
 
     [Test]
