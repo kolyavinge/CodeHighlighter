@@ -18,6 +18,28 @@ internal class InputModelIntegration
     }
 
     [Test]
+    public void SetText_ResetCursor_1()
+    {
+        _model.SetText("123");
+        _model.MoveCursorTextEnd();
+
+        _model.SetText("");
+
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+    }
+
+    [Test]
+    public void SetText_ResetCursor_2()
+    {
+        _model.SetText("123");
+        _model.MoveCursorTextEnd();
+
+        _model.SetText("1");
+
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+    }
+
+    [Test]
     public void AppendChar()
     {
         var result = _model.AppendChar('0');

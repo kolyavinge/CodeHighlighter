@@ -41,6 +41,7 @@ internal class InputModel
 
     public void SetText(string text)
     {
+        TextCursor.MoveTextBegin();
         Text.TextContent = text;
         SetTokens();
     }

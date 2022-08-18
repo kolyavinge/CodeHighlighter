@@ -28,7 +28,7 @@ internal class AppendCharHistoryActionIntegration : BaseHistoryActionIntegration
 
         MakeUncompleteSelection();
         _action.Undo();
-        _context.InputModel.SetText("text\r\nfor 1");
+        Assert.AreEqual("text\r\nfor 1", _text.ToString());
         AssertCursorPosition(new(0, 4));
 
         MakeUncompleteSelection();
