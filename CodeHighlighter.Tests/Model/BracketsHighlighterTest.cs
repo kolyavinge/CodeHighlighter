@@ -47,6 +47,9 @@ class BracketsHighlighterTest
         Assert.AreEqual(HighlightKind.NoHighlight, _result.Kind);
         Assert.AreEqual(default(BracketPosition), _result.Open);
         Assert.AreEqual(default(BracketPosition), _result.Close);
+        _textCursor.VerifyGet(x => x.LineIndex, Times.Never());
+        _textCursor.VerifyGet(x => x.ColumnIndex, Times.Never());
+        _text.Verify(x => x.GetLine(It.IsAny<int>()), Times.Never());
     }
 
     [Test]

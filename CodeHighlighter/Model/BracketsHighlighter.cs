@@ -23,6 +23,8 @@ internal class BracketsHighlighter
 
     public HighlightResult GetHighlightedBrackets()
     {
+        if (!_bracketPairs.Any()) return new(HighlightKind.NoHighlight, default, default);
+
         var cursorLineIndex = _textCursor.LineIndex;
         var cursorColumnIndex = _textCursor.ColumnIndex;
 
