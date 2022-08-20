@@ -35,7 +35,7 @@
 
             <highlighter:LineNumberPanel
                 Grid.Column="0"
-                Margin="0,0,0,18"
+                Margin="0,0,0,17"
                 HorizontalAlignment="Left"
                 FontFamily="Consolas"
                 FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
@@ -52,7 +52,7 @@
                 Model="{Binding CodeTextBoxModel}"
                 FontFamily="Consolas"
                 FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
-                Margin="4,0,0,0"
+                Margin="4,0,0,17"
                 Background="Azure"
                 HighlightPairBracketsBrush="GreenYellow"
                 HighlightNoPairBracketBrush="IndianRed"

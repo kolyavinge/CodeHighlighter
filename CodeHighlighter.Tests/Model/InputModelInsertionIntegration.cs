@@ -25,6 +25,8 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("XXX", _model.Text.ToString());
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(1, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
     }
 
     [Test]
@@ -35,6 +37,10 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("XXX\r\nYYY\r\nZZZ", _model.Text.ToString());
         Assert.AreEqual(2, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(3, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(2).Count);
     }
 
     [Test]
@@ -46,6 +52,8 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("01234XXX56789", _model.Text.ToString());
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(8, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(1, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
     }
 
     [Test]
@@ -57,6 +65,10 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ56789", _model.Text.ToString());
         Assert.AreEqual(2, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(3, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(2).Count);
     }
 
     [Test]
@@ -71,6 +83,10 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ789", _model.Text.ToString());
         Assert.AreEqual(2, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(3, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(2).Count);
     }
 
     [Test]
@@ -82,6 +98,10 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual("XXX\r\nYYY\r\nZZZ", _model.Text.ToString());
         Assert.AreEqual(2, _model.TextCursor.LineIndex);
         Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(3, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(2).Count);
     }
 
     private void AppendString(string str)

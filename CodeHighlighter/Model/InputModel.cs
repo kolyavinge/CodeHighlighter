@@ -289,7 +289,11 @@ internal class InputModel
         var insertResult = Text.Insert(TextCursor.Position, insertedText);
         TextCursor.MoveTo(insertResult.EndPosition);
         var newCursorPosition = TextCursor.Position;
-        UpdateTokensForLines(0, Text.LinesCount);
+        if (insertedText.LinesCount > 1)
+        {
+            Tokens.InsertEmptyLines(oldCursorPosition.LineIndex, insertedText.LinesCount - 1);
+        }
+        UpdateTokensForLines(oldCursorPosition.LineIndex, insertedText.LinesCount);
 
         return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, insertResult.StartPosition, insertResult.EndPosition, text, insertResult.HasInserted);
     }

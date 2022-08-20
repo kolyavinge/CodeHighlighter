@@ -66,6 +66,14 @@ public class Tokens : ITokens
         _tokens.Insert(lineIndex, new TokenList());
     }
 
+    internal void InsertEmptyLines(int lineIndex, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            _tokens.Insert(lineIndex, new TokenList());
+        }
+    }
+
     internal void DeleteLine(int lineIndex)
     {
         if (lineIndex == 0 && !_tokens.Any()) return;

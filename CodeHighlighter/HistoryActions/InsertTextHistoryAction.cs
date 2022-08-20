@@ -31,7 +31,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
         else
         {
             _context.TextSelection.Set(_result.InsertStartPosition, _result.InsertEndPosition);
-            InsertTextInputAction.Instance.Do(_context, "");
+            LeftDeleteInputAction.Instance.Do(_context);
         }
         SetCursorToStartPosition();
         _context.CodeTextBox?.InvalidateVisual();
