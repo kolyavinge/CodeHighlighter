@@ -9,6 +9,7 @@ public class CodeTextBoxModel
     private readonly HistoryActionContext _historyActionContext;
     private ICodeTextBox? _codeTextBox;
 
+    public event EventHandler? TextSet;
     public event EventHandler? TextChanged;
 
     public Text Text { get; }
@@ -39,7 +40,8 @@ public class CodeTextBoxModel
         Viewport = new Viewport(ViewportContext, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "", Text, TextCursor);
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
-        _historyActionContext = new HistoryActionContext(InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, RaiseTextChanged);
+        _historyActionContext = new HistoryActionContext(
+            InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, () => TextChanged?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
     }
 
@@ -71,7 +73,7 @@ public class CodeTextBoxModel
     {
         InputModel.SetText(text);
         Viewport.UpdateScrollbarsMaximumValues(Text);
-        RaiseTextChanged();
+        TextSet?.Invoke(this, EventArgs.Empty);
         _codeTextBox?.InvalidateVisual();
     }
 
@@ -243,8 +245,6 @@ public class CodeTextBoxModel
         if (IsReadOnly) return;
         History.AddAndDo(new ToLowerCaseHistoryAction(_historyActionContext));
     }
-
-    private void RaiseTextChanged() => TextChanged?.Invoke(this, EventArgs.Empty);
 }
 
 public class CodeTextBoxModelAdditionalParams
