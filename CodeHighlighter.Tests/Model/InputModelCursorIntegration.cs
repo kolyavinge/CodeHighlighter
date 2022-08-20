@@ -65,6 +65,50 @@ internal class InputModelCursorIntegration
     }
 
     [Test]
+    public void CursorLeftSpaces()
+    {
+        AppendString("    0123456789");
+        _model.MoveCursorTextEnd();
+
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(4, _model.TextCursor.ColumnIndex);
+
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(0, _model.TextCursor.ColumnIndex);
+
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(4, _model.TextCursor.ColumnIndex);
+
+        _model.MoveCursorTo(new(0, 2));
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(4, _model.TextCursor.ColumnIndex);
+    }
+
+    [Test]
+    public void CursorLeftSpaces_AllSpaces()
+    {
+        AppendString("    ");
+        _model.MoveCursorTextEnd();
+
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(0, _model.TextCursor.ColumnIndex);
+
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(0, _model.TextCursor.ColumnIndex);
+
+        _model.MoveCursorTo(new(0, 2));
+        _model.MoveCursorStartLine();
+        Assert.AreEqual(0, _model.TextCursor.LineIndex);
+        Assert.AreEqual(0, _model.TextCursor.ColumnIndex);
+    }
+
+    [Test]
     public void CursorLimitsRight()
     {
         AppendString("0123456789");

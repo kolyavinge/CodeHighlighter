@@ -23,6 +23,11 @@ public class TextLine : IEnumerable<char>
         return new(_symbs.Skip(startIndex).Take(length).ToArray());
     }
 
+    internal int FindIndex(int startIndex, int count, Predicate<char> match)
+    {
+        return _symbs.FindIndex(startIndex, count, match);
+    }
+
     internal void AppendChar(int columnIndex, char ch)
     {
         _symbs.Insert(columnIndex, ch);
