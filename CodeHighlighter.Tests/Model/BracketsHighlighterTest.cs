@@ -9,7 +9,6 @@ namespace CodeHighlighter.Tests.Model;
 class BracketsHighlighterTest
 {
     private Mock<IText> _text;
-    private Mock<ITextCursor> _textCursor;
     private BracketsHighlighter _highlighter;
     private HighlightResult _result;
 
@@ -17,8 +16,7 @@ class BracketsHighlighterTest
     public void Setup()
     {
         _text = new Mock<IText>();
-        _textCursor = new Mock<ITextCursor>();
-        _highlighter = new BracketsHighlighter("()", _text.Object, _textCursor.Object);
+        _highlighter = new BracketsHighlighter("()");
     }
 
     [Test]
@@ -26,7 +24,7 @@ class BracketsHighlighterTest
     {
         try
         {
-            _highlighter = new BracketsHighlighter("(", _text.Object, _textCursor.Object);
+            _highlighter = new BracketsHighlighter("(");
             Assert.Fail();
         }
         catch (ArgumentException e)
@@ -38,7 +36,7 @@ class BracketsHighlighterTest
     [Test]
     public void NoBracketsInHighlighter()
     {
-        _highlighter = new BracketsHighlighter("", _text.Object, _textCursor.Object);
+        _highlighter = new BracketsHighlighter("");
 
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("()"));
         _text.SetupGet(x => x.LinesCount).Returns(1);
@@ -47,8 +45,6 @@ class BracketsHighlighterTest
         Assert.AreEqual(HighlightKind.NoHighlight, _result.Kind);
         Assert.AreEqual(default(BracketPosition), _result.Open);
         Assert.AreEqual(default(BracketPosition), _result.Close);
-        _textCursor.VerifyGet(x => x.LineIndex, Times.Never());
-        _textCursor.VerifyGet(x => x.ColumnIndex, Times.Never());
         _text.Verify(x => x.GetLine(It.IsAny<int>()), Times.Never());
     }
 
@@ -197,8 +193,6 @@ class BracketsHighlighterTest
 
     private void GetResult(int lineIndex, int columnIndex)
     {
-        _textCursor.SetupGet(x => x.LineIndex).Returns(lineIndex);
-        _textCursor.SetupGet(x => x.ColumnIndex).Returns(columnIndex);
-        _result = _highlighter.GetHighlightedBrackets();
+        _result = _highlighter.GetHighlightedBrackets(_text.Object, new(lineIndex, columnIndex));
     }
 }

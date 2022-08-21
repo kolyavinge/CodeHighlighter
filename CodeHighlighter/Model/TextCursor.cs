@@ -16,14 +16,7 @@ public readonly struct CursorPosition
     public override string ToString() => $"{LineIndex}:{ColumnIndex}";
 }
 
-internal interface ITextCursor
-{
-    int LineIndex { get; }
-    int ColumnIndex { get; }
-    CursorPosition Position { get; }
-}
-
-public class TextCursor : ITextCursor
+public class TextCursor
 {
     private readonly IText _text;
 
@@ -129,6 +122,6 @@ public class TextCursor : ITextCursor
 
 internal static class TextCursorExt
 {
-    public static Point GetAbsolutePosition(this ITextCursor cursor, TextMeasures measures) =>
+    public static Point GetAbsolutePosition(this TextCursor cursor, TextMeasures measures) =>
         new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);
 }

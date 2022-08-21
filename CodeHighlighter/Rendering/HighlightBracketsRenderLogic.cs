@@ -9,7 +9,7 @@ internal class HighlightBracketsRenderLogic
 {
     public void DrawHighlightedBrackets(CodeTextBoxModel model, DrawingContext context, Brush highlightingBrush, Brush noPairBrush)
     {
-        var brackets = model.BracketsHighlighter.GetHighlightedBrackets();
+        var brackets = model.BracketsHighlighter.GetHighlightedBrackets(model.Text, model.TextCursor.Position);
         if (brackets.Kind == HighlightKind.NoHighlight) return;
         if (brackets.Kind == HighlightKind.Highlighted)
         {

@@ -38,7 +38,7 @@ internal class Viewport
         return new(lineIndex, columnIndex);
     }
 
-    public void CorrectByCursorPosition(ITextCursor textCursor)
+    public void CorrectByCursorPosition(TextCursor textCursor)
     {
         CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
     }

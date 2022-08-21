@@ -5,43 +5,39 @@ namespace CodeHighlighter.Model;
 
 internal class BracketsHighlighter
 {
-    private readonly IText _text;
-    private readonly ITextCursor _textCursor;
     private readonly List<BracketPair> _bracketPairs = new();
     private HighlightResult _lastResult;
 
-    public BracketsHighlighter(string bracketsString, IText text, ITextCursor textCursor)
+    public BracketsHighlighter(string bracketsString)
     {
         if (bracketsString.Length % 2 != 0) throw new ArgumentException(nameof(bracketsString));
         for (int i = 0; i < bracketsString.Length; i += 2)
         {
             _bracketPairs.Add(new(bracketsString[i], bracketsString[i + 1]));
         }
-        _text = text;
-        _textCursor = textCursor;
     }
 
-    public HighlightResult GetHighlightedBrackets()
+    public HighlightResult GetHighlightedBrackets(IText text, CursorPosition position)
     {
         if (!_bracketPairs.Any()) return new(HighlightKind.NoHighlight, default, default);
 
-        var cursorLineIndex = _textCursor.LineIndex;
-        var cursorColumnIndex = _textCursor.ColumnIndex;
+        var cursorLineIndex = position.LineIndex;
+        var cursorColumnIndex = position.ColumnIndex;
 
         var cursorChar = (char)0;
-        if (cursorColumnIndex < _text.GetLine(cursorLineIndex).Length)
+        if (cursorColumnIndex < text.GetLine(cursorLineIndex).Length)
         {
-            cursorChar = _text.GetLine(cursorLineIndex)[cursorColumnIndex];
+            cursorChar = text.GetLine(cursorLineIndex)[cursorColumnIndex];
             if (!_bracketPairs.Any(x => x.Open == cursorChar || x.Close == cursorChar) && cursorColumnIndex > 0)
             {
                 cursorColumnIndex--;
-                cursorChar = _text.GetLine(cursorLineIndex)[cursorColumnIndex];
+                cursorChar = text.GetLine(cursorLineIndex)[cursorColumnIndex];
             }
         }
         else if (cursorColumnIndex > 0)
         {
             cursorColumnIndex--;
-            cursorChar = _text.GetLine(cursorLineIndex)[cursorColumnIndex];
+            cursorChar = text.GetLine(cursorLineIndex)[cursorColumnIndex];
         }
 
         // open bracket
@@ -49,7 +45,7 @@ internal class BracketsHighlighter
         {
             var closeBracket = _bracketPairs.First(x => x.Open == cursorChar).Close;
             int count = 1;
-            var iter = new ForwardTextIterator(_text, cursorLineIndex, cursorColumnIndex, _text.LinesCount - 1);
+            var iter = new ForwardTextIterator(text, cursorLineIndex, cursorColumnIndex, text.LinesCount - 1);
             while (!iter.Eof)
             {
                 if (iter.Char == cursorChar) count++;
@@ -71,7 +67,7 @@ internal class BracketsHighlighter
         {
             var openBracket = _bracketPairs.First(x => x.Close == cursorChar).Open;
             int count = 1;
-            var iter = new BackwardTextIterator(_text, 0, cursorColumnIndex, cursorLineIndex);
+            var iter = new BackwardTextIterator(text, 0, cursorColumnIndex, cursorLineIndex);
             while (!iter.Eof)
             {
                 if (iter.Char == cursorChar) count++;
