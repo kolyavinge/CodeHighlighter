@@ -77,7 +77,12 @@ public class TextCursor
 
     internal void MoveStartLine()
     {
-        ColumnIndex = 0;
+        var line = _text.GetLine(LineIndex);
+        var spacesCount = line.FindIndex(0, line.Length, ch => ch != ' ');
+        if (spacesCount == -1) ColumnIndex = 0;
+        else if (ColumnIndex > spacesCount) ColumnIndex = spacesCount;
+        else if (ColumnIndex == spacesCount) ColumnIndex = 0;
+        else ColumnIndex = spacesCount;
         CorrectPosition();
     }
 

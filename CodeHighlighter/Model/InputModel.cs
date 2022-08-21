@@ -78,24 +78,7 @@ internal class InputModel
 
     public void MoveCursorStartLine()
     {
-        var line = Text.GetLine(TextCursor.LineIndex);
-        var spacesCount = line.FindIndex(0, line.Length, ch => ch != ' ');
-        if (spacesCount == -1)
-        {
-            TextCursor.MoveStartLine();
-        }
-        else if (TextCursor.ColumnIndex > spacesCount)
-        {
-            TextCursor.MoveTo(new(TextCursor.LineIndex, spacesCount));
-        }
-        else if (TextCursor.ColumnIndex == spacesCount)
-        {
-            TextCursor.MoveStartLine();
-        }
-        else
-        {
-            TextCursor.MoveTo(new(TextCursor.LineIndex, spacesCount));
-        }
+        TextCursor.MoveStartLine();
         SetSelection();
     }
 

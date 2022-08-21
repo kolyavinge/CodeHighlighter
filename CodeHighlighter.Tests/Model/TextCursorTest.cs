@@ -5,12 +5,14 @@ namespace CodeHighlighter.Tests.Model;
 
 internal class TextCursorTest
 {
+    private Text _text;
     private TextCursor _textCursor;
 
     [SetUp]
     public void Setup()
     {
-        _textCursor = new TextCursor(new Text("12345\n1234\n123"));
+        _text = new Text("12345\n1234\n123");
+        _textCursor = new TextCursor(_text);
     }
 
     [Test]
@@ -209,6 +211,50 @@ internal class TextCursorTest
         Assert.AreEqual(new CursorPosition(1, 0), _textCursor.Position);
         _textCursor.MoveStartLine();
         Assert.AreEqual(new CursorPosition(1, 0), _textCursor.Position);
+    }
+
+    [Test]
+    public void CursorLeftSpaces()
+    {
+        _text.TextContent = "    0123456789";
+        _textCursor.MoveTextEnd();
+
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(4, _textCursor.ColumnIndex);
+
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(0, _textCursor.ColumnIndex);
+
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(4, _textCursor.ColumnIndex);
+
+        _textCursor.MoveTo(new(0, 2));
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(4, _textCursor.ColumnIndex);
+    }
+
+    [Test]
+    public void CursorLeftSpaces_AllSpaces()
+    {
+        _text.TextContent = "    ";
+        _textCursor.MoveTextEnd();
+
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(0, _textCursor.ColumnIndex);
+
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(0, _textCursor.ColumnIndex);
+
+        _textCursor.MoveTo(new(0, 2));
+        _textCursor.MoveStartLine();
+        Assert.AreEqual(0, _textCursor.LineIndex);
+        Assert.AreEqual(0, _textCursor.ColumnIndex);
     }
 
     [Test]
