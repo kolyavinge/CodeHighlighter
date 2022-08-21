@@ -13,30 +13,30 @@ internal class TextSelectionTest
     public void Setup()
     {
         _text = new Text();
-        _textSelection = new TextSelection(0, 0, 0, 0);
+        _textSelection = new TextSelection();
     }
 
 
     [Test]
     public void Init()
     {
-        Assert.AreEqual(0, _textSelection.StartCursorLineIndex);
-        Assert.AreEqual(0, _textSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _textSelection.EndCursorLineIndex);
-        Assert.AreEqual(0, _textSelection.EndCursorColumnIndex);
+        Assert.False(_textSelection.IsExist);
+        Assert.AreEqual(0, _textSelection.StartPosition.LineIndex);
+        Assert.AreEqual(0, _textSelection.StartPosition.ColumnIndex);
+        Assert.AreEqual(0, _textSelection.EndPosition.LineIndex);
+        Assert.AreEqual(0, _textSelection.EndPosition.ColumnIndex);
     }
 
     [Test]
     public void GetTextSelectionLines_1()
     {
         _text.TextContent = "01234\n01234\n01234\n01234\n01234";
-        _textSelection.StartCursorLineIndex = 0;
-        _textSelection.StartCursorColumnIndex = 2;
-        _textSelection.EndCursorLineIndex = 3;
-        _textSelection.EndCursorColumnIndex = 4;
+        _textSelection.StartPosition = new(0, 2);
+        _textSelection.EndPosition = new(3, 4);
 
         var result = _textSelection.GetSelectedLines(_text).ToList();
 
+        Assert.True(_textSelection.IsExist);
         Assert.AreEqual(4, result.Count);
 
         Assert.AreEqual(0, result[0].LineIndex);
@@ -60,13 +60,12 @@ internal class TextSelectionTest
     public void GetTextSelectionLines_2()
     {
         _text.TextContent = "01234\n01234\n01234\n01234\n01234";
-        _textSelection.StartCursorLineIndex = 3;
-        _textSelection.StartCursorColumnIndex = 4;
-        _textSelection.EndCursorLineIndex = 0;
-        _textSelection.EndCursorColumnIndex = 2;
+        _textSelection.StartPosition = new(3, 4);
+        _textSelection.EndPosition = new(0, 2);
 
         var result = _textSelection.GetSelectedLines(_text).ToList();
 
+        Assert.True(_textSelection.IsExist);
         Assert.AreEqual(4, result.Count);
 
         Assert.AreEqual(0, result[0].LineIndex);
@@ -87,17 +86,36 @@ internal class TextSelectionTest
     }
 
     [Test]
-    public void SelectAll()
+    public void SelectAll_Empty()
     {
         _text.TextContent = "";
-        _textSelection.StartCursorLineIndex = 0;
-        _textSelection.StartCursorColumnIndex = 0;
-        _textSelection.EndCursorLineIndex = 0;
-        _textSelection.EndCursorColumnIndex = 0;
+        _textSelection.StartPosition = new();
+        _textSelection.EndPosition = new();
 
         var result = _textSelection.GetSelectedLines(_text).ToList();
 
-        Assert.AreEqual(false, _textSelection.IsExist);
+        Assert.False(_textSelection.IsExist);
         Assert.AreEqual(0, result.Count);
+    }
+
+    [Test]
+    public void VirtualCursor()
+    {
+        _text.TextContent = "    000\r\n\r\n111";
+        _textSelection.StartPosition = new(1, 4, CursorPositionKind.Virtual);
+        _textSelection.EndPosition = new(2, 0);
+
+        var result = _textSelection.GetSelectedLines(_text).ToList();
+
+        Assert.True(_textSelection.IsExist);
+        Assert.AreEqual(2, result.Count);
+
+        Assert.AreEqual(1, result[0].LineIndex);
+        Assert.AreEqual(4, result[0].LeftColumnIndex);
+        Assert.AreEqual(4, result[0].RightColumnIndex);
+
+        Assert.AreEqual(2, result[1].LineIndex);
+        Assert.AreEqual(0, result[1].LeftColumnIndex);
+        Assert.AreEqual(0, result[1].RightColumnIndex);
     }
 }

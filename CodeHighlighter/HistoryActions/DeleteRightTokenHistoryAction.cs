@@ -22,13 +22,22 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
         ResetSelection();
         SetCursorToEndPosition();
         InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
+        ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox?.InvalidateVisual();
     }
 
     public override void Redo()
     {
-        RestoreSelection();
+        if (_result!.OldCursorPosition.Kind == CursorPositionKind.Real)
+        {
+            RestoreSelection();
+        }
+        else
+        {
+            ResetSelection();
+            SetCursorToStartPosition();
+        }
         DeleteRightTokenInputAction.Instance.Do(_context);
         _context.CodeTextBox?.InvalidateVisual();
     }

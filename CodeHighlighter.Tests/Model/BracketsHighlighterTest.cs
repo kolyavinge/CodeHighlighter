@@ -49,6 +49,19 @@ class BracketsHighlighterTest
     }
 
     [Test]
+    public void VirtualCursorNoHighlight()
+    {
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine(""));
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+
+        GetResult(0, 4, CursorPositionKind.Virtual);
+        Assert.AreEqual(HighlightKind.NoHighlight, _result.Kind);
+        Assert.AreEqual(default(BracketPosition), _result.Open);
+        Assert.AreEqual(default(BracketPosition), _result.Close);
+        _text.Verify(x => x.GetLine(It.IsAny<int>()), Times.Never());
+    }
+
+    [Test]
     public void Empty()
     {
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine(""));
@@ -191,8 +204,8 @@ class BracketsHighlighterTest
         Assert.AreEqual(new BracketPosition(0, 4), _result.Close);
     }
 
-    private void GetResult(int lineIndex, int columnIndex)
+    private void GetResult(int lineIndex, int columnIndex, CursorPositionKind kind = CursorPositionKind.Real)
     {
-        _result = _highlighter.GetHighlightedBrackets(_text.Object, new(lineIndex, columnIndex));
+        _result = _highlighter.GetHighlightedBrackets(_text.Object, new(lineIndex, columnIndex, kind));
     }
 }

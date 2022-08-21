@@ -33,6 +33,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             _context.TextSelection.Set(_result.InsertStartPosition, _result.InsertEndPosition);
             LeftDeleteInputAction.Instance.Do(_context);
         }
+        ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox?.InvalidateVisual();
     }

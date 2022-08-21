@@ -68,6 +68,14 @@ internal class TextCursorTest
     }
 
     [Test]
+    public void MoveTo_VirtualCursor()
+    {
+        _text.TextContent = "    123\r\n\r\n";
+        _textCursor.MoveTo(new(2, 10, CursorPositionKind.Real));
+        Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), _textCursor.Position);
+    }
+
+    [Test]
     public void MoveUp()
     {
         _textCursor.MoveTo(new(2, 1));
@@ -149,6 +157,17 @@ internal class TextCursorTest
     }
 
     [Test]
+    public void MoveLeft_VirtualCursor()
+    {
+        _text.TextContent = "    123\r\n";
+        _textCursor.MoveTo(new(1, 4, CursorPositionKind.Virtual));
+
+        _textCursor.MoveLeft();
+
+        Assert.AreEqual(new CursorPosition(1, 0), _textCursor.Position);
+    }
+
+    [Test]
     public void MoveRight()
     {
         _textCursor.MoveRight();
@@ -198,6 +217,17 @@ internal class TextCursorTest
     }
 
     [Test]
+    public void MoveRight_VirtualCursor()
+    {
+        _text.TextContent = "    123\r\n\r\n";
+        _textCursor.MoveTo(new(1, 4, CursorPositionKind.Virtual));
+
+        _textCursor.MoveRight();
+
+        Assert.AreEqual(new CursorPosition(2, 0), _textCursor.Position);
+    }
+
+    [Test]
     public void MoveStartLine()
     {
         _textCursor.MoveTo(new(0, 5));
@@ -214,7 +244,7 @@ internal class TextCursorTest
     }
 
     [Test]
-    public void CursorLeftSpaces()
+    public void MoveStartLine_LeftSpaces()
     {
         _text.TextContent = "    0123456789";
         _textCursor.MoveTextEnd();
@@ -238,7 +268,7 @@ internal class TextCursorTest
     }
 
     [Test]
-    public void CursorLeftSpaces_AllSpaces()
+    public void MoveStartLine_LeftSpaces_AllSpaces()
     {
         _text.TextContent = "    ";
         _textCursor.MoveTextEnd();

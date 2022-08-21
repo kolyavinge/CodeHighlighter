@@ -24,7 +24,7 @@ internal class BaseHistoryActionIntegration
         _text = new();
         _textCursor = new(_text);
         _textMeasures = new(new FontSettings());
-        _textSelection = new(0, 0, 0, 0);
+        _textSelection = new();
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
@@ -46,14 +46,13 @@ internal class BaseHistoryActionIntegration
 
     protected void MakeInactiveSelection()
     {
-        _context.TextSelection.StartCursorLineIndex = 1;
-        _context.TextSelection.EndCursorLineIndex = 1;
+        _context.TextSelection.StartPosition = new(1, 0);
+        _context.TextSelection.EndPosition = new(1, 0);
     }
 
     protected void AssertCursorPosition(CursorPosition position)
     {
-        Assert.AreEqual(position.LineIndex, _context.TextCursor.LineIndex);
-        Assert.AreEqual(position.ColumnIndex, _context.TextCursor.ColumnIndex);
+        Assert.AreEqual(position, _context.TextCursor.Position);
     }
 
     protected void InvalidateVisualCallNever()

@@ -1,4 +1,5 @@
 ﻿using CodeHighlighter.HistoryActions;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;
@@ -11,13 +12,13 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     public void Setup()
     {
         MakeContext();
-        _context.InputModel.SetText("text\r\n123");
         _action = new LeftDeleteHistoryAction(_context);
     }
 
     [Test]
     public void NoDelete()
     {
+        _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(0, 0));
         Assert.False(_action.Do());
         InvalidateVisualCallNever();
@@ -26,11 +27,13 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     [Test]
     public void NoSelection()
     {
+        _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(0, 1));
         MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("ext\r\n123", _text.ToString());
+        AssertCursorPosition(new(0, 0));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -40,6 +43,7 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("ext\r\n123", _text.ToString());
+        AssertCursorPosition(new(0, 0));
 
         InvalidateVisualCallThreeTimes();
     }
@@ -47,11 +51,13 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     [Test]
     public void NoSelection_DeleteReturn()
     {
+        _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(1, 0));
         MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("text123", _text.ToString());
+        AssertCursorPosition(new(0, 4));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -61,6 +67,7 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text123", _text.ToString());
+        AssertCursorPosition(new(0, 4));
 
         InvalidateVisualCallThreeTimes();
     }
@@ -68,6 +75,7 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     [Test]
     public void WithSelection()
     {
+        _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(0, 3));
         _context.InputModel.ActivateSelection();
         _context.InputModel.MoveCursorTo(new(1, 1));
@@ -75,6 +83,7 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
 
         _action.Do();
         Assert.AreEqual("tex23", _text.ToString());
+        AssertCursorPosition(new(0, 3));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -84,6 +93,31 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("tex23", _text.ToString());
+        AssertCursorPosition(new(0, 3));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void NoSelection_VirtualCursor()
+    {
+        _context.InputModel.SetText("    text\r\n");
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        MakeInactiveSelection();
+
+        _action.Do();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 4, CursorPositionKind.Virtual));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         InvalidateVisualCallThreeTimes();
     }

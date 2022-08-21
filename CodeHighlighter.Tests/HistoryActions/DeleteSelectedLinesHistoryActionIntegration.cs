@@ -1,4 +1,5 @@
 ﻿using CodeHighlighter.HistoryActions;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;
@@ -11,7 +12,6 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     public void Setup()
     {
         MakeContext();
-        _context.InputModel.SetText("text\r\nfor 1\r\n123");
         _action = new DeleteSelectedLinesHistoryAction(_context);
     }
 
@@ -26,11 +26,13 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoSelection()
     {
+        _context.InputModel.SetText("text\r\nfor 1\r\n123");
         _context.InputModel.MoveCursorTo(new(0, 3));
         MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("for 1\r\n123", _text.ToString());
+        AssertCursorPosition(new(0, 0));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -40,6 +42,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("for 1\r\n123", _text.ToString());
+        AssertCursorPosition(new(0, 0));
 
         InvalidateVisualCallThreeTimes();
     }
@@ -47,11 +50,13 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoSelection_DeleteLastLine()
     {
+        _context.InputModel.SetText("text\r\nfor 1\r\n123");
         _context.InputModel.MoveCursorTo(new(2, 0));
         MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("text\r\nfor 1\r\n", _text.ToString());
+        AssertCursorPosition(new(2, 0));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -61,6 +66,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\nfor 1\r\n", _text.ToString());
+        AssertCursorPosition(new(2, 0));
 
         InvalidateVisualCallThreeTimes();
     }
@@ -68,6 +74,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void WithSelection()
     {
+        _context.InputModel.SetText("text\r\nfor 1\r\n123");
         _context.InputModel.MoveCursorTo(new(1, 0));
         _context.InputModel.ActivateSelection();
         _context.InputModel.MoveCursorTo(new(2, 3));
@@ -75,6 +82,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
 
         _action.Do();
         Assert.AreEqual("text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -84,6 +92,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         InvalidateVisualCallThreeTimes();
     }
@@ -99,6 +108,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
 
         _action.Do();
         Assert.AreEqual("text\r\n456\r\n789", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -108,6 +118,55 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("text\r\n456\r\n789", _text.ToString());
+        AssertCursorPosition(new(1, 0));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void NoSelection_VirtualCursor()
+    {
+        _context.InputModel.SetText("    text\r\n\r\n");
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        MakeInactiveSelection();
+
+        _action.Do();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    text\r\n\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 4, CursorPositionKind.Virtual));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void NoSelection_DeleteLastLine_VirtualCursor()
+    {
+        _context.InputModel.SetText("    text\r\n");
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        MakeInactiveSelection();
+
+        _action.Do();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 4, CursorPositionKind.Virtual));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    text\r\n", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         InvalidateVisualCallThreeTimes();
     }

@@ -71,6 +71,14 @@ internal class TextTest
     }
 
     [Test]
+    public void NewLine_VirtualCursor()
+    {
+        SetText("    123\r\n");
+        _text.AppendNewLine(new(1, 4, CursorPositionKind.Virtual));
+        Assert.AreEqual("    123\r\n\r\n", _text.ToString());
+    }
+
+    [Test]
     public void AppendChar_First()
     {
         SetText("123");
@@ -92,6 +100,14 @@ internal class TextTest
         SetText("123");
         _text.AppendChar(new(0, 3), 'a');
         Assert.AreEqual("123a", _text.ToString());
+    }
+
+    [Test]
+    public void AppendChar_Many()
+    {
+        SetText("123");
+        _text.AppendChar(new(0, 3), 'a', 3);
+        Assert.AreEqual("123aaa", _text.ToString());
     }
 
     [Test]
@@ -130,6 +146,50 @@ internal class TextTest
         try
         {
             _text.AppendChar(new(0, 0), '\u001B');
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+    }
+
+    [Test]
+    public void AppendChar_Many_NotAllowedSymbols()
+    {
+        try
+        {
+            _text.AppendChar(new(0, 0), '\n', 3);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\r', 3);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\b', 3);
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("ch", e.Message);
+        }
+
+        try
+        {
+            _text.AppendChar(new(0, 0), '\u001B', 3);
             Assert.Fail();
         }
         catch (ArgumentException e)
@@ -220,6 +280,16 @@ internal class TextTest
         Assert.AreEqual("12\r\n34\r\n56\r\n78", _text.ToString());
         Assert.AreEqual(new CursorPosition(0, 1), result.StartPosition);
         Assert.AreEqual(new CursorPosition(3, 1), result.EndPosition);
+    }
+
+    [Test]
+    public void InsertTwoLines_VirtualCursor()
+    {
+        SetText("    125\r\n");
+        var result = _text.Insert(new(1, 4, CursorPositionKind.Virtual), new Text("3\n4"));
+        Assert.AreEqual("    125\r\n    3\r\n4", _text.ToString());
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.StartPosition);
+        Assert.AreEqual(new CursorPosition(2, 1), result.EndPosition);
     }
 
     [Test]
@@ -325,7 +395,7 @@ internal class TextTest
     public void DeleteSelection_OneLine_Begin()
     {
         SetText("012345");
-        var result = _text.DeleteSelection(new TextSelection(0, 0, 0, 4));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 0), new(0, 4)));
         Assert.AreEqual("45", _text.ToString());
         Assert.AreEqual(0, result.FirstDeletedLineIndex);
         Assert.AreEqual(0, result.DeletedLinesCount);
@@ -335,7 +405,7 @@ internal class TextTest
     public void DeleteSelection_OneLine_End()
     {
         SetText("012345");
-        _text.DeleteSelection(new TextSelection(0, 1, 0, 6));
+        _text.DeleteSelection(new TextSelection(new(0, 1), new(0, 6)));
         Assert.AreEqual("0", _text.ToString());
     }
 
@@ -343,7 +413,7 @@ internal class TextTest
     public void DeleteSelection_OneLine_Middle()
     {
         SetText("012345");
-        _text.DeleteSelection(new TextSelection(0, 1, 0, 5));
+        _text.DeleteSelection(new TextSelection(new(0, 1), new(0, 5)));
         Assert.AreEqual("05", _text.ToString());
     }
 
@@ -351,7 +421,7 @@ internal class TextTest
     public void DeleteSelection_OneLine_All()
     {
         SetText("012345");
-        _text.DeleteSelection(new TextSelection(0, 0, 0, 6));
+        _text.DeleteSelection(new TextSelection(new(0, 0), new(0, 6)));
         Assert.AreEqual("", _text.ToString());
     }
 
@@ -359,7 +429,7 @@ internal class TextTest
     public void DeleteSelection_ManyLines_Begin()
     {
         SetText("012345\n012345");
-        var result = _text.DeleteSelection(new TextSelection(0, 0, 1, 4));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 0), new(1, 4)));
         Assert.AreEqual("45", _text.ToString());
         Assert.AreEqual(1, result.FirstDeletedLineIndex);
         Assert.AreEqual(1, result.DeletedLinesCount);
@@ -369,7 +439,7 @@ internal class TextTest
     public void DeleteSelection_ManyLines_Middle()
     {
         SetText("012345\n012345");
-        var result = _text.DeleteSelection(new TextSelection(0, 2, 1, 4));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 2), new(1, 4)));
         Assert.AreEqual("0145", _text.ToString());
         Assert.AreEqual(1, result.FirstDeletedLineIndex);
         Assert.AreEqual(1, result.DeletedLinesCount);
@@ -379,7 +449,7 @@ internal class TextTest
     public void DeleteSelection_ManyLines_End()
     {
         SetText("012345\n012345");
-        var result = _text.DeleteSelection(new TextSelection(0, 2, 1, 6));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 2), new(1, 6)));
         Assert.AreEqual("01", _text.ToString());
         Assert.AreEqual(1, result.FirstDeletedLineIndex);
         Assert.AreEqual(1, result.DeletedLinesCount);
@@ -389,7 +459,7 @@ internal class TextTest
     public void DeleteSelection_ManyLines_DeleteFirst()
     {
         SetText("012345\n555555");
-        var result = _text.DeleteSelection(new TextSelection(0, 0, 0, 6));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 0), new(0, 6)));
         Assert.AreEqual("\r\n555555", _text.ToString());
         Assert.AreEqual(0, result.FirstDeletedLineIndex);
         Assert.AreEqual(0, result.DeletedLinesCount);
@@ -399,7 +469,7 @@ internal class TextTest
     public void DeleteSelection_ManyLines_DeleteLast()
     {
         SetText("012345\n555555");
-        var result = _text.DeleteSelection(new TextSelection(1, 0, 1, 6));
+        var result = _text.DeleteSelection(new TextSelection(new(1, 0), new(1, 6)));
         Assert.AreEqual("012345\r\n", _text.ToString());
         Assert.AreEqual(0, result.FirstDeletedLineIndex);
         Assert.AreEqual(0, result.DeletedLinesCount);
@@ -409,10 +479,40 @@ internal class TextTest
     public void DeleteSelection_ManyLines_All()
     {
         SetText("012345\n012345");
-        var result = _text.DeleteSelection(new TextSelection(0, 0, 1, 6));
+        var result = _text.DeleteSelection(new TextSelection(new(0, 0), new(1, 6)));
         Assert.AreEqual("", _text.ToString());
         Assert.AreEqual(1, result.FirstDeletedLineIndex);
         Assert.AreEqual(1, result.DeletedLinesCount);
+    }
+
+    [Test]
+    public void DeleteSelection_OneLine_VirtualCursor()
+    {
+        SetText("    012345\n");
+        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(1, 4, CursorPositionKind.Virtual)));
+        Assert.AreEqual("    012345", _text.ToString());
+        Assert.AreEqual(1, result.FirstDeletedLineIndex);
+        Assert.AreEqual(1, result.DeletedLinesCount);
+    }
+
+    [Test]
+    public void DeleteSelection_ManyEmptyLines_VirtualCursor()
+    {
+        SetText("    012345\n\n\n");
+        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(3, 4, CursorPositionKind.Virtual)));
+        Assert.AreEqual("    012345", _text.ToString());
+        Assert.AreEqual(1, result.FirstDeletedLineIndex);
+        Assert.AreEqual(3, result.DeletedLinesCount);
+    }
+
+    [Test]
+    public void DeleteSelection_ManyLines_VirtualCursor()
+    {
+        SetText("    012345\n\n123\n123");
+        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(3, 4, CursorPositionKind.Virtual)));
+        Assert.AreEqual("    012345", _text.ToString());
+        Assert.AreEqual(1, result.FirstDeletedLineIndex);
+        Assert.AreEqual(3, result.DeletedLinesCount);
     }
 
     [Test]
@@ -449,11 +549,11 @@ internal class TextTest
     public void SetSelectedTextCase()
     {
         SetText("abc\nxyz");
-        _text.SetSelectedTextCase(new TextSelection(0, 0, 1, 1), TextCase.Upper);
+        _text.SetSelectedTextCase(new TextSelection(new(0, 0), new(1, 1)), TextCase.Upper);
         Assert.AreEqual("ABC\r\nXyz", _text.ToString());
 
         SetText("ABC\nXYZ");
-        _text.SetSelectedTextCase(new TextSelection(0, 0, 1, 1), TextCase.Lower);
+        _text.SetSelectedTextCase(new TextSelection(new(0, 0), new(1, 1)), TextCase.Lower);
         Assert.AreEqual("abc\r\nxYZ", _text.ToString());
     }
 

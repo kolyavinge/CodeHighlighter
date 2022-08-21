@@ -33,6 +33,7 @@ internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegratio
 
         _action.Do();
         Assert.AreEqual("teXT\r\nA", _text.ToString());
+        AssertCursorPosition(new(1, 1));
 
         MakeUncompleteSelection();
         _action.Undo();
@@ -42,6 +43,7 @@ internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegratio
         MakeUncompleteSelection();
         _action.Redo();
         Assert.AreEqual("teXT\r\nA", _text.ToString());
+        AssertCursorPosition(new(1, 0));
 
         InvalidateVisualCallThreeTimes();
     }

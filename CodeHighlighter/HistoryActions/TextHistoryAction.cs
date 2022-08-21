@@ -45,4 +45,12 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
             new(_result!.SelectionStart.LineIndex + 1, _result!.SelectionStart.ColumnIndex),
             new(_result.SelectionEnd.LineIndex + 1, _result.SelectionEnd.ColumnIndex));
     }
+
+    protected void ClearLineIfVirtualCursor()
+    {
+        if (_result!.OldCursorPosition.Kind == CursorPositionKind.Virtual)
+        {
+            _context.Text.GetLine(_result!.OldCursorPosition.LineIndex).Clear();
+        }
+    }
 }

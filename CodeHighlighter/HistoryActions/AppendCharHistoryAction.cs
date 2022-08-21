@@ -33,6 +33,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
             SetCursorToStartPosition();
             RightDeleteInputAction.Instance.Do(_context);
         }
+        ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox?.InvalidateVisual();
     }

@@ -12,7 +12,7 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
     public override bool Do()
     {
         _result = DeleteSelectedLinesInputAction.Instance.Do(_context);
-        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+        if (_result.HasDeleted || _result.OldCursorPosition.Kind == CursorPositionKind.Virtual) _context.CodeTextBox?.InvalidateVisual();
 
         return _result.HasDeleted;
     }

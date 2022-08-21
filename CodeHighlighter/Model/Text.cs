@@ -45,10 +45,17 @@ public class Text : IText
 
     internal void AppendNewLine(CursorPosition position)
     {
-        var line = _lines[position.LineIndex];
-        var remains = line.GetSubstring(position.ColumnIndex, line.Length - position.ColumnIndex);
-        line.RemoveRange(position.ColumnIndex, line.Length - position.ColumnIndex);
-        _lines.Insert(position.LineIndex + 1, new TextLine(remains));
+        if (position.Kind == CursorPositionKind.Real)
+        {
+            var line = _lines[position.LineIndex];
+            var remains = line.GetSubstring(position.ColumnIndex, line.Length - position.ColumnIndex);
+            line.RemoveRange(position.ColumnIndex, line.Length - position.ColumnIndex);
+            _lines.Insert(position.LineIndex + 1, new TextLine(remains));
+        }
+        else
+        {
+            _lines.Insert(position.LineIndex + 1, new TextLine(""));
+        }
     }
 
     internal static readonly IReadOnlyCollection<char> NotAllowedSymbols = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
@@ -59,9 +66,22 @@ public class Text : IText
         _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
     }
 
+    internal void AppendChar(CursorPosition position, char ch, int count)
+    {
+        if (NotAllowedSymbols.Contains(ch)) throw new ArgumentException(nameof(ch));
+        for (int i = 0; i < count; i++)
+        {
+            _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
+        }
+    }
+
     internal InsertResult Insert(CursorPosition position, Text insertedText)
     {
         if (insertedText.IsEmpty) return default;
+        if (position.Kind == CursorPositionKind.Virtual)
+        {
+            AppendChar(new(position.LineIndex, 0), ' ', position.ColumnIndex);
+        }
         CursorPosition endPosition;
         if (insertedText.LinesCount == 1)
         {

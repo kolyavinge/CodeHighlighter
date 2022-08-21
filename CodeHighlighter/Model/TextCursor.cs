@@ -1,19 +1,31 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 
 namespace CodeHighlighter.Model;
+
+public enum CursorPositionKind { Real, Virtual }
 
 public readonly struct CursorPosition
 {
     public readonly int LineIndex;
     public readonly int ColumnIndex;
+    public readonly CursorPositionKind Kind;
 
     public CursorPosition(int lineIndex, int columnIndex)
     {
         LineIndex = lineIndex;
         ColumnIndex = columnIndex;
+        Kind = CursorPositionKind.Real;
     }
 
-    public override string ToString() => $"{LineIndex}:{ColumnIndex}";
+    internal CursorPosition(int lineIndex, int columnIndex, CursorPositionKind kind)
+    {
+        LineIndex = lineIndex;
+        ColumnIndex = columnIndex;
+        Kind = kind;
+    }
+
+    public override string ToString() => Kind == CursorPositionKind.Real ? $"{LineIndex}:{ColumnIndex}" : $"[{LineIndex}:{ColumnIndex}]";
 }
 
 public class TextCursor
@@ -24,7 +36,9 @@ public class TextCursor
 
     public int ColumnIndex { get; private set; }
 
-    public CursorPosition Position => new(LineIndex, ColumnIndex);
+    public CursorPositionKind Kind { get; internal set; }
+
+    public CursorPosition Position => new(LineIndex, ColumnIndex, Kind);
 
     internal TextCursor(IText text)
     {
@@ -36,6 +50,7 @@ public class TextCursor
     {
         LineIndex = position.LineIndex;
         ColumnIndex = position.ColumnIndex;
+        Kind = position.Kind;
         CorrectPosition();
     }
 
@@ -54,11 +69,18 @@ public class TextCursor
     internal void MoveLeft()
     {
         if (LineIndex == 0 && ColumnIndex == 0) return;
-        ColumnIndex--;
-        if (ColumnIndex == -1)
+        if (Kind == CursorPositionKind.Real)
         {
-            LineIndex--;
-            ColumnIndex = int.MaxValue;
+            ColumnIndex--;
+            if (ColumnIndex == -1)
+            {
+                LineIndex--;
+                ColumnIndex = int.MaxValue;
+            }
+        }
+        else
+        {
+            ColumnIndex = 0;
         }
         CorrectPosition();
     }
@@ -66,8 +88,8 @@ public class TextCursor
     internal void MoveRight()
     {
         if (LineIndex == _text.LinesCount - 1 && ColumnIndex == _text.GetLine(LineIndex).Length) return;
-        ColumnIndex++;
-        if (ColumnIndex == _text.GetLine(LineIndex).Length + 1)
+        if (Kind == CursorPositionKind.Real) ColumnIndex++;
+        if (Kind == CursorPositionKind.Virtual || ColumnIndex == _text.GetLine(LineIndex).Length + 1)
         {
             LineIndex++;
             ColumnIndex = 0;
@@ -88,7 +110,7 @@ public class TextCursor
 
     internal void MoveEndLine()
     {
-        ColumnIndex = _text.GetLine(LineIndex).Length;
+        ColumnIndex = Int32.MaxValue;
         CorrectPosition();
     }
 
@@ -119,9 +141,22 @@ public class TextCursor
     private void CorrectPosition()
     {
         if (LineIndex < 0) LineIndex = 0;
-        if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
-        if (ColumnIndex < 0) ColumnIndex = 0;
-        if (ColumnIndex > _text.GetLine(LineIndex).Length) ColumnIndex = _text.GetLine(LineIndex).Length;
+        else if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
+        var lineLength = _text.GetLine(LineIndex).Length;
+        Kind = CursorPositionKind.Real;
+        if (lineLength == 0 && ColumnIndex > 0 && LineIndex > 0)
+        {
+            var prevLineIndex = LineIndex - 1;
+            var prevLine = _text.GetLine(prevLineIndex);
+            while (!prevLine.Any() && prevLineIndex > 0) prevLine = _text.GetLine(--prevLineIndex);
+            ColumnIndex = prevLine.FindIndex(0, prevLine.Length, ch => ch != ' ');
+            if (ColumnIndex > 0) Kind = CursorPositionKind.Virtual;
+        }
+        else
+        {
+            if (ColumnIndex < 0) ColumnIndex = 0;
+            else if (ColumnIndex > lineLength) ColumnIndex = lineLength;
+        }
     }
 }
 

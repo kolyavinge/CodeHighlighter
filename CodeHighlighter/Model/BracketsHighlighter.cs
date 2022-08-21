@@ -20,6 +20,7 @@ internal class BracketsHighlighter
     public HighlightResult GetHighlightedBrackets(IText text, CursorPosition position)
     {
         if (!_bracketPairs.Any()) return new(HighlightKind.NoHighlight, default, default);
+        if (position.Kind == CursorPositionKind.Virtual) return new(HighlightKind.NoHighlight, default, default);
 
         var cursorLineIndex = position.LineIndex;
         var cursorColumnIndex = position.ColumnIndex;

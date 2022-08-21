@@ -34,7 +34,7 @@ public class CodeTextBoxModel
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
         History = new History();
-        TextSelection = new TextSelection(0, 0, 0, 0);
+        TextSelection = new TextSelection();
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);

@@ -26,6 +26,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
         {
             InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
         }
+        ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox?.InvalidateVisual();
     }

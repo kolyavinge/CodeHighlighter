@@ -79,10 +79,8 @@ internal class InputModelTokenNavigationIntegration
         _model.MoveToNextToken();
         _model.MoveToNextToken();
         _model.MoveToNextToken();
-        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
-        Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
-        Assert.AreEqual(20, _model.TextSelection.EndCursorColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(0, 20), _model.TextSelection.EndPosition);
 
         _model.MoveToNextToken();
         _model.MoveToNextToken();
@@ -92,10 +90,8 @@ internal class InputModelTokenNavigationIntegration
         _model.MoveToNextToken();
         _model.MoveToNextToken();
         _model.CompleteSelection();
-        Assert.AreEqual(0, _model.TextSelection.StartCursorLineIndex);
-        Assert.AreEqual(0, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(1, _model.TextSelection.EndCursorLineIndex);
-        Assert.AreEqual(22, _model.TextSelection.EndCursorColumnIndex);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 22), _model.TextSelection.EndPosition);
     }
 
     [Test]
@@ -164,10 +160,8 @@ internal class InputModelTokenNavigationIntegration
         _model.MoveToPrevToken();
         _model.MoveToPrevToken();
         _model.MoveToPrevToken();
-        Assert.AreEqual(1, _model.TextSelection.StartCursorLineIndex);
-        Assert.AreEqual(22, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(1, _model.TextSelection.EndCursorLineIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndCursorColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 22), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(1, 0), _model.TextSelection.EndPosition);
 
         _model.MoveToPrevToken();
         _model.MoveToPrevToken();
@@ -175,10 +169,8 @@ internal class InputModelTokenNavigationIntegration
         _model.MoveToPrevToken();
         _model.MoveToPrevToken();
         _model.CompleteSelection();
-        Assert.AreEqual(1, _model.TextSelection.StartCursorLineIndex);
-        Assert.AreEqual(22, _model.TextSelection.StartCursorColumnIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndCursorLineIndex);
-        Assert.AreEqual(0, _model.TextSelection.EndCursorColumnIndex);
+        Assert.AreEqual(new CursorPosition(1, 22), _model.TextSelection.StartPosition);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.EndPosition);
     }
 
     [Test]
