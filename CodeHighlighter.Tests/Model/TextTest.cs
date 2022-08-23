@@ -283,16 +283,6 @@ internal class TextTest
     }
 
     [Test]
-    public void InsertTwoLines_VirtualCursor()
-    {
-        SetText("    125\r\n");
-        var result = _text.Insert(new(1, 4, CursorPositionKind.Virtual), new Text("3\n4"));
-        Assert.AreEqual("    125\r\n    3\r\n4", _text.ToString());
-        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.StartPosition);
-        Assert.AreEqual(new CursorPosition(2, 1), result.EndPosition);
-    }
-
-    [Test]
     public void LeftDelete_First()
     {
         SetText("123");
@@ -483,36 +473,6 @@ internal class TextTest
         Assert.AreEqual("", _text.ToString());
         Assert.AreEqual(1, result.FirstDeletedLineIndex);
         Assert.AreEqual(1, result.DeletedLinesCount);
-    }
-
-    [Test]
-    public void DeleteSelection_OneLine_VirtualCursor()
-    {
-        SetText("    012345\n");
-        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(1, 4, CursorPositionKind.Virtual)));
-        Assert.AreEqual("    012345", _text.ToString());
-        Assert.AreEqual(1, result.FirstDeletedLineIndex);
-        Assert.AreEqual(1, result.DeletedLinesCount);
-    }
-
-    [Test]
-    public void DeleteSelection_ManyEmptyLines_VirtualCursor()
-    {
-        SetText("    012345\n\n\n");
-        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(3, 4, CursorPositionKind.Virtual)));
-        Assert.AreEqual("    012345", _text.ToString());
-        Assert.AreEqual(1, result.FirstDeletedLineIndex);
-        Assert.AreEqual(3, result.DeletedLinesCount);
-    }
-
-    [Test]
-    public void DeleteSelection_ManyLines_VirtualCursor()
-    {
-        SetText("    012345\n\n123\n123");
-        var result = _text.DeleteSelection(new TextSelection(new(0, 10), new(3, 4, CursorPositionKind.Virtual)));
-        Assert.AreEqual("    012345", _text.ToString());
-        Assert.AreEqual(1, result.FirstDeletedLineIndex);
-        Assert.AreEqual(3, result.DeletedLinesCount);
     }
 
     [Test]

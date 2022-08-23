@@ -78,10 +78,6 @@ public class Text : IText
     internal InsertResult Insert(CursorPosition position, Text insertedText)
     {
         if (insertedText.IsEmpty) return default;
-        if (position.Kind == CursorPositionKind.Virtual)
-        {
-            AppendChar(new(position.LineIndex, 0), ' ', position.ColumnIndex);
-        }
         CursorPosition endPosition;
         if (insertedText.LinesCount == 1)
         {

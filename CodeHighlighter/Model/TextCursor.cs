@@ -149,8 +149,16 @@ public class TextCursor
             var prevLineIndex = LineIndex - 1;
             var prevLine = _text.GetLine(prevLineIndex);
             while (!prevLine.Any() && prevLineIndex > 0) prevLine = _text.GetLine(--prevLineIndex);
-            ColumnIndex = prevLine.FindIndex(0, prevLine.Length, ch => ch != ' ');
-            if (ColumnIndex > 0) Kind = CursorPositionKind.Virtual;
+            var spacesCount = prevLine.FindIndex(0, prevLine.Length, ch => ch != ' ');
+            if (spacesCount != -1)
+            {
+                ColumnIndex = spacesCount;
+                if (ColumnIndex > 0) Kind = CursorPositionKind.Virtual;
+            }
+            else
+            {
+                ColumnIndex = 0;
+            }
         }
         else
         {

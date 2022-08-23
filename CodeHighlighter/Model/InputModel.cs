@@ -205,19 +205,26 @@ internal class InputModel
     public DeleteTokenResult DeleteRightToken()
     {
         var oldCursorPosition = TextCursor.Position;
-        if (TextCursor.Kind == CursorPositionKind.Virtual)
-        {
-            Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
-        }
+        CursorPosition selectionStart, selectionEnd;
         if (!TextSelection.IsExist)
         {
+            selectionStart = TextCursor.Position;
+            if (TextCursor.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
             var navigator = new TokenNavigator();
             var position = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
             ActivateSelection();
             MoveCursorTo(position);
             CompleteSelection();
+            selectionEnd = position;
         }
-        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        else
+        {
+            (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
+        }
         var deletedSelectedText = GetSelectedText();
         var deleteResult = RightDelete();
         var newCursorPosition = TextCursor.Position;
@@ -230,10 +237,18 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        if (TextSelection.IsExist) DeleteSelection();
+        if (TextSelection.IsExist)
+        {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                TextSelection.StartPosition = new(TextSelection.StartPosition.LineIndex, 0);
+            }
+            DeleteSelection();
+        }
         Text.AppendNewLine(TextCursor.Position);
         Tokens.InsertEmptyLine(TextCursor.LineIndex + 1);
         TextCursor.MoveDown();
+        TextCursor.MoveEndLine();
         if (Text.GetLine(TextCursor.LineIndex).Any()) TextCursor.MoveStartLine();
         var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex - 1, 2);
@@ -248,10 +263,14 @@ internal class InputModel
         var deletedSelectedText = GetSelectedText();
         if (TextSelection.IsExist)
         {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
             DeleteSelection();
-            TextCursor.Kind = CursorPositionKind.Real;
         }
-        else if (oldCursorPosition.Kind == CursorPositionKind.Virtual)
+        else if (TextCursor.Kind == CursorPositionKind.Virtual)
         {
             Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
             TextCursor.Kind = CursorPositionKind.Real;
@@ -282,15 +301,31 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        if (TextSelection.IsExist) DeleteSelection();
+        int insertedLineIndex = 0;
+        if (TextSelection.IsExist)
+        {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
+            DeleteSelection();
+            insertedLineIndex = selectionStart.LineIndex;
+        }
+        else if (TextCursor.Kind == CursorPositionKind.Virtual)
+        {
+            Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
+            TextCursor.Kind = CursorPositionKind.Real;
+            insertedLineIndex = TextCursor.LineIndex;
+        }
         var insertResult = Text.Insert(TextCursor.Position, insertedText);
         TextCursor.MoveTo(insertResult.EndPosition);
         var newCursorPosition = TextCursor.Position;
         if (insertedText.LinesCount > 1)
         {
-            Tokens.InsertEmptyLines(oldCursorPosition.LineIndex, insertedText.LinesCount - 1);
+            Tokens.InsertEmptyLines(insertedLineIndex, insertedText.LinesCount - 1);
         }
-        UpdateTokensForLines(oldCursorPosition.LineIndex, insertedText.LinesCount);
+        UpdateTokensForLines(insertedLineIndex, insertedText.LinesCount);
 
         return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, insertResult.StartPosition, insertResult.EndPosition, text, insertResult.HasInserted);
     }
@@ -301,25 +336,30 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        if (TextCursor.Kind == CursorPositionKind.Virtual)
+        if (TextSelection.IsExist)
         {
-            TextCursor.MoveTo(new(TextCursor.LineIndex, 0));
-        }
-        else if (TextSelection.IsExist)
-        {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
             DeleteSelection();
             UpdateTokensForLines(TextCursor.LineIndex, 1);
         }
         else
         {
-            var newPosition = Text.GetCursorPositionAfterLeftDelete(TextCursor.Position);
-            charDeleteResult = Text.LeftDelete(TextCursor.Position);
-            if (charDeleteResult.IsLineDeleted)
+            if (TextCursor.Kind == CursorPositionKind.Virtual)
             {
-                Tokens.DeleteLine(TextCursor.LineIndex);
+                TextCursor.MoveTo(new(TextCursor.LineIndex, 0));
             }
-            TextCursor.MoveTo(newPosition);
-            UpdateTokensForLines(TextCursor.LineIndex, 1);
+            else
+            {
+                var newPosition = Text.GetCursorPositionAfterLeftDelete(TextCursor.Position);
+                charDeleteResult = Text.LeftDelete(TextCursor.Position);
+                if (charDeleteResult.IsLineDeleted) Tokens.DeleteLine(TextCursor.LineIndex);
+                TextCursor.MoveTo(newPosition);
+                UpdateTokensForLines(TextCursor.LineIndex, 1);
+            }
         }
         var newCursorPosition = TextCursor.Position;
 
@@ -332,22 +372,24 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        if (TextCursor.Kind == CursorPositionKind.Virtual)
-        {
-            Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
-            TextCursor.Kind = CursorPositionKind.Real;
-        }
         if (TextSelection.IsExist)
         {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
             DeleteSelection();
         }
         else
         {
-            charDeleteResult = Text.RightDelete(TextCursor.Position);
-            if (charDeleteResult.IsLineDeleted)
+            if (TextCursor.Kind == CursorPositionKind.Virtual)
             {
-                Tokens.DeleteLine(TextCursor.LineIndex + 1);
+                Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
             }
+            charDeleteResult = Text.RightDelete(TextCursor.Position);
+            if (charDeleteResult.IsLineDeleted) Tokens.DeleteLine(TextCursor.LineIndex + 1);
         }
         var newCursorPosition = TextCursor.Position;
         UpdateTokensForLines(TextCursor.LineIndex, 1);
