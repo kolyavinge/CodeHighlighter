@@ -25,7 +25,10 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
         ResetSelection();
         if (_result!.IsSelectionExist)
         {
-            _context.TextSelection.Set(_result.SelectionStart, new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + 1));
+            _context.TextSelection.Set(
+                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex),
+                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + 1));
+
             InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
         }
         else

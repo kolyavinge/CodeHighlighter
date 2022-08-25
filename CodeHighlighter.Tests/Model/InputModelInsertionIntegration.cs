@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using NUnit.Framework;
 
@@ -46,7 +45,7 @@ internal class InputModelInsertionIntegration
     [Test]
     public void InsertText_OneLine()
     {
-        AppendString("0123456789");
+        _model.SetText("0123456789");
         _model.MoveCursorTo(new(0, 5));
         _model.InsertText("XXX");
         Assert.AreEqual("01234XXX56789", _model.Text.ToString());
@@ -57,9 +56,22 @@ internal class InputModelInsertionIntegration
     }
 
     [Test]
+    public void InsertText_OneLine_SecondTextLine()
+    {
+        _model.SetText("0123456789\r\n");
+        _model.MoveCursorTo(new(1, 0));
+        _model.InsertText("XXX");
+        Assert.AreEqual("0123456789\r\nXXX", _model.Text.ToString());
+        Assert.AreEqual(1, _model.TextCursor.LineIndex);
+        Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(2, _model.Tokens.LinesCount);
+        Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
+    }
+
+    [Test]
     public void InsertText_MultyLines()
     {
-        AppendString("0123456789");
+        _model.SetText("0123456789");
         _model.MoveCursorTo(new(0, 5));
         _model.InsertText("XXX\nYYY\nZZZ");
         Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ56789", _model.Text.ToString());
@@ -74,7 +86,7 @@ internal class InputModelInsertionIntegration
     [Test]
     public void InsertText_MultyLinesWithSelection()
     {
-        AppendString("0123456789");
+        _model.SetText("0123456789");
         _model.MoveCursorTo(new(0, 5));
         _model.ActivateSelection();
         _model.MoveCursorTo(new(0, 7));
@@ -92,7 +104,7 @@ internal class InputModelInsertionIntegration
     [Test]
     public void InsertText_MultyLinesWithAllSelection()
     {
-        AppendString("0123456789");
+        _model.SetText("0123456789");
         _model.SelectAll();
         _model.InsertText("XXX\nYYY\nZZZ");
         Assert.AreEqual("XXX\r\nYYY\r\nZZZ", _model.Text.ToString());
@@ -102,10 +114,5 @@ internal class InputModelInsertionIntegration
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
         Assert.AreEqual(1, _model.Tokens.GetTokens(1).Count);
         Assert.AreEqual(1, _model.Tokens.GetTokens(2).Count);
-    }
-
-    private void AppendString(string str)
-    {
-        str.ToList().ForEach(ch => _model.AppendChar(ch));
     }
 }

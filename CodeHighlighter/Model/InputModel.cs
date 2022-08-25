@@ -197,8 +197,9 @@ internal class InputModel
         {
             var deleteResult = LeftDelete();
             var newCursorPosition = TextCursor.Position;
+            // deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText - write test
 
-            return new(oldCursorPosition, newCursorPosition, default, default, "", deleteResult.HasDeleted);
+            return new(oldCursorPosition, newCursorPosition, deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText, deleteResult.HasDeleted);
         }
     }
 
@@ -301,31 +302,23 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        int insertedLineIndex = 0;
+        if (selectionStart.Kind == CursorPositionKind.Virtual)
+        {
+            Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+            TextCursor.Kind = CursorPositionKind.Real;
+        }
         if (TextSelection.IsExist)
         {
-            if (selectionStart.Kind == CursorPositionKind.Virtual)
-            {
-                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
-                TextCursor.Kind = CursorPositionKind.Real;
-            }
             DeleteSelection();
-            insertedLineIndex = selectionStart.LineIndex;
-        }
-        else if (TextCursor.Kind == CursorPositionKind.Virtual)
-        {
-            Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
-            TextCursor.Kind = CursorPositionKind.Real;
-            insertedLineIndex = TextCursor.LineIndex;
         }
         var insertResult = Text.Insert(TextCursor.Position, insertedText);
         TextCursor.MoveTo(insertResult.EndPosition);
         var newCursorPosition = TextCursor.Position;
         if (insertedText.LinesCount > 1)
         {
-            Tokens.InsertEmptyLines(insertedLineIndex, insertedText.LinesCount - 1);
+            Tokens.InsertEmptyLines(insertResult.StartPosition.LineIndex, insertedText.LinesCount - 1);
         }
-        UpdateTokensForLines(insertedLineIndex, insertedText.LinesCount);
+        UpdateTokensForLines(insertResult.StartPosition.LineIndex, insertedText.LinesCount);
 
         return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, insertResult.StartPosition, insertResult.EndPosition, text, insertResult.HasInserted);
     }

@@ -20,7 +20,14 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
     public override void Undo()
     {
         ResetSelection();
-        SetCursorToStartPosition();
+        if (_result!.IsSelectionExist)
+        {
+            _context.TextCursor.MoveTo(new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex));
+        }
+        else
+        {
+            SetCursorToStartPosition();
+        }
         RightDeleteInputAction.Instance.Do(_context);
         if (_result!.IsSelectionExist)
         {

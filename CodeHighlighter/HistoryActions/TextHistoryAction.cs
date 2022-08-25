@@ -48,7 +48,11 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
 
     protected void ClearLineIfVirtualCursor()
     {
-        if (_result!.OldCursorPosition.Kind == CursorPositionKind.Virtual)
+        if (_result!.IsSelectionExist && _result!.SelectionStart.Kind == CursorPositionKind.Virtual)
+        {
+            _context.Text.GetLine(_result!.SelectionStart.LineIndex).Clear();
+        }
+        else if (!_result!.IsSelectionExist && _result!.OldCursorPosition.Kind == CursorPositionKind.Virtual)
         {
             _context.Text.GetLine(_result!.OldCursorPosition.LineIndex).Clear();
         }

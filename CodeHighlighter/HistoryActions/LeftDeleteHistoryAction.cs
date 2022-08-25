@@ -21,7 +21,7 @@ internal class LeftDeleteHistoryAction : TextHistoryAction<DeleteResult>
     {
         ResetSelection();
         SetCursorToEndPosition();
-        var deletedSelectedText = !String.IsNullOrWhiteSpace(_result!.DeletedSelectedText) ? _result!.DeletedSelectedText : _result.CharCharDeleteResult.DeletedChar.ToString();
+        var deletedSelectedText = _result!.DeletedSelectedText != "" ? _result!.DeletedSelectedText : _result.CharCharDeleteResult.DeletedChar.ToString();
         InsertTextInputAction.Instance.Do(_context, deletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();

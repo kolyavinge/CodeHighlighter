@@ -29,7 +29,6 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     {
         _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(0, 1));
-        MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("ext\r\n123", _text.ToString());
@@ -53,7 +52,6 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     {
         _context.InputModel.SetText("text\r\n123");
         _context.InputModel.MoveCursorTo(new(1, 0));
-        MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("text123", _text.ToString());
@@ -103,7 +101,6 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     {
         _context.InputModel.SetText("    text\r\n");
         _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        MakeInactiveSelection();
 
         _action.Do();
         Assert.AreEqual("    text\r\n", _text.ToString());
@@ -118,6 +115,84 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
         _action.Redo();
         Assert.AreEqual("    text\r\n", _text.ToString());
         AssertCursorPosition(new(1, 0));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void WithSelection_1_VirtualCursor()
+    {
+        _context.InputModel.SetText("    123\r\n\r\n456");
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _context.InputModel.ActivateSelection();
+        _context.InputModel.MoveCursorTo(new(2, 3));
+        _context.InputModel.CompleteSelection();
+
+        _action.Do();
+        Assert.AreEqual("    123\r\n    ", _text.ToString());
+        AssertCursorPosition(new(1, 4));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    123\r\n\r\n456", _text.ToString());
+        AssertCursorPosition(new(2, 3));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    123\r\n    ", _text.ToString());
+        AssertCursorPosition(new(1, 4));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void WithSelection_2_VirtualCursor()
+    {
+        _context.InputModel.SetText("    123\r\n\r\n456");
+        _context.InputModel.MoveCursorTo(new(0, 7));
+        _context.InputModel.ActivateSelection();
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _context.InputModel.CompleteSelection();
+
+        _action.Do();
+        Assert.AreEqual("    123\r\n456", _text.ToString());
+        AssertCursorPosition(new(0, 7));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    123\r\n\r\n456", _text.ToString());
+        AssertCursorPosition(new(1, 4, CursorPositionKind.Virtual));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    123\r\n456", _text.ToString());
+        AssertCursorPosition(new(0, 7));
+
+        InvalidateVisualCallThreeTimes();
+    }
+
+    [Test]
+    public void WithSelection_3_VirtualCursor()
+    {
+        _context.InputModel.SetText("    123\r\n\r\n\r\n456");
+        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _context.InputModel.ActivateSelection();
+        _context.InputModel.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        _context.InputModel.CompleteSelection();
+
+        _action.Do();
+        Assert.AreEqual("    123\r\n    \r\n456", _text.ToString());
+        AssertCursorPosition(new(1, 4));
+
+        MakeUncompleteSelection();
+        _action.Undo();
+        Assert.AreEqual("    123\r\n\r\n\r\n456", _text.ToString());
+        AssertCursorPosition(new(2, 4, CursorPositionKind.Virtual));
+
+        MakeUncompleteSelection();
+        _action.Redo();
+        Assert.AreEqual("    123\r\n    \r\n456", _text.ToString());
+        AssertCursorPosition(new(1, 4));
 
         InvalidateVisualCallThreeTimes();
     }
