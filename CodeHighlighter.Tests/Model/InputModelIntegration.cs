@@ -702,6 +702,63 @@ internal class InputModelIntegration
     }
 
     [Test]
+    public void DeleteLeftToken_1_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n456");
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(2, 3));
+        _model.CompleteSelection();
+        var result = _model.DeleteLeftToken();
+
+        Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(2, 3), result.SelectionEnd);
+        Assert.AreEqual("\r\n456", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n    ", _model.Text.ToString());
+    }
+
+    [Test]
+    public void DeleteLeftToken_2_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n456");
+        _model.MoveCursorTo(new(0, 7));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.CompleteSelection();
+        var result = _model.DeleteLeftToken();
+
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n456", _model.Text.ToString());
+    }
+
+    [Test]
+    public void DeleteLeftToken_3_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n\r\n456");
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        _model.CompleteSelection();
+        var result = _model.DeleteLeftToken();
+
+        Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n    \r\n456", _model.Text.ToString());
+    }
+
+    [Test]
     public void DeleteRightToken()
     {
         _model.SetText("SELECT FROM");
@@ -766,6 +823,63 @@ internal class InputModelIntegration
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
         Assert.AreEqual("    SELECT FROM\r\n    SELECT FROM", _model.Text.ToString());
+    }
+
+    [Test]
+    public void DeleteRightToken_WithSelection_1_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n456");
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(2, 3));
+        _model.CompleteSelection();
+        var result = _model.DeleteRightToken();
+
+        Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(2, 3), result.SelectionEnd);
+        Assert.AreEqual("\r\n456", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n    ", _model.Text.ToString());
+    }
+
+    [Test]
+    public void DeleteRightToken_WithSelection_2_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n456");
+        _model.MoveCursorTo(new(0, 7));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.CompleteSelection();
+        var result = _model.DeleteRightToken();
+
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n456", _model.Text.ToString());
+    }
+
+    [Test]
+    public void DeleteRightToken_WithSelection_3_VirtualCursor()
+    {
+        _model.SetText("    123\r\n\r\n\r\n456");
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        _model.ActivateSelection();
+        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        _model.CompleteSelection();
+        var result = _model.DeleteRightToken();
+
+        Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("\r\n", result.DeletedSelectedText);
+        Assert.True(result.HasDeleted);
+        Assert.AreEqual("    123\r\n    \r\n456", _model.Text.ToString());
     }
 
     [Test]

@@ -197,7 +197,6 @@ internal class InputModel
         {
             var deleteResult = LeftDelete();
             var newCursorPosition = TextCursor.Position;
-            // deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText - write test
 
             return new(oldCursorPosition, newCursorPosition, deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText, deleteResult.HasDeleted);
         }
