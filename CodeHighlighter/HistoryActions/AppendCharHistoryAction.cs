@@ -14,7 +14,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
 
     public override bool Do()
     {
-        _result = AppendCharInputAction.Instance.Do(_context, _appendedChar);
+        Result = AppendCharInputAction.Instance.Do(_context, _appendedChar);
         _context.CodeTextBox.InvalidateVisual();
 
         return true;
@@ -23,13 +23,13 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
     public override void Undo()
     {
         ResetSelection();
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             _context.TextSelection.Set(
-                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex),
-                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + 1));
+                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex),
+                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex + 1));
 
-            InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
+            InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         }
         else
         {
@@ -43,7 +43,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
 
     public override void Redo()
     {
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelection();
         }

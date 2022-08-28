@@ -11,17 +11,17 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
 
     public override bool Do()
     {
-        _result = DeleteRightTokenInputAction.Instance.Do(_context);
-        if (_result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
+        Result = DeleteRightTokenInputAction.Instance.Do(_context);
+        if (Result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasDeleted;
+        return Result.HasDeleted;
     }
 
     public override void Undo()
     {
         ResetSelection();
         SetCursorToEndPosition();
-        InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
+        InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();

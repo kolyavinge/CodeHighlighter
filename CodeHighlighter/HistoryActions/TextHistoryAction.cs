@@ -4,8 +4,14 @@ namespace CodeHighlighter.HistoryActions;
 
 internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where TEditTextResult : EditTextResult
 {
+    private TEditTextResult? _result;
     protected readonly HistoryActionContext _context;
-    protected TEditTextResult? _result;
+
+    protected TEditTextResult Result
+    {
+        get => _result ?? throw new InvalidOperationException();
+        set => _result = value;
+    }
 
     protected TextHistoryAction(HistoryActionContext context)
     {
@@ -19,42 +25,42 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
 
     protected void SetCursorToStartPosition()
     {
-        _context.InputModel.MoveCursorTo(_result!.OldCursorPosition);
+        _context.InputModel.MoveCursorTo(Result.OldCursorPosition);
     }
 
     protected void SetCursorToEndPosition()
     {
-        _context.InputModel.MoveCursorTo(_result!.NewCursorPosition);
+        _context.InputModel.MoveCursorTo(Result.NewCursorPosition);
     }
 
     protected void RestoreSelection()
     {
-        _context.TextSelection.Set(_result!.SelectionStart, _result.SelectionEnd);
+        _context.TextSelection.Set(Result.SelectionStart, Result.SelectionEnd);
     }
 
     protected void RestoreSelectionLineUp()
     {
         _context.TextSelection.Set(
-            new(_result!.SelectionStart.LineIndex - 1, _result!.SelectionStart.ColumnIndex),
-            new(_result.SelectionEnd.LineIndex - 1, _result.SelectionEnd.ColumnIndex));
+            new(Result.SelectionStart.LineIndex - 1, Result.SelectionStart.ColumnIndex),
+            new(Result.SelectionEnd.LineIndex - 1, Result.SelectionEnd.ColumnIndex));
     }
 
     protected void RestoreSelectionLineDown()
     {
         _context.TextSelection.Set(
-            new(_result!.SelectionStart.LineIndex + 1, _result!.SelectionStart.ColumnIndex),
-            new(_result.SelectionEnd.LineIndex + 1, _result.SelectionEnd.ColumnIndex));
+            new(Result.SelectionStart.LineIndex + 1, Result.SelectionStart.ColumnIndex),
+            new(Result.SelectionEnd.LineIndex + 1, Result.SelectionEnd.ColumnIndex));
     }
 
     protected void ClearLineIfVirtualCursor()
     {
-        if (_result!.IsSelectionExist && _result!.SelectionStart.Kind == CursorPositionKind.Virtual)
+        if (Result.IsSelectionExist && Result.SelectionStart.Kind == CursorPositionKind.Virtual)
         {
-            _context.Text.GetLine(_result!.SelectionStart.LineIndex).Clear();
+            _context.Text.GetLine(Result.SelectionStart.LineIndex).Clear();
         }
-        else if (!_result!.IsSelectionExist && _result!.OldCursorPosition.Kind == CursorPositionKind.Virtual)
+        else if (!Result.IsSelectionExist && Result.OldCursorPosition.Kind == CursorPositionKind.Virtual)
         {
-            _context.Text.GetLine(_result!.OldCursorPosition.LineIndex).Clear();
+            _context.Text.GetLine(Result.OldCursorPosition.LineIndex).Clear();
         }
     }
 }

@@ -11,15 +11,15 @@ internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelect
 
     public override bool Do()
     {
-        _result = MoveSelectedLinesDownInputAction.Instance.Do(_context);
-        if (_result.HasMoved) _context.CodeTextBox.InvalidateVisual();
+        Result = MoveSelectedLinesDownInputAction.Instance.Do(_context);
+        if (Result.HasMoved) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasMoved;
+        return Result.HasMoved;
     }
 
     public override void Undo()
     {
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelectionLineDown();
         }
@@ -37,7 +37,7 @@ internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelect
     public override void Redo()
     {
         SetCursorToStartPosition();
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelection();
         }

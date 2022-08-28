@@ -14,26 +14,26 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
 
     public override bool Do()
     {
-        _result = InsertTextInputAction.Instance.Do(_context, _insertedText);
-        if (_result.HasInserted) _context.CodeTextBox.InvalidateVisual();
+        Result = InsertTextInputAction.Instance.Do(_context, _insertedText);
+        if (Result.HasInserted) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasInserted;
+        return Result.HasInserted;
     }
 
     public override void Undo()
     {
         ResetSelection();
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             _context.TextSelection.Set(
-                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex),
-                new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex + _insertedText.Length));
+                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex),
+                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex + _insertedText.Length));
 
-            InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
+            InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         }
         else
         {
-            _context.TextSelection.Set(_result.InsertStartPosition, _result.InsertEndPosition);
+            _context.TextSelection.Set(Result.InsertStartPosition, Result.InsertEndPosition);
             LeftDeleteInputAction.Instance.Do(_context);
         }
         ClearLineIfVirtualCursor();
@@ -43,7 +43,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
 
     public override void Redo()
     {
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelection();
         }

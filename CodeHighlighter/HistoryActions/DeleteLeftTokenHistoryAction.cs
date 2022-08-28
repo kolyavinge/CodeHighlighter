@@ -11,17 +11,17 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
 
     public override bool Do()
     {
-        _result = DeleteLeftTokenInputAction.Instance.Do(_context);
-        if (_result.HasDeleted || _result.OldCursorPosition.Kind == CursorPositionKind.Virtual) _context.CodeTextBox.InvalidateVisual();
+        Result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        if (Result.HasDeleted || Result.OldCursorPosition.Kind == CursorPositionKind.Virtual) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasDeleted;
+        return Result.HasDeleted;
     }
 
     public override void Undo()
     {
         ResetSelection();
         SetCursorToEndPosition();
-        InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
+        InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();
@@ -29,7 +29,7 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
 
     public override void Redo()
     {
-        if (!_result!.IsSelectionExist && _result!.OldCursorPosition.Kind == CursorPositionKind.Virtual)
+        if (!Result.IsSelectionExist && Result.OldCursorPosition.Kind == CursorPositionKind.Virtual)
         {
             ResetSelection();
             SetCursorToStartPosition();

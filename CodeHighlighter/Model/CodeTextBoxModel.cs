@@ -7,7 +7,7 @@ namespace CodeHighlighter.Model;
 public class CodeTextBoxModel
 {
     private readonly HistoryActionContext _historyActionContext;
-    private ICodeTextBox? _codeTextBox;
+    private ICodeTextBox _codeTextBox;
 
     public event EventHandler? TextSet;
     public event EventHandler? TextChanged;
@@ -28,6 +28,7 @@ public class CodeTextBoxModel
 
     public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
     {
+        _codeTextBox = DummyCodeTextBox.Instance;
         Text = new Text();
         TextCursor = new TextCursor(Text);
         Tokens = new Tokens();
@@ -64,7 +65,7 @@ public class CodeTextBoxModel
             tokenKindUpdatable.TokenKindUpdated += (s, e) =>
             {
                 tokenKindUpdater.UpdateTokenKinds(e.UpdatedTokenKinds);
-                _codeTextBox?.InvalidateVisual();
+                _codeTextBox.InvalidateVisual();
             };
         }
     }
@@ -74,67 +75,67 @@ public class CodeTextBoxModel
         InputModel.SetText(text);
         Viewport.UpdateScrollbarsMaximumValues(Text);
         TextSet?.Invoke(this, EventArgs.Empty);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorLeft()
     {
         MoveCursorLeftInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorRight()
     {
         MoveCursorRightInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorUp()
     {
         MoveCursorUpInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorDown()
     {
         MoveCursorDownInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorStartLine()
     {
         MoveCursorStartLineInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorEndLine()
     {
         MoveCursorEndLineInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextBegin()
     {
         MoveCursorTextBeginInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextEnd()
     {
         MoveCursorTextEndInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageUp()
     {
         MoveCursorPageUpInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageDown()
     {
         MoveCursorPageDownInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveSelectedLinesUp()
@@ -152,38 +153,38 @@ public class CodeTextBoxModel
     public void GotoLine(int lineIndex)
     {
         GotoLineInputAction.Instance.Do(_historyActionContext, lineIndex);
-        _codeTextBox?.InvalidateVisual();
-        _codeTextBox?.Focus();
+        _codeTextBox.InvalidateVisual();
+        _codeTextBox.Focus();
     }
 
     public void ScrollLineUp()
     {
         ScrollLineUpInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void ScrollLineDown()
     {
         ScrollLineDownInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToPrevToken()
     {
         MoveToPrevTokenInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToNextToken()
     {
         MoveToNextTokenInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void SelectAll()
     {
         SelectAllInputAction.Instance.Do(_historyActionContext);
-        _codeTextBox?.InvalidateVisual();
+        _codeTextBox.InvalidateVisual();
     }
 
     public void DeleteLeftToken()

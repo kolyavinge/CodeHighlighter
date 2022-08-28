@@ -11,17 +11,17 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
 
     public override bool Do()
     {
-        _result = RightDeleteInputAction.Instance.Do(_context);
-        if (_result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
+        Result = RightDeleteInputAction.Instance.Do(_context);
+        if (Result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasDeleted;
+        return Result.HasDeleted;
     }
 
     public override void Undo()
     {
         ResetSelection();
         SetCursorToEndPosition();
-        var deletedSelectedText = _result!.DeletedSelectedText != "" ? _result!.DeletedSelectedText : _result.CharCharDeleteResult.DeletedChar.ToString();
+        var deletedSelectedText = Result.DeletedSelectedText != "" ? Result.DeletedSelectedText : Result.CharCharDeleteResult.DeletedChar.ToString();
         InsertTextInputAction.Instance.Do(_context, deletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
@@ -30,7 +30,7 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
 
     public override void Redo()
     {
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelection();
         }

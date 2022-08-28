@@ -11,16 +11,16 @@ internal class ToLowerCaseHistoryAction : TextHistoryAction<CaseResult>
 
     public override bool Do()
     {
-        _result = ToLowerCaseInputAction.Instance.Do(_context);
-        if (_result.HasChanged) _context.CodeTextBox.InvalidateVisual();
+        Result = ToLowerCaseInputAction.Instance.Do(_context);
+        if (Result.HasChanged) _context.CodeTextBox.InvalidateVisual();
 
-        return _result.HasChanged;
+        return Result.HasChanged;
     }
 
     public override void Undo()
     {
         RestoreSelection();
-        InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
+        InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();
     }

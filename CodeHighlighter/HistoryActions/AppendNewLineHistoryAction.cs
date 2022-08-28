@@ -11,7 +11,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
 
     public override bool Do()
     {
-        _result = AppendNewLineInputAction.Instance.Do(_context);
+        Result = AppendNewLineInputAction.Instance.Do(_context);
         _context.CodeTextBox.InvalidateVisual();
 
         return true;
@@ -20,18 +20,18 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
     public override void Undo()
     {
         ResetSelection();
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
-            _context.TextCursor.MoveTo(new(_result.SelectionStart.LineIndex, _result.SelectionStart.ColumnIndex));
+            _context.TextCursor.MoveTo(new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex));
         }
         else
         {
             SetCursorToStartPosition();
         }
         RightDeleteInputAction.Instance.Do(_context);
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
-            InsertTextInputAction.Instance.Do(_context, _result.DeletedSelectedText);
+            InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
@@ -40,7 +40,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
 
     public override void Redo()
     {
-        if (_result!.IsSelectionExist)
+        if (Result.IsSelectionExist)
         {
             RestoreSelection();
         }
