@@ -15,7 +15,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
     public override bool Do()
     {
         _result = AppendCharInputAction.Instance.Do(_context, _appendedChar);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
 
         return true;
     }
@@ -38,7 +38,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
@@ -53,6 +53,6 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
             SetCursorToStartPosition();
         }
         AppendCharInputAction.Instance.Do(_context, _appendedChar);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

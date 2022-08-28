@@ -15,7 +15,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
     public override bool Do()
     {
         _result = InsertTextInputAction.Instance.Do(_context, _insertedText);
-        if (_result.HasInserted) _context.CodeTextBox?.InvalidateVisual();
+        if (_result.HasInserted) _context.CodeTextBox.InvalidateVisual();
 
         return _result.HasInserted;
     }
@@ -38,7 +38,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
@@ -53,6 +53,6 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             SetCursorToStartPosition();
         }
         InsertTextInputAction.Instance.Do(_context, _insertedText);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

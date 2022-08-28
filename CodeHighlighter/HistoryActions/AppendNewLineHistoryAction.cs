@@ -12,7 +12,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
     public override bool Do()
     {
         _result = AppendNewLineInputAction.Instance.Do(_context);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
 
         return true;
     }
@@ -35,7 +35,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
@@ -50,6 +50,6 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
             SetCursorToStartPosition();
         }
         AppendNewLineInputAction.Instance.Do(_context);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

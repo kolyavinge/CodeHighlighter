@@ -45,7 +45,7 @@ public class CodeTextBoxModel
         SetCodeProvider(codeProvider);
     }
 
-    internal void Init(ICodeTextBox? codeTextBox, IViewportContext viewportContext)
+    internal void Init(ICodeTextBox codeTextBox, IViewportContext viewportContext)
     {
         _codeTextBox = codeTextBox;
         ViewportContext = viewportContext;

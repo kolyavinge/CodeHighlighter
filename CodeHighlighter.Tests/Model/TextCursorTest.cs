@@ -24,11 +24,13 @@ internal class TextCursorTest
     [Test]
     public void PositionToString()
     {
-        Assert.AreEqual("0:0", _textCursor.Position.ToString());
+        _text.TextContent = "12345\n1234\n    123\n";
+
         _textCursor.MoveTo(new(1, 1));
         Assert.AreEqual("1:1", _textCursor.Position.ToString());
-        _textCursor.MoveTo(new(2, 3));
-        Assert.AreEqual("2:3", _textCursor.Position.ToString());
+
+        _textCursor.MoveTo(new(3, 4, CursorPositionKind.Virtual));
+        Assert.AreEqual("[3:4]", _textCursor.Position.ToString());
     }
 
     [Test]

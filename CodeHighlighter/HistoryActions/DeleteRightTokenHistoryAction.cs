@@ -12,7 +12,7 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
     public override bool Do()
     {
         _result = DeleteRightTokenInputAction.Instance.Do(_context);
-        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+        if (_result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
 
         return _result.HasDeleted;
     }
@@ -24,13 +24,13 @@ internal class DeleteRightTokenHistoryAction : TextHistoryAction<DeleteTokenResu
         InsertTextInputAction.Instance.Do(_context, _result!.DeletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
     {
         RestoreSelection();
         DeleteRightTokenInputAction.Instance.Do(_context);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

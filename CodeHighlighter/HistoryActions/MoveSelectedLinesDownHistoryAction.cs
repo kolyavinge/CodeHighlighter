@@ -12,7 +12,7 @@ internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelect
     public override bool Do()
     {
         _result = MoveSelectedLinesDownInputAction.Instance.Do(_context);
-        if (_result.HasMoved) _context.CodeTextBox?.InvalidateVisual();
+        if (_result.HasMoved) _context.CodeTextBox.InvalidateVisual();
 
         return _result.HasMoved;
     }
@@ -31,7 +31,7 @@ internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelect
         MoveSelectedLinesUpInputAction.Instance.Do(_context);
         SetCursorToStartPosition();
         RestoreSelection();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
@@ -47,6 +47,6 @@ internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelect
             SetCursorToStartPosition();
         }
         MoveSelectedLinesDownInputAction.Instance.Do(_context);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

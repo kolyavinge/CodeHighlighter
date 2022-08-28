@@ -12,7 +12,7 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
     public override bool Do()
     {
         _result = RightDeleteInputAction.Instance.Do(_context);
-        if (_result.HasDeleted) _context.CodeTextBox?.InvalidateVisual();
+        if (_result.HasDeleted) _context.CodeTextBox.InvalidateVisual();
 
         return _result.HasDeleted;
     }
@@ -25,7 +25,7 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
         InsertTextInputAction.Instance.Do(_context, deletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
@@ -40,6 +40,6 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
             SetCursorToStartPosition();
         }
         RightDeleteInputAction.Instance.Do(_context);
-        _context.CodeTextBox?.InvalidateVisual();
+        _context.CodeTextBox.InvalidateVisual();
     }
 }

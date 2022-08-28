@@ -5,7 +5,7 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class HistoryActionContext : InputActionContext
 {
-    public ICodeTextBox? CodeTextBox;
+    public ICodeTextBox CodeTextBox;
 
     public HistoryActionContext(
         InputModel inputModel,
@@ -17,5 +17,6 @@ internal class HistoryActionContext : InputActionContext
         IViewportContext viewportContext,
         Action raiseTextChanged) : base(inputModel, text, textCursor, textMeasures, textSelection, viewport, viewportContext, raiseTextChanged)
     {
+        CodeTextBox = DummyCodeTextBox.Instance;
     }
 }
