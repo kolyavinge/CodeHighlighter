@@ -152,6 +152,7 @@ internal class InputModel
     {
         var selector = new TokenSelector();
         var range = selector.GetSelection(Tokens, position);
+        TextCursor.MoveTo(new(position.LineIndex, range.EndCursorColumnIndex));
         TextSelection.Reset();
         TextSelection.StartPosition = new(position.LineIndex, range.StartCursorColumnIndex);
         TextSelection.EndPosition = new(position.LineIndex, range.EndCursorColumnIndex);

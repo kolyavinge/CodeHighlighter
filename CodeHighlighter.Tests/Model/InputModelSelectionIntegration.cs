@@ -282,18 +282,22 @@ internal class InputModelSelectionIntegration
         _model.SelectToken(new(0, 0));
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 6), _model.TextSelection.EndPosition);
+        Assert.AreEqual(new CursorPosition(0, 6), _model.TextCursor.Position);
 
         _model.SelectToken(new(0, 8));
         Assert.AreEqual(new CursorPosition(0, 7), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 11), _model.TextSelection.EndPosition);
+        Assert.AreEqual(new CursorPosition(0, 11), _model.TextCursor.Position);
 
         _model.SelectToken(new(0, 12));
         Assert.AreEqual(new CursorPosition(0, 12), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 16), _model.TextSelection.EndPosition);
+        Assert.AreEqual(new CursorPosition(0, 16), _model.TextCursor.Position);
 
         _model.SelectToken(new(0, 20));
         Assert.AreEqual(new CursorPosition(0, 17), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 22), _model.TextSelection.EndPosition);
+        Assert.AreEqual(new CursorPosition(0, 22), _model.TextCursor.Position);
     }
 
     [Test]
