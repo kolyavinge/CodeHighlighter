@@ -15,7 +15,9 @@ internal class HistoryActionContext : InputActionContext
         TextSelection textSelection,
         Viewport viewport,
         IViewportContext viewportContext,
-        Action raiseTextChanged) : base(inputModel, text, textCursor, textMeasures, textSelection, viewport, viewportContext, raiseTextChanged)
+        Action raiseTextChanged,
+        Action raiseTextSet)
+        : base(inputModel, text, textCursor, textMeasures, textSelection, viewport, viewportContext, raiseTextChanged, raiseTextSet)
     {
         CodeTextBox = DummyCodeTextBox.Instance;
     }

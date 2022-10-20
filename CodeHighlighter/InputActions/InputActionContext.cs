@@ -12,6 +12,7 @@ internal class InputActionContext
     public Viewport Viewport;
     public IViewportContext ViewportContext;
     public readonly Action RaiseTextChanged;
+    public readonly Action RaiseTextSet;
 
     public InputActionContext(
         InputModel inputModel,
@@ -21,7 +22,8 @@ internal class InputActionContext
         TextSelection textSelection,
         Viewport viewport,
         IViewportContext viewportContext,
-        Action raiseTextChanged)
+        Action raiseTextChanged,
+        Action raiseTextSet)
     {
         InputModel = inputModel;
         Text = text;
@@ -31,5 +33,6 @@ internal class InputActionContext
         Viewport = viewport;
         ViewportContext = viewportContext;
         RaiseTextChanged = raiseTextChanged;
+        RaiseTextSet = raiseTextSet;
     }
 }

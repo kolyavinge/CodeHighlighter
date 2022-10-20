@@ -16,6 +16,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly Action _raiseTextChanged;
+    protected readonly Action _raiseTextSet;
     protected Mock<ICodeTextBox> _codeTextBox;
     protected HistoryActionContext _context;
 
@@ -28,12 +29,13 @@ internal class BaseHistoryActionIntegration
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
+        _raiseTextSet = () => { };
         _inputModel = new(_text, _textCursor, _textSelection, new());
     }
 
     protected void MakeContext()
     {
-        _context = new(_inputModel, _text, _textCursor, _textMeasures, _textSelection, _viewport, _viewportContext.Object, _raiseTextChanged);
+        _context = new(_inputModel, _text, _textCursor, _textMeasures, _textSelection, _viewport, _viewportContext.Object, _raiseTextChanged, _raiseTextSet);
         _codeTextBox = new();
         _context.CodeTextBox = _codeTextBox.Object;
     }

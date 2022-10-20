@@ -341,6 +341,17 @@ internal class TextCursorTest
     }
 
     [Test]
+    public void MoveTextBegin_AfterVertualVursor()
+    {
+        _text.TextContent = "    123\r\n\r\n";
+        _textCursor.MoveTo(new(1, 4, CursorPositionKind.Virtual));
+
+        _textCursor.MoveTextBegin();
+
+        Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
+    }
+
+    [Test]
     public void MoveTextEnd()
     {
         _textCursor.MoveTextEnd();
@@ -348,5 +359,16 @@ internal class TextCursorTest
 
         _textCursor.MoveTextEnd();
         Assert.AreEqual(new CursorPosition(2, 3), _textCursor.Position);
+    }
+
+    [Test]
+    public void MoveTextEnd_AfterVertualVursor()
+    {
+        _text.TextContent = "    123\r\n\r\n";
+        _textCursor.MoveTo(new(1, 4, CursorPositionKind.Virtual));
+
+        _textCursor.MoveTextEnd();
+
+        Assert.AreEqual(new CursorPosition(2, 0), _textCursor.Position);
     }
 }

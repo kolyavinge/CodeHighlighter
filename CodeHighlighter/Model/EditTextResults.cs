@@ -22,6 +22,17 @@ internal abstract class EditTextResult
     }
 }
 
+internal class SetTextResult : EditTextResult
+{
+    public readonly string Text;
+
+    public SetTextResult(CursorPosition oldCursorPosition, string deletedSelectedText, string text)
+        : base(oldCursorPosition, new(), new(), new(), deletedSelectedText)
+    {
+        Text = text;
+    }
+}
+
 internal class AppendCharResult : EditTextResult
 {
     public readonly char AppendedChar;

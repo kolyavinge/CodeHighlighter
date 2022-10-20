@@ -130,12 +130,14 @@ public class TextCursor
     {
         ColumnIndex = 0;
         LineIndex = 0;
+        CorrectPosition();
     }
 
     internal void MoveTextEnd()
     {
         LineIndex = _text.LinesCount - 1;
         ColumnIndex = _text.GetLine(LineIndex).Length;
+        CorrectPosition();
     }
 
     private void CorrectPosition()

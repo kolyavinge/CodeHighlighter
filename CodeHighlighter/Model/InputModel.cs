@@ -39,11 +39,15 @@ internal class InputModel
         SetTokens();
     }
 
-    public void SetText(string text)
+    public SetTextResult SetText(string text)
     {
+        var oldCursorPosition = TextCursor.Position;
+        var oldText = Text.TextContent;
         TextCursor.MoveTextBegin();
         Text.TextContent = text;
         SetTokens();
+
+        return new(oldCursorPosition, oldText, text);
     }
 
     public void MoveCursorTo(CursorPosition position)

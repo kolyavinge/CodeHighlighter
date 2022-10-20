@@ -42,7 +42,7 @@ public class CodeTextBoxModel
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _historyActionContext = new HistoryActionContext(
-            InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, () => TextChanged?.Invoke(this, EventArgs.Empty));
+            InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, () => TextChanged?.Invoke(this, EventArgs.Empty), () => TextSet?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
     }
 
@@ -72,10 +72,8 @@ public class CodeTextBoxModel
 
     public void SetText(string text)
     {
-        InputModel.SetText(text);
-        Viewport.UpdateScrollbarsMaximumValues(Text);
-        TextSet?.Invoke(this, EventArgs.Empty);
-        _codeTextBox.InvalidateVisual();
+        if (IsReadOnly) return;
+        History.AddAndDo(new SetTextHistoryAction(_historyActionContext, text));
     }
 
     public void MoveCursorLeft()
