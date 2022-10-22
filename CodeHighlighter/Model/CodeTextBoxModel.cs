@@ -1,6 +1,7 @@
 ﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
+using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter.Model;
 
@@ -18,6 +19,7 @@ public class CodeTextBoxModel
     public TextMeasures TextMeasures { get; }
     public TextSelection TextSelection { get; }
     public History History { get; }
+    public LinesDecorationCollection LinesDecoration { get; }
     public bool IsReadOnly { get; set; }
 
     internal IViewportContext ViewportContext { get; set; }
@@ -35,6 +37,7 @@ public class CodeTextBoxModel
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
         History = new History();
+        LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();

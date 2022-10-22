@@ -25,6 +25,7 @@
             <TextBlock Text="{Binding TextLinesCount, ElementName=codeTextBox}" Margin="0,2,0,0" />
             <Button Command="{Binding GotoLineCommand}" Content="Goto line" Margin="8,0,0,0" />
             <TextBox Text="{Binding SelectedLineToGoto}" Margin="8,0,0,0" Width="50" />
+            <CheckBox IsChecked="{Binding IsAlterLinesColor}" Content="Alter lines colors" Margin="8,3,0,0" />
         </StackPanel>
 
         <Grid Margin="0,24,0,24">

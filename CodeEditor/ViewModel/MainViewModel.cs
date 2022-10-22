@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using CodeEditor.Mvvm;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
+using CodeHighlighter.Rendering;
 
 namespace CodeEditor.ViewModel;
 
@@ -28,6 +30,30 @@ public class MainViewModel
     {
         get => _isReadOnly;
         set { _isReadOnly = value; CodeTextBoxModel.IsReadOnly = value; }
+    }
+
+    private bool _isAlterLinesColor;
+    public bool IsAlterLinesColor
+    {
+        get => _isAlterLinesColor;
+        set
+        {
+            _isAlterLinesColor = value;
+            if (value)
+            {
+                for (int i = 0; i < CodeTextBoxModel.Text.LinesCount; i += 2)
+                {
+                    CodeTextBoxModel.LinesDecoration[i] = new LineDecoration { Background = Brushes.Wheat };
+                }
+            }
+            else
+            {
+                for (int i = 0; i < CodeTextBoxModel.Text.LinesCount; i++)
+                {
+                    CodeTextBoxModel.LinesDecoration[i] = null;
+                }
+            }
+        }
     }
 
     public MainViewModel()

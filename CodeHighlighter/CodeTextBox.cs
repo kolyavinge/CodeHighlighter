@@ -18,6 +18,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private readonly KeyboardController _keyboardController;
     private readonly MouseController _mouseController;
     private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
+    private readonly LineRenderLogic _lineRenderLogic;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -244,6 +245,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _keyboardController = new KeyboardController();
         _mouseController = new MouseController();
         _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
+        _lineRenderLogic = new LineRenderLogic();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
@@ -270,6 +272,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         {
             _cursorRenderLogic.DrawHighlightedCursorLine(Model, context, CursorLineHighlightingBrush, ActualWidth);
         }
+        _lineRenderLogic.DrawLines(Model, context, ActualWidth);
         _textSelectionRenderLogic.DrawSelectedLines(Model, context, SelectionBrush);
         _highlightBracketsRenderLogic.DrawHighlightedBrackets(Model, context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
         _textRenderLogic.DrawText(Model, context, Foreground);
