@@ -10,11 +10,16 @@ internal class LineRenderLogic
         DrawingContext context,
         double actualWidth)
     {
+        var linesDecorationCollection = model.LinesDecoration;
+        if (!linesDecorationCollection.AnyLines)
+        {
+            return;
+        }
+
         var inputModel = model.InputModel;
         var textMeasures = model.TextMeasures;
         var viewport = model.Viewport;
         var viewportContext = model.ViewportContext;
-        var linesDecorationCollection = model.LinesDecoration;
 
         var startLine = (int)(viewportContext.VerticalScrollBarValue / textMeasures.LineHeight);
         var linesCount = viewport.GetLinesCountInViewport();

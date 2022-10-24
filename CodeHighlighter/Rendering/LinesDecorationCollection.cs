@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 
 namespace CodeHighlighter.Rendering;
@@ -6,6 +7,8 @@ namespace CodeHighlighter.Rendering;
 public class LinesDecorationCollection
 {
     private readonly Dictionary<int, LineDecoration> _lineDecorations = new();
+
+    public bool AnyLines => _lineDecorations.Any();
 
     public LineDecoration? this[int lineInex]
     {
@@ -32,6 +35,11 @@ public class LinesDecorationCollection
                 }
             }
         }
+    }
+
+    public void Clear()
+    {
+        _lineDecorations.Clear();
     }
 }
 
