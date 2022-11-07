@@ -235,4 +235,18 @@ internal class HistoryTest
 
         Assert.False(_history.CanUndo);
     }
+
+    [Test]
+    public void AddToLimit()
+    {
+        _history.AddAndDo(_firstAction.Object);
+        for (int i = 1; i < History.ActionsLimit; i++)
+        {
+            _history.AddAndDo(_secondAction.Object);
+        }
+        _history.AddAndDo(_secondAction.Object);
+        // _firstAction removed
+
+        _firstAction.Verify(x => x.Undo(), Times.Never());
+    }
 }

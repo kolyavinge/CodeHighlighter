@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
@@ -19,7 +19,9 @@ internal abstract class HistoryAction : IHistoryAction
 
 public class History
 {
-    internal readonly List<IHistoryAction> _actions = new();
+    internal const int ActionsLimit = 1000;
+
+    internal readonly LimitedCollection<IHistoryAction> _actions = new(ActionsLimit);
     internal int _activeActionIndex = -1;
 
     public bool CanRedo => _actions.Any() && !IsLastActive();
