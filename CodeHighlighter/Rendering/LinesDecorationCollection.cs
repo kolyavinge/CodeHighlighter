@@ -10,28 +10,28 @@ public class LinesDecorationCollection
 
     public bool AnyLines => _lineDecorations.Any();
 
-    public LineDecoration? this[int lineInex]
+    public LineDecoration? this[int lineIndex]
     {
         get
         {
-            _lineDecorations.TryGetValue(lineInex, out LineDecoration? result);
+            _lineDecorations.TryGetValue(lineIndex, out LineDecoration? result);
             return result;
         }
         set
         {
             if (value != null)
             {
-                if (_lineDecorations.ContainsKey(lineInex))
+                if (_lineDecorations.ContainsKey(lineIndex))
                 {
-                    _lineDecorations.Remove(lineInex);
+                    _lineDecorations.Remove(lineIndex);
                 }
-                _lineDecorations.Add(lineInex, value);
+                _lineDecorations.Add(lineIndex, value);
             }
             else
             {
-                if (_lineDecorations.ContainsKey(lineInex))
+                if (_lineDecorations.ContainsKey(lineIndex))
                 {
-                    _lineDecorations.Remove(lineInex);
+                    _lineDecorations.Remove(lineIndex);
                 }
             }
         }
