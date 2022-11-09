@@ -25,7 +25,7 @@ internal class Viewport
 
     public int GetLinesCountInViewport()
     {
-        var result = (int)(_context.ActualHeight / _textMeasures.LineHeight) + 1;
+        var result = (int)Math.Ceiling(_context.ActualHeight / _textMeasures.LineHeight);
         if (_context.ActualHeight % _textMeasures.LineHeight != 0) result++;
 
         return result;
