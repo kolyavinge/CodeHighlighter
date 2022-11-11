@@ -8,7 +8,7 @@ internal class LineRenderLogic
     public void DrawLines(CodeTextBoxModel model, DrawingContext context, double actualWidth)
     {
         var linesDecorationCollection = model.LinesDecoration;
-        if (!linesDecorationCollection.AnyLines) return;
+        if (!linesDecorationCollection.AnyItems) return;
 
         var inputModel = model.InputModel;
         var textMeasures = model.TextMeasures;

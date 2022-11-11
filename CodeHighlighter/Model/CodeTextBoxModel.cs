@@ -1,7 +1,6 @@
 ﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
-using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter.Model;
 
@@ -48,6 +47,8 @@ public class CodeTextBoxModel
             InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, () => TextChanged?.Invoke(this, EventArgs.Empty), () => TextSet?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
     }
+
+    public CodeTextBoxModel() : this(new EmptyCodeProvider()) { }
 
     internal void Init(ICodeTextBox codeTextBox, IViewportContext viewportContext)
     {
