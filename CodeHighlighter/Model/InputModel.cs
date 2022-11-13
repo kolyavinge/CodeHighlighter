@@ -306,14 +306,19 @@ internal class InputModel
         var oldCursorPosition = TextCursor.Position;
         var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
         var deletedSelectedText = GetSelectedText();
-        if (selectionStart.Kind == CursorPositionKind.Virtual)
-        {
-            Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
-            TextCursor.Kind = CursorPositionKind.Real;
-        }
         if (TextSelection.IsExist)
         {
+            if (selectionStart.Kind == CursorPositionKind.Virtual)
+            {
+                Text.AppendChar(new(selectionStart.LineIndex, 0), ' ', selectionStart.ColumnIndex);
+                TextCursor.Kind = CursorPositionKind.Real;
+            }
             DeleteSelection();
+        }
+        else if (TextCursor.Kind == CursorPositionKind.Virtual)
+        {
+            Text.AppendChar(new(TextCursor.LineIndex, 0), ' ', TextCursor.ColumnIndex);
+            TextCursor.Kind = CursorPositionKind.Real;
         }
         var insertResult = Text.Insert(TextCursor.Position, insertedText);
         TextCursor.MoveTo(insertResult.EndPosition);

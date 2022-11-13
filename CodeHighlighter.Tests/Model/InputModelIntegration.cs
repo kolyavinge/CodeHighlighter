@@ -106,6 +106,22 @@ internal class InputModelIntegration
     }
 
     [Test]
+    public void AppendChar_VirtualCursor_2()
+    {
+        _model.SetText("    012");
+        _model.MoveCursorEndLine();
+        _model.AppendNewLine();
+        var result = _model.AppendChar('9');
+
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual("    012\r\n    9", _model.Text.ToString());
+    }
+
+    [Test]
     public void AppendChar_WithSelection_1_VirtualCursor()
     {
         _model.SetText("    012\r\n\r\n");
@@ -466,6 +482,37 @@ internal class InputModelIntegration
     }
 
     [Test]
+    public void InsertText_VirtualCursor()
+    {
+        _model.SetText("    125\r\n");
+        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+
+        var result = _model.InsertText("333");
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 7), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual("    125\r\n    333", _model.Text.ToString());
+    }
+
+    [Test]
+    public void InsertText_VirtualCursor_2()
+    {
+        _model.SetText("    125");
+        _model.MoveCursorEndLine();
+        _model.AppendNewLine();
+
+        var result = _model.InsertText("333");
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(1, 7), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual("    125\r\n    333", _model.Text.ToString());
+    }
+
+    [Test]
     public void InsertTwoLines_VirtualCursor()
     {
         _model.SetText("    125\r\n");
@@ -476,6 +523,22 @@ internal class InputModelIntegration
         Assert.AreEqual(new CursorPosition(2, 1), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
+        Assert.AreEqual("", result.DeletedSelectedText);
+        Assert.AreEqual("    125\r\n    3\r\n4", _model.Text.ToString());
+    }
+
+    [Test]
+    public void InsertTwoLines_VirtualCursor_2()
+    {
+        _model.SetText("    125");
+        _model.MoveCursorEndLine();
+        _model.AppendNewLine();
+
+        var result = _model.InsertText("3\n4");
+        Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
+        Assert.AreEqual(new CursorPosition(2, 1), result.NewCursorPosition);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
+        Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.AreEqual("    125\r\n    3\r\n4", _model.Text.ToString());
     }
