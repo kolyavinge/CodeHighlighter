@@ -29,8 +29,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 0, TextLineHeight, 3).ToList();
 
@@ -44,8 +44,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_LinesOutControl()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 0, TextLineHeight, 100).ToList();
 
@@ -61,8 +61,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 30, TextLineHeight, 100).ToList();
 
@@ -80,8 +80,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven_2()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 50, TextLineHeight, 100).ToList();
 
@@ -100,8 +100,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 45, TextLineHeight, 100).ToList();
 
@@ -120,8 +120,8 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd_2()
     {
-        _model.GapCollection[0] = new(2);
-        _model.GapCollection[2] = new(3);
+        _model.Gaps[0] = new(2);
+        _model.Gaps[2] = new(3);
 
         var lines = _model.GetLines(100, 25, TextLineHeight, 100).ToList();
 
