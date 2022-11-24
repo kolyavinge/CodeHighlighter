@@ -38,8 +38,11 @@ public class History
         {
             _actions.RemoveRange(_activeActionIndex + 1, _actions.Count - _activeActionIndex - 1);
         }
+        if (!_actions.HasLimit)
+        {
+            _activeActionIndex++;
+        }
         _actions.Add(action);
-        _activeActionIndex++;
     }
 
     public void Redo()

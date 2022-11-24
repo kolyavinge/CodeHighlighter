@@ -10,6 +10,8 @@ internal class LimitedCollection<T> : IReadOnlyList<T>
 
     public int Count => _items.Count;
 
+    public bool HasLimit => _items.Count == _limit;
+
     public LimitedCollection(int limit)
     {
         _limit = limit;

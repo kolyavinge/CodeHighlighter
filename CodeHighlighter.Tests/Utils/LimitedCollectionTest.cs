@@ -40,4 +40,17 @@ internal class LimitedCollectionTest
         Assert.That(_collection.First(), Is.EqualTo(2));
         Assert.That(_collection.Last(), Is.EqualTo(101));
     }
+
+    [Test]
+    public void HasLimit()
+    {
+        _collection = new LimitedCollection<int>(100);
+        for (int i = 0; i < 99; i++)
+        {
+            _collection.Add(i);
+        }
+        Assert.False(_collection.HasLimit);
+        _collection.Add(100);
+        Assert.True(_collection.HasLimit);
+    }
 }

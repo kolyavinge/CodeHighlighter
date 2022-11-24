@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using System.Linq;
+using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
 
@@ -247,6 +248,37 @@ internal class HistoryTest
         _history.AddAndDo(_secondAction.Object);
         // _firstAction removed
 
+        Assert.That(_history._actions.First(), Is.EqualTo(_secondAction.Object));
+        Assert.That(_history._actions.Last(), Is.EqualTo(_secondAction.Object));
         _firstAction.Verify(x => x.Undo(), Times.Never());
+    }
+
+    [Test]
+    public void AddToLimit_2()
+    {
+        for (int i = 0; i < History.ActionsLimit; i++)
+        {
+            _history.AddAndDo(_firstAction.Object);
+        }
+
+        for (int i = 0; i < History.ActionsLimit; i++)
+        {
+            _history.AddAndDo(_secondAction.Object);
+        }
+
+        Assert.That(_history._actions.First(), Is.EqualTo(_secondAction.Object));
+        Assert.That(_history._actions.Last(), Is.EqualTo(_secondAction.Object));
+        _firstAction.Verify(x => x.Undo(), Times.Never());
+    }
+
+    [Test]
+    public void ActiveActionIndexWithLimit()
+    {
+        for (int i = 0; i < 2 * History.ActionsLimit; i++)
+        {
+            _history.AddAndDo(_firstAction.Object);
+        }
+
+        Assert.That(_history._activeActionIndex, Is.EqualTo(History.ActionsLimit - 1));
     }
 }
