@@ -27,9 +27,9 @@ internal class MouseController
         }
     }
 
-    public void OnMouseWheel(ICodeTextBox codeTextBox, IViewportContext viewportContext, int delta)
+    public void OnMouseWheel(ICodeTextBox codeTextBox, IViewportContext viewportContext, TextMeasures textMeasures, int pages, bool up)
     {
-        viewportContext.VerticalScrollBarValue -= delta;
+        viewportContext.VerticalScrollBarValue += (up ? -1 : 1) * pages * textMeasures.LineHeight;
         codeTextBox.InvalidateVisual();
     }
 

@@ -19,6 +19,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
     private readonly MouseController _mouseController;
     private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
     private readonly LineRenderLogic _lineRenderLogic;
+    private readonly MouseSettings _mouseSettings;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -246,6 +247,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         _mouseController = new MouseController();
         _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
         _lineRenderLogic = new LineRenderLogic();
+        _mouseSettings = new MouseSettings();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
@@ -316,7 +318,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
-        _mouseController.OnMouseWheel(this, this, e.Delta);
+        _mouseController.OnMouseWheel(this, this, Model!.TextMeasures, _mouseSettings.VerticalScrollLinesCount, e.Delta > 0);
     }
 
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
