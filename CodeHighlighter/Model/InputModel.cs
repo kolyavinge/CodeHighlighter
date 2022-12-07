@@ -139,19 +139,6 @@ internal class InputModel
         TextSelection.InProgress = false;
     }
 
-    private void SetSelection()
-    {
-        if (TextSelection.InProgress)
-        {
-            TextSelection.EndPosition = TextCursor.Position;
-        }
-        else
-        {
-            TextSelection.StartPosition = TextCursor.Position;
-            TextSelection.EndPosition = TextCursor.Position;
-        }
-    }
-
     public void SelectToken(CursorPosition position)
     {
         var selector = new TokenSelector();
@@ -187,9 +174,7 @@ internal class InputModel
             {
                 var navigator = new TokenNavigator();
                 var position = navigator.MoveLeft(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
-                ActivateSelection();
-                MoveCursorTo(position);
-                CompleteSelection();
+                TextSelection.Set(position, new(TextCursor.LineIndex, TextCursor.ColumnIndex));
             }
             var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
             var deletedSelectedText = GetSelectedText();
@@ -221,9 +206,7 @@ internal class InputModel
             }
             var navigator = new TokenNavigator();
             var position = navigator.MoveRight(Text, Tokens, TextCursor.LineIndex, TextCursor.ColumnIndex);
-            ActivateSelection();
-            MoveCursorTo(position);
-            CompleteSelection();
+            TextSelection.Set(position, new(TextCursor.LineIndex, TextCursor.ColumnIndex));
             selectionEnd = position;
         }
         else
@@ -399,15 +382,6 @@ internal class InputModel
         return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, charDeleteResult);
     }
 
-    private void DeleteSelection()
-    {
-        var deleteResult = Text.DeleteSelection(TextSelection);
-        Tokens.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
-        var startCursorPosition = TextSelection.GetSortedPositions().Item1;
-        TextCursor.MoveTo(startCursorPosition);
-        TextSelection.Reset();
-    }
-
     public DeleteSelectedLinesResult DeleteSelectedLines()
     {
         var oldCursorPosition = TextCursor.Position;
@@ -514,6 +488,28 @@ internal class InputModel
         UpdateTokensForLines(selectionStart.LineIndex, selectionEnd.LineIndex - selectionStart.LineIndex + 1);
 
         return new(cursorPosition, selectionStart, selectionEnd, deletedSelectedText, changedText);
+    }
+
+    private void SetSelection()
+    {
+        if (TextSelection.InProgress)
+        {
+            TextSelection.EndPosition = TextCursor.Position;
+        }
+        else
+        {
+            TextSelection.StartPosition = TextCursor.Position;
+            TextSelection.EndPosition = TextCursor.Position;
+        }
+    }
+
+    private void DeleteSelection()
+    {
+        var deleteResult = Text.DeleteSelection(TextSelection);
+        Tokens.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
+        var (startCursorPosition, _) = TextSelection.GetSortedPositions();
+        TextCursor.MoveTo(startCursorPosition);
+        TextSelection.Reset();
     }
 
     private void SetTokens()
