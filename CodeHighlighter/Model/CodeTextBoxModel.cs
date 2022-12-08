@@ -80,6 +80,17 @@ public class CodeTextBoxModel
         History.AddAndDo(new SetTextHistoryAction(_historyActionContext, text));
     }
 
+    public string GetSelectedText()
+    {
+        return InputModel.GetSelectedText();
+    }
+
+    public void MoveCursorTo(CursorPosition position)
+    {
+        MoveCursorToInputAction.Instance.Do(_historyActionContext, position);
+        _codeTextBox.InvalidateVisual();
+    }
+
     public void MoveCursorLeft()
     {
         MoveCursorLeftInputAction.Instance.Do(_historyActionContext);
@@ -152,6 +163,16 @@ public class CodeTextBoxModel
         History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_historyActionContext));
     }
 
+    public void ActivateSelection()
+    {
+        InputModel.ActivateSelection();
+    }
+
+    public void CompleteSelection()
+    {
+        InputModel.CompleteSelection();
+    }
+
     public void GotoLine(int lineIndex)
     {
         GotoLineInputAction.Instance.Do(_historyActionContext, lineIndex);
@@ -187,6 +208,11 @@ public class CodeTextBoxModel
     {
         SelectAllInputAction.Instance.Do(_historyActionContext);
         _codeTextBox.InvalidateVisual();
+    }
+
+    public void SelectToken(CursorPosition position)
+    {
+        InputModel.SelectToken(position);
     }
 
     public void DeleteLeftToken()

@@ -4,15 +4,14 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class InputModelInsertionIntegration
+internal class CodeTextBoxModelInsertionIntegration
 {
-    private InputModel _model;
+    private CodeTextBoxModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = InputModel.MakeDefault();
-        _model.SetCodeProvider(new SqlCodeProvider());
+        _model = new CodeTextBoxModel(new SqlCodeProvider());
         _model.SetText("");
     }
 

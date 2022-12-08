@@ -4,15 +4,14 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class InputModelTokenNavigationIntegration
+internal class CodeTextBoxModelTokenNavigationIntegration
 {
-    private InputModel _model;
+    private CodeTextBoxModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = InputModel.MakeDefault();
-        _model.SetCodeProvider(new SqlCodeProvider());
+        _model = new CodeTextBoxModel(new SqlCodeProvider());
         _model.SetText("SELECT * FROM Table1\r\nJOIN Table2 ON t1 = t2");
     }
 

@@ -1,19 +1,24 @@
 ﻿using System.Linq;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
+using Moq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class InputModelCursorIntegration
+internal class CodeTextBoxModelCursorIntegration
 {
-    private InputModel _model;
+    private Mock<ICodeTextBox> _codeTextBox;
+    private Mock<IViewportContext> _viewportContext;
+    private CodeTextBoxModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = InputModel.MakeDefault();
-        _model.SetCodeProvider(new SqlCodeProvider());
+        _codeTextBox = new Mock<ICodeTextBox>();
+        _viewportContext = new Mock<IViewportContext>();
+        _model = new CodeTextBoxModel(new SqlCodeProvider());
+        _model.Init(_codeTextBox.Object, _viewportContext.Object);
         _model.SetText("");
     }
 
@@ -101,7 +106,7 @@ internal class InputModelCursorIntegration
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
-        _model.MoveCursorPageUp(1);
+        _model.MoveCursorPageUp();
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
     }
@@ -121,7 +126,7 @@ internal class InputModelCursorIntegration
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
-        _model.MoveCursorPageDown(1);
+        _model.MoveCursorPageDown();
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
     }
@@ -129,6 +134,7 @@ internal class InputModelCursorIntegration
     [Test]
     public void CursorPageUp()
     {
+        _viewportContext.SetupGet(x => x.ActualHeight).Returns(_model.TextMeasures.LineHeight * 3);
         AppendString("0123456789");
         _model.AppendNewLine();
         AppendString("0123456789");
@@ -140,11 +146,11 @@ internal class InputModelCursorIntegration
         AppendString("0123456789");
         _model.MoveCursorTo(new(4, 5));
 
-        _model.MoveCursorPageUp(3);
+        _model.MoveCursorPageUp();
         Assert.AreEqual(1, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
-        _model.MoveCursorPageUp(3);
+        _model.MoveCursorPageUp();
         Assert.AreEqual(0, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
     }
@@ -152,6 +158,7 @@ internal class InputModelCursorIntegration
     [Test]
     public void CursorPageDown()
     {
+        _viewportContext.SetupGet(x => x.ActualHeight).Returns(_model.TextMeasures.LineHeight * 3);
         AppendString("0123456789");
         _model.AppendNewLine();
         AppendString("0123456789");
@@ -163,11 +170,11 @@ internal class InputModelCursorIntegration
         AppendString("0123456789");
         _model.MoveCursorTo(new(0, 5));
 
-        _model.MoveCursorPageDown(3);
+        _model.MoveCursorPageDown();
         Assert.AreEqual(3, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
 
-        _model.MoveCursorPageDown(3);
+        _model.MoveCursorPageDown();
         Assert.AreEqual(4, _model.TextCursor.LineIndex);
         Assert.AreEqual(5, _model.TextCursor.ColumnIndex);
     }

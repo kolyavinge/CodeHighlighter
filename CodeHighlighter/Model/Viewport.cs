@@ -12,7 +12,17 @@ interface IViewportContext
     double HorizontalScrollBarMaximum { get; set; }
 }
 
-internal class Viewport
+internal interface IViewport
+{
+    void CorrectByCursorPosition(TextCursor textCursor);
+    CursorPosition GetCursorPosition(Point cursorClickPosition);
+    int GetLinesCountInViewport();
+    void ScrollLineDown();
+    void ScrollLineUp();
+    void UpdateScrollbarsMaximumValues(IText text);
+}
+
+internal class Viewport : IViewport
 {
     private readonly IViewportContext _context;
     private readonly TextMeasures _textMeasures;
