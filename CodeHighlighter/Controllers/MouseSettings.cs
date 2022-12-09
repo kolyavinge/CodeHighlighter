@@ -4,12 +4,11 @@ namespace CodeHighlighter.Controllers;
 
 internal class MouseSettings
 {
-    public int VerticalScrollLinesCount
+    public int VerticalScrollLinesCount { get; }
+
+    public MouseSettings()
     {
-        get
-        {
-            WinApi.SystemParametersInfo(WinApi.SPI_GETWHEELSCROLLLINES, 0, out IntPtr ptr, 0);
-            return ptr.ToInt32();
-        }
+        WinApi.SystemParametersInfo(WinApi.SPI_GETWHEELSCROLLLINES, 0, out IntPtr ptr, 0);
+        VerticalScrollLinesCount = ptr.ToInt32();
     }
 }
