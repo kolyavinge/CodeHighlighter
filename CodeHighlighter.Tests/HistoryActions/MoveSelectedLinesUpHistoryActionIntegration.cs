@@ -18,8 +18,8 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoMove()
     {
-        _context.InputModel.SetText("000\r\n111\r\n222");
-        _context.InputModel.MoveCursorTo(new(0, 0));
+        SetText("000\r\n111\r\n222");
+        MoveCursorTo(new(0, 0));
         Assert.False(_action.Do());
         InvalidateVisualCallNever();
     }
@@ -27,8 +27,8 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoSelection()
     {
-        _context.InputModel.SetText("000\r\n111\r\n222");
-        _context.InputModel.MoveCursorTo(new(1, 0));
+        SetText("000\r\n111\r\n222");
+        MoveCursorTo(new(1, 0));
 
         _action.Do();
         Assert.AreEqual("111\r\n000\r\n222", _text.ToString());
@@ -50,11 +50,11 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void WithSelection()
     {
-        _context.InputModel.SetText("000\r\n111\r\n222");
-        _context.InputModel.MoveCursorTo(new(1, 3));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 1));
-        _context.InputModel.CompleteSelection();
+        SetText("000\r\n111\r\n222");
+        MoveCursorTo(new(1, 3));
+        ActivateSelection();
+        MoveCursorTo(new(2, 1));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("111\r\n222\r\n000", _text.ToString());
@@ -77,8 +77,8 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoSelection_VirtualCursor()
     {
-        _context.InputModel.SetText("    000\r\n");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    000\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
         _action.Do();
         Assert.AreEqual("\r\n    000", _text.ToString());
@@ -100,8 +100,8 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void NoSelection_2_VirtualCursor()
     {
-        _context.InputModel.SetText("    000\r\n\r\n");
-        _context.InputModel.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        SetText("    000\r\n\r\n");
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
 
         _action.Do();
         Assert.AreEqual("    000\r\n\r\n", _text.ToString());
@@ -123,11 +123,11 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void MoveSelectedLinesUp_WithSelection_1_VirtualCursor()
     {
-        _context.InputModel.SetText("    012\r\n\r\n");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 0));
-        _context.InputModel.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("\r\n\r\n    012", _text.ToString());
@@ -149,11 +149,11 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void MoveSelectedLinesUp_WithSelection_2_VirtualCursor()
     {
-        _context.InputModel.SetText("\r\n    012\r\n\r\n");
-        _context.InputModel.MoveCursorTo(new(1, 7));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _context.InputModel.CompleteSelection();
+        SetText("\r\n    012\r\n\r\n");
+        MoveCursorTo(new(1, 7));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("    012\r\n\r\n\r\n", _text.ToString());
@@ -175,11 +175,11 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     [Test]
     public void MoveSelectedLinesUp_WithSelection_3_VirtualCursor()
     {
-        _context.InputModel.SetText("    012\r\n\r\n\r\n");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _context.InputModel.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("\r\n\r\n    012\r\n", _text.ToString());

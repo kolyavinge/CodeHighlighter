@@ -18,8 +18,8 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void NoDelete()
     {
-        _context.InputModel.SetText("text\r\n123");
-        _context.InputModel.MoveCursorTo(new(1, 3));
+        SetText("text\r\n123");
+        MoveCursorTo(new(1, 3));
         Assert.False(_action.Do());
         InvalidateVisualCallNever();
     }
@@ -27,8 +27,8 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void NoSelection()
     {
-        _context.InputModel.SetText("text\r\n123");
-        _context.InputModel.MoveCursorTo(new(0, 0));
+        SetText("text\r\n123");
+        MoveCursorTo(new(0, 0));
 
         _action.Do();
         Assert.AreEqual("ext\r\n123", _text.ToString());
@@ -50,8 +50,8 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void NoSelection_DeleteReturn()
     {
-        _context.InputModel.SetText("text\r\n123");
-        _context.InputModel.MoveCursorTo(new(0, 4));
+        SetText("text\r\n123");
+        MoveCursorTo(new(0, 4));
 
         _action.Do();
         Assert.AreEqual("text123", _text.ToString());
@@ -73,11 +73,11 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void WithSelection()
     {
-        _context.InputModel.SetText("text\r\n123");
-        _context.InputModel.MoveCursorTo(new(0, 3));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(1, 1));
-        _context.InputModel.CompleteSelection();
+        SetText("text\r\n123");
+        MoveCursorTo(new(0, 3));
+        ActivateSelection();
+        MoveCursorTo(new(1, 1));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("tex23", _text.ToString());
@@ -99,8 +99,8 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void NoSelection_VirtualCursor()
     {
-        _context.InputModel.SetText("    text\r\n\r\n123");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    text\r\n\r\n123");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
         _action.Do();
         Assert.AreEqual("    text\r\n    123", _text.ToString());
@@ -122,11 +122,11 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void WithSelection_1_VirtualCursor()
     {
-        _context.InputModel.SetText("    123\r\n\r\n456");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 3));
-        _context.InputModel.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 3));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("    123\r\n    ", _text.ToString());
@@ -148,11 +148,11 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void WithSelection_2_VirtualCursor()
     {
-        _context.InputModel.SetText("    123\r\n\r\n456");
-        _context.InputModel.MoveCursorTo(new(0, 7));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _context.InputModel.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("    123\r\n456", _text.ToString());
@@ -174,11 +174,11 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void WithSelection_3_VirtualCursor()
     {
-        _context.InputModel.SetText("    123\r\n\r\n\r\n456");
-        _context.InputModel.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _context.InputModel.CompleteSelection();
+        SetText("    123\r\n\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("    123\r\n    \r\n456", _text.ToString());

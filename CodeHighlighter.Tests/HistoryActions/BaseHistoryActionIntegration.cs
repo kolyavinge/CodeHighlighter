@@ -40,21 +40,46 @@ internal class BaseHistoryActionIntegration
         _context.CodeTextBox = _codeTextBox.Object;
     }
 
+    protected void SetText(string text)
+    {
+        _inputModel.SetText(text);
+    }
+
+    protected void MoveCursorTo(CursorPosition position)
+    {
+        _inputModel.MoveCursorTo(position);
+    }
+
+    protected void MoveCursorStartLine()
+    {
+        _inputModel.MoveCursorStartLine();
+    }
+
+    protected void ActivateSelection()
+    {
+        _inputModel.ActivateSelection();
+    }
+
+    protected void CompleteSelection()
+    {
+        _inputModel.CompleteSelection();
+    }
+
     protected void MakeUncompleteSelection()
     {
-        _context.InputModel.MoveCursorTo(new(2, 0));
-        _context.InputModel.ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        ActivateSelection();
     }
 
     protected void MakeInactiveSelection()
     {
-        _context.TextSelection.StartPosition = new(1, 0);
-        _context.TextSelection.EndPosition = new(1, 0);
+        _textSelection.StartPosition = new(1, 0);
+        _textSelection.EndPosition = new(1, 0);
     }
 
     protected void AssertCursorPosition(CursorPosition position)
     {
-        Assert.AreEqual(position, _context.TextCursor.Position);
+        Assert.AreEqual(position, _textCursor.Position);
     }
 
     protected void InvalidateVisualCallNever()

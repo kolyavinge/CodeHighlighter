@@ -11,14 +11,14 @@ internal class ToLowerCaseHistoryActionIntegration : BaseHistoryActionIntegratio
     public void Setup()
     {
         MakeContext();
-        _context.InputModel.SetText("TExT\r\nA");
+        SetText("TExT\r\nA");
         _action = new ToLowerCaseHistoryAction(_context);
     }
 
     [Test]
     public void NoChanges()
     {
-        _context.InputModel.MoveCursorStartLine();
+        MoveCursorStartLine();
         Assert.False(_action.Do());
         InvalidateVisualCallNever();
     }
@@ -26,10 +26,10 @@ internal class ToLowerCaseHistoryActionIntegration : BaseHistoryActionIntegratio
     [Test]
     public void WithSelection()
     {
-        _context.InputModel.MoveCursorTo(new(0, 2));
-        _context.InputModel.ActivateSelection();
-        _context.InputModel.MoveCursorTo(new(1, 1));
-        _context.InputModel.CompleteSelection();
+        MoveCursorTo(new(0, 2));
+        ActivateSelection();
+        MoveCursorTo(new(1, 1));
+        CompleteSelection();
 
         _action.Do();
         Assert.AreEqual("TExt\r\na", _text.ToString());
