@@ -25,78 +25,78 @@ internal class KeyboardControllerIntegration
          * qwert
          * asdfg
          */
-        _model.InputModel.SetText("12345\r\nqwert\r\nasdfg");
-        _model.InputModel.MoveCursorTo(new(1, 3));
+        _model.SetText("12345\r\nqwert\r\nasdfg");
+        _model.MoveCursorTo(new(1, 3));
 
         KeyDownWithShift(Key.Left);
-        Assert.AreEqual("e", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("e", _model.GetSelectedText());
 
         KeyDownWithShift(Key.Home);
-        Assert.AreEqual("qwe", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("qwe", _model.GetSelectedText());
 
         KeyDownWithShift(Key.Right);
-        Assert.AreEqual("we", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("we", _model.GetSelectedText());
 
         KeyDownWithShift(Key.End);
-        Assert.AreEqual("rt", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("rt", _model.GetSelectedText());
 
-        _model.InputModel.MoveCursorTo(new(1, 3));
+        _model.MoveCursorTo(new(1, 3));
         KeyDownWithShift(Key.Up);
-        Assert.AreEqual("45\r\nqwe", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("45\r\nqwe", _model.GetSelectedText());
 
-        _model.InputModel.MoveCursorTo(new(1, 3));
+        _model.MoveCursorTo(new(1, 3));
         KeyDownWithShift(Key.Down);
-        Assert.AreEqual("rt\r\nasd", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("rt\r\nasd", _model.GetSelectedText());
 
         KeyDownWithShift(Key.PageDown);
-        Assert.AreEqual("rt\r\nasd", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("rt\r\nasd", _model.GetSelectedText());
 
         KeyDownWithShiftAndControl(Key.Home);
-        Assert.AreEqual("12345\r\nqwe", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("12345\r\nqwe", _model.GetSelectedText());
 
         KeyDownWithShiftAndControl(Key.End);
-        Assert.AreEqual("rt\r\nasdfg", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("rt\r\nasdfg", _model.GetSelectedText());
     }
 
     [Test]
     public void KeyDownWithoutShift_SelectionReset()
     {
-        _model.InputModel.SetText("0");
+        _model.SetText("0");
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Left);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Home);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Right);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
         KeyDownWithoutShift(Key.End);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Up);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Down);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.PageDown);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.Home);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
 
-        _model.InputModel.SelectAll();
+        _model.SelectAll();
         KeyDownWithoutShift(Key.End);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
     }
 
     private void KeyDownWithoutShift(Key key)

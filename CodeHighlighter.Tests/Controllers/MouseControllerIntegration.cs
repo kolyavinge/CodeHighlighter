@@ -35,10 +35,10 @@ internal class MouseControllerIntegration
 
         _controller.OnMouseDown(_codeTextBox.Object, _model, new(0, 0), true);
         _controller.OnMouseDown(_codeTextBox.Object, _model, new(100, 100), true);
-        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
 
         _controller.OnMouseDown(_codeTextBox.Object, _model, new(0, 0), false);
-        Assert.AreEqual("", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("", _model.GetSelectedText());
     }
 
     [Test]
@@ -52,6 +52,6 @@ internal class MouseControllerIntegration
 
         _controller.OnMouseMove(_codeTextBox.Object, _model, new(0, 0), MouseButtonState.Pressed);
         _controller.OnMouseMove(_codeTextBox.Object, _model, new(100, 100), MouseButtonState.Pressed);
-        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.InputModel.GetSelectedText());
+        Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
     }
 }
