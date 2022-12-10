@@ -1,26 +1,22 @@
-﻿using CodeHighlighter.CodeProvidering;
-using CodeHighlighter.Model;
+﻿using CodeHighlighter.Model;
+using CodeHighlighter.Tests.InputActions;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class InputModelIntegration
+internal class InputModelIntegration : BaseInputActionIntegration
 {
-    private InputModel _model;
-
     [SetUp]
     public void Setup()
     {
-        _model = InputModel.MakeDefault();
-        _model.SetCodeProvider(new SqlCodeProvider());
-        _model.SetText("");
+        Init();
     }
 
     [Test]
     public void SetText_ResetCursor_1()
     {
         _model.SetText("123");
-        _model.MoveCursorTextEnd();
+        MoveCursorTextEnd();
 
         _model.SetText("");
 
@@ -31,7 +27,7 @@ internal class InputModelIntegration
     public void SetText_ResetCursor_2()
     {
         _model.SetText("123");
-        _model.MoveCursorTextEnd();
+        MoveCursorTextEnd();
 
         _model.SetText("1");
 
@@ -55,11 +51,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_WithSelection_1()
     {
-        _model.SetText("000");
-        _model.MoveCursorStartLine();
-        _model.ActivateSelection();
-        _model.MoveCursorEndLine();
-        _model.CompleteSelection();
+        SetText("000");
+        MoveCursorStartLine();
+        ActivateSelection();
+        MoveCursorEndLine();
+        CompleteSelection();
         var result = _model.AppendChar('0');
 
         Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
@@ -74,11 +70,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_WithSelection_2()
     {
-        _model.SetText("000");
-        _model.MoveCursorEndLine();
-        _model.ActivateSelection();
-        _model.MoveCursorStartLine();
-        _model.CompleteSelection();
+        SetText("000");
+        MoveCursorEndLine();
+        ActivateSelection();
+        MoveCursorStartLine();
+        CompleteSelection();
         var result = _model.AppendChar('0');
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
@@ -93,8 +89,8 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_VirtualCursor()
     {
-        _model.SetText("    012\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    012\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.AppendChar('9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -108,9 +104,9 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_VirtualCursor_2()
     {
-        _model.SetText("    012");
-        _model.MoveCursorEndLine();
-        _model.AppendNewLine();
+        SetText("    012");
+        MoveCursorEndLine();
+        AppendNewLine();
         var result = _model.AppendChar('9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -124,11 +120,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.AppendChar('9');
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -142,11 +138,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.AppendChar('9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -160,11 +156,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendChar_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.AppendChar('9');
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -178,8 +174,8 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete()
     {
-        _model.SetText("0");
-        _model.MoveCursorTo(new(0, 1));
+        SetText("0");
+        MoveCursorTo(new(0, 1));
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(0, 1), result.OldCursorPosition);
@@ -195,11 +191,11 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_WithSelection()
     {
-        _model.SetText("0123456789\r\n9876543210");
-        _model.MoveCursorTo(new(0, 3));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 7));
-        _model.CompleteSelection();
+        SetText("0123456789\r\n9876543210");
+        MoveCursorTo(new(0, 3));
+        ActivateSelection();
+        MoveCursorTo(new(1, 7));
+        CompleteSelection();
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(1, 7), result.OldCursorPosition);
@@ -214,11 +210,11 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_WithSelection_DeleteEmptyLine()
     {
-        _model.SetText("0123456789\r\n9876543210");
-        _model.MoveCursorTo(new(0, 10));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 0));
-        _model.CompleteSelection();
+        SetText("0123456789\r\n9876543210");
+        MoveCursorTo(new(0, 10));
+        ActivateSelection();
+        MoveCursorTo(new(1, 0));
+        CompleteSelection();
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
@@ -233,8 +229,8 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_VirtualCursor()
     {
-        _model.SetText("    123\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -249,10 +245,10 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 3));
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 3));
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
@@ -267,10 +263,10 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -285,10 +281,10 @@ internal class InputModelIntegration
     [Test]
     public void LeftDelete_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         var result = _model.LeftDelete();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -303,8 +299,8 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete()
     {
-        _model.SetText("0");
-        _model.MoveCursorTo(new(0, 0));
+        SetText("0");
+        MoveCursorTo(new(0, 0));
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
@@ -320,11 +316,11 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_WithSelection()
     {
-        _model.SetText("0123456789\r\n9876543210");
-        _model.MoveCursorTo(new(0, 3));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 7));
-        _model.CompleteSelection();
+        SetText("0123456789\r\n9876543210");
+        MoveCursorTo(new(0, 3));
+        ActivateSelection();
+        MoveCursorTo(new(1, 7));
+        CompleteSelection();
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(1, 7), result.OldCursorPosition);
@@ -339,11 +335,11 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_WithSelection_DeleteEmptyLine()
     {
-        _model.SetText("0123456789\r\n9876543210");
-        _model.MoveCursorTo(new(0, 10));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 0));
-        _model.CompleteSelection();
+        SetText("0123456789\r\n9876543210");
+        MoveCursorTo(new(0, 10));
+        ActivateSelection();
+        MoveCursorTo(new(1, 0));
+        CompleteSelection();
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
@@ -358,8 +354,8 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -374,10 +370,10 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 3));
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 3));
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
@@ -392,10 +388,10 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -410,10 +406,10 @@ internal class InputModelIntegration
     [Test]
     public void RightDelete_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        SetText("    123\r\n\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         var result = _model.RightDelete();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -445,11 +441,11 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_WithSelection()
     {
-        _model.SetText("0123456789");
-        _model.MoveCursorTo(new(0, 5));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(0, 7));
-        _model.CompleteSelection();
+        SetText("0123456789");
+        MoveCursorTo(new(0, 5));
+        ActivateSelection();
+        MoveCursorTo(new(0, 7));
+        CompleteSelection();
         var result = _model.InsertText("XXX\nYYY\nZZZ");
 
         Assert.AreEqual(new CursorPosition(0, 7), result.OldCursorPosition);
@@ -484,8 +480,8 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_VirtualCursor()
     {
-        _model.SetText("    125\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    125\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
         var result = _model.InsertText("333");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -499,9 +495,9 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_VirtualCursor_2()
     {
-        _model.SetText("    125");
-        _model.MoveCursorEndLine();
-        _model.AppendNewLine();
+        SetText("    125");
+        MoveCursorEndLine();
+        AppendNewLine();
 
         var result = _model.InsertText("333");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -515,8 +511,8 @@ internal class InputModelIntegration
     [Test]
     public void InsertTwoLines_VirtualCursor()
     {
-        _model.SetText("    125\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    125\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
         var result = _model.InsertText("3\n4");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -530,9 +526,9 @@ internal class InputModelIntegration
     [Test]
     public void InsertTwoLines_VirtualCursor_2()
     {
-        _model.SetText("    125");
-        _model.MoveCursorEndLine();
-        _model.AppendNewLine();
+        SetText("    125");
+        MoveCursorEndLine();
+        AppendNewLine();
 
         var result = _model.InsertText("3\n4");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -546,11 +542,11 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.InsertText("9");
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -564,11 +560,11 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.InsertText("9");
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -582,11 +578,11 @@ internal class InputModelIntegration
     [Test]
     public void InsertText_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.InsertText("9");
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -598,7 +594,7 @@ internal class InputModelIntegration
     }
 
     [Test]
-    public void AppendNewLine()
+    public void AppendNewLine_NoSelection()
     {
         var result = _model.AppendNewLine();
 
@@ -613,11 +609,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendNewLine_WithSelection()
     {
-        _model.SetText("0123456789");
-        _model.MoveCursorTo(new(0, 5));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(0, 7));
-        _model.CompleteSelection();
+        SetText("0123456789");
+        MoveCursorTo(new(0, 5));
+        ActivateSelection();
+        MoveCursorTo(new(0, 7));
+        CompleteSelection();
         var result = _model.AppendNewLine();
 
         Assert.AreEqual(new CursorPosition(0, 7), result.OldCursorPosition);
@@ -631,8 +627,8 @@ internal class InputModelIntegration
     [Test]
     public void AppendNewLine_VirtualCursor()
     {
-        _model.SetText("    012\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    012\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.AppendNewLine();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -646,11 +642,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendNewLine_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.AppendNewLine();
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -664,11 +660,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendNewLine_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.AppendNewLine();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -682,11 +678,11 @@ internal class InputModelIntegration
     [Test]
     public void AppendNewLine_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.AppendNewLine();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -700,8 +696,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorEndLine();
+        SetText("SELECT FROM");
+        MoveCursorEndLine();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
@@ -716,8 +712,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_NoDelection()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorStartLine();
+        SetText("SELECT FROM");
+        MoveCursorStartLine();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
@@ -732,11 +728,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_WithSelection()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorStartLine();
-        _model.ActivateSelection();
-        _model.MoveCursorEndLine();
-        _model.CompleteSelection();
+        SetText("SELECT FROM");
+        MoveCursorStartLine();
+        ActivateSelection();
+        MoveCursorEndLine();
+        CompleteSelection();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
@@ -751,8 +747,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_VirtualCursor()
     {
-        _model.SetText("    SELECT FROM\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    SELECT FROM\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -767,11 +763,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_1_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 3));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 3));
+        CompleteSelection();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
@@ -786,11 +782,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_2_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -805,11 +801,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteLeftToken_3_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteLeftToken();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -824,8 +820,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorTo(new(0, 7));
+        SetText("SELECT FROM");
+        MoveCursorTo(new(0, 7));
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(0, 7), result.OldCursorPosition);
@@ -840,8 +836,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_NoDelection()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorEndLine();
+        SetText("SELECT FROM");
+        MoveCursorEndLine();
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
@@ -856,11 +852,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_WithSelection()
     {
-        _model.SetText("SELECT FROM");
-        _model.MoveCursorStartLine();
-        _model.ActivateSelection();
-        _model.MoveCursorEndLine();
-        _model.CompleteSelection();
+        SetText("SELECT FROM");
+        MoveCursorStartLine();
+        ActivateSelection();
+        MoveCursorEndLine();
+        CompleteSelection();
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
@@ -875,8 +871,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_VirtualCursor()
     {
-        _model.SetText("    SELECT FROM\r\n\r\nSELECT FROM");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        SetText("    SELECT FROM\r\n\r\nSELECT FROM");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -891,11 +887,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 3));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 3));
+        CompleteSelection();
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
@@ -910,11 +906,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n456");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n456");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -929,11 +925,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteRightToken_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    123\r\n\r\n\r\n456");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    123\r\n\r\n\r\n456");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteRightToken();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -948,8 +944,8 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(1, 1));
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(1, 1));
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
@@ -964,8 +960,8 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp_NoMoving()
     {
-        _model.SetText("000");
-        _model.MoveCursorTo(new(0, 0));
+        SetText("000");
+        MoveCursorTo(new(0, 0));
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
@@ -980,11 +976,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp_WithSelection()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(1, 1));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 1));
-        _model.CompleteSelection();
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(1, 1));
+        ActivateSelection();
+        MoveCursorTo(new(2, 1));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(2, 1), result.OldCursorPosition);
@@ -999,11 +995,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -1017,11 +1013,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("\r\n    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("\r\n    012\r\n\r\n");
+        MoveCursorTo(new(1, 7));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1035,11 +1031,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesUp_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesUp();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1053,8 +1049,8 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(1, 1));
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(1, 1));
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
@@ -1069,8 +1065,8 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown_NoMoving()
     {
-        _model.SetText("000");
-        _model.MoveCursorTo(new(0, 0));
+        SetText("000");
+        MoveCursorTo(new(0, 0));
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
@@ -1085,11 +1081,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown_WithSelection()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(0, 1));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 1));
-        _model.CompleteSelection();
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(0, 1));
+        ActivateSelection();
+        MoveCursorTo(new(1, 1));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
@@ -1104,11 +1100,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -1122,11 +1118,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("\r\n    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("\r\n    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 7));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1140,11 +1136,11 @@ internal class InputModelIntegration
     [Test]
     public void MoveSelectedLinesDown_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.MoveSelectedLinesDown();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1158,8 +1154,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(1, 1));
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(1, 1));
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
@@ -1188,10 +1184,10 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_EmptyLine()
     {
-        _model.SetText("000");
-        _model.AppendNewLine();
-        _model.AppendNewLine();
-        _model.MoveCursorTo(new(1, 0));
+        SetText("000");
+        AppendNewLine();
+        AppendNewLine();
+        MoveCursorTo(new(1, 0));
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 0), result.OldCursorPosition);
@@ -1206,11 +1202,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_WithSelection()
     {
-        _model.SetText("000\r\n111\r\n222\r\n");
-        _model.MoveCursorTo(new(0, 1));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 1));
-        _model.CompleteSelection();
+        SetText("000\r\n111\r\n222\r\n");
+        MoveCursorTo(new(0, 1));
+        ActivateSelection();
+        MoveCursorTo(new(1, 1));
+        CompleteSelection();
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 1), result.OldCursorPosition);
@@ -1225,8 +1221,8 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_LastLine()
     {
-        _model.SetText("000\r\n111\r\n222");
-        _model.MoveCursorTo(new(2, 1));
+        SetText("000\r\n111\r\n222");
+        MoveCursorTo(new(2, 1));
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(2, 1), result.OldCursorPosition);
@@ -1241,11 +1237,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_WithSelection_1_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 0));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 0));
+        CompleteSelection();
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
@@ -1259,11 +1255,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_WithSelection_2_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n");
-        _model.MoveCursorTo(new(0, 7));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n");
+        MoveCursorTo(new(0, 7));
+        ActivateSelection();
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1277,11 +1273,11 @@ internal class InputModelIntegration
     [Test]
     public void DeleteSelectedLines_WithSelection_3_VirtualCursor()
     {
-        _model.SetText("    012\r\n\r\n\r\n");
-        _model.MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        _model.ActivateSelection();
-        _model.MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
-        _model.CompleteSelection();
+        SetText("    012\r\n\r\n\r\n");
+        MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
+        ActivateSelection();
+        MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
+        CompleteSelection();
         var result = _model.DeleteSelectedLines();
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
@@ -1295,8 +1291,8 @@ internal class InputModelIntegration
     [Test]
     public void SetSelectedTextCase()
     {
-        _model.SetText("AAA");
-        _model.SelectAll();
+        SetText("AAA");
+        SelectAll();
         var result = _model.SetSelectedTextCase(TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
@@ -1312,8 +1308,8 @@ internal class InputModelIntegration
     [Test]
     public void SetSelectedTextCase_NoChanges()
     {
-        _model.SetText("AAA");
-        _model.MoveCursorStartLine();
+        SetText("AAA");
+        MoveCursorStartLine();
         var result = _model.SetSelectedTextCase(TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
