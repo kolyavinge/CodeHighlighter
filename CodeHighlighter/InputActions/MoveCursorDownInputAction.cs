@@ -1,12 +1,13 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class MoveCursorDownInputAction
+internal class MoveCursorDownInputAction : InputAction
 {
     public static readonly MoveCursorDownInputAction Instance = new();
 
     public void Do(InputActionContext context)
     {
-        context.InputModel.MoveCursorDown();
+        context.TextCursor.MoveDown();
+        SetSelection(context);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
     }
 }

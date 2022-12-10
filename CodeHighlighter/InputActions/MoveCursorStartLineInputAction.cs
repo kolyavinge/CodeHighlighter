@@ -1,12 +1,13 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class MoveCursorStartLineInputAction
+internal class MoveCursorStartLineInputAction : InputAction
 {
     public static readonly MoveCursorStartLineInputAction Instance = new();
 
     public void Do(InputActionContext context)
     {
-        context.InputModel.MoveCursorStartLine();
+        context.TextCursor.MoveStartLine();
+        SetSelection(context);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
     }
 }

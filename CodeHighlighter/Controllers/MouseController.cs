@@ -36,7 +36,7 @@ internal class MouseController
     public void OnMouseDoubleClick(ICodeTextBox codeTextBox, CodeTextBoxModel model, Point positionInControl)
     {
         var pos = model.Viewport.GetCursorPosition(positionInControl);
-        model.InputModel.SelectToken(pos);
+        model.SelectToken(pos);
         codeTextBox.InvalidateVisual();
     }
 }

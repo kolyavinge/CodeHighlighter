@@ -1,12 +1,17 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Model;
 
-internal class MoveToNextTokenInputAction
+namespace CodeHighlighter.InputActions;
+
+internal class MoveToNextTokenInputAction : InputAction
 {
     public static readonly MoveToNextTokenInputAction Instance = new();
 
     public void Do(InputActionContext context)
     {
-        context.InputModel.MoveToNextToken();
+        var navigator = new TokenNavigator();
+        var pos = navigator.MoveRight(context.Text, context.Tokens, context.TextCursor.LineIndex, context.TextCursor.ColumnIndex);
+        context.TextCursor.MoveTo(pos);
+        SetSelection(context);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.HistoryActions;
+using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
@@ -35,7 +37,19 @@ internal class BaseHistoryActionIntegration
 
     protected void MakeContext()
     {
-        _context = new(_inputModel, _text, _textCursor, _textMeasures, _textSelection, _viewport, _viewportContext.Object, _raiseTextChanged, _raiseTextSet);
+        _context = new(
+            new SqlCodeProvider(),
+            _inputModel,
+            _text,
+            _textCursor,
+            _textMeasures,
+            _textSelection,
+            _inputModel.Tokens,
+            _inputModel.TokenColors,
+            _viewport,
+            _viewportContext.Object,
+            _raiseTextChanged,
+            _raiseTextSet);
         _codeTextBox = new();
         _context.CodeTextBox = _codeTextBox.Object;
     }
@@ -52,7 +66,7 @@ internal class BaseHistoryActionIntegration
 
     protected void MoveCursorStartLine()
     {
-        _inputModel.MoveCursorStartLine();
+        MoveCursorStartLineInputAction.Instance.Do(_context);
     }
 
     protected void ActivateSelection()

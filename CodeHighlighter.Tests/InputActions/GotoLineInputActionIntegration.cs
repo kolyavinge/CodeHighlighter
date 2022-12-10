@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.InputActions;
 
-internal class GotoLineInputActionTest
+internal class GotoLineInputActionIntegration : BaseInputActionIntegration
 {
     [Test]
     public void GotoFirstLine()

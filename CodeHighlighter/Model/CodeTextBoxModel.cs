@@ -44,7 +44,18 @@ public class CodeTextBoxModel
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _historyActionContext = new HistoryActionContext(
-            InputModel, Text, TextCursor, TextMeasures, TextSelection, Viewport, ViewportContext, () => TextChanged?.Invoke(this, EventArgs.Empty), () => TextSet?.Invoke(this, EventArgs.Empty));
+            codeProvider,
+            InputModel,
+            Text,
+            TextCursor,
+            TextMeasures,
+            TextSelection,
+            Tokens,
+            new TokensColors(),
+            Viewport,
+            ViewportContext,
+            () => TextChanged?.Invoke(this, EventArgs.Empty),
+            () => TextSet?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
     }
 
@@ -212,7 +223,7 @@ public class CodeTextBoxModel
 
     public void SelectToken(CursorPosition position)
     {
-        InputModel.SelectToken(position);
+        SelectTokenInputAction.Instance.Do(_historyActionContext, position);
     }
 
     public void DeleteLeftToken()

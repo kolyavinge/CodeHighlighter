@@ -1,12 +1,14 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class MoveCursorPageUpInputAction
+internal class MoveCursorPageUpInputAction : InputAction
 {
     public static readonly MoveCursorPageUpInputAction Instance = new();
 
     public void Do(InputActionContext context)
     {
-        context.InputModel.MoveCursorPageUp(context.Viewport.GetLinesCountInViewport());
+        var pageSize = context.Viewport.GetLinesCountInViewport();
+        context.TextCursor.MovePageUp(pageSize);
+        SetSelection(context);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
     }
 }
