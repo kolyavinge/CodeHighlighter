@@ -1,10 +1,10 @@
-﻿using CodeHighlighter.Model;
-using CodeHighlighter.Tests.InputActions;
+﻿using CodeHighlighter.InputActions;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Model;
+namespace CodeHighlighter.Tests.InputActions;
 
-internal class InputModelIntegration : BaseInputActionIntegration
+internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
 {
     [SetUp]
     public void Setup()
@@ -13,33 +13,11 @@ internal class InputModelIntegration : BaseInputActionIntegration
     }
 
     [Test]
-    public void SetText_ResetCursor_1()
-    {
-        _model.SetText("123");
-        MoveCursorTextEnd();
-
-        _model.SetText("");
-
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
-    }
-
-    [Test]
-    public void SetText_ResetCursor_2()
-    {
-        _model.SetText("123");
-        MoveCursorTextEnd();
-
-        _model.SetText("1");
-
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
-    }
-
-    [Test]
     public void SetSelectedTextCase()
     {
         SetText("AAA");
         SelectAll();
-        var result = _model.SetSelectedTextCase(TextCase.Lower);
+        var result = SetTextCaseInputAction.Instance.Do(_context, TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 3), result.NewCursorPosition);
@@ -56,7 +34,7 @@ internal class InputModelIntegration : BaseInputActionIntegration
     {
         SetText("AAA");
         MoveCursorStartLine();
-        var result = _model.SetSelectedTextCase(TextCase.Lower);
+        var result = SetTextCaseInputAction.Instance.Do(_context, TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);

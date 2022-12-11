@@ -22,11 +22,11 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
         ResetSelection();
         if (Result.IsSelectionExist)
         {
-            _context.InputModel.MoveCursorTo(new(Result.SelectionStart.LineIndex, 0));
+            MoveCursorToInputAction.Instance.Do(_context, new(Result.SelectionStart.LineIndex, 0));
         }
         else
         {
-            _context.InputModel.MoveCursorTo(new(Result.OldCursorPosition.LineIndex, 0));
+            MoveCursorToInputAction.Instance.Do(_context, new(Result.OldCursorPosition.LineIndex, 0));
         }
         InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
         SetCursorToStartPosition();

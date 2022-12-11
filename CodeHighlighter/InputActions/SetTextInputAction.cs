@@ -2,17 +2,28 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class SetTextInputAction
+internal class SetTextInputAction : InputAction
 {
     public static readonly SetTextInputAction Instance = new();
 
     public SetTextResult Do(InputActionContext context, string text)
     {
-        var result = context.InputModel.SetText(text);
+        var result = SetText(context, text);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
         context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
         context.RaiseTextSet();
 
         return result;
+    }
+
+    private SetTextResult SetText(InputActionContext context, string text)
+    {
+        var oldCursorPosition = context.TextCursor.Position;
+        var oldText = context.Text.TextContent;
+        context.TextCursor.MoveTextBegin();
+        context.Text.TextContent = text;
+        SetTokens(context);
+
+        return new(oldCursorPosition, oldText, text);
     }
 }

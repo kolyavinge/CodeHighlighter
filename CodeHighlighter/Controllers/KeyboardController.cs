@@ -21,22 +21,22 @@ internal class KeyboardController
         }
         else if (controlPressed && key == Key.Left)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveToPrevToken();
         }
         else if (controlPressed && key == Key.Right)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveToNextToken();
         }
         else if (controlPressed && key == Key.Home)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorTextBegin();
         }
         else if (controlPressed && key == Key.End)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorTextEnd();
         }
         else if (controlPressed && key == Key.Back)
@@ -53,12 +53,12 @@ internal class KeyboardController
         }
         else if (controlPressed && key == Key.X)
         {
-            Clipboard.SetText(model.InputModel.GetSelectedText());
+            Clipboard.SetText(model.GetSelectedText());
             model.LeftDelete();
         }
         else if (controlPressed && key == Key.C)
         {
-            Clipboard.SetText(model.InputModel.GetSelectedText());
+            Clipboard.SetText(model.GetSelectedText());
         }
         else if (controlPressed && key == Key.V)
         {
@@ -67,42 +67,42 @@ internal class KeyboardController
         // without any modifiers
         else if (key == Key.Up)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorUp();
         }
         else if (key == Key.Down)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorDown();
         }
         else if (key == Key.Left)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorLeft();
         }
         else if (key == Key.Right)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorRight();
         }
         else if (key == Key.Home)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorStartLine();
         }
         else if (key == Key.End)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorEndLine();
         }
         else if (key == Key.PageUp)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorPageUp();
         }
         else if (key == Key.PageDown)
         {
-            ActivateOrCompleteSelection(model.InputModel, shiftPressed);
+            ActivateOrCompleteSelection(model, shiftPressed);
             model.MoveCursorPageDown();
         }
         else if (key == Key.Return)
@@ -136,9 +136,9 @@ internal class KeyboardController
         foreach (var ch in inputText) codeTextBoxModel.AppendChar(ch);
     }
 
-    private void ActivateOrCompleteSelection(InputModel inputModel, bool shiftPressed)
+    private void ActivateOrCompleteSelection(CodeTextBoxModel codeTextBoxModel, bool shiftPressed)
     {
-        if (shiftPressed) inputModel.ActivateSelection();
-        else inputModel.CompleteSelection();
+        if (shiftPressed) codeTextBoxModel.ActivateSelection();
+        else codeTextBoxModel.CompleteSelection();
     }
 }

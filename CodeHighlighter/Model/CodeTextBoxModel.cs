@@ -274,16 +274,10 @@ public class CodeTextBoxModel
         History.AddAndDo(new RightDeleteHistoryAction(_historyActionContext));
     }
 
-    public void ToUpperCase()
+    public void SetTextCase(TextCase textCase)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new ToUpperCaseHistoryAction(_historyActionContext));
-    }
-
-    public void ToLowerCase()
-    {
-        if (IsReadOnly) return;
-        History.AddAndDo(new ToLowerCaseHistoryAction(_historyActionContext));
+        History.AddAndDo(new SetTextCaseHistoryAction(_historyActionContext, textCase));
     }
 }
 

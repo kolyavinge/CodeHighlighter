@@ -1,18 +1,19 @@
 ﻿using CodeHighlighter.HistoryActions;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;
 
-internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegration
+internal class SetTextCaseHistoryActionIntegration : BaseHistoryActionIntegration
 {
-    private ToUpperCaseHistoryAction _action;
+    private SetTextCaseHistoryAction _action;
 
     [SetUp]
     public void Setup()
     {
         MakeContext();
-        SetText("teXt\r\na");
-        _action = new ToUpperCaseHistoryAction(_context);
+        SetText("TExT\r\nA");
+        _action = new SetTextCaseHistoryAction(_context, TextCase.Lower);
     }
 
     [Test]
@@ -32,17 +33,17 @@ internal class ToUpperCaseHistoryActionIntegration : BaseHistoryActionIntegratio
         CompleteSelection();
 
         _action.Do();
-        Assert.AreEqual("teXT\r\nA", _text.ToString());
+        Assert.AreEqual("TExt\r\na", _text.ToString());
         AssertCursorPosition(new(1, 1));
 
         MakeUncompleteSelection();
         _action.Undo();
-        Assert.AreEqual("teXt\r\na", _text.ToString());
+        Assert.AreEqual("TExT\r\nA", _text.ToString());
         AssertCursorPosition(new(1, 1));
 
         MakeUncompleteSelection();
         _action.Redo();
-        Assert.AreEqual("teXT\r\nA", _text.ToString());
+        Assert.AreEqual("TExt\r\na", _text.ToString());
         AssertCursorPosition(new(1, 0));
 
         InvalidateVisualCallThreeTimes();

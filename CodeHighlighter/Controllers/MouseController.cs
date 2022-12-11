@@ -10,9 +10,9 @@ internal class MouseController
     {
         codeTextBox.Focus();
         var pos = model.Viewport.GetCursorPosition(positionInControl);
-        if (shiftPressed) model.InputModel.ActivateSelection();
-        else model.InputModel.CompleteSelection();
-        model.InputModel.MoveCursorTo(pos);
+        if (shiftPressed) model.ActivateSelection();
+        else model.CompleteSelection();
+        model.MoveCursorTo(pos);
         codeTextBox.InvalidateVisual();
     }
 
@@ -20,9 +20,9 @@ internal class MouseController
     {
         if (leftButton == MouseButtonState.Pressed)
         {
-            model.InputModel.ActivateSelection();
+            model.ActivateSelection();
             var pos = model.Viewport.GetCursorPosition(positionInControl);
-            model.InputModel.MoveCursorTo(pos);
+            model.MoveCursorTo(pos);
             codeTextBox.InvalidateVisual();
         }
     }

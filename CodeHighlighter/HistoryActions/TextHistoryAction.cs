@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.InputActions;
+using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
@@ -25,12 +26,12 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
 
     protected void SetCursorToStartPosition()
     {
-        _context.InputModel.MoveCursorTo(Result.OldCursorPosition);
+        MoveCursorToInputAction.Instance.Do(_context, Result.OldCursorPosition);
     }
 
     protected void SetCursorToEndPosition()
     {
-        _context.InputModel.MoveCursorTo(Result.NewCursorPosition);
+        MoveCursorToInputAction.Instance.Do(_context, Result.NewCursorPosition);
     }
 
     protected void RestoreSelection()

@@ -56,12 +56,12 @@ internal class BaseHistoryActionIntegration
 
     protected void SetText(string text)
     {
-        _inputModel.SetText(text);
+        SetTextInputAction.Instance.Do(_context, text);
     }
 
     protected void MoveCursorTo(CursorPosition position)
     {
-        _inputModel.MoveCursorTo(position);
+        MoveCursorToInputAction.Instance.Do(_context, position);
     }
 
     protected void MoveCursorStartLine()

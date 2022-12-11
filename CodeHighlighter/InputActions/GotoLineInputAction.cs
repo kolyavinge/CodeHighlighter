@@ -9,7 +9,7 @@ internal class GotoLineInputAction
         if (lineIndex < 0) throw new ArgumentException(nameof(lineIndex));
         lineIndex = CalculateLineIndex(lineIndex, context.Text.LinesCount);
         var offsetLine = CalculateOffsetLine(lineIndex, context.Viewport.GetLinesCountInViewport());
-        context.InputModel.MoveCursorTo(new(lineIndex, 0));
+        MoveCursorToInputAction.Instance.Do(context, new(lineIndex, 0));
         context.ViewportContext.VerticalScrollBarValue = CalculateVerticalScrollBarValue(offsetLine, context.TextMeasures.LineHeight);
     }
 

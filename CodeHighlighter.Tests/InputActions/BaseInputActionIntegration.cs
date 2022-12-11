@@ -33,7 +33,6 @@ internal class BaseInputActionIntegration
         _raiseTextSet = () => { };
         _model = new InputModel(_text, _textCursor, _textSelection, _tokens);
         _model.SetCodeProvider(new SqlCodeProvider());
-        _model.SetText("");
         _context = new(
             new SqlCodeProvider(),
             _model,
@@ -51,12 +50,12 @@ internal class BaseInputActionIntegration
 
     protected void SetText(string text)
     {
-        _model.SetText(text);
+        SetTextInputAction.Instance.Do(_context, text);
     }
 
     protected void MoveCursorTo(CursorPosition position)
     {
-        _model.MoveCursorTo(position);
+        MoveCursorToInputAction.Instance.Do(_context, position);
     }
 
     protected void MoveCursorStartLine()

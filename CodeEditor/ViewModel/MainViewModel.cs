@@ -5,7 +5,6 @@ using System.Windows.Media;
 using CodeEditor.Mvvm;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
-using CodeHighlighter.Rendering;
 
 namespace CodeEditor.ViewModel;
 
@@ -107,12 +106,12 @@ public class MainViewModel
         }
         else if (controlPressed && !altPressed && shiftPressed && key == Key.U)
         {
-            CodeTextBoxModel.ToUpperCase();
+            CodeTextBoxModel.SetTextCase(TextCase.Upper);
             e.Handled = true;
         }
         else if (controlPressed && !altPressed && !shiftPressed && key == Key.U)
         {
-            CodeTextBoxModel.ToLowerCase();
+            CodeTextBoxModel.SetTextCase(TextCase.Lower);
             e.Handled = true;
         }
         else if (!controlPressed && altPressed && !shiftPressed && key == Key.Up)

@@ -3,15 +3,18 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class ToLowerCaseHistoryAction : TextHistoryAction<CaseResult>
+internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>
 {
-    public ToLowerCaseHistoryAction(HistoryActionContext context) : base(context)
+    private readonly TextCase _textCase;
+
+    public SetTextCaseHistoryAction(HistoryActionContext context, TextCase textCase) : base(context)
     {
+        _textCase = textCase;
     }
 
     public override bool Do()
     {
-        Result = ToLowerCaseInputAction.Instance.Do(_context);
+        Result = SetTextCaseInputAction.Instance.Do(_context, _textCase);
         if (Result.HasChanged) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasChanged;
@@ -28,7 +31,7 @@ internal class ToLowerCaseHistoryAction : TextHistoryAction<CaseResult>
     public override void Redo()
     {
         RestoreSelection();
-        ToLowerCaseInputAction.Instance.Do(_context);
+        SetTextCaseInputAction.Instance.Do(_context, _textCase);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

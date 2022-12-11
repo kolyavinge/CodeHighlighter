@@ -30,23 +30,6 @@ internal class InputModel
         SetTokens();
     }
 
-    public SetTextResult SetText(string text)
-    {
-        var oldCursorPosition = TextCursor.Position;
-        var oldText = Text.TextContent;
-        TextCursor.MoveTextBegin();
-        Text.TextContent = text;
-        SetTokens();
-
-        return new(oldCursorPosition, oldText, text);
-    }
-
-    public void MoveCursorTo(CursorPosition position)
-    {
-        TextCursor.MoveTo(position);
-        SetSelection();
-    }
-
     public void ActivateSelection()
     {
         if (!TextSelection.InProgress)
@@ -74,41 +57,10 @@ internal class InputModel
         return String.Join(Environment.NewLine, selectedLines);
     }
 
-    public CaseResult SetSelectedTextCase(TextCase textCase)
-    {
-        var cursorPosition = TextCursor.Position;
-        var (selectionStart, selectionEnd) = TextSelection.GetSortedPositions();
-        var deletedSelectedText = GetSelectedText();
-        Text.SetSelectedTextCase(TextSelection, textCase);
-        var changedText = GetSelectedText();
-        UpdateTokensForLines(selectionStart.LineIndex, selectionEnd.LineIndex - selectionStart.LineIndex + 1);
-
-        return new(cursorPosition, selectionStart, selectionEnd, deletedSelectedText, changedText);
-    }
-
-    private void SetSelection()
-    {
-        if (TextSelection.InProgress)
-        {
-            TextSelection.EndPosition = TextCursor.Position;
-        }
-        else
-        {
-            TextSelection.StartPosition = TextCursor.Position;
-            TextSelection.EndPosition = TextCursor.Position;
-        }
-    }
-
     private void SetTokens()
     {
         var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(Text, 0, Text.LinesCount - 1)).ToList();
         Tokens.SetTokens(codeProviderTokens, 0, Text.LinesCount);
         TokenColors.SetColors(_codeProvider.GetColors());
-    }
-
-    private void UpdateTokensForLines(int startLineIndex, int count)
-    {
-        var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(Text, startLineIndex, startLineIndex + count - 1)).ToList();
-        Tokens.SetTokens(codeProviderTokens, startLineIndex, count);
     }
 }
