@@ -182,7 +182,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         UpdateFontSettings(codeTextBox, model.FontSettings, model.TextMeasures);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
-        model.Viewport.UpdateScrollbarsMaximumValues(model.Text);
+        model.Viewport.UpdateScrollbarsMaximumValues();
     }
 
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -290,7 +290,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
         if (Model == null) return;
         ViewportHeight = sizeInfo.NewSize.Height;
         ViewportWidth = sizeInfo.NewSize.Width;
-        Model.Viewport.UpdateScrollbarsMaximumValues(Model.Text);
+        Model.Viewport.UpdateScrollbarsMaximumValues();
         InvalidateVisual();
     }
 

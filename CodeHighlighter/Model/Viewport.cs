@@ -19,11 +19,12 @@ internal interface IViewport
     int GetLinesCountInViewport();
     void ScrollLineDown();
     void ScrollLineUp();
-    void UpdateScrollbarsMaximumValues(IText text);
+    void UpdateScrollbarsMaximumValues();
 }
 
 internal class Viewport : IViewport
 {
+    private readonly IText _text;
     private readonly IViewportContext _context;
     private readonly TextMeasures _textMeasures;
 
@@ -56,8 +57,9 @@ internal class Viewport : IViewport
     }
 
 
-    public Viewport(IViewportContext context, TextMeasures textMeasures)
+    public Viewport(IText text, IViewportContext context, TextMeasures textMeasures)
     {
+        _text = text;
         _context = context;
         _textMeasures = textMeasures;
     }
@@ -103,15 +105,15 @@ internal class Viewport : IViewport
         }
     }
 
-    public void UpdateScrollbarsMaximumValues(IText text)
+    public void UpdateScrollbarsMaximumValues()
     {
-        var maxLineWidthInPixels = text.GetMaxLineWidth() * _textMeasures.LetterWidth;
+        var maxLineWidthInPixels = _text.GetMaxLineWidth() * _textMeasures.LetterWidth;
         _context.HorizontalScrollBarMaximum = _context.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
         if (_context.HorizontalScrollBarMaximum == 0)
         {
             _context.HorizontalScrollBarValue = 0;
         }
-        _context.VerticalScrollBarMaximum = text.LinesCount * _textMeasures.LineHeight;
+        _context.VerticalScrollBarMaximum = _text.LinesCount * _textMeasures.LineHeight;
     }
 
     public void ScrollLineUp()

@@ -33,7 +33,7 @@ internal class BaseHistoryActionIntegration
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _viewportContext = new();
-        _viewport = new(_viewportContext.Object, _textMeasures);
+        _viewport = new(_text, _viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
         _raiseTextSet = () => { };
     }

@@ -10,7 +10,7 @@ internal class SetTextInputAction : InputAction
     {
         var result = SetText(context, text);
         context.Viewport.CorrectByCursorPosition(context.TextCursor);
-        context.Viewport.UpdateScrollbarsMaximumValues(context.Text);
+        context.Viewport.UpdateScrollbarsMaximumValues();
         context.RaiseTextSet();
 
         return result;
