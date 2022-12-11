@@ -25,7 +25,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("111\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("000\r\n222\r\n", _model.Text.ToString());
+        Assert.AreEqual("000\r\n222\r\n", _text.ToString());
     }
 
     [Test]
@@ -39,7 +39,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.False(result.HasDeleted);
-        Assert.AreEqual("", _model.Text.ToString());
+        Assert.AreEqual("", _text.ToString());
     }
 
     [Test]
@@ -57,7 +57,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 0), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("\r\n000", _model.Text.ToString());
+        Assert.AreEqual("\r\n000", _text.ToString());
     }
 
     [Test]
@@ -76,7 +76,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("000\r\n111\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("222\r\n", _model.Text.ToString());
+        Assert.AreEqual("222\r\n", _text.ToString());
     }
 
     [Test]
@@ -92,7 +92,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(2, 1), result.SelectionEnd);
         Assert.AreEqual("222", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("000\r\n111\r\n", _model.Text.ToString());
+        Assert.AreEqual("000\r\n111\r\n", _text.ToString());
     }
 
     [Test]
@@ -110,7 +110,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 0), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("    012\r\n", _model.Text.ToString());
+        Assert.AreEqual("    012\r\n", _text.ToString());
     }
 
     [Test]
@@ -128,7 +128,7 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("    012\r\n\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("", _model.Text.ToString());
+        Assert.AreEqual("", _text.ToString());
     }
 
     [Test]
@@ -146,6 +146,6 @@ internal class DeleteSelectedLinesInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("\r\n\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("    012\r\n", _model.Text.ToString());
+        Assert.AreEqual("    012\r\n", _text.ToString());
     }
 }

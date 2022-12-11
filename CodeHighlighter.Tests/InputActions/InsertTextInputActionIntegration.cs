@@ -26,7 +26,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(2, 3), result.InsertEndPosition);
         Assert.AreEqual("XXX\nYYY\nZZZ", result.InsertedText);
         Assert.True(result.HasInserted);
-        Assert.AreEqual("XXX\r\nYYY\r\nZZZ", _model.Text.ToString());
+        Assert.AreEqual("XXX\r\nYYY\r\nZZZ", _text.ToString());
     }
 
     [Test]
@@ -48,7 +48,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(2, 3), result.InsertEndPosition);
         Assert.AreEqual("XXX\nYYY\nZZZ", result.InsertedText);
         Assert.True(result.HasInserted);
-        Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ789", _model.Text.ToString());
+        Assert.AreEqual("01234XXX\r\nYYY\r\nZZZ789", _text.ToString());
     }
 
     [Test]
@@ -65,7 +65,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.InsertEndPosition);
         Assert.AreEqual("", result.InsertedText);
         Assert.False(result.HasInserted);
-        Assert.AreEqual("", _model.Text.ToString());
+        Assert.AreEqual("", _text.ToString());
     }
 
     [Test]
@@ -80,7 +80,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("    125\r\n    333", _model.Text.ToString());
+        Assert.AreEqual("    125\r\n    333", _text.ToString());
     }
 
     [Test]
@@ -96,7 +96,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("    125\r\n    333", _model.Text.ToString());
+        Assert.AreEqual("    125\r\n    333", _text.ToString());
     }
 
     [Test]
@@ -111,7 +111,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("    125\r\n    3\r\n4", _model.Text.ToString());
+        Assert.AreEqual("    125\r\n    3\r\n4", _text.ToString());
     }
 
     [Test]
@@ -127,7 +127,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("    125\r\n    3\r\n4", _model.Text.ToString());
+        Assert.AreEqual("    125\r\n    3\r\n4", _text.ToString());
     }
 
     [Test]
@@ -145,7 +145,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 0), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("    012\r\n    9", _model.Text.ToString());
+        Assert.AreEqual("    012\r\n    9", _text.ToString());
     }
 
     [Test]
@@ -163,7 +163,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("    0129\r\n", _model.Text.ToString());
+        Assert.AreEqual("    0129\r\n", _text.ToString());
     }
 
     [Test]
@@ -181,6 +181,6 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
-        Assert.AreEqual("    012\r\n    9\r\n", _model.Text.ToString());
+        Assert.AreEqual("    012\r\n    9\r\n", _text.ToString());
     }
 }

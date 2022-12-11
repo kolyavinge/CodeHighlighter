@@ -25,7 +25,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("FROM", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("SELECT ", _model.Text.ToString());
+        Assert.AreEqual("SELECT ", _text.ToString());
     }
 
     [Test]
@@ -41,7 +41,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.False(result.HasDeleted);
-        Assert.AreEqual("SELECT FROM", _model.Text.ToString());
+        Assert.AreEqual("SELECT FROM", _text.ToString());
     }
 
     [Test]
@@ -60,7 +60,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(0, 11), result.SelectionEnd);
         Assert.AreEqual("SELECT FROM", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("", _model.Text.ToString());
+        Assert.AreEqual("", _text.ToString());
     }
 
     [Test]
@@ -76,7 +76,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(2, 0), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("    SELECT FROM\r\n    SELECT FROM", _model.Text.ToString());
+        Assert.AreEqual("    SELECT FROM\r\n    SELECT FROM", _text.ToString());
     }
 
     [Test]
@@ -95,7 +95,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(2, 3), result.SelectionEnd);
         Assert.AreEqual("\r\n456", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("    123\r\n    ", _model.Text.ToString());
+        Assert.AreEqual("    123\r\n    ", _text.ToString());
     }
 
     [Test]
@@ -114,7 +114,7 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("    123\r\n456", _model.Text.ToString());
+        Assert.AreEqual("    123\r\n456", _text.ToString());
     }
 
     [Test]
@@ -133,6 +133,6 @@ internal class DeleteRightTokenInputActionIntegration : BaseInputActionIntegrati
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("\r\n", result.DeletedSelectedText);
         Assert.True(result.HasDeleted);
-        Assert.AreEqual("    123\r\n    \r\n456", _model.Text.ToString());
+        Assert.AreEqual("    123\r\n    \r\n456", _text.ToString());
     }
 }

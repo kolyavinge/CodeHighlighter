@@ -25,7 +25,7 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.True(result.HasMoved);
-        Assert.AreEqual("111\r\n000\r\n222\r\n", _model.Text.ToString());
+        Assert.AreEqual("111\r\n000\r\n222\r\n", _text.ToString());
     }
 
     [Test]
@@ -41,7 +41,7 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.False(result.HasMoved);
-        Assert.AreEqual("000", _model.Text.ToString());
+        Assert.AreEqual("000", _text.ToString());
     }
 
     [Test]
@@ -60,7 +60,7 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(2, 1), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.True(result.HasMoved);
-        Assert.AreEqual("111\r\n222\r\n000\r\n", _model.Text.ToString());
+        Assert.AreEqual("111\r\n222\r\n000\r\n", _text.ToString());
     }
 
     [Test]
@@ -78,7 +78,7 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("\r\n\r\n    012", _model.Text.ToString());
+        Assert.AreEqual("\r\n\r\n    012", _text.ToString());
     }
 
     [Test]
@@ -96,7 +96,7 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 7), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("    012\r\n\r\n\r\n", _model.Text.ToString());
+        Assert.AreEqual("    012\r\n\r\n\r\n", _text.ToString());
     }
 
     [Test]
@@ -114,6 +114,6 @@ internal class MoveSelectedLinesUpInputActionIntegration : BaseInputActionIntegr
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual("\r\n\r\n    012\r\n", _model.Text.ToString());
+        Assert.AreEqual("\r\n\r\n    012\r\n", _text.ToString());
     }
 }

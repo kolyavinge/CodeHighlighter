@@ -10,7 +10,6 @@ internal class HistoryActionContext : InputActionContext
 
     public HistoryActionContext(
         ICodeProvider codeProvider,
-        InputModel inputModel,
         Text text,
         TextCursor textCursor,
         TextMeasures textMeasures,
@@ -22,7 +21,7 @@ internal class HistoryActionContext : InputActionContext
         IViewportContext viewportContext,
         Action raiseTextChanged,
         Action raiseTextSet)
-        : base(codeProvider, inputModel, text, textCursor, textMeasures, textSelection, textSelector, tokens, tokenColors, viewport, viewportContext, raiseTextChanged, raiseTextSet)
+        : base(codeProvider, text, textCursor, textMeasures, textSelection, textSelector, tokens, tokenColors, viewport, viewportContext, raiseTextChanged, raiseTextSet)
     {
         CodeTextBox = DummyCodeTextBox.Instance;
     }

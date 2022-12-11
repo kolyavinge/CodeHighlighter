@@ -14,6 +14,7 @@ public class CodeTextBoxModel
 
     public Text Text { get; }
     public Tokens Tokens { get; }
+    internal TokensColors TokensColors { get; }
     public TextCursor TextCursor { get; }
     public TextMeasures TextMeasures { get; }
     public TextSelection TextSelection { get; }
@@ -25,7 +26,6 @@ public class CodeTextBoxModel
     internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
     internal FontSettings FontSettings { get; }
-    internal InputModel InputModel { get; }
     internal BracketsHighlighter BracketsHighlighter { get; }
 
     public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
@@ -34,27 +34,26 @@ public class CodeTextBoxModel
         Text = new Text();
         TextCursor = new TextCursor(Text);
         Tokens = new Tokens();
+        TokensColors = new TokensColors();
         FontSettings = new FontSettings();
         TextMeasures = new TextMeasures(FontSettings);
         History = new History();
         LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
         TextSelector = new TextSelector(Text, TextCursor, TextSelection);
-        InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _historyActionContext = new HistoryActionContext(
             codeProvider,
-            InputModel,
             Text,
             TextCursor,
             TextMeasures,
             TextSelection,
             TextSelector,
             Tokens,
-            new TokensColors(),
+            TokensColors,
             Viewport,
             ViewportContext,
             () => TextChanged?.Invoke(this, EventArgs.Empty),
@@ -76,7 +75,6 @@ public class CodeTextBoxModel
 
     private void SetCodeProvider(ICodeProvider codeProvider)
     {
-        InputModel.SetCodeProvider(codeProvider);
         if (codeProvider is ITokenKindUpdatable tokenKindUpdatable)
         {
             var tokenKindUpdater = new TokenKindUpdater(Tokens);

@@ -10,11 +10,10 @@ internal class LineRenderLogic
         var linesDecorationCollection = model.LinesDecoration;
         if (!linesDecorationCollection.AnyItems) return;
 
-        var inputModel = model.InputModel;
         var textMeasures = model.TextMeasures;
         var viewportContext = model.ViewportContext;
 
-        foreach (var line in LineNumber.GetLineNumbers(viewportContext.ActualHeight, viewportContext.VerticalScrollBarValue, textMeasures.LineHeight, inputModel.Text.LinesCount))
+        foreach (var line in LineNumber.GetLineNumbers(viewportContext.ActualHeight, viewportContext.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
         {
             var lineDecoration = linesDecorationCollection[line.Index];
             if (lineDecoration != null)

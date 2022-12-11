@@ -6,7 +6,6 @@ namespace CodeHighlighter.InputActions;
 internal class InputActionContext
 {
     public readonly ICodeProvider CodeProvider;
-    public readonly InputModel InputModel;
     public readonly Text Text;
     public readonly TextCursor TextCursor;
     public readonly TextMeasures TextMeasures;
@@ -19,10 +18,8 @@ internal class InputActionContext
     public readonly Action RaiseTextChanged;
     public readonly Action RaiseTextSet;
 
-
     public InputActionContext(
         ICodeProvider codeProvider,
-        InputModel inputModel,
         Text text,
         TextCursor textCursor,
         TextMeasures textMeasures,
@@ -36,7 +33,6 @@ internal class InputActionContext
         Action raiseTextSet)
     {
         CodeProvider = codeProvider;
-        InputModel = inputModel;
         Text = text;
         TextCursor = textCursor;
         TextMeasures = textMeasures;

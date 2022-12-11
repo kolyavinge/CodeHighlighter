@@ -8,7 +8,6 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class BaseInputActionIntegration
 {
-    protected InputModel _model;
     protected Text _text;
     protected TextCursor _textCursor;
     protected TextMeasures _textMeasures;
@@ -33,22 +32,20 @@ internal class BaseInputActionIntegration
         _viewport = new(_viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
         _raiseTextSet = () => { };
-        _model = new InputModel(_text, _textCursor, _textSelection, _tokens);
-        _model.SetCodeProvider(new SqlCodeProvider());
         _context = new(
             new SqlCodeProvider(),
-            _model,
             _text,
             _textCursor,
             _textMeasures,
             _textSelection,
             _textSelector,
-            _model.Tokens,
-            _model.TokenColors,
+            _tokens,
+            new(),
             _viewport,
             _viewportContext.Object,
             _raiseTextChanged,
             _raiseTextSet);
+        SetText("");
     }
 
     protected void SetText(string text)

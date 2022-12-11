@@ -20,7 +20,7 @@ internal class SetTextInputActionIntegration : BaseInputActionIntegration
 
         SetTextInputAction.Instance.Do(_context, "");
 
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }
 
     [Test]
@@ -31,6 +31,6 @@ internal class SetTextInputActionIntegration : BaseInputActionIntegration
 
         SetTextInputAction.Instance.Do(_context, "1");
 
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }
 }

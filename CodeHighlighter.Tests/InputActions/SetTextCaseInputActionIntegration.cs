@@ -26,7 +26,7 @@ internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual("AAA", result.DeletedSelectedText);
         Assert.AreEqual("aaa", result.ChangedText);
         Assert.True(result.HasChanged);
-        Assert.AreEqual("aaa", _model.Text.ToString());
+        Assert.AreEqual("aaa", _text.ToString());
     }
 
     [Test]
@@ -43,6 +43,6 @@ internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual("", result.DeletedSelectedText);
         Assert.AreEqual("", result.ChangedText);
         Assert.False(result.HasChanged);
-        Assert.AreEqual("AAA", _model.Text.ToString());
+        Assert.AreEqual("AAA", _text.ToString());
     }
 }

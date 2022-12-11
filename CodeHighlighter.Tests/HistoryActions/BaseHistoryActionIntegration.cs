@@ -4,18 +4,19 @@ using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 using Moq;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;
 
 internal class BaseHistoryActionIntegration
 {
-    protected readonly InputModel _inputModel;
     protected readonly Text _text;
     protected readonly TextCursor _textCursor;
     protected readonly TextMeasures _textMeasures;
     protected readonly TextSelection _textSelection;
     protected readonly TextSelector _textSelector;
+    protected readonly Tokens _tokens;
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly Action _raiseTextChanged;
@@ -30,25 +31,24 @@ internal class BaseHistoryActionIntegration
         _textMeasures = new(new FontSettings());
         _textSelection = new();
         _textSelector = new(_text, _textCursor, _textSelection);
+        _tokens = new();
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
         _raiseTextSet = () => { };
-        _inputModel = new(_text, _textCursor, _textSelection, new());
     }
 
     protected void MakeContext()
     {
         _context = new(
             new SqlCodeProvider(),
-            _inputModel,
             _text,
             _textCursor,
             _textMeasures,
             _textSelection,
             _textSelector,
-            _inputModel.Tokens,
-            _inputModel.TokenColors,
+            _tokens,
+            new(),
             _viewport,
             _viewportContext.Object,
             _raiseTextChanged,
