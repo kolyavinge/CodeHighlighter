@@ -50,7 +50,6 @@ internal class BaseHistoryActionIntegration
             _tokens,
             new(),
             _viewport,
-            _viewportContext.Object,
             _raiseTextChanged,
             _raiseTextSet);
         _codeTextBox = new();

@@ -11,16 +11,16 @@ internal class TextRenderLogic
     {
         var fontSettings = model.FontSettings;
         var textMeasures = model.TextMeasures;
-        var viewportContext = model.ViewportContext;
+        var viewport = model.Viewport;
         var typeface = new Typeface(fontSettings.FontFamily, fontSettings.FontStyle, fontSettings.FontWeight, fontSettings.FontStretch);
-        foreach (var line in LineNumber.GetLineNumbers(viewportContext.ActualHeight, viewportContext.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
+        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
         {
             var lineTokens = model.Tokens.GetTokens(line.Index);
             foreach (var token in lineTokens)
             {
                 var brush = model.TokensColors.GetColorBrushOrNull(token.Kind) ?? defaultForeground;
                 var formattedText = new FormattedText(token.Name, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, fontSettings.FontSize, brush, 1.0);
-                var offsetX = -viewportContext.HorizontalScrollBarValue + textMeasures.LetterWidth * token.StartColumnIndex;
+                var offsetX = -viewport.HorizontalScrollBarValue + textMeasures.LetterWidth * token.StartColumnIndex;
                 context.DrawText(formattedText, new Point(offsetX, line.OffsetY));
             }
         }

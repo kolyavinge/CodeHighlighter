@@ -42,7 +42,6 @@ internal class BaseInputActionIntegration
             _tokens,
             new(),
             _viewport,
-            _viewportContext.Object,
             _raiseTextChanged,
             _raiseTextSet);
         SetText("");

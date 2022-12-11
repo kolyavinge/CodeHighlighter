@@ -28,16 +28,13 @@ internal class CursorRenderLogic
 
     public void DrawCursor(CodeTextBoxModel model)
     {
-        var textCursor = model.TextCursor;
-        var textMeasures = model.TextMeasures;
-        var viewportContext = model.ViewportContext;
-        var cursorAbsolutePoint = textCursor.GetAbsolutePosition(textMeasures);
-        cursorAbsolutePoint.X -= viewportContext.HorizontalScrollBarValue;
-        cursorAbsolutePoint.Y -= viewportContext.VerticalScrollBarValue;
+        var cursorAbsolutePoint = model.TextCursor.GetAbsolutePosition(model.TextMeasures);
+        cursorAbsolutePoint.X -= model.Viewport.HorizontalScrollBarValue;
+        cursorAbsolutePoint.Y -= model.Viewport.VerticalScrollBarValue;
         _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor is not cropped to the left
         _cursorLine.Y1 = (int)(cursorAbsolutePoint.Y - 1);
         _cursorLine.X2 = (int)cursorAbsolutePoint.X;
-        _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + textMeasures.LineHeight + 1);
+        _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + model.TextMeasures.LineHeight + 1);
     }
 
     public void HideCursor()
@@ -50,13 +47,10 @@ internal class CursorRenderLogic
 
     public void DrawHighlightedCursorLine(CodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
     {
-        var textCursor = model.TextCursor;
-        var textMeasures = model.TextMeasures;
-        var viewportContext = model.ViewportContext;
         var x = 0.0;
-        var y = textCursor.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue;
+        var y = model.TextCursor.LineIndex * model.TextMeasures.LineHeight - model.Viewport.VerticalScrollBarValue;
         var width = actualWidth;
-        var height = textMeasures.LineHeight;
+        var height = model.TextMeasures.LineHeight;
         context.DrawRectangle(background, null, new(x, y, width, height));
     }
 }

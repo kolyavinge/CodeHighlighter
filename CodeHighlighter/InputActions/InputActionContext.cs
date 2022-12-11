@@ -14,7 +14,6 @@ internal class InputActionContext
     public readonly Tokens Tokens;
     public readonly TokensColors TokenColors;
     public Viewport Viewport;
-    public IViewportContext ViewportContext;
     public readonly Action RaiseTextChanged;
     public readonly Action RaiseTextSet;
 
@@ -28,7 +27,6 @@ internal class InputActionContext
         Tokens tokens,
         TokensColors tokenColors,
         Viewport viewport,
-        IViewportContext viewportContext,
         Action raiseTextChanged,
         Action raiseTextSet)
     {
@@ -41,7 +39,6 @@ internal class InputActionContext
         Tokens = tokens;
         TokenColors = tokenColors;
         Viewport = viewport;
-        ViewportContext = viewportContext;
         RaiseTextChanged = raiseTextChanged;
         RaiseTextSet = raiseTextSet;
     }

@@ -11,15 +11,15 @@ internal class LineRenderLogic
         if (!linesDecorationCollection.AnyItems) return;
 
         var textMeasures = model.TextMeasures;
-        var viewportContext = model.ViewportContext;
+        var viewport = model.Viewport;
 
-        foreach (var line in LineNumber.GetLineNumbers(viewportContext.ActualHeight, viewportContext.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
+        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
         {
             var lineDecoration = linesDecorationCollection[line.Index];
             if (lineDecoration != null)
             {
                 var x = 0.0;
-                var y = line.Index * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue;
+                var y = line.Index * textMeasures.LineHeight - viewport.VerticalScrollBarValue;
                 var width = actualWidth;
                 var height = textMeasures.LineHeight;
                 context.DrawRectangle(lineDecoration.Background, null, new(x, y, width, height));

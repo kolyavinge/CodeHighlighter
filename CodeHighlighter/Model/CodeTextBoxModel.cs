@@ -23,7 +23,6 @@ public class CodeTextBoxModel
     public LinesDecorationCollection LinesDecoration { get; }
     public bool IsReadOnly { get; set; }
 
-    internal IViewportContext ViewportContext { get; set; }
     internal Viewport Viewport { get; private set; }
     internal FontSettings FontSettings { get; }
     internal BracketsHighlighter BracketsHighlighter { get; }
@@ -41,8 +40,7 @@ public class CodeTextBoxModel
         LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
         TextSelector = new TextSelector(Text, TextCursor, TextSelection);
-        ViewportContext = new DummyViewportContext();
-        Viewport = new Viewport(ViewportContext, TextMeasures);
+        Viewport = new Viewport(new DummyViewportContext(), TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _historyActionContext = new HistoryActionContext(
@@ -55,7 +53,6 @@ public class CodeTextBoxModel
             Tokens,
             TokensColors,
             Viewport,
-            ViewportContext,
             () => TextChanged?.Invoke(this, EventArgs.Empty),
             () => TextSet?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
@@ -66,11 +63,9 @@ public class CodeTextBoxModel
     internal void Init(ICodeTextBox codeTextBox, IViewportContext viewportContext)
     {
         _codeTextBox = codeTextBox;
-        ViewportContext = viewportContext;
-        Viewport = new Viewport(ViewportContext, TextMeasures);
+        Viewport = new Viewport(viewportContext, TextMeasures);
         _historyActionContext.CodeTextBox = _codeTextBox;
         _historyActionContext.Viewport = Viewport;
-        _historyActionContext.ViewportContext = ViewportContext;
     }
 
     private void SetCodeProvider(ICodeProvider codeProvider)

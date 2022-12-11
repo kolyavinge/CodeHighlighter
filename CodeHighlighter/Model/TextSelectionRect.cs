@@ -6,7 +6,11 @@ namespace CodeHighlighter.Model;
 
 internal class TextSelectionRect
 {
-    public IEnumerable<Rect> GetCalculatedRects(IEnumerable<TextSelectionLine> selectedLines, TextMeasures textMeasures, IViewportContext viewportContext)
+    public IEnumerable<Rect> GetCalculatedRects(
+        IEnumerable<TextSelectionLine> selectedLines,
+        TextMeasures textMeasures,
+        double horizontalScrollBarValue,
+        double verticalScrollBarValue)
     {
         var selectedLinesList = selectedLines.ToList();
         if (!selectedLinesList.Any()) yield break;
@@ -17,23 +21,23 @@ internal class TextSelectionRect
         for (int i = 0; i < selectedLinesList.Count - 1; i++)
         {
             line = selectedLinesList[i];
-            leftColumnPos = line.LeftColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue;
-            rightColumnPos = line.RightColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue;
+            leftColumnPos = line.LeftColumnIndex * textMeasures.LetterWidth - horizontalScrollBarValue;
+            rightColumnPos = line.RightColumnIndex * textMeasures.LetterWidth - horizontalScrollBarValue;
 
             yield return new Rect(
                 leftColumnPos,
-                line.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue,
+                line.LineIndex * textMeasures.LineHeight - verticalScrollBarValue,
                 rightColumnPos - leftColumnPos + textMeasures.LetterWidth,
                 textMeasures.LineHeight);
         }
 
         line = selectedLinesList.Last();
-        leftColumnPos = line.LeftColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue;
-        rightColumnPos = line.RightColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue;
+        leftColumnPos = line.LeftColumnIndex * textMeasures.LetterWidth - horizontalScrollBarValue;
+        rightColumnPos = line.RightColumnIndex * textMeasures.LetterWidth - horizontalScrollBarValue;
 
         yield return new Rect(
             leftColumnPos,
-            line.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue,
+            line.LineIndex * textMeasures.LineHeight - verticalScrollBarValue,
             rightColumnPos - leftColumnPos,
             textMeasures.LineHeight);
     }

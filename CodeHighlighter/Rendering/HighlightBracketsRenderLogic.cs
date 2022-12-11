@@ -24,13 +24,10 @@ internal class HighlightBracketsRenderLogic
 
     private Rect GetBracketRect(CodeTextBoxModel model, BracketPosition bracketPosition)
     {
-        var textMeasures = model.TextMeasures;
-        var viewportContext = model.ViewportContext;
-
         return new(
-            bracketPosition.ColumnIndex * textMeasures.LetterWidth - viewportContext.HorizontalScrollBarValue,
-            bracketPosition.LineIndex * textMeasures.LineHeight - viewportContext.VerticalScrollBarValue,
-            textMeasures.LetterWidth,
-            textMeasures.LineHeight);
+            bracketPosition.ColumnIndex * model.TextMeasures.LetterWidth - model.Viewport.HorizontalScrollBarValue,
+            bracketPosition.LineIndex * model.TextMeasures.LineHeight - model.Viewport.VerticalScrollBarValue,
+            model.TextMeasures.LetterWidth,
+            model.TextMeasures.LineHeight);
     }
 }

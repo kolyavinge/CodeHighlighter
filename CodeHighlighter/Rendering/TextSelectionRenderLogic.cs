@@ -12,6 +12,8 @@ internal class TextSelectionRenderLogic
         CodeTextBoxModel model, DrawingContext context, Brush brush)
     {
         var selectedLines = model.TextSelection.GetSelectedLines(model.Text);
-        _textSelectionRect.GetCalculatedRects(selectedLines, model.TextMeasures, model.ViewportContext).Each(rect => context.DrawRectangle(brush, null, rect));
+        _textSelectionRect
+            .GetCalculatedRects(selectedLines, model.TextMeasures, model.Viewport.HorizontalScrollBarValue, model.Viewport.VerticalScrollBarValue)
+            .Each(rect => context.DrawRectangle(brush, null, rect));
     }
 }

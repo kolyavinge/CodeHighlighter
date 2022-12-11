@@ -27,6 +27,35 @@ internal class Viewport : IViewport
     private readonly IViewportContext _context;
     private readonly TextMeasures _textMeasures;
 
+    public double ActualWidth => _context.ActualWidth;
+
+    public double ActualHeight => _context.ActualHeight;
+
+    public double VerticalScrollBarValue
+    {
+        get => _context.VerticalScrollBarValue;
+        set => _context.VerticalScrollBarValue = value;
+    }
+
+    public double VerticalScrollBarMaximum
+    {
+        get => _context.VerticalScrollBarMaximum;
+        set => _context.VerticalScrollBarMaximum = value;
+    }
+
+    public double HorizontalScrollBarValue
+    {
+        get => _context.HorizontalScrollBarValue;
+        set => _context.HorizontalScrollBarValue = value;
+    }
+
+    public double HorizontalScrollBarMaximum
+    {
+        get => _context.HorizontalScrollBarMaximum;
+        set => _context.HorizontalScrollBarMaximum = value;
+    }
+
+
     public Viewport(IViewportContext context, TextMeasures textMeasures)
     {
         _context = context;

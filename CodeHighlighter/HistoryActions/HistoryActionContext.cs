@@ -18,10 +18,9 @@ internal class HistoryActionContext : InputActionContext
         Tokens tokens,
         TokensColors tokenColors,
         Viewport viewport,
-        IViewportContext viewportContext,
         Action raiseTextChanged,
         Action raiseTextSet)
-        : base(codeProvider, text, textCursor, textMeasures, textSelection, textSelector, tokens, tokenColors, viewport, viewportContext, raiseTextChanged, raiseTextSet)
+        : base(codeProvider, text, textCursor, textMeasures, textSelection, textSelector, tokens, tokenColors, viewport, raiseTextChanged, raiseTextSet)
     {
         CodeTextBox = DummyCodeTextBox.Instance;
     }
