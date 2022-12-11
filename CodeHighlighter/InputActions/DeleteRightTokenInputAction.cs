@@ -37,7 +37,7 @@ internal class DeleteRightTokenInputAction : InputAction
         {
             (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
         }
-        var deletedSelectedText = GetSelectedText(context);
+        var deletedSelectedText = context.TextSelector.GetSelectedText();
         var deleteResult = RightDeleteInputAction.Instance.Do(context);
         var newCursorPosition = context.TextCursor.Position;
 

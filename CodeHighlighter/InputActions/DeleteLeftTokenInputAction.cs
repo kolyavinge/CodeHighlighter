@@ -28,7 +28,7 @@ internal class DeleteLeftTokenInputAction : InputAction
                 context.TextSelection.Set(position, new(context.TextCursor.LineIndex, context.TextCursor.ColumnIndex));
             }
             var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
-            var deletedSelectedText = GetSelectedText(context);
+            var deletedSelectedText = context.TextSelector.GetSelectedText();
             var deleteResult = LeftDeleteInputAction.Instance.Do(context);
             var newCursorPosition = context.TextCursor.Position;
 

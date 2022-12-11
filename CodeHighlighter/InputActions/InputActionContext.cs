@@ -11,12 +11,14 @@ internal class InputActionContext
     public readonly TextCursor TextCursor;
     public readonly TextMeasures TextMeasures;
     public readonly TextSelection TextSelection;
+    public readonly TextSelector TextSelector;
     public readonly Tokens Tokens;
     public readonly TokensColors TokenColors;
     public Viewport Viewport;
     public IViewportContext ViewportContext;
     public readonly Action RaiseTextChanged;
     public readonly Action RaiseTextSet;
+
 
     public InputActionContext(
         ICodeProvider codeProvider,
@@ -25,6 +27,7 @@ internal class InputActionContext
         TextCursor textCursor,
         TextMeasures textMeasures,
         TextSelection textSelection,
+        TextSelector textSelector,
         Tokens tokens,
         TokensColors tokenColors,
         Viewport viewport,
@@ -38,6 +41,7 @@ internal class InputActionContext
         TextCursor = textCursor;
         TextMeasures = textMeasures;
         TextSelection = textSelection;
+        TextSelector = textSelector;
         Tokens = tokens;
         TokenColors = tokenColors;
         Viewport = viewport;

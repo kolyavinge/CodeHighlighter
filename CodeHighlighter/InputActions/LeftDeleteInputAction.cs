@@ -21,7 +21,7 @@ internal class LeftDeleteInputAction : InputAction
         var charDeleteResult = default(Text.CharDeleteResult);
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
-        var deletedSelectedText = GetSelectedText(context);
+        var deletedSelectedText = context.TextSelector.GetSelectedText();
         if (context.TextSelection.IsExist)
         {
             if (selectionStart.Kind == CursorPositionKind.Virtual)

@@ -15,6 +15,7 @@ internal class BaseHistoryActionIntegration
     protected readonly TextCursor _textCursor;
     protected readonly TextMeasures _textMeasures;
     protected readonly TextSelection _textSelection;
+    protected readonly TextSelector _textSelector;
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly Action _raiseTextChanged;
@@ -28,6 +29,7 @@ internal class BaseHistoryActionIntegration
         _textCursor = new(_text);
         _textMeasures = new(new FontSettings());
         _textSelection = new();
+        _textSelector = new(_text, _textCursor, _textSelection);
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
         _raiseTextChanged = () => { };
@@ -44,6 +46,7 @@ internal class BaseHistoryActionIntegration
             _textCursor,
             _textMeasures,
             _textSelection,
+            _textSelector,
             _inputModel.Tokens,
             _inputModel.TokenColors,
             _viewport,
@@ -71,12 +74,12 @@ internal class BaseHistoryActionIntegration
 
     protected void ActivateSelection()
     {
-        _inputModel.ActivateSelection();
+        _textSelector.ActivateSelection();
     }
 
     protected void CompleteSelection()
     {
-        _inputModel.CompleteSelection();
+        _textSelector.CompleteSelection();
     }
 
     protected void MakeUncompleteSelection()

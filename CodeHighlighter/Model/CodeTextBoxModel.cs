@@ -17,6 +17,7 @@ public class CodeTextBoxModel
     public TextCursor TextCursor { get; }
     public TextMeasures TextMeasures { get; }
     public TextSelection TextSelection { get; }
+    internal TextSelector TextSelector { get; }
     public History History { get; }
     public LinesDecorationCollection LinesDecoration { get; }
     public bool IsReadOnly { get; set; }
@@ -38,6 +39,7 @@ public class CodeTextBoxModel
         History = new History();
         LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
+        TextSelector = new TextSelector(Text, TextCursor, TextSelection);
         InputModel = new InputModel(Text, TextCursor, TextSelection, Tokens);
         ViewportContext = new DummyViewportContext();
         Viewport = new Viewport(ViewportContext, TextMeasures);
@@ -50,6 +52,7 @@ public class CodeTextBoxModel
             TextCursor,
             TextMeasures,
             TextSelection,
+            TextSelector,
             Tokens,
             new TokensColors(),
             Viewport,
@@ -93,7 +96,7 @@ public class CodeTextBoxModel
 
     public string GetSelectedText()
     {
-        return InputModel.GetSelectedText();
+        return TextSelector.GetSelectedText();
     }
 
     public void MoveCursorTo(CursorPosition position)
@@ -176,12 +179,12 @@ public class CodeTextBoxModel
 
     public void ActivateSelection()
     {
-        InputModel.ActivateSelection();
+        TextSelector.ActivateSelection();
     }
 
     public void CompleteSelection()
     {
-        InputModel.CompleteSelection();
+        TextSelector.CompleteSelection();
     }
 
     public void GotoLine(int lineIndex)

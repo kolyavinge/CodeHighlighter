@@ -13,6 +13,7 @@ internal class BaseInputActionIntegration
     protected TextCursor _textCursor;
     protected TextMeasures _textMeasures;
     protected TextSelection _textSelection;
+    protected TextSelector _textSelector;
     protected Tokens _tokens;
     protected Viewport _viewport;
     protected Mock<IViewportContext> _viewportContext;
@@ -26,6 +27,7 @@ internal class BaseInputActionIntegration
         _textCursor = new(_text);
         _textMeasures = new(new FontSettings());
         _textSelection = new();
+        _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _viewportContext = new();
         _viewport = new(_viewportContext.Object, _textMeasures);
@@ -40,6 +42,7 @@ internal class BaseInputActionIntegration
             _textCursor,
             _textMeasures,
             _textSelection,
+            _textSelector,
             _model.Tokens,
             _model.TokenColors,
             _viewport,
@@ -80,12 +83,12 @@ internal class BaseInputActionIntegration
 
     protected void ActivateSelection()
     {
-        _model.ActivateSelection();
+        _textSelector.ActivateSelection();
     }
 
     protected void CompleteSelection()
     {
-        _model.CompleteSelection();
+        _textSelector.CompleteSelection();
     }
 
     protected void AppendNewLine()

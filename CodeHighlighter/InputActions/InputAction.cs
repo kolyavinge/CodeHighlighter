@@ -6,18 +6,6 @@ namespace CodeHighlighter.InputActions;
 
 internal class InputAction
 {
-    protected string GetSelectedText(InputActionContext context)
-    {
-        if (!context.TextSelection.IsExist) return "";
-        var selectedLines = new List<string>();
-        foreach (var line in context.TextSelection.GetSelectedLines(context.Text))
-        {
-            selectedLines.Add(context.Text.GetLine(line.LineIndex).GetSubstring(line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
-        }
-
-        return String.Join(Environment.NewLine, selectedLines);
-    }
-
     protected void SetSelection(InputActionContext context)
     {
         if (context.TextSelection.InProgress)

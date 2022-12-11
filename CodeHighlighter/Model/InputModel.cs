@@ -30,33 +30,6 @@ internal class InputModel
         SetTokens();
     }
 
-    public void ActivateSelection()
-    {
-        if (!TextSelection.InProgress)
-        {
-            TextSelection.InProgress = true;
-            TextSelection.StartPosition = TextCursor.Position;
-            TextSelection.EndPosition = TextCursor.Position;
-        }
-    }
-
-    public void CompleteSelection()
-    {
-        TextSelection.InProgress = false;
-    }
-
-    public string GetSelectedText()
-    {
-        if (!TextSelection.IsExist) return "";
-        var selectedLines = new List<string>();
-        foreach (var line in TextSelection.GetSelectedLines(Text))
-        {
-            selectedLines.Add(Text.GetLine(line.LineIndex).GetSubstring(line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
-        }
-
-        return String.Join(Environment.NewLine, selectedLines);
-    }
-
     private void SetTokens()
     {
         var codeProviderTokens = _codeProvider.GetTokens(new ForwardTextIterator(Text, 0, Text.LinesCount - 1)).ToList();
