@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using CodeHighlighter.Common;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Controllers;

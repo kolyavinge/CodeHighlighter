@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
+using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 

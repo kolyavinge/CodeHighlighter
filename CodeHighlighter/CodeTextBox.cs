@@ -301,7 +301,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
         var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-        _mouseController.OnMouseDown(this, Model, positionInControl, shiftPressed);
+        _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y), shiftPressed);
         Mouse.Capture(this);
     }
 
@@ -309,7 +309,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseMove(this, Model, positionInControl, e.LeftButton);
+        _mouseController.OnMouseMove(this, Model, new(positionInControl.X, positionInControl.Y), e.LeftButton);
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -327,7 +327,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseDoubleClick(this, Model, positionInControl);
+        _mouseController.OnMouseDoubleClick(this, Model, new(positionInControl.X, positionInControl.Y));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

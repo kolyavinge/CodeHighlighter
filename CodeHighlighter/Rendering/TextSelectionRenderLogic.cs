@@ -14,6 +14,6 @@ internal class TextSelectionRenderLogic
         var selectedLines = model.TextSelection.GetSelectedLines(model.Text);
         _textSelectionRect
             .GetCalculatedRects(selectedLines, model.TextMeasures, model.Viewport.HorizontalScrollBarValue, model.Viewport.VerticalScrollBarValue)
-            .Each(rect => context.DrawRectangle(brush, null, rect));
+            .Each(rect => context.DrawRectangle(brush, null, new(rect.X, rect.Y, rect.Width, rect.Height)));
     }
 }

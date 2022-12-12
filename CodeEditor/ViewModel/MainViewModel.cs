@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using CodeEditor.Mvvm;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
@@ -42,7 +41,7 @@ public class MainViewModel
             {
                 for (int i = 0; i < CodeTextBoxModel.Text.LinesCount; i += 2)
                 {
-                    CodeTextBoxModel.LinesDecoration[i] = new LineDecoration { Background = Brushes.Wheat };
+                    CodeTextBoxModel.LinesDecoration[i] = new LineDecoration { Background = new(250, 220, 160) };
                 }
             }
             else

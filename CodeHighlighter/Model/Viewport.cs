@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 

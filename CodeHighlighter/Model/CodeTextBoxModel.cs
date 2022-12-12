@@ -218,6 +218,7 @@ public class CodeTextBoxModel
     public void SelectToken(CursorPosition position)
     {
         SelectTokenInputAction.Instance.Do(_context, position);
+        _codeTextBox.InvalidateVisual();
     }
 
     public void DeleteLeftToken()

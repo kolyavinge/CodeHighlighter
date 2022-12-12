@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
+using CodeHighlighter.Common;
 using CodeHighlighter.Sql;
 
 namespace CodeHighlighter.CodeProvidering;
@@ -216,14 +216,14 @@ public class SqlCodeProvider : ICodeProvider
     private bool IsReturn(char ch) => ch == '\n';
 
     public IEnumerable<TokenColor> GetColors() => new[]
-        {
-            new TokenColor((byte)TokenKind.Keyword, Colors.Blue),
-            new TokenColor((byte)TokenKind.Operator, Colors.DimGray),
-            new TokenColor((byte)TokenKind.Function, Colors.Magenta),
-            new TokenColor((byte)TokenKind.Variable, Colors.Brown),
-            new TokenColor((byte)TokenKind.String, Colors.Red),
-            new TokenColor((byte)TokenKind.Comment, Colors.Green),
-        };
+    {
+        new TokenColor((byte)TokenKind.Keyword,  new Color(0,0,255)),
+        new TokenColor((byte)TokenKind.Operator, new Color(100,100,100)),
+        new TokenColor((byte)TokenKind.Function, new Color(250,3,140)),
+        new TokenColor((byte)TokenKind.Variable, new Color(140,80,60)),
+        new TokenColor((byte)TokenKind.String,   new Color(255,0,0)),
+        new TokenColor((byte)TokenKind.Comment,  new Color(100,210,90))
+    };
 
     enum State
     {

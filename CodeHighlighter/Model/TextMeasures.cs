@@ -11,7 +11,7 @@ public class TextMeasures
     public void UpdateMeasures(double lineHeight, double letterWidth)
     {
         LineHeight = Math.Round(lineHeight);
-        LetterWidth = Math.Round(letterWidth);
+        LetterWidth = letterWidth;
         MeasuresUpdated?.Invoke(this, EventArgs.Empty);
     }
 }

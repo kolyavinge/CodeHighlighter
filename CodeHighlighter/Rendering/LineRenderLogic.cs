@@ -22,7 +22,9 @@ internal class LineRenderLogic
                 var y = line.Index * textMeasures.LineHeight - viewport.VerticalScrollBarValue;
                 var width = actualWidth;
                 var height = textMeasures.LineHeight;
-                context.DrawRectangle(lineDecoration.Background, null, new(x, y, width, height));
+                var background = lineDecoration.Background;
+                var brush = new SolidColorBrush(new() { R = background.R, G = background.G, B = background.B, A = background.A });
+                context.DrawRectangle(brush, null, new(x, y, width, height));
             }
         }
     }

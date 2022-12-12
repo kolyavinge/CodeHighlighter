@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Media;
+using CodeHighlighter.Common;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.CodeProvidering;
