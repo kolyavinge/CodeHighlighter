@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-internal class BracketsHighlighter
+public class BracketsHighlighter
 {
     private readonly List<BracketPair> _bracketPairs = new();
     private HighlightResult _lastResult;

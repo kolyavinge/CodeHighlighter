@@ -1,10 +1,8 @@
 ﻿using System;
 using CodeHighlighter.CodeProvidering;
-using CodeHighlighter.HistoryActions;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 using Moq;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;

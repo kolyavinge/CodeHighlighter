@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-internal interface IText
+public interface IText
 {
     IEnumerable<TextLine> Lines { get; }
     int LinesCount { get; }
@@ -58,7 +58,7 @@ public class Text : IText
         }
     }
 
-    internal static readonly IReadOnlyCollection<char> NotAllowedSymbols = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
+    public static readonly IReadOnlyCollection<char> NotAllowedSymbols = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
 
     internal void AppendChar(CursorPosition position, char ch)
     {

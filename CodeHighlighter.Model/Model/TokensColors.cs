@@ -4,7 +4,7 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-internal class TokensColors
+public class TokensColors
 {
     private readonly Dictionary<byte, Color> _colors = new();
 

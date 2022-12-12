@@ -170,7 +170,7 @@ public class TextCursor
     }
 }
 
-internal static class TextCursorExt
+public static class TextCursorExt
 {
     public static Point GetAbsolutePosition(this TextCursor cursor, TextMeasures measures) =>
         new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);

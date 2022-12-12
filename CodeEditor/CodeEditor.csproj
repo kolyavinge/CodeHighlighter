@@ -10,6 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CodeHighlighter.Model\CodeHighlighter.Model.csproj" />
 		<ProjectReference Include="..\CodeHighlighter\CodeHighlighter.csproj" />
 	</ItemGroup>
 

@@ -2,7 +2,7 @@
 
 namespace CodeHighlighter.Model;
 
-internal readonly struct TextSelectionLine
+public readonly struct TextSelectionLine
 {
     public readonly int LineIndex;
     public readonly int LeftColumnIndex;
@@ -50,7 +50,7 @@ public class TextSelection
         return (end, start);
     }
 
-    internal IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
+    public IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
     {
         if (!IsExist) yield break;
         var (start, end) = GetSortedPositions();

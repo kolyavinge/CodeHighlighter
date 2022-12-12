@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CodeHighlighter.CodeProvidering;
 
-internal class EmptyCodeProvider : ICodeProvider
+public class EmptyCodeProvider : ICodeProvider
 {
     public IEnumerable<Token> GetTokens(ITextIterator textIterator) => Enumerable.Empty<Token>();
 

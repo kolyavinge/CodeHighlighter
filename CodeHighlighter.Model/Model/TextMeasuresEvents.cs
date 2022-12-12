@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter.Model;
 
-internal class TextMeasuresEvents
+public class TextMeasuresEvents
 {
     private readonly TextMeasures _textMeasures;
     private double _lineHeight;
@@ -34,7 +34,7 @@ internal class TextMeasuresEvents
     }
 }
 
-internal class LineHeightChangedEventArgs : EventArgs
+public class LineHeightChangedEventArgs : EventArgs
 {
     public double LineHeight { get; }
     public LineHeightChangedEventArgs(double lineHeight)
@@ -43,7 +43,7 @@ internal class LineHeightChangedEventArgs : EventArgs
     }
 }
 
-internal class LetterWidthChangedEventArgs : EventArgs
+public class LetterWidthChangedEventArgs : EventArgs
 {
     public double LetterWidth { get; }
     public LetterWidthChangedEventArgs(double letterWidth)

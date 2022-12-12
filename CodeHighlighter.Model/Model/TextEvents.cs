@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter.Model;
 
-internal class TextEvents
+public class TextEvents
 {
     private readonly IText _text;
     private int _linesCount;
@@ -23,7 +23,7 @@ internal class TextEvents
     }
 }
 
-internal class LinesCountChangedEventArgs : EventArgs
+public class LinesCountChangedEventArgs : EventArgs
 {
     public int LinesCount { get; }
     public LinesCountChangedEventArgs(int linesCount)

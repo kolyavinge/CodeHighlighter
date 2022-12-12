@@ -2,7 +2,7 @@
 
 namespace CodeHighlighter.Utils;
 
-internal static class EnumerableExt
+public static class EnumerableExt
 {
     public static void Each<T>(this IEnumerable<T> collection, Action<T> action)
     {

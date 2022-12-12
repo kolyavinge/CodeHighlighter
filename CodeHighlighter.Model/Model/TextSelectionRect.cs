@@ -4,7 +4,7 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-internal class TextSelectionRect
+public class TextSelectionRect
 {
     public IEnumerable<Rect> GetCalculatedRects(
         IEnumerable<TextSelectionLine> selectedLines,

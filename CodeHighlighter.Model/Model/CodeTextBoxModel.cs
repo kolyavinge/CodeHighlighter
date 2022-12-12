@@ -14,7 +14,7 @@ public class CodeTextBoxModel
 
     public Text Text { get; }
     public Tokens Tokens { get; }
-    internal TokensColors TokensColors { get; }
+    public TokensColors TokensColors { get; }
     public TextCursor TextCursor { get; }
     public TextMeasures TextMeasures { get; }
     public TextSelection TextSelection { get; }
@@ -23,8 +23,8 @@ public class CodeTextBoxModel
     public LinesDecorationCollection LinesDecoration { get; }
     public bool IsReadOnly { get; set; }
 
-    internal Viewport Viewport { get; private set; }
-    internal BracketsHighlighter BracketsHighlighter { get; }
+    public Viewport Viewport { get; private set; }
+    public BracketsHighlighter BracketsHighlighter { get; }
 
     public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
     {

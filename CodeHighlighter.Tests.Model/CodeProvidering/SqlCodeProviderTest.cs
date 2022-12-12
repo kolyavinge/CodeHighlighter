@@ -193,7 +193,7 @@ from MyTable'";
     [Test]
     public void SQLFile_1()
     {
-        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_1.sql");
+        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests.Model\Examples\sql_1.sql");
         var tokens = GetTokens(text);
         Assert.AreEqual(637, tokens.Count);
         tokens.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
@@ -202,7 +202,7 @@ from MyTable'";
     [Test]
     public void SQLFile_2()
     {
-        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_2.sql");
+        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests.Model\Examples\sql_2.sql");
         var tokens = GetTokens(text);
         Assert.AreEqual(1744, tokens.Count);
         tokens.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
@@ -211,7 +211,7 @@ from MyTable'";
     [Test]
     public void SQLFile_3()
     {
-        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests\Examples\sql_3.sql");
+        var text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeHighlighter.Tests.Model\Examples\sql_3.sql");
         var tokens = GetTokens(text);
         Assert.AreEqual(31058, tokens.Count);
         tokens.ForEach(x => Assert.IsTrue(x.StartColumnIndex <= text.Length));
