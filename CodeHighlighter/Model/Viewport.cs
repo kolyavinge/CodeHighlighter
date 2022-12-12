@@ -2,7 +2,7 @@
 
 namespace CodeHighlighter.Model;
 
-interface IViewportContext
+public interface IViewportContext
 {
     double ActualWidth { get; }
     double ActualHeight { get; }

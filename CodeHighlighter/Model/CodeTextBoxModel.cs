@@ -60,10 +60,10 @@ public class CodeTextBoxModel
 
     public CodeTextBoxModel() : this(new EmptyCodeProvider()) { }
 
-    internal void Init(ICodeTextBox codeTextBox, IViewportContext viewportContext)
+    public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        Viewport = new Viewport(Text, viewportContext, TextMeasures);
+        Viewport = new Viewport(Text, codeTextBox, TextMeasures);
         _context.CodeTextBox = _codeTextBox;
         _context.Viewport = Viewport;
     }

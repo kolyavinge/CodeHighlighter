@@ -16,9 +16,9 @@ internal class CodeTextBoxModelCursorIntegration
     public void Setup()
     {
         _codeTextBox = new Mock<ICodeTextBox>();
-        _viewportContext = new Mock<IViewportContext>();
+        _viewportContext = _codeTextBox.As<IViewportContext>();
         _model = new CodeTextBoxModel(new SqlCodeProvider());
-        _model.Init(_codeTextBox.Object, _viewportContext.Object);
+        _model.AttachCodeTextBox(_codeTextBox.Object);
         _model.SetText("");
     }
 

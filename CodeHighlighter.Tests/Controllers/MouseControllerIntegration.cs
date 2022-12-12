@@ -10,7 +10,6 @@ namespace CodeHighlighter.Tests.Controllers;
 internal class MouseControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
-    private Mock<IViewportContext> _viewportContext;
     private CodeTextBoxModel _model;
     private MouseController _controller;
 
@@ -18,9 +17,8 @@ internal class MouseControllerIntegration
     public void Setup()
     {
         _codeTextBox = new Mock<ICodeTextBox>();
-        _viewportContext = new Mock<IViewportContext>();
         _model = new CodeTextBoxModel(new EmptyCodeProvider());
-        _model.Init(_codeTextBox.Object, _viewportContext.Object);
+        _model.AttachCodeTextBox(_codeTextBox.Object);
         _controller = new MouseController();
     }
 

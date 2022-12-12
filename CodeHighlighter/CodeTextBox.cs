@@ -10,7 +10,7 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPropertyChanged
+public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 {
     private readonly TextRenderLogic _textRenderLogic;
     private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
@@ -170,7 +170,7 @@ public class CodeTextBox : Control, ICodeTextBox, IViewportContext, INotifyPrope
 
     private static void InitModel(CodeTextBox codeTextBox, CodeTextBoxModel model)
     {
-        model.Init(codeTextBox, codeTextBox);
+        model.AttachCodeTextBox(codeTextBox);
         var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
         textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
         textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
