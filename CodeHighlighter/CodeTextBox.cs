@@ -20,6 +20,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
     private readonly LineRenderLogic _lineRenderLogic;
     private readonly MouseSettings _mouseSettings;
+    private readonly FontSettings _fontSettings;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -179,7 +180,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         model.TextChanged += (s, e) => textEvents.OnTextChanged();
         textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
         codeTextBox.TextLinesCount = model.Text.LinesCount;
-        UpdateFontSettings(codeTextBox, model.FontSettings, model.TextMeasures);
+        UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, model.TextMeasures);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
         model.Viewport.UpdateScrollbarsMaximumValues();
@@ -195,7 +196,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         var codeTextBox = (CodeTextBox)d;
         if (codeTextBox.Model == null) return;
-        UpdateFontSettings(codeTextBox, codeTextBox.Model.FontSettings, codeTextBox.Model.TextMeasures);
+        UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, codeTextBox.Model.TextMeasures);
     }
 
     private static void UpdateFontSettings(CodeTextBox codeTextBox, FontSettings fontSettings, TextMeasures textMeasures)
@@ -205,7 +206,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         fontSettings.FontStretch = codeTextBox.FontStretch;
         fontSettings.FontStyle = codeTextBox.FontStyle;
         fontSettings.FontWeight = codeTextBox.FontWeight;
-        textMeasures.UpdateMeasures();
+        textMeasures.UpdateMeasures(fontSettings.LineHeight, fontSettings.LetterWidth);
     }
 
     static CodeTextBox()
@@ -248,6 +249,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
         _lineRenderLogic = new LineRenderLogic();
         _mouseSettings = new MouseSettings();
+        _fontSettings = new FontSettings();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
@@ -277,7 +279,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         _lineRenderLogic.DrawLines(Model, context, ActualWidth);
         _textSelectionRenderLogic.DrawSelectedLines(Model, context, SelectionBrush);
         _highlightBracketsRenderLogic.DrawHighlightedBrackets(Model, context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
-        _textRenderLogic.DrawText(Model, context, Foreground);
+        _textRenderLogic.DrawText(Model, _fontSettings, context, Foreground);
         if (IsFocused)
         {
             _cursorRenderLogic.DrawCursor(Model);

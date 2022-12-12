@@ -7,9 +7,8 @@ namespace CodeHighlighter.Rendering;
 
 internal class TextRenderLogic
 {
-    public void DrawText(CodeTextBoxModel model, DrawingContext context, Brush defaultForeground)
+    public void DrawText(CodeTextBoxModel model, FontSettings fontSettings, DrawingContext context, Brush defaultForeground)
     {
-        var fontSettings = model.FontSettings;
         var textMeasures = model.TextMeasures;
         var viewport = model.Viewport;
         var typeface = new Typeface(fontSettings.FontFamily, fontSettings.FontStyle, fontSettings.FontWeight, fontSettings.FontStretch);

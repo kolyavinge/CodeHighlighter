@@ -28,7 +28,7 @@ internal class BaseHistoryActionIntegration
     {
         _text = new();
         _textCursor = new(_text);
-        _textMeasures = new(new FontSettings());
+        _textMeasures = new();
         _textSelection = new();
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();

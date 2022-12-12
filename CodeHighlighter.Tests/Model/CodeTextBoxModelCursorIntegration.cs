@@ -19,6 +19,7 @@ internal class CodeTextBoxModelCursorIntegration
         _viewportContext = _codeTextBox.As<IViewportContext>();
         _model = new CodeTextBoxModel(new SqlCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
+        _model.TextMeasures.UpdateMeasures(10, 10);
         _model.SetText("");
     }
 

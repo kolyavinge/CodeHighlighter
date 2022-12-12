@@ -16,7 +16,8 @@ internal class TextSelectionRenderLogicTest
     [SetUp]
     public void Setup()
     {
-        _textMeasures = new TextMeasures(5, 2);
+        _textMeasures = new TextMeasures();
+        _textMeasures.UpdateMeasures(5, 2);
         _horizontalScrollBarValue = 7;
         _verticalScrollBarValue = 9;
         _textSelectionRect = new TextSelectionRect();

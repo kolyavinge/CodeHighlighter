@@ -24,7 +24,6 @@ public class CodeTextBoxModel
     public bool IsReadOnly { get; set; }
 
     internal Viewport Viewport { get; private set; }
-    internal FontSettings FontSettings { get; }
     internal BracketsHighlighter BracketsHighlighter { get; }
 
     public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
@@ -34,8 +33,7 @@ public class CodeTextBoxModel
         TextCursor = new TextCursor(Text);
         Tokens = new Tokens();
         TokensColors = new TokensColors();
-        FontSettings = new FontSettings();
-        TextMeasures = new TextMeasures(FontSettings);
+        TextMeasures = new TextMeasures();
         History = new History();
         LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
