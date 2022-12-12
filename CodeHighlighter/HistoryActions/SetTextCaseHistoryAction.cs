@@ -7,7 +7,7 @@ internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>
 {
     private readonly TextCase _textCase;
 
-    public SetTextCaseHistoryAction(HistoryActionContext context, TextCase textCase) : base(context)
+    public SetTextCaseHistoryAction(InputActionContext context, TextCase textCase) : base(context)
     {
         _textCase = textCase;
     }

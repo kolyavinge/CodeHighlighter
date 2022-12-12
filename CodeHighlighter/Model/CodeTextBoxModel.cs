@@ -6,7 +6,7 @@ namespace CodeHighlighter.Model;
 
 public class CodeTextBoxModel
 {
-    private readonly HistoryActionContext _historyActionContext;
+    private readonly InputActionContext _context;
     private ICodeTextBox _codeTextBox;
 
     public event EventHandler? TextSet;
@@ -43,7 +43,7 @@ public class CodeTextBoxModel
         Viewport = new Viewport(Text, new DummyViewportContext(), TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
-        _historyActionContext = new HistoryActionContext(
+        _context = new InputActionContext(
             codeProvider,
             Text,
             TextCursor,
@@ -64,8 +64,8 @@ public class CodeTextBoxModel
     {
         _codeTextBox = codeTextBox;
         Viewport = new Viewport(Text, viewportContext, TextMeasures);
-        _historyActionContext.CodeTextBox = _codeTextBox;
-        _historyActionContext.Viewport = Viewport;
+        _context.CodeTextBox = _codeTextBox;
+        _context.Viewport = Viewport;
     }
 
     private void SetCodeProvider(ICodeProvider codeProvider)
@@ -84,7 +84,7 @@ public class CodeTextBoxModel
     public void SetText(string text)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new SetTextHistoryAction(_historyActionContext, text));
+        History.AddAndDo(new SetTextHistoryAction(_context, text));
     }
 
     public string GetSelectedText()
@@ -94,80 +94,80 @@ public class CodeTextBoxModel
 
     public void MoveCursorTo(CursorPosition position)
     {
-        MoveCursorToInputAction.Instance.Do(_historyActionContext, position);
+        MoveCursorToInputAction.Instance.Do(_context, position);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorLeft()
     {
-        MoveCursorLeftInputAction.Instance.Do(_historyActionContext);
+        MoveCursorLeftInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorRight()
     {
-        MoveCursorRightInputAction.Instance.Do(_historyActionContext);
+        MoveCursorRightInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorUp()
     {
-        MoveCursorUpInputAction.Instance.Do(_historyActionContext);
+        MoveCursorUpInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorDown()
     {
-        MoveCursorDownInputAction.Instance.Do(_historyActionContext);
+        MoveCursorDownInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorStartLine()
     {
-        MoveCursorStartLineInputAction.Instance.Do(_historyActionContext);
+        MoveCursorStartLineInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorEndLine()
     {
-        MoveCursorEndLineInputAction.Instance.Do(_historyActionContext);
+        MoveCursorEndLineInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextBegin()
     {
-        MoveCursorTextBeginInputAction.Instance.Do(_historyActionContext);
+        MoveCursorTextBeginInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextEnd()
     {
-        MoveCursorTextEndInputAction.Instance.Do(_historyActionContext);
+        MoveCursorTextEndInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageUp()
     {
-        MoveCursorPageUpInputAction.Instance.Do(_historyActionContext);
+        MoveCursorPageUpInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageDown()
     {
-        MoveCursorPageDownInputAction.Instance.Do(_historyActionContext);
+        MoveCursorPageDownInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveSelectedLinesUp()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_historyActionContext));
+        History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_context));
     }
 
     public void MoveSelectedLinesDown()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_historyActionContext));
+        History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_context));
     }
 
     public void ActivateSelection()
@@ -182,98 +182,98 @@ public class CodeTextBoxModel
 
     public void GotoLine(int lineIndex)
     {
-        GotoLineInputAction.Instance.Do(_historyActionContext, lineIndex);
+        GotoLineInputAction.Instance.Do(_context, lineIndex);
         _codeTextBox.InvalidateVisual();
         _codeTextBox.Focus();
     }
 
     public void ScrollLineUp()
     {
-        ScrollLineUpInputAction.Instance.Do(_historyActionContext);
+        ScrollLineUpInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void ScrollLineDown()
     {
-        ScrollLineDownInputAction.Instance.Do(_historyActionContext);
+        ScrollLineDownInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToPrevToken()
     {
-        MoveToPrevTokenInputAction.Instance.Do(_historyActionContext);
+        MoveToPrevTokenInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToNextToken()
     {
-        MoveToNextTokenInputAction.Instance.Do(_historyActionContext);
+        MoveToNextTokenInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void SelectAll()
     {
-        SelectAllInputAction.Instance.Do(_historyActionContext);
+        SelectAllInputAction.Instance.Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void SelectToken(CursorPosition position)
     {
-        SelectTokenInputAction.Instance.Do(_historyActionContext, position);
+        SelectTokenInputAction.Instance.Do(_context, position);
     }
 
     public void DeleteLeftToken()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteLeftTokenHistoryAction(_historyActionContext));
+        History.AddAndDo(new DeleteLeftTokenHistoryAction(_context));
     }
 
     public void DeleteRightToken()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteRightTokenHistoryAction(_historyActionContext));
+        History.AddAndDo(new DeleteRightTokenHistoryAction(_context));
     }
 
     public void AppendChar(char ch)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new AppendCharHistoryAction(_historyActionContext, ch));
+        History.AddAndDo(new AppendCharHistoryAction(_context, ch));
     }
 
     public void AppendNewLine()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new AppendNewLineHistoryAction(_historyActionContext));
+        History.AddAndDo(new AppendNewLineHistoryAction(_context));
     }
 
     public void InsertText(string insertedText)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new InsertTextHistoryAction(_historyActionContext, insertedText));
+        History.AddAndDo(new InsertTextHistoryAction(_context, insertedText));
     }
 
     public void DeleteSelectedLines()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteSelectedLinesHistoryAction(_historyActionContext));
+        History.AddAndDo(new DeleteSelectedLinesHistoryAction(_context));
     }
 
     public void LeftDelete()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new LeftDeleteHistoryAction(_historyActionContext));
+        History.AddAndDo(new LeftDeleteHistoryAction(_context));
     }
 
     public void RightDelete()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new RightDeleteHistoryAction(_historyActionContext));
+        History.AddAndDo(new RightDeleteHistoryAction(_context));
     }
 
     public void SetTextCase(TextCase textCase)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new SetTextCaseHistoryAction(_historyActionContext, textCase));
+        History.AddAndDo(new SetTextCaseHistoryAction(_context, textCase));
     }
 }
 

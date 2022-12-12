@@ -7,7 +7,7 @@ internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>
 {
     public readonly string _text;
 
-    public SetTextHistoryAction(HistoryActionContext context, string text) : base(context)
+    public SetTextHistoryAction(InputActionContext context, string text) : base(context)
     {
         _text = text;
     }

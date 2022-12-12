@@ -5,7 +5,7 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class LeftDeleteHistoryAction : TextHistoryAction<DeleteResult>
 {
-    public LeftDeleteHistoryAction(HistoryActionContext context) : base(context)
+    public LeftDeleteHistoryAction(InputActionContext context) : base(context)
     {
     }
 

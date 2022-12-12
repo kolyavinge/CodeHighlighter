@@ -16,6 +16,7 @@ internal class InputActionContext
     public Viewport Viewport;
     public readonly Action RaiseTextChanged;
     public readonly Action RaiseTextSet;
+    public ICodeTextBox CodeTextBox;
 
     public InputActionContext(
         ICodeProvider codeProvider,
@@ -41,5 +42,6 @@ internal class InputActionContext
         Viewport = viewport;
         RaiseTextChanged = raiseTextChanged;
         RaiseTextSet = raiseTextSet;
+        CodeTextBox = DummyCodeTextBox.Instance;
     }
 }

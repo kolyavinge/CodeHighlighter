@@ -5,7 +5,7 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelectedLinesResult>
 {
-    public DeleteSelectedLinesHistoryAction(HistoryActionContext context) : base(context)
+    public DeleteSelectedLinesHistoryAction(InputActionContext context) : base(context)
     {
     }
 

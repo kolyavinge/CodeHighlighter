@@ -7,7 +7,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
 {
     private readonly string _insertedText;
 
-    public InsertTextHistoryAction(HistoryActionContext context, string insertedText) : base(context)
+    public InsertTextHistoryAction(InputActionContext context, string insertedText) : base(context)
     {
         _insertedText = insertedText;
     }

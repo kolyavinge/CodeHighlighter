@@ -5,7 +5,7 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelectedLinesResult>
 {
-    public MoveSelectedLinesDownHistoryAction(HistoryActionContext context) : base(context)
+    public MoveSelectedLinesDownHistoryAction(InputActionContext context) : base(context)
     {
     }
 

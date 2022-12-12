@@ -22,7 +22,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Action _raiseTextChanged;
     protected readonly Action _raiseTextSet;
     protected Mock<ICodeTextBox> _codeTextBox;
-    protected HistoryActionContext _context;
+    protected InputActionContext _context;
 
     protected BaseHistoryActionIntegration()
     {

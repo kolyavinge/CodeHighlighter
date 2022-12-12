@@ -7,7 +7,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
 {
     private readonly char _appendedChar;
 
-    public AppendCharHistoryAction(HistoryActionContext context, char appendedChar) : base(context)
+    public AppendCharHistoryAction(InputActionContext context, char appendedChar) : base(context)
     {
         _appendedChar = appendedChar;
     }

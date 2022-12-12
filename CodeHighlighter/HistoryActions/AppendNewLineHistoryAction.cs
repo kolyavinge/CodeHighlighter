@@ -5,7 +5,7 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResult>
 {
-    public AppendNewLineHistoryAction(HistoryActionContext context) : base(context)
+    public AppendNewLineHistoryAction(InputActionContext context) : base(context)
     {
     }
 
