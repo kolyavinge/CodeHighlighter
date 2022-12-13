@@ -36,7 +36,7 @@ public class CodeTextBoxModel
         TextMeasures = new TextMeasures();
         History = new History();
         LinesDecoration = new LinesDecorationCollection();
-        TextSelection = new TextSelection();
+        TextSelection = new TextSelection(Text);
         TextSelector = new TextSelector(Text, TextCursor, TextSelection);
         Viewport = new Viewport(Text, new DummyViewportContext(), TextCursor, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(Text, additionalParams?.HighlighteredBrackets ?? "");

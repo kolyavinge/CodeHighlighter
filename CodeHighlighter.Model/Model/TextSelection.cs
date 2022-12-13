@@ -18,26 +18,25 @@ public readonly struct TextSelectionLine
 
 public class TextSelection
 {
+    private readonly IText _text;
+
     public bool IsExist => StartPosition.LineIndex != EndPosition.LineIndex || StartPosition.ColumnIndex != EndPosition.ColumnIndex;
     internal bool InProgress { get; set; }
     public CursorPosition StartPosition { get; internal set; }
     public CursorPosition EndPosition { get; internal set; }
 
-    public TextSelection()
+    public TextSelection(IText text)
     {
-        Set(new(0, 0), new(0, 0));
+        _text = text;
     }
 
-    public TextSelection(CursorPosition selectionStart, CursorPosition selectionEnd)
-    {
-        Set(selectionStart, selectionEnd);
-    }
-
-    public void Set(CursorPosition selectionStart, CursorPosition selectionEnd)
+    public TextSelection Set(CursorPosition selectionStart, CursorPosition selectionEnd)
     {
         InProgress = false;
         StartPosition = selectionStart;
         EndPosition = selectionEnd;
+
+        return this;
     }
 
     internal (CursorPosition, CursorPosition) GetSortedPositions()
@@ -50,7 +49,7 @@ public class TextSelection
         return (end, start);
     }
 
-    public IEnumerable<TextSelectionLine> GetSelectedLines(IText text)
+    public IEnumerable<TextSelectionLine> GetSelectedLines()
     {
         if (!IsExist) yield break;
         var (start, end) = GetSortedPositions();
@@ -60,11 +59,11 @@ public class TextSelection
         }
         else
         {
-            var rightColumnIndex = start.Kind == CursorPositionKind.Real ? text.GetLine(start.LineIndex).Length : start.ColumnIndex;
+            var rightColumnIndex = start.Kind == CursorPositionKind.Real ? _text.GetLine(start.LineIndex).Length : start.ColumnIndex;
             yield return new TextSelectionLine(start.LineIndex, start.ColumnIndex, rightColumnIndex);
             for (int middleLineIndex = start.LineIndex + 1; middleLineIndex <= end.LineIndex - 1; middleLineIndex++)
             {
-                yield return new TextSelectionLine(middleLineIndex, 0, text.GetLine(middleLineIndex).Length);
+                yield return new TextSelectionLine(middleLineIndex, 0, _text.GetLine(middleLineIndex).Length);
             }
             yield return new TextSelectionLine(end.LineIndex, 0, end.ColumnIndex);
         }

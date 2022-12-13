@@ -147,7 +147,7 @@ public class Text : IText
 
     internal DeleteSelectionResult DeleteSelection(TextSelection textSelection)
     {
-        var selectedLines = textSelection.GetSelectedLines(this).ToList();
+        var selectedLines = textSelection.GetSelectedLines().ToList();
         if (selectedLines.Count == 1)
         {
             var selectedLine = selectedLines.First();
@@ -192,7 +192,7 @@ public class Text : IText
 
     internal void SetSelectedTextCase(TextSelection textSelection, TextCase textCase)
     {
-        var selectedLines = textSelection.GetSelectedLines(this).ToList();
+        var selectedLines = textSelection.GetSelectedLines().ToList();
         foreach (var selectedLine in selectedLines)
         {
             var line = _lines[selectedLine.LineIndex];
