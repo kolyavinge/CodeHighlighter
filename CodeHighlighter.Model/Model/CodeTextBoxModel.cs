@@ -39,7 +39,7 @@ public class CodeTextBoxModel
         TextSelection = new TextSelection();
         TextSelector = new TextSelector(Text, TextCursor, TextSelection);
         Viewport = new Viewport(Text, new DummyViewportContext(), TextMeasures);
-        BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
+        BracketsHighlighter = new BracketsHighlighter(Text, additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _context = new InputActionContext(
             codeProvider,
