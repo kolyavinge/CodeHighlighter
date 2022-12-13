@@ -145,12 +145,12 @@ public class Text : IText
         else return default;
     }
 
-    internal DeleteSelectionResult DeleteSelection(TextSelection textSelection)
+    internal DeleteSelectionResult DeleteSelection(IEnumerable<TextSelectionLine> selectedLines)
     {
-        var selectedLines = textSelection.GetSelectedLines().ToList();
-        if (selectedLines.Count == 1)
+        var selectedLinesList = selectedLines.ToList();
+        if (selectedLinesList.Count == 1)
         {
-            var selectedLine = selectedLines.First();
+            var selectedLine = selectedLinesList.First();
             var line = _lines[selectedLine.LineIndex];
             line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
 
@@ -158,16 +158,16 @@ public class Text : IText
         }
         else
         {
-            var firstSelectedLine = selectedLines.First();
-            var lastSelectedLine = selectedLines.Last();
+            var firstSelectedLine = selectedLinesList.First();
+            var lastSelectedLine = selectedLinesList.Last();
             var firstLine = _lines[firstSelectedLine.LineIndex];
             var lastLine = _lines[lastSelectedLine.LineIndex];
             firstLine.RemoveRange(firstSelectedLine.LeftColumnIndex, firstSelectedLine.RightColumnIndex - firstSelectedLine.LeftColumnIndex);
             firstLine.AppendLine(lastLine, lastSelectedLine.RightColumnIndex, lastLine.Length - lastSelectedLine.RightColumnIndex);
-            var secondSelectedLine = selectedLines.Skip(1).First();
-            _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            var secondSelectedLine = selectedLinesList.Skip(1).First();
+            _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLinesList.Count - 1);
 
-            return new(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            return new(secondSelectedLine.LineIndex, selectedLinesList.Count - 1);
         }
     }
 
@@ -190,9 +190,8 @@ public class Text : IText
         _lines.Insert(destinationLineIndex, sourceLine);
     }
 
-    internal void SetSelectedTextCase(TextSelection textSelection, TextCase textCase)
+    internal void SetSelectedTextCase(IEnumerable<TextSelectionLine> selectedLines, TextCase textCase)
     {
-        var selectedLines = textSelection.GetSelectedLines().ToList();
         foreach (var selectedLine in selectedLines)
         {
             var line = _lines[selectedLine.LineIndex];
