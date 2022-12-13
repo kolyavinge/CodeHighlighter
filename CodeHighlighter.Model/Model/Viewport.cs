@@ -14,7 +14,7 @@ public interface IViewportContext
 
 public interface IViewport
 {
-    void CorrectByCursorPosition(TextCursor textCursor);
+    void CorrectByCursorPosition();
     CursorPosition GetCursorPosition(Point cursorClickPosition);
     int GetLinesCountInViewport();
     void ScrollLineDown();
@@ -26,6 +26,7 @@ public class Viewport : IViewport
 {
     private readonly IText _text;
     private readonly IViewportContext _context;
+    private readonly TextCursor _textCursor;
     private readonly TextMeasures _textMeasures;
 
     public double ActualWidth => _context.ActualWidth;
@@ -57,10 +58,11 @@ public class Viewport : IViewport
     }
 
 
-    public Viewport(IText text, IViewportContext context, TextMeasures textMeasures)
+    public Viewport(IText text, IViewportContext context, TextCursor textCursor, TextMeasures textMeasures)
     {
         _text = text;
         _context = context;
+        _textCursor = textCursor;
         _textMeasures = textMeasures;
     }
 
@@ -79,9 +81,9 @@ public class Viewport : IViewport
         return new(lineIndex, columnIndex);
     }
 
-    public void CorrectByCursorPosition(TextCursor textCursor)
+    public void CorrectByCursorPosition()
     {
-        CorrectByCursorPosition(textCursor.GetAbsolutePosition(_textMeasures));
+        CorrectByCursorPosition(_textCursor.GetAbsolutePosition(_textMeasures));
     }
 
     private void CorrectByCursorPosition(Point cursorAbsolutePoint)

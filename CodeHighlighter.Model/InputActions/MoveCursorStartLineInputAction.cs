@@ -8,6 +8,6 @@ internal class MoveCursorStartLineInputAction : InputAction
     {
         context.TextCursor.MoveStartLine();
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

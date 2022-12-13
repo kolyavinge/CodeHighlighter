@@ -38,7 +38,7 @@ public class CodeTextBoxModel
         LinesDecoration = new LinesDecorationCollection();
         TextSelection = new TextSelection();
         TextSelector = new TextSelector(Text, TextCursor, TextSelection);
-        Viewport = new Viewport(Text, new DummyViewportContext(), TextMeasures);
+        Viewport = new Viewport(Text, new DummyViewportContext(), TextCursor, TextMeasures);
         BracketsHighlighter = new BracketsHighlighter(Text, additionalParams?.HighlighteredBrackets ?? "");
         IsReadOnly = additionalParams?.IsReadOnly ?? false;
         _context = new InputActionContext(
@@ -61,7 +61,7 @@ public class CodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        Viewport = new Viewport(Text, codeTextBox, TextMeasures);
+        Viewport = new Viewport(Text, codeTextBox, TextCursor, TextMeasures);
         _context.CodeTextBox = _codeTextBox;
         _context.Viewport = Viewport;
     }

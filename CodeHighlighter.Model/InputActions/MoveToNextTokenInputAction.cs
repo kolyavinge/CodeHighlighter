@@ -12,6 +12,6 @@ internal class MoveToNextTokenInputAction : InputAction
         var pos = navigator.MoveRight(context.Text, context.Tokens, context.TextCursor.LineIndex, context.TextCursor.ColumnIndex);
         context.TextCursor.MoveTo(pos);
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

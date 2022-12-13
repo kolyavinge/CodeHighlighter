@@ -9,7 +9,7 @@ internal class RightDeleteInputAction : InputAction
     public DeleteResult Do(InputActionContext context)
     {
         var result = RightDelete(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
         context.RaiseTextChanged();
 

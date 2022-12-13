@@ -8,6 +8,6 @@ internal class MoveCursorDownInputAction : InputAction
     {
         context.TextCursor.MoveDown();
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }
