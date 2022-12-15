@@ -1,5 +1,6 @@
 ﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.HistoryActions;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 
 namespace CodeHighlighter.Model;
@@ -7,6 +8,7 @@ namespace CodeHighlighter.Model;
 public class CodeTextBoxModel
 {
     private readonly InputActionContext _context;
+    private readonly IInputActionsFactory _inputActionsFactory;
     private ICodeTextBox _codeTextBox;
 
     public IText Text { get; }
@@ -37,6 +39,7 @@ public class CodeTextBoxModel
         IBracketsHighlighter bracketsHighlighter,
         ITextEvents textEvents,
         ICodeProvider codeProvider,
+        IInputActionsFactory inputActionsFactory,
         CodeTextBoxModelAdditionalParams additionalParams)
     {
         _codeTextBox = DummyCodeTextBox.Instance;
@@ -52,6 +55,7 @@ public class CodeTextBoxModel
         Viewport = viewport;
         BracketsHighlighter = bracketsHighlighter;
         TextEvents = textEvents;
+        _inputActionsFactory = inputActionsFactory;
         IsReadOnly = additionalParams.IsReadOnly;
         _context = new InputActionContext(
             codeProvider,
@@ -101,67 +105,67 @@ public class CodeTextBoxModel
 
     public void MoveCursorTo(CursorPosition position)
     {
-        MoveCursorToInputAction.Instance.Do(_context, position);
+        _inputActionsFactory.Get<IMoveCursorToInputAction>().Do(_context, position);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorLeft()
     {
-        MoveCursorLeftInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorLeftInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorRight()
     {
-        MoveCursorRightInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorRightInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorUp()
     {
-        MoveCursorUpInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorUpInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorDown()
     {
-        MoveCursorDownInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorDownInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorStartLine()
     {
-        MoveCursorStartLineInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorStartLineInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorEndLine()
     {
-        MoveCursorEndLineInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorEndLineInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextBegin()
     {
-        MoveCursorTextBeginInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorTextBeginInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorTextEnd()
     {
-        MoveCursorTextEndInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorTextEndInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageUp()
     {
-        MoveCursorPageUpInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorPageUpInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveCursorPageDown()
     {
-        MoveCursorPageDownInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveCursorPageDownInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
@@ -189,44 +193,44 @@ public class CodeTextBoxModel
 
     public void GotoLine(int lineIndex)
     {
-        GotoLineInputAction.Instance.Do(_context, lineIndex);
+        _inputActionsFactory.Get<IGotoLineInputAction>().Do(_context, lineIndex);
         _codeTextBox.InvalidateVisual();
         _codeTextBox.Focus();
     }
 
     public void ScrollLineUp()
     {
-        ScrollLineUpInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IScrollLineUpInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void ScrollLineDown()
     {
-        ScrollLineDownInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IScrollLineDownInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToPrevToken()
     {
-        MoveToPrevTokenInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveToPrevTokenInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void MoveToNextToken()
     {
-        MoveToNextTokenInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveToNextTokenInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void SelectAll()
     {
-        SelectAllInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<ISelectAllInputAction>().Do(_context);
         _codeTextBox.InvalidateVisual();
     }
 
     public void SelectToken(CursorPosition position)
     {
-        SelectTokenInputAction.Instance.Do(_context, position);
+        _inputActionsFactory.Get<ISelectTokenInputAction>().Do(_context, position);
         _codeTextBox.InvalidateVisual();
     }
 

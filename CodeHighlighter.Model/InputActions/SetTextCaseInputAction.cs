@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class SetTextCaseInputAction : InputAction
+internal interface ISetTextCaseInputAction
+{
+    CaseResult Do(InputActionContext context, TextCase textCase);
+}
+
+[InputAction]
+internal class SetTextCaseInputAction : InputAction, ISetTextCaseInputAction
 {
     public static readonly SetTextCaseInputAction Instance = new();
 

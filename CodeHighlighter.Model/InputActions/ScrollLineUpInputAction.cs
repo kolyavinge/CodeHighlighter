@@ -1,6 +1,12 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class ScrollLineUpInputAction
+internal interface IScrollLineUpInputAction
+{
+    void Do(InputActionContext context);
+}
+
+[InputAction]
+internal class ScrollLineUpInputAction : IScrollLineUpInputAction
 {
     public static readonly ScrollLineUpInputAction Instance = new();
 

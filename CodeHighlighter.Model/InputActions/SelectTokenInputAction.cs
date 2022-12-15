@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class SelectTokenInputAction : InputAction
+internal interface ISelectTokenInputAction
+{
+    void Do(InputActionContext context, CursorPosition position);
+}
+
+[InputAction]
+internal class SelectTokenInputAction : InputAction, ISelectTokenInputAction
 {
     public static readonly SelectTokenInputAction Instance = new();
 

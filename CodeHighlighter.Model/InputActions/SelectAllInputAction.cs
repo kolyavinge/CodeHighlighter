@@ -1,6 +1,12 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class SelectAllInputAction : InputAction
+internal interface ISelectAllInputAction
+{
+    void Do(InputActionContext context);
+}
+
+[InputAction]
+internal class SelectAllInputAction : InputAction, ISelectAllInputAction
 {
     public static readonly SelectAllInputAction Instance = new();
 

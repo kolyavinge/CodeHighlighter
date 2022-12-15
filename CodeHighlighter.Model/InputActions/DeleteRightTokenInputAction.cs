@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class DeleteRightTokenInputAction : InputAction
+internal interface IDeleteRightTokenInputAction
+{
+    DeleteTokenResult Do(InputActionContext context);
+}
+
+[InputAction]
+internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInputAction
 {
     public static readonly DeleteRightTokenInputAction Instance = new();
 

@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class LeftDeleteInputAction : InputAction
+internal interface ILeftDeleteInputAction
+{
+    DeleteResult Do(InputActionContext context);
+}
+
+[InputAction]
+internal class LeftDeleteInputAction : InputAction, ILeftDeleteInputAction
 {
     public static readonly LeftDeleteInputAction Instance = new();
 

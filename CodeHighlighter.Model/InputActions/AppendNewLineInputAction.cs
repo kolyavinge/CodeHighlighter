@@ -3,7 +3,13 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
-internal class AppendNewLineInputAction : InputAction
+internal interface IAppendNewLineInputAction
+{
+    AppendNewLineResult Do(InputActionContext context);
+}
+
+[InputAction]
+internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
 {
     public static readonly AppendNewLineInputAction Instance = new();
 

@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class MoveToPrevTokenInputAction : InputAction
+internal interface IMoveToPrevTokenInputAction
+{
+    void Do(InputActionContext context);
+}
+
+[InputAction]
+internal class MoveToPrevTokenInputAction : InputAction, IMoveToPrevTokenInputAction
 {
     public static readonly MoveToPrevTokenInputAction Instance = new();
 

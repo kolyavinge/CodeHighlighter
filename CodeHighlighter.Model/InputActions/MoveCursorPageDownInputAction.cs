@@ -1,6 +1,12 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class MoveCursorPageDownInputAction : InputAction
+internal interface IMoveCursorPageDownInputAction
+{
+    void Do(InputActionContext context);
+}
+
+[InputAction]
+internal class MoveCursorPageDownInputAction : InputAction, IMoveCursorPageDownInputAction
 {
     public static readonly MoveCursorPageDownInputAction Instance = new();
 

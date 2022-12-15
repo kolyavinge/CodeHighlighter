@@ -34,6 +34,7 @@ internal class BaseCodeTextBoxModelIntegration
             bracketsHighlighter,
             textEvents,
             new SqlCodeProvider(),
+            new TestInputActionsFactory(),
             new CodeTextBoxModelAdditionalParams());
     }
 }

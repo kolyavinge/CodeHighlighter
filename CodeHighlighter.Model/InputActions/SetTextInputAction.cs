@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class SetTextInputAction : InputAction
+internal interface ISetTextInputAction
+{
+    SetTextResult Do(InputActionContext context, string text);
+}
+
+[InputAction]
+internal class SetTextInputAction : InputAction, ISetTextInputAction
 {
     public static readonly SetTextInputAction Instance = new();
 

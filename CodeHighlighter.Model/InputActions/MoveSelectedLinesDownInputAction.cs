@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class MoveSelectedLinesDownInputAction : InputAction
+internal interface IMoveSelectedLinesDownInputAction
+{
+    MoveSelectedLinesResult Do(InputActionContext context);
+}
+
+[InputAction]
+internal class MoveSelectedLinesDownInputAction : InputAction, IMoveSelectedLinesDownInputAction
 {
     public static readonly MoveSelectedLinesDownInputAction Instance = new();
 

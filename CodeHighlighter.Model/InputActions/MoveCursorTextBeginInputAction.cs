@@ -1,6 +1,12 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class MoveCursorTextBeginInputAction : InputAction
+internal interface IMoveCursorTextBeginInputAction
+{
+    void Do(InputActionContext context);
+}
+
+[InputAction]
+internal class MoveCursorTextBeginInputAction : InputAction, IMoveCursorTextBeginInputAction
 {
     public static readonly MoveCursorTextBeginInputAction Instance = new();
 

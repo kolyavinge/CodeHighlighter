@@ -1,6 +1,12 @@
 ﻿namespace CodeHighlighter.InputActions;
 
-internal class GotoLineInputAction
+internal interface IGotoLineInputAction
+{
+    void Do(InputActionContext context, int lineIndex);
+}
+
+[InputAction]
+internal class GotoLineInputAction : InputAction, IGotoLineInputAction
 {
     public static readonly GotoLineInputAction Instance = new();
 

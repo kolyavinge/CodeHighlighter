@@ -3,7 +3,13 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
-internal class DeleteSelectedLinesInputAction
+internal interface IDeleteSelectedLinesInputAction
+{
+    DeleteSelectedLinesResult Do(InputActionContext context);
+}
+
+[InputAction]
+internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLinesInputAction
 {
     public static readonly DeleteSelectedLinesInputAction Instance = new();
 

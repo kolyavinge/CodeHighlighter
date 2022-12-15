@@ -2,7 +2,13 @@
 
 namespace CodeHighlighter.InputActions;
 
-internal class AppendCharInputAction : InputAction
+internal interface IAppendCharInputAction
+{
+    AppendCharResult Do(InputActionContext context, char ch);
+}
+
+[InputAction]
+internal class AppendCharInputAction : InputAction, IAppendCharInputAction
 {
     public static readonly AppendCharInputAction Instance = new();
 
