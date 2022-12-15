@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IMoveToPrevTokenInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveToPrevTokenInputAction : InputAction, IMoveToPrevTokenInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         var navigator = new TokenNavigator();
         var pos = navigator.MoveLeft(context.Text, context.Tokens, context.TextCursor.LineIndex, context.TextCursor.ColumnIndex);

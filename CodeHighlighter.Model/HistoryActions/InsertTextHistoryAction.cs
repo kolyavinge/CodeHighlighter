@@ -9,7 +9,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
     private readonly IInputActionsFactory _inputActionsFactory;
     private readonly string _insertedText;
 
-    public InsertTextHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context, string insertedText) : base(context)
+    public InsertTextHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context, string insertedText) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
         _insertedText = insertedText;

@@ -5,13 +5,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IDeleteSelectedLinesInputAction
 {
-    DeleteSelectedLinesResult Do(InputActionContext context);
+    DeleteSelectedLinesResult Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLinesInputAction
 {
-    public DeleteSelectedLinesResult Do(InputActionContext context)
+    public DeleteSelectedLinesResult Do(IInputActionContext context)
     {
         var result = DeleteSelectedLines(context);
         context.Viewport.CorrectByCursorPosition();
@@ -21,7 +21,7 @@ internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLine
         return result;
     }
 
-    private DeleteSelectedLinesResult DeleteSelectedLines(InputActionContext context)
+    private DeleteSelectedLinesResult DeleteSelectedLines(IInputActionContext context)
     {
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();

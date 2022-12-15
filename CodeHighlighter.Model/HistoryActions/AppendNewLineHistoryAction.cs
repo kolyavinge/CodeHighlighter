@@ -8,7 +8,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 
-    public AppendNewLineHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
+    public AppendNewLineHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
     }

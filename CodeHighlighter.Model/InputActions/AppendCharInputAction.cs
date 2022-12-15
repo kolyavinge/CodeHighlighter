@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IAppendCharInputAction
 {
-    AppendCharResult Do(InputActionContext context, char ch);
+    AppendCharResult Do(IInputActionContext context, char ch);
 }
 
 [InputAction]
 internal class AppendCharInputAction : InputAction, IAppendCharInputAction
 {
-    public AppendCharResult Do(InputActionContext context, char ch)
+    public AppendCharResult Do(IInputActionContext context, char ch)
     {
         var result = AppendChar(context, ch);
         context.Viewport.CorrectByCursorPosition();
@@ -20,7 +20,7 @@ internal class AppendCharInputAction : InputAction, IAppendCharInputAction
         return result;
     }
 
-    private AppendCharResult AppendChar(InputActionContext context, char ch)
+    private AppendCharResult AppendChar(IInputActionContext context, char ch)
     {
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();

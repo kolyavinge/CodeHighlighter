@@ -2,13 +2,13 @@
 
 internal interface IScrollLineUpInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class ScrollLineUpInputAction : IScrollLineUpInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.Viewport.ScrollLineUp();
     }

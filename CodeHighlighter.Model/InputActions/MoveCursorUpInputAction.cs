@@ -2,13 +2,13 @@
 
 internal interface IMoveCursorUpInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveCursorUpInputAction : InputAction, IMoveCursorUpInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveUp();
         SetSelection(context);

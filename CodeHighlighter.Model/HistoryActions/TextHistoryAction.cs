@@ -6,7 +6,7 @@ namespace CodeHighlighter.HistoryActions;
 internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where TEditTextResult : EditTextResult
 {
     private TEditTextResult? _result;
-    protected readonly InputActionContext _context;
+    protected readonly IInputActionContext _context;
 
     protected TEditTextResult Result
     {
@@ -14,7 +14,7 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
         set => _result = value;
     }
 
-    protected TextHistoryAction(InputActionContext context)
+    protected TextHistoryAction(IInputActionContext context)
     {
         _context = context;
     }

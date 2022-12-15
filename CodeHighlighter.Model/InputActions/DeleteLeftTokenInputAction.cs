@@ -5,7 +5,7 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IDeleteLeftTokenInputAction
 {
-    DeleteTokenResult Do(InputActionContext context);
+    DeleteTokenResult Do(IInputActionContext context);
 }
 
 [InputAction]
@@ -18,7 +18,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
         _inputActionsFactory = inputActionsFactory;
     }
 
-    public DeleteTokenResult Do(InputActionContext context)
+    public DeleteTokenResult Do(IInputActionContext context)
     {
         var result = DeleteLeftToken(context);
         context.Viewport.CorrectByCursorPosition();
@@ -28,7 +28,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
         return result;
     }
 
-    private DeleteTokenResult DeleteLeftToken(InputActionContext context)
+    private DeleteTokenResult DeleteLeftToken(IInputActionContext context)
     {
         var oldCursorPosition = context.TextCursor.Position;
         if (context.TextCursor.Kind == CursorPositionKind.Real)

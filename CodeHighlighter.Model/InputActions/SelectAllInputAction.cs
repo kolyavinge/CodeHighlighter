@@ -2,13 +2,13 @@
 
 internal interface ISelectAllInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class SelectAllInputAction : InputAction, ISelectAllInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.TextSelection.InProgress = false;
         context.TextSelection.StartPosition = new(0, 0);

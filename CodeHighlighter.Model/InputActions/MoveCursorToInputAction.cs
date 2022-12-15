@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IMoveCursorToInputAction
 {
-    void Do(InputActionContext context, CursorPosition position);
+    void Do(IInputActionContext context, CursorPosition position);
 }
 
 [InputAction]
 internal class MoveCursorToInputAction : InputAction, IMoveCursorToInputAction
 {
-    public void Do(InputActionContext context, CursorPosition position)
+    public void Do(IInputActionContext context, CursorPosition position)
     {
         context.TextCursor.MoveTo(position);
         SetSelection(context);

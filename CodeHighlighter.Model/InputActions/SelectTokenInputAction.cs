@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface ISelectTokenInputAction
 {
-    void Do(InputActionContext context, CursorPosition position);
+    void Do(IInputActionContext context, CursorPosition position);
 }
 
 [InputAction]
 internal class SelectTokenInputAction : InputAction, ISelectTokenInputAction
 {
-    public void Do(InputActionContext context, CursorPosition position)
+    public void Do(IInputActionContext context, CursorPosition position)
     {
         var selector = new TokenSelector();
         var range = selector.GetSelection(context.Tokens, position);

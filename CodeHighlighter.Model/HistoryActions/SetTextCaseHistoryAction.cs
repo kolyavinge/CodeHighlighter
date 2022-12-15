@@ -9,7 +9,7 @@ internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>
     private readonly IInputActionsFactory _inputActionsFactory;
     private readonly TextCase _textCase;
 
-    public SetTextCaseHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context, TextCase textCase) : base(context)
+    public SetTextCaseHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context, TextCase textCase) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
         _textCase = textCase;

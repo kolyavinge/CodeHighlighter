@@ -8,7 +8,7 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 
-    public DeleteSelectedLinesHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
+    public DeleteSelectedLinesHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
     }

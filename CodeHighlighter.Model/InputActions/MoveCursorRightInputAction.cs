@@ -2,13 +2,13 @@
 
 internal interface IMoveCursorRightInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveCursorRightInputAction : InputAction, IMoveCursorRightInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveRight();
         SetSelection(context);

@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface ISetTextInputAction
 {
-    SetTextResult Do(InputActionContext context, string text);
+    SetTextResult Do(IInputActionContext context, string text);
 }
 
 [InputAction]
 internal class SetTextInputAction : InputAction, ISetTextInputAction
 {
-    public SetTextResult Do(InputActionContext context, string text)
+    public SetTextResult Do(IInputActionContext context, string text)
     {
         var result = SetText(context, text);
         context.Viewport.CorrectByCursorPosition();
@@ -20,7 +20,7 @@ internal class SetTextInputAction : InputAction, ISetTextInputAction
         return result;
     }
 
-    private SetTextResult SetText(InputActionContext context, string text)
+    private SetTextResult SetText(IInputActionContext context, string text)
     {
         var oldCursorPosition = context.TextCursor.Position;
         var oldText = context.Text.TextContent;

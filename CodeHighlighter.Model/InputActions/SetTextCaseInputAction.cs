@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface ISetTextCaseInputAction
 {
-    CaseResult Do(InputActionContext context, TextCase textCase);
+    CaseResult Do(IInputActionContext context, TextCase textCase);
 }
 
 [InputAction]
 internal class SetTextCaseInputAction : InputAction, ISetTextCaseInputAction
 {
-    public CaseResult Do(InputActionContext context, TextCase textCase)
+    public CaseResult Do(IInputActionContext context, TextCase textCase)
     {
         var cursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();

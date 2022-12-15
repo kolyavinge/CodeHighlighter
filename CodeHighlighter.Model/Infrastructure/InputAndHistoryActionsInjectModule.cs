@@ -20,5 +20,6 @@ internal class InputAndHistoryActionsInjectModule : InjectModule
         }
 
         bindingProvider.Bind<IInputActionsFactory>().ToMethod(provider => new InputActionsFactory(provider)).ToSingleton();
+        bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();
     }
 }

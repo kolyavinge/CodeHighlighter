@@ -4,7 +4,7 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IGotoLineInputAction
 {
-    void Do(InputActionContext context, int lineIndex);
+    void Do(IInputActionContext context, int lineIndex);
 }
 
 [InputAction]
@@ -17,7 +17,7 @@ internal class GotoLineInputAction : InputAction, IGotoLineInputAction
         _inputActionsFactory = inputActionsFactory;
     }
 
-    public void Do(InputActionContext context, int lineIndex)
+    public void Do(IInputActionContext context, int lineIndex)
     {
         if (lineIndex < 0) throw new ArgumentException(nameof(lineIndex));
         lineIndex = CalculateLineIndex(lineIndex, context.Text.LinesCount);

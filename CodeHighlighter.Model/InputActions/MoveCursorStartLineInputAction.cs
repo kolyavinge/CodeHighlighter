@@ -2,13 +2,13 @@
 
 internal interface IMoveCursorStartLineInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveCursorStartLineInputAction : InputAction, IMoveCursorStartLineInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveStartLine();
         SetSelection(context);

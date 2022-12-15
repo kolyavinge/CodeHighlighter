@@ -11,7 +11,7 @@ internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
 
     public AppendCharHistoryAction(
         IInputActionsFactory inputActionsFactory,
-        InputActionContext context,
+        IInputActionContext context,
         char appendedChar) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;

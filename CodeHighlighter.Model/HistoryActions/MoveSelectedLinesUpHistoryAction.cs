@@ -8,7 +8,7 @@ internal class MoveSelectedLinesUpHistoryAction : TextHistoryAction<MoveSelected
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 
-    public MoveSelectedLinesUpHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
+    public MoveSelectedLinesUpHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
     }

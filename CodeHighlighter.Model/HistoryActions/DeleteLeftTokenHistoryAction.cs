@@ -8,7 +8,7 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 
-    public DeleteLeftTokenHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
+    public DeleteLeftTokenHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
     }

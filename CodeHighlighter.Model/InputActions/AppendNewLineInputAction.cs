@@ -5,13 +5,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IAppendNewLineInputAction
 {
-    AppendNewLineResult Do(InputActionContext context);
+    AppendNewLineResult Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
 {
-    public AppendNewLineResult Do(InputActionContext context)
+    public AppendNewLineResult Do(IInputActionContext context)
     {
         var result = AppendNewLine(context);
         context.Viewport.CorrectByCursorPosition();
@@ -21,7 +21,7 @@ internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
         return result;
     }
 
-    private AppendNewLineResult AppendNewLine(InputActionContext context)
+    private AppendNewLineResult AppendNewLine(IInputActionContext context)
     {
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();

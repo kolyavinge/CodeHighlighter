@@ -2,13 +2,13 @@
 
 internal interface IMoveCursorEndLineInputAction
 {
-    void Do(InputActionContext context);
+    void Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveCursorEndLineInputAction : InputAction, IMoveCursorEndLineInputAction
 {
-    public void Do(InputActionContext context)
+    public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveEndLine();
         SetSelection(context);

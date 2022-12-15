@@ -8,7 +8,7 @@ internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 
-    public RightDeleteHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
+    public RightDeleteHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
     }

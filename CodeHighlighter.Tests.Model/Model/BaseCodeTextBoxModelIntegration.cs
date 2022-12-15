@@ -1,4 +1,5 @@
 ﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Tests.Model;
@@ -19,6 +20,18 @@ internal class BaseCodeTextBoxModelIntegration
         var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var textEvents = new TextEvents(text);
+        var codeProvider = new SqlCodeProvider();
+        var inputActionContext = new InputActionContext(
+            codeProvider,
+            text,
+            textCursor,
+            textMeasures,
+            textSelection,
+            textSelector,
+            tokens,
+            tokensColors,
+            viewport,
+            textEvents);
 
         return new CodeTextBoxModel(
             text,
@@ -33,8 +46,9 @@ internal class BaseCodeTextBoxModelIntegration
             viewport,
             bracketsHighlighter,
             textEvents,
-            new SqlCodeProvider(),
+            codeProvider,
             new TestInputActionsFactory(),
+            inputActionContext,
             new CodeTextBoxModelAdditionalParams());
     }
 }

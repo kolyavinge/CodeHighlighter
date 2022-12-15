@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IMoveSelectedLinesDownInputAction
 {
-    MoveSelectedLinesResult Do(InputActionContext context);
+    MoveSelectedLinesResult Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class MoveSelectedLinesDownInputAction : InputAction, IMoveSelectedLinesDownInputAction
 {
-    public MoveSelectedLinesResult Do(InputActionContext context)
+    public MoveSelectedLinesResult Do(IInputActionContext context)
     {
         var result = MoveSelectedLinesDown(context);
         context.Viewport.CorrectByCursorPosition();
@@ -18,7 +18,7 @@ internal class MoveSelectedLinesDownInputAction : InputAction, IMoveSelectedLine
         return result;
     }
 
-    private MoveSelectedLinesResult MoveSelectedLinesDown(InputActionContext context)
+    private MoveSelectedLinesResult MoveSelectedLinesDown(IInputActionContext context)
     {
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();

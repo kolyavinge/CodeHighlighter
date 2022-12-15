@@ -4,13 +4,13 @@ namespace CodeHighlighter.InputActions;
 
 internal interface IRightDeleteInputAction
 {
-    DeleteResult Do(InputActionContext context);
+    DeleteResult Do(IInputActionContext context);
 }
 
 [InputAction]
 internal class RightDeleteInputAction : InputAction, IRightDeleteInputAction
 {
-    public DeleteResult Do(InputActionContext context)
+    public DeleteResult Do(IInputActionContext context)
     {
         var result = RightDelete(context);
         context.Viewport.CorrectByCursorPosition();
@@ -20,7 +20,7 @@ internal class RightDeleteInputAction : InputAction, IRightDeleteInputAction
         return result;
     }
 
-    private DeleteResult RightDelete(InputActionContext context)
+    private DeleteResult RightDelete(IInputActionContext context)
     {
         var charDeleteResult = default(Text.CharDeleteResult);
         var oldCursorPosition = context.TextCursor.Position;
