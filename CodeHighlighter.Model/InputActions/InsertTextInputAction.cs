@@ -9,7 +9,7 @@ internal class InsertTextInputAction : InputAction
     public InsertTextResult Do(InputActionContext context, string insertedText)
     {
         var insertResult = InsertText(context, insertedText);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
         context.RaiseTextChanged();
 

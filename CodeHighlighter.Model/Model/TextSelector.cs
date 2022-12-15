@@ -41,7 +41,7 @@ internal class TextSelector : ITextSelector
     {
         if (!_textSelection.IsExist) return "";
         var selectedLines = new List<string>();
-        foreach (var line in _textSelection.GetSelectedLines(_text))
+        foreach (var line in _textSelection.GetSelectedLines())
         {
             selectedLines.Add(_text.GetLine(line.LineIndex).GetSubstring(line.LeftColumnIndex, line.RightColumnIndex - line.LeftColumnIndex));
         }

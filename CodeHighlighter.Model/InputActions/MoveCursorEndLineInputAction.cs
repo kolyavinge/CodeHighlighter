@@ -8,6 +8,6 @@ internal class MoveCursorEndLineInputAction : InputAction
     {
         context.TextCursor.MoveEndLine();
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

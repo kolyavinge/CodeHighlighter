@@ -25,7 +25,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 10), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -38,7 +38,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(0, 10), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -53,7 +53,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(0, 5), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 5), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -68,7 +68,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(1, 5), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 5), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -83,7 +83,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(0, 4), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 9), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -98,7 +98,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         Assert.AreEqual(new CursorPosition(1, 9), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 4), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -110,7 +110,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.SelectAll();
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 10), _model.TextSelection.EndPosition);
-        Assert.True(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.True(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -119,7 +119,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         AppendString("0000000000");
         _model.SelectAll();
         _model.MoveCursorTo(new(0, 5));
-        Assert.False(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.False(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]
@@ -128,7 +128,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         AppendString("0000000000");
         _model.SelectAll();
         _model.MoveCursorRight();
-        Assert.False(_model.TextSelection.GetSelectedLines(_model.Text).Any());
+        Assert.False(_model.TextSelection.GetSelectedLines().Any());
     }
 
     [Test]

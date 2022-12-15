@@ -8,6 +8,6 @@ internal class MoveCursorTextBeginInputAction : InputAction
     {
         context.TextCursor.MoveTextBegin();
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

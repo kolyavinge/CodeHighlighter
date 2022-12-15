@@ -9,6 +9,6 @@ internal class MoveCursorPageUpInputAction : InputAction
         var pageSize = context.Viewport.GetLinesCountInViewport();
         context.TextCursor.MovePageUp(pageSize);
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

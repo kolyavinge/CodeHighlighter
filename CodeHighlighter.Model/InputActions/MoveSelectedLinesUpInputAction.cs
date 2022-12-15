@@ -9,7 +9,7 @@ internal class MoveSelectedLinesUpInputAction : InputAction
     public MoveSelectedLinesResult Do(InputActionContext context)
     {
         var result = MoveSelectedLinesUp(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
 
         return result;
     }

@@ -14,14 +14,14 @@ public interface IText
     void AppendNewLine(CursorPosition position);
     void DeleteLine(int lineIndex);
     void DeleteLines(int lineIndex, int count);
-    Text.DeleteSelectionResult DeleteSelection(ITextSelection textSelection);
+    Text.DeleteSelectionResult DeleteSelection(IEnumerable<TextSelectionLine> selectedLines);
     CursorPosition GetCursorPositionAfterLeftDelete(CursorPosition current);
     TextLine GetLine(int lineIndex);
     Text.InsertResult Insert(CursorPosition position, IText insertedText);
     Text.CharDeleteResult LeftDelete(CursorPosition position);
     void ReplaceLines(int sourceLineIndex, int destinationLineIndex);
     Text.CharDeleteResult RightDelete(CursorPosition position);
-    void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase);
+    void SetSelectedTextCase(IEnumerable<TextSelectionLine> selectedLines, TextCase textCase);
     string ToString();
 }
 
@@ -159,12 +159,12 @@ public class Text : IText
         else return default;
     }
 
-    public DeleteSelectionResult DeleteSelection(ITextSelection textSelection)
+    public DeleteSelectionResult DeleteSelection(IEnumerable<TextSelectionLine> selectedLines)
     {
-        var selectedLines = textSelection.GetSelectedLines(this).ToList();
-        if (selectedLines.Count == 1)
+        var selectedLinesList = selectedLines.ToList();
+        if (selectedLinesList.Count == 1)
         {
-            var selectedLine = selectedLines.First();
+            var selectedLine = selectedLinesList.First();
             var line = _lines[selectedLine.LineIndex];
             line.RemoveRange(selectedLine.LeftColumnIndex, selectedLine.RightColumnIndex - selectedLine.LeftColumnIndex);
 
@@ -172,16 +172,16 @@ public class Text : IText
         }
         else
         {
-            var firstSelectedLine = selectedLines.First();
-            var lastSelectedLine = selectedLines.Last();
+            var firstSelectedLine = selectedLinesList.First();
+            var lastSelectedLine = selectedLinesList.Last();
             var firstLine = _lines[firstSelectedLine.LineIndex];
             var lastLine = _lines[lastSelectedLine.LineIndex];
             firstLine.RemoveRange(firstSelectedLine.LeftColumnIndex, firstSelectedLine.RightColumnIndex - firstSelectedLine.LeftColumnIndex);
             firstLine.AppendLine(lastLine, lastSelectedLine.RightColumnIndex, lastLine.Length - lastSelectedLine.RightColumnIndex);
-            var secondSelectedLine = selectedLines.Skip(1).First();
-            _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            var secondSelectedLine = selectedLinesList.Skip(1).First();
+            _lines.RemoveRange(secondSelectedLine.LineIndex, selectedLinesList.Count - 1);
 
-            return new(secondSelectedLine.LineIndex, selectedLines.Count - 1);
+            return new(secondSelectedLine.LineIndex, selectedLinesList.Count - 1);
         }
     }
 
@@ -204,9 +204,8 @@ public class Text : IText
         _lines.Insert(destinationLineIndex, sourceLine);
     }
 
-    public void SetSelectedTextCase(ITextSelection textSelection, TextCase textCase)
+    public void SetSelectedTextCase(IEnumerable<TextSelectionLine> selectedLines, TextCase textCase)
     {
-        var selectedLines = textSelection.GetSelectedLines(this).ToList();
         foreach (var selectedLine in selectedLines)
         {
             var line = _lines[selectedLine.LineIndex];

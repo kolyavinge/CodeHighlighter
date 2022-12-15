@@ -72,7 +72,7 @@ public class CodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        Viewport = new Viewport(Text, codeTextBox, TextMeasures);
+        Viewport = new Viewport(Text, codeTextBox, TextCursor, TextMeasures);
         _context.CodeTextBox = _codeTextBox;
         _context.Viewport = Viewport;
     }

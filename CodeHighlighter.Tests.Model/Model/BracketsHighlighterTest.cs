@@ -16,7 +16,7 @@ class BracketsHighlighterTest
     public void Setup()
     {
         _text = new Mock<IText>();
-        _highlighter = new BracketsHighlighter("()");
+        _highlighter = new BracketsHighlighter(_text.Object, "()");
     }
 
     [Test]
@@ -24,7 +24,7 @@ class BracketsHighlighterTest
     {
         try
         {
-            _highlighter = new BracketsHighlighter("(");
+            _highlighter = new BracketsHighlighter(_text.Object, "(");
             Assert.Fail();
         }
         catch (ArgumentException e)
@@ -36,7 +36,7 @@ class BracketsHighlighterTest
     [Test]
     public void NoBracketsInHighlighter()
     {
-        _highlighter = new BracketsHighlighter("");
+        _highlighter = new BracketsHighlighter(_text.Object, "");
 
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("()"));
         _text.SetupGet(x => x.LinesCount).Returns(1);
@@ -206,6 +206,6 @@ class BracketsHighlighterTest
 
     private void GetResult(int lineIndex, int columnIndex, CursorPositionKind kind = CursorPositionKind.Real)
     {
-        _result = _highlighter.GetHighlightedBrackets(_text.Object, new(lineIndex, columnIndex, kind));
+        _result = _highlighter.GetHighlightedBrackets(new(lineIndex, columnIndex, kind));
     }
 }

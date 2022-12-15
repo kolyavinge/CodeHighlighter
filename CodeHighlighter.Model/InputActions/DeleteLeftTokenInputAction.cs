@@ -9,7 +9,7 @@ internal class DeleteLeftTokenInputAction : InputAction
     public DeleteTokenResult Do(InputActionContext context)
     {
         var result = DeleteLeftToken(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
         context.RaiseTextChanged();
 

@@ -8,6 +8,6 @@ internal class MoveCursorLeftInputAction : InputAction
     {
         context.TextCursor.MoveLeft();
         SetSelection(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
     }
 }

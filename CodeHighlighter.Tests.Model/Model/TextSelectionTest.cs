@@ -13,7 +13,7 @@ internal class TextSelectionTest
     public void Setup()
     {
         _text = new Text();
-        _textSelection = new TextSelection();
+        _textSelection = new TextSelection(_text);
     }
 
 
@@ -34,7 +34,7 @@ internal class TextSelectionTest
         _textSelection.StartPosition = new(0, 2);
         _textSelection.EndPosition = new(3, 4);
 
-        var result = _textSelection.GetSelectedLines(_text).ToList();
+        var result = _textSelection.GetSelectedLines().ToList();
 
         Assert.True(_textSelection.IsExist);
         Assert.AreEqual(4, result.Count);
@@ -63,7 +63,7 @@ internal class TextSelectionTest
         _textSelection.StartPosition = new(3, 4);
         _textSelection.EndPosition = new(0, 2);
 
-        var result = _textSelection.GetSelectedLines(_text).ToList();
+        var result = _textSelection.GetSelectedLines().ToList();
 
         Assert.True(_textSelection.IsExist);
         Assert.AreEqual(4, result.Count);
@@ -92,7 +92,7 @@ internal class TextSelectionTest
         _textSelection.StartPosition = new();
         _textSelection.EndPosition = new();
 
-        var result = _textSelection.GetSelectedLines(_text).ToList();
+        var result = _textSelection.GetSelectedLines().ToList();
 
         Assert.False(_textSelection.IsExist);
         Assert.AreEqual(0, result.Count);
@@ -105,7 +105,7 @@ internal class TextSelectionTest
         _textSelection.StartPosition = new(1, 4, CursorPositionKind.Virtual);
         _textSelection.EndPosition = new(2, 0);
 
-        var result = _textSelection.GetSelectedLines(_text).ToList();
+        var result = _textSelection.GetSelectedLines().ToList();
 
         Assert.True(_textSelection.IsExist);
         Assert.AreEqual(2, result.Count);

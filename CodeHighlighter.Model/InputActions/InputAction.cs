@@ -20,7 +20,7 @@ internal class InputAction
 
     protected void DeleteSelection(InputActionContext context)
     {
-        var deleteResult = context.Text.DeleteSelection(context.TextSelection);
+        var deleteResult = context.Text.DeleteSelection(context.TextSelection.GetSelectedLines());
         context.Tokens.DeleteLines(deleteResult.FirstDeletedLineIndex, deleteResult.DeletedLinesCount);
         var (startCursorPosition, _) = context.TextSelection.GetSortedPositions();
         context.TextCursor.MoveTo(startCursorPosition);

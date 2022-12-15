@@ -9,7 +9,7 @@ internal class DeleteRightTokenInputAction : InputAction
     public DeleteTokenResult Do(InputActionContext context)
     {
         var result = DeleteRightToken(context);
-        context.Viewport.CorrectByCursorPosition(context.TextCursor);
+        context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
         context.RaiseTextChanged();
 

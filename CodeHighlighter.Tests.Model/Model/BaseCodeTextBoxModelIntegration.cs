@@ -14,10 +14,10 @@ internal class BaseCodeTextBoxModelIntegration
         var textMeasures = new TextMeasures();
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
-        var textSelection = new TextSelection();
+        var textSelection = new TextSelection(text);
         var textSelector = new TextSelector(text, textCursor, textSelection);
-        var viewport = new Viewport(text, new DummyViewportContext(), textMeasures);
-        var bracketsHighlighter = new BracketsHighlighter("");
+        var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
+        var bracketsHighlighter = new BracketsHighlighter(text, "");
 
         return new CodeTextBoxModel(
             text,
