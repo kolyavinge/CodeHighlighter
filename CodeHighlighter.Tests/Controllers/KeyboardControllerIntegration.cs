@@ -14,7 +14,7 @@ internal class KeyboardControllerIntegration
     [SetUp]
     public void Setup()
     {
-        _model = new CodeTextBoxModel(new EmptyCodeProvider());
+        _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
         _model.TextMeasures.UpdateMeasures(10, 10);
         _controller = new KeyboardController();
     }

@@ -199,7 +199,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, codeTextBox.Model.TextMeasures);
     }
 
-    private static void UpdateFontSettings(CodeTextBox codeTextBox, FontSettings fontSettings, TextMeasures textMeasures)
+    private static void UpdateFontSettings(CodeTextBox codeTextBox, FontSettings fontSettings, ITextMeasures textMeasures)
     {
         fontSettings.FontFamily = codeTextBox.FontFamily;
         fontSettings.FontSize = codeTextBox.FontSize;

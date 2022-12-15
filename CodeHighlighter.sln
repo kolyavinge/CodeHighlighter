@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeHighlighter", "CodeHigh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeHighlighter.Tests", "CodeHighlighter.Tests\CodeHighlighter.Tests.csproj", "{AF38E437-9E1F-4706-954E-AEC21DE966AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeHighlighter.Model", "CodeHighlighter.Model\CodeHighlighter.Model.csproj", "{B288417E-F3F4-455D-AC73-87299278A11C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeHighlighter.Model", "CodeHighlighter.Model\CodeHighlighter.Model.csproj", "{B288417E-F3F4-455D-AC73-87299278A11C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeHighlighter.Tests.Model", "CodeHighlighter.Tests.Model\CodeHighlighter.Tests.Model.csproj", "{861A1515-B409-4716-99A6-AEF5644D1A21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeHighlighter.Tests.Model", "CodeHighlighter.Tests.Model\CodeHighlighter.Tests.Model.csproj", "{861A1515-B409-4716-99A6-AEF5644D1A21}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{587D28C1-FDE6-4231-88FF-746DB7487C06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjection", "..\DependencyInjection\DependencyInjection\DependencyInjection.csproj", "{38496045-927C-4EFE-A64D-A35D4025D037}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +43,16 @@ Global
 		{861A1515-B409-4716-99A6-AEF5644D1A21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{861A1515-B409-4716-99A6-AEF5644D1A21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{861A1515-B409-4716-99A6-AEF5644D1A21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38496045-927C-4EFE-A64D-A35D4025D037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38496045-927C-4EFE-A64D-A35D4025D037}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38496045-927C-4EFE-A64D-A35D4025D037}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38496045-927C-4EFE-A64D-A35D4025D037}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38496045-927C-4EFE-A64D-A35D4025D037} = {587D28C1-FDE6-4231-88FF-746DB7487C06}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59A56764-CFB7-4B8F-9FBA-55D132471151}

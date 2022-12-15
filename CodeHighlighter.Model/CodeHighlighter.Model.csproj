@@ -7,4 +7,8 @@
 		<RootNamespace>CodeHighlighter</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\DependencyInjection\DependencyInjection\DependencyInjection.csproj" />
+	</ItemGroup>
+
 </Project>

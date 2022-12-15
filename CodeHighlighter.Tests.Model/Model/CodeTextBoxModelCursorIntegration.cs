@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelCursorIntegration
+internal class CodeTextBoxModelCursorIntegration : BaseCodeTextBoxModelIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private Mock<IViewportContext> _viewportContext;
@@ -17,7 +16,7 @@ internal class CodeTextBoxModelCursorIntegration
     {
         _codeTextBox = new Mock<ICodeTextBox>();
         _viewportContext = _codeTextBox.As<IViewportContext>();
-        _model = new CodeTextBoxModel(new SqlCodeProvider());
+        _model = MakeModel();
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _model.TextMeasures.UpdateMeasures(10, 10);
         _model.SetText("");

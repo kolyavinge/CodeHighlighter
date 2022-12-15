@@ -2,13 +2,20 @@
 
 namespace CodeHighlighter.Model;
 
-internal class TextSelector
+public interface ITextSelector
 {
-    private readonly Text _text;
-    private readonly TextCursor _textCursor;
-    private readonly TextSelection _textSelection;
+    void ActivateSelection();
+    void CompleteSelection();
+    string GetSelectedText();
+}
 
-    public TextSelector(Text text, TextCursor textCursor, TextSelection textSelection)
+internal class TextSelector : ITextSelector
+{
+    private readonly IText _text;
+    private readonly ITextCursor _textCursor;
+    private readonly ITextSelection _textSelection;
+
+    public TextSelector(IText text, ITextCursor textCursor, ITextSelection textSelection)
     {
         _text = text;
         _textCursor = textCursor;

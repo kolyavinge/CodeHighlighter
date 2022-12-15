@@ -2,7 +2,7 @@
 
 public class TextMeasuresEvents
 {
-    private readonly TextMeasures _textMeasures;
+    private readonly ITextMeasures _textMeasures;
     private double _lineHeight;
     private double _letterWidth;
 
@@ -10,7 +10,7 @@ public class TextMeasuresEvents
 
     public event EventHandler<LetterWidthChangedEventArgs>? LetterWidthChanged;
 
-    public TextMeasuresEvents(TextMeasures textMeasures)
+    public TextMeasuresEvents(ITextMeasures textMeasures)
     {
         _textMeasures = textMeasures;
         _textMeasures.MeasuresUpdated += OnMeasuresUpdated;

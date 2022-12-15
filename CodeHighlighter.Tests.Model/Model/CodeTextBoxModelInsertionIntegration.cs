@@ -1,17 +1,16 @@
-﻿using CodeHighlighter.CodeProvidering;
-using CodeHighlighter.Model;
+﻿using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelInsertionIntegration
+internal class CodeTextBoxModelInsertionIntegration : BaseCodeTextBoxModelIntegration
 {
     private CodeTextBoxModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _model = new CodeTextBoxModel(new SqlCodeProvider());
+        _model = MakeModel();
         _model.SetText("");
     }
 

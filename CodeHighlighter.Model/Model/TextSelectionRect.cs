@@ -8,7 +8,7 @@ public class TextSelectionRect
 {
     public IEnumerable<Rect> GetCalculatedRects(
         IEnumerable<TextSelectionLine> selectedLines,
-        TextMeasures textMeasures,
+        ITextMeasures textMeasures,
         double horizontalScrollBarValue,
         double verticalScrollBarValue)
     {

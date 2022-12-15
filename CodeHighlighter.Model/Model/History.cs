@@ -3,7 +3,7 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-internal interface IHistoryAction
+public interface IHistoryAction
 {
     bool Do();
     void Undo();
@@ -17,7 +17,16 @@ internal abstract class HistoryAction : IHistoryAction
     public abstract void Redo();
 }
 
-public class History
+public interface IHistory
+{
+    bool CanRedo { get; }
+    bool CanUndo { get; }
+    void AddAndDo(IHistoryAction action);
+    void Redo();
+    void Undo();
+}
+
+public class History : IHistory
 {
     internal const int ActionsLimit = 1000;
 
@@ -28,7 +37,7 @@ public class History
 
     public bool CanUndo => _activeActionIndex >= 0;
 
-    internal void AddAndDo(IHistoryAction action)
+    public void AddAndDo(IHistoryAction action)
     {
         if (!action.Do())
         {

@@ -1,8 +1,16 @@
 ﻿namespace CodeHighlighter.Model;
 
-public class TextMeasures
+public interface ITextMeasures
 {
-    internal event EventHandler? MeasuresUpdated;
+    event EventHandler? MeasuresUpdated;
+    double LetterWidth { get; }
+    double LineHeight { get; }
+    void UpdateMeasures(double lineHeight, double letterWidth);
+}
+
+public class TextMeasures : ITextMeasures
+{
+    public event EventHandler? MeasuresUpdated;
 
     public double LineHeight { get; private set; }
 

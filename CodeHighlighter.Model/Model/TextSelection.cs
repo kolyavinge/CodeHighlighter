@@ -16,12 +16,24 @@ public readonly struct TextSelectionLine
     }
 }
 
-public class TextSelection
+public interface ITextSelection
+{
+    bool IsExist { get; }
+    bool InProgress { get; set; }
+    CursorPosition StartPosition { get; set; }
+    CursorPosition EndPosition { get; set; }
+    IEnumerable<TextSelectionLine> GetSelectedLines(IText text);
+    (CursorPosition, CursorPosition) GetSortedPositions();
+    void Reset();
+    void Set(CursorPosition selectionStart, CursorPosition selectionEnd);
+}
+
+public class TextSelection : ITextSelection
 {
     public bool IsExist => StartPosition.LineIndex != EndPosition.LineIndex || StartPosition.ColumnIndex != EndPosition.ColumnIndex;
-    internal bool InProgress { get; set; }
-    public CursorPosition StartPosition { get; internal set; }
-    public CursorPosition EndPosition { get; internal set; }
+    public bool InProgress { get; set; }
+    public CursorPosition StartPosition { get; set; }
+    public CursorPosition EndPosition { get; set; }
 
     public TextSelection()
     {
@@ -40,7 +52,7 @@ public class TextSelection
         EndPosition = selectionEnd;
     }
 
-    internal (CursorPosition, CursorPosition) GetSortedPositions()
+    public (CursorPosition, CursorPosition) GetSortedPositions()
     {
         var start = StartPosition;
         var end = EndPosition;
@@ -70,7 +82,7 @@ public class TextSelection
         }
     }
 
-    internal void Reset()
+    public void Reset()
     {
         InProgress = false;
         StartPosition = new();

@@ -40,7 +40,7 @@ internal class BaseInputActionIntegration
             _textSelection,
             _textSelector,
             _tokens,
-            new(),
+            new TokensColors(),
             _viewport,
             _raiseTextChanged,
             _raiseTextSet);

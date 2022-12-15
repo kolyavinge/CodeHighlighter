@@ -57,7 +57,7 @@ public class MainViewModel
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
-        CodeTextBoxModel = new CodeTextBoxModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
+        CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }

@@ -12,35 +12,48 @@ public class CodeTextBoxModel
     public event EventHandler? TextSet;
     public event EventHandler? TextChanged;
 
-    public Text Text { get; }
-    public Tokens Tokens { get; }
-    public TokensColors TokensColors { get; }
-    public TextCursor TextCursor { get; }
-    public TextMeasures TextMeasures { get; }
-    public TextSelection TextSelection { get; }
-    internal TextSelector TextSelector { get; }
-    public History History { get; }
-    public LinesDecorationCollection LinesDecoration { get; }
+    public IText Text { get; }
+    public ITokens Tokens { get; }
+    public ITokensColors TokensColors { get; }
+    public ITextCursor TextCursor { get; }
+    public ITextMeasures TextMeasures { get; }
+    public ITextSelection TextSelection { get; }
+    internal ITextSelector TextSelector { get; }
+    public IHistory History { get; }
+    public ILinesDecorationCollection LinesDecoration { get; }
     public bool IsReadOnly { get; set; }
 
-    public Viewport Viewport { get; private set; }
-    public BracketsHighlighter BracketsHighlighter { get; }
+    public IViewport Viewport { get; private set; }
+    public IBracketsHighlighter BracketsHighlighter { get; }
 
-    public CodeTextBoxModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
+    public CodeTextBoxModel(
+        IText text,
+        ITextCursor textCursor,
+        ITokens tokens,
+        ITokensColors tokensColors,
+        ITextMeasures textMeasures,
+        IHistory history,
+        ILinesDecorationCollection linesDecoration,
+        ITextSelection textSelection,
+        ITextSelector textSelector,
+        IViewport viewport,
+        IBracketsHighlighter bracketsHighlighter,
+        ICodeProvider codeProvider,
+        CodeTextBoxModelAdditionalParams additionalParams)
     {
         _codeTextBox = DummyCodeTextBox.Instance;
-        Text = new Text();
-        TextCursor = new TextCursor(Text);
-        Tokens = new Tokens();
-        TokensColors = new TokensColors();
-        TextMeasures = new TextMeasures();
-        History = new History();
-        LinesDecoration = new LinesDecorationCollection();
-        TextSelection = new TextSelection();
-        TextSelector = new TextSelector(Text, TextCursor, TextSelection);
-        Viewport = new Viewport(Text, new DummyViewportContext(), TextMeasures);
-        BracketsHighlighter = new BracketsHighlighter(additionalParams?.HighlighteredBrackets ?? "");
-        IsReadOnly = additionalParams?.IsReadOnly ?? false;
+        Text = text;
+        TextCursor = textCursor;
+        Tokens = tokens;
+        TokensColors = tokensColors;
+        TextMeasures = textMeasures;
+        History = history;
+        LinesDecoration = linesDecoration;
+        TextSelection = textSelection;
+        TextSelector = textSelector;
+        Viewport = viewport;
+        BracketsHighlighter = bracketsHighlighter;
+        IsReadOnly = additionalParams.IsReadOnly;
         _context = new InputActionContext(
             codeProvider,
             Text,
@@ -55,8 +68,6 @@ public class CodeTextBoxModel
             () => TextSet?.Invoke(this, EventArgs.Empty));
         SetCodeProvider(codeProvider);
     }
-
-    public CodeTextBoxModel() : this(new EmptyCodeProvider()) { }
 
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {

@@ -3,7 +3,14 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-public class LinesDecorationCollection : SpreadCollection<LineDecoration>
+public interface ILinesDecorationCollection
+{
+    bool AnyItems { get; }
+    LineDecoration? this[int lineIndex] { get; set; }
+    void Clear();
+}
+
+public class LinesDecorationCollection : SpreadCollection<LineDecoration>, ILinesDecorationCollection
 {
 }
 

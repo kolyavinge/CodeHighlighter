@@ -3,11 +3,18 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-internal interface ITokens
+public interface ITokens
 {
-    int LinesCount { get; }
     IEnumerable<Token> AllTokens { get; }
+    int LinesCount { get; }
+    void DeleteLine(int lineIndex);
+    void DeleteLines(int lineIndex, int count);
+    TokenCursorPosition? GetTokenOnPosition(CursorPosition position);
     TokenList GetTokens(int lineIndex);
+    void InsertEmptyLine(int lineIndex);
+    void InsertEmptyLines(int lineIndex, int count);
+    void ReplaceLines(int sourceLineIndex, int destinationLineIndex);
+    void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount);
 }
 
 public class Tokens : ITokens
@@ -18,7 +25,7 @@ public class Tokens : ITokens
 
     public IEnumerable<Token> AllTokens => _tokens.SelectMany(x => x);
 
-    internal Tokens() { }
+    public Tokens() { }
 
     public TokenList GetTokens(int lineIndex)
     {
@@ -32,7 +39,7 @@ public class Tokens : ITokens
         return logic.GetPosition(lineTokens, position.ColumnIndex);
     }
 
-    internal void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount)
+    public void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount)
     {
         var groupedTokens = new Dictionary<int, TokenList>();
         foreach (var token in tokens)
@@ -61,12 +68,12 @@ public class Tokens : ITokens
         }
     }
 
-    internal void InsertEmptyLine(int lineIndex)
+    public void InsertEmptyLine(int lineIndex)
     {
         _tokens.Insert(lineIndex, new TokenList());
     }
 
-    internal void InsertEmptyLines(int lineIndex, int count)
+    public void InsertEmptyLines(int lineIndex, int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -74,18 +81,18 @@ public class Tokens : ITokens
         }
     }
 
-    internal void DeleteLine(int lineIndex)
+    public void DeleteLine(int lineIndex)
     {
         if (lineIndex == 0 && !_tokens.Any()) return;
         _tokens.RemoveAt(lineIndex);
     }
 
-    internal void DeleteLines(int lineIndex, int count)
+    public void DeleteLines(int lineIndex, int count)
     {
         _tokens.RemoveRange(lineIndex, count);
     }
 
-    internal void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
+    public void ReplaceLines(int sourceLineIndex, int destinationLineIndex)
     {
         var lineTokens = _tokens[sourceLineIndex];
         _tokens.RemoveAt(sourceLineIndex);

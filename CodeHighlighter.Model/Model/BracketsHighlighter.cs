@@ -3,12 +3,20 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-public class BracketsHighlighter
+public interface IBracketsHighlighter
+{
+    BracketsHighlighter.HighlightResult GetHighlightedBrackets(IText text, CursorPosition position);
+}
+
+public class BracketsHighlighter : IBracketsHighlighter
 {
     private readonly List<BracketPair> _bracketPairs = new();
     private HighlightResult _lastResult;
 
-    public BracketsHighlighter(string bracketsString)
+    public BracketsHighlighter(CodeTextBoxModelAdditionalParams additionalParams)
+        : this(additionalParams.HighlighteredBrackets ?? "") { }
+
+    internal BracketsHighlighter(string bracketsString)
     {
         if (bracketsString.Length % 2 != 0) throw new ArgumentException(nameof(bracketsString));
         for (int i = 0; i < bracketsString.Length; i += 2)
