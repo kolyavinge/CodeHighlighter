@@ -10,8 +10,6 @@ internal interface IRightDeleteInputAction
 [InputAction]
 internal class RightDeleteInputAction : InputAction, IRightDeleteInputAction
 {
-    public static readonly RightDeleteInputAction Instance = new();
-
     public DeleteResult Do(InputActionContext context)
     {
         var result = RightDelete(context);

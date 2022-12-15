@@ -1,3 +1,4 @@
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
@@ -5,13 +6,16 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelectedLinesResult>
 {
-    public DeleteSelectedLinesHistoryAction(InputActionContext context) : base(context)
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public DeleteSelectedLinesHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
     }
 
     public override bool Do()
     {
-        Result = DeleteSelectedLinesInputAction.Instance.Do(_context);
+        Result = _inputActionsFactory.Get<IDeleteSelectedLinesInputAction>().Do(_context);
         if (Result.HasDeleted || Result.OldCursorPosition.Kind == CursorPositionKind.Virtual) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasDeleted;
@@ -22,13 +26,13 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
         ResetSelection();
         if (Result.IsSelectionExist)
         {
-            MoveCursorToInputAction.Instance.Do(_context, new(Result.SelectionStart.LineIndex, 0));
+            _inputActionsFactory.Get<IMoveCursorToInputAction>().Do(_context, new(Result.SelectionStart.LineIndex, 0));
         }
         else
         {
-            MoveCursorToInputAction.Instance.Do(_context, new(Result.OldCursorPosition.LineIndex, 0));
+            _inputActionsFactory.Get<IMoveCursorToInputAction>().Do(_context, new(Result.OldCursorPosition.LineIndex, 0));
         }
-        InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
+        _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, Result.DeletedSelectedText);
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();
     }
@@ -44,7 +48,7 @@ internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelect
             ResetSelection();
             SetCursorToStartPosition();
         }
-        DeleteSelectedLinesInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IDeleteSelectedLinesInputAction>().Do(_context);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

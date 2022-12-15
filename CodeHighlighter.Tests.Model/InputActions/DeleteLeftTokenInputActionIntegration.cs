@@ -6,10 +6,13 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegration
 {
+    private DeleteLeftTokenInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new DeleteLeftTokenInputAction(_inputActionFactory);
     }
 
     [Test]
@@ -17,7 +20,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
     {
         SetText("SELECT FROM");
         MoveCursorEndLine();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 7), result.NewCursorPosition);
@@ -33,7 +36,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
     {
         SetText("SELECT FROM");
         MoveCursorStartLine();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
@@ -52,7 +55,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
         ActivateSelection();
         MoveCursorEndLine();
         CompleteSelection();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(0, 11), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
@@ -68,7 +71,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
     {
         SetText("    SELECT FROM\r\n");
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 0), result.NewCursorPosition);
@@ -87,7 +90,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
         ActivateSelection();
         MoveCursorTo(new(2, 3));
         CompleteSelection();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(2, 3), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);
@@ -106,7 +109,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
         ActivateSelection();
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 7), result.NewCursorPosition);
@@ -125,7 +128,7 @@ internal class DeleteLeftTokenInputActionIntegration : BaseInputActionIntegratio
         ActivateSelection();
         MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4), result.NewCursorPosition);

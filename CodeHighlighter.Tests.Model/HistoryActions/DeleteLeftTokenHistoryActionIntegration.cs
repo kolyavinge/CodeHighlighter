@@ -12,7 +12,7 @@ internal class DeleteLeftTokenHistoryActionIntegration : BaseHistoryActionIntegr
     public void Setup()
     {
         MakeContext();
-        _action = new DeleteLeftTokenHistoryAction(_context);
+        _action = new DeleteLeftTokenHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

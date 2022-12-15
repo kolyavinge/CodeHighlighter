@@ -13,7 +13,7 @@ internal class SetTextCaseHistoryActionIntegration : BaseHistoryActionIntegratio
     {
         MakeContext();
         SetText("TExT\r\nA");
-        _action = new SetTextCaseHistoryAction(_context, TextCase.Lower);
+        _action = new SetTextCaseHistoryAction(_inputActionsFactory, _context, TextCase.Lower);
     }
 
     [Test]

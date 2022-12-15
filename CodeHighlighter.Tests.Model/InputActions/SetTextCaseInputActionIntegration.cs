@@ -6,10 +6,13 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
 {
+    private SetTextCaseInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new SetTextCaseInputAction();
     }
 
     [Test]
@@ -17,7 +20,7 @@ internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
     {
         SetText("AAA");
         SelectAll();
-        var result = SetTextCaseInputAction.Instance.Do(_context, TextCase.Lower);
+        var result = _action.Do(_context, TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 3), result.NewCursorPosition);
@@ -34,7 +37,7 @@ internal class SetTextCaseInputActionIntegration : BaseInputActionIntegration
     {
         SetText("AAA");
         MoveCursorStartLine();
-        var result = SetTextCaseInputAction.Instance.Do(_context, TextCase.Lower);
+        var result = _action.Do(_context, TextCase.Lower);
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);

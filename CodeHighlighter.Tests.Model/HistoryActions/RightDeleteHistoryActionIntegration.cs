@@ -12,7 +12,7 @@ internal class RightDeleteHistoryActionIntegration : BaseHistoryActionIntegratio
     public void Setup()
     {
         MakeContext();
-        _action = new RightDeleteHistoryAction(_context);
+        _action = new RightDeleteHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

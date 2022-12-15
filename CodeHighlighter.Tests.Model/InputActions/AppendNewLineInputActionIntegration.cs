@@ -6,16 +6,19 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
 {
+    private AppendNewLineInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new AppendNewLineInputAction();
     }
 
     [Test]
     public void AppendNewLine_NoSelection()
     {
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 0), result.NewCursorPosition);
@@ -33,7 +36,7 @@ internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(0, 7));
         CompleteSelection();
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(0, 7), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 0), result.NewCursorPosition);
@@ -48,7 +51,7 @@ internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
     {
         SetText("    012\r\n");
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.NewCursorPosition);
@@ -66,7 +69,7 @@ internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 0));
         CompleteSelection();
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.NewCursorPosition);
@@ -84,7 +87,7 @@ internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.NewCursorPosition);
@@ -102,7 +105,7 @@ internal class AppendNewLineInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = AppendNewLineInputAction.Instance.Do(_context);
+        var result = _action.Do(_context);
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.NewCursorPosition);

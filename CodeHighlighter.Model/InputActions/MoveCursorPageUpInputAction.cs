@@ -8,8 +8,6 @@ internal interface IMoveCursorPageUpInputAction
 [InputAction]
 internal class MoveCursorPageUpInputAction : InputAction, IMoveCursorPageUpInputAction
 {
-    public static readonly MoveCursorPageUpInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         var pageSize = context.Viewport.GetLinesCountInViewport();

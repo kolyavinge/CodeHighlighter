@@ -2,6 +2,7 @@
 using CodeHighlighter.Contracts;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
+using CodeHighlighter.Tests.Model;
 using Moq;
 
 namespace CodeHighlighter.Tests.InputActions;
@@ -17,6 +18,7 @@ internal class BaseInputActionIntegration
     protected Viewport _viewport;
     protected Mock<IViewportContext> _viewportContext;
     protected TextEvents _textEvents;
+    protected TestInputActionsFactory _inputActionFactory;
     protected InputActionContext _context;
 
     protected void Init()
@@ -30,6 +32,7 @@ internal class BaseInputActionIntegration
         _viewportContext = new();
         _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
         _textEvents = new(_text);
+        _inputActionFactory = new();
         _context = new(
             new SqlCodeProvider(),
             _text,
@@ -46,32 +49,32 @@ internal class BaseInputActionIntegration
 
     protected void SetText(string text)
     {
-        SetTextInputAction.Instance.Do(_context, text);
+        new SetTextInputAction().Do(_context, text);
     }
 
     protected void MoveCursorTo(CursorPosition position)
     {
-        MoveCursorToInputAction.Instance.Do(_context, position);
+        new MoveCursorToInputAction().Do(_context, position);
     }
 
     protected void MoveCursorStartLine()
     {
-        MoveCursorStartLineInputAction.Instance.Do(_context);
+        new MoveCursorStartLineInputAction().Do(_context);
     }
 
     protected void MoveCursorEndLine()
     {
-        MoveCursorEndLineInputAction.Instance.Do(_context);
+        new MoveCursorEndLineInputAction().Do(_context);
     }
 
     protected void MoveCursorTextEnd()
     {
-        MoveCursorTextEndInputAction.Instance.Do(_context);
+        new MoveCursorTextEndInputAction().Do(_context);
     }
 
     protected void SelectAll()
     {
-        SelectAllInputAction.Instance.Do(_context);
+        new SelectAllInputAction().Do(_context);
     }
 
     protected void ActivateSelection()
@@ -86,6 +89,6 @@ internal class BaseInputActionIntegration
 
     protected void AppendNewLine()
     {
-        AppendNewLineInputAction.Instance.Do(_context);
+        new AppendNewLineInputAction().Do(_context);
     }
 }

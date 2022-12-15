@@ -10,8 +10,6 @@ internal interface ISelectTokenInputAction
 [InputAction]
 internal class SelectTokenInputAction : InputAction, ISelectTokenInputAction
 {
-    public static readonly SelectTokenInputAction Instance = new();
-
     public void Do(InputActionContext context, CursorPosition position)
     {
         var selector = new TokenSelector();

@@ -16,7 +16,7 @@ internal class InputAndHistoryActionsInjectModule : InjectModule
 
         foreach (var actionType in actionTypes)
         {
-            bindingProvider.Bind(actionType.GetInterfaces().First(), actionType);
+            bindingProvider.Bind(actionType.GetInterfaces().First(), actionType).ToSingleton();
         }
 
         bindingProvider.Bind<IInputActionsFactory>().ToMethod(provider => new InputActionsFactory(provider)).ToSingleton();

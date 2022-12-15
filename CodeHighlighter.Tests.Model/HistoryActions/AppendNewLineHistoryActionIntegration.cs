@@ -12,7 +12,7 @@ internal class AppendNewLineHistoryActionIntegration : BaseHistoryActionIntegrat
     public void Setup()
     {
         MakeContext();
-        _action = new AppendNewLineHistoryAction(_context);
+        _action = new AppendNewLineHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

@@ -10,8 +10,6 @@ internal interface ISetTextInputAction
 [InputAction]
 internal class SetTextInputAction : InputAction, ISetTextInputAction
 {
-    public static readonly SetTextInputAction Instance = new();
-
     public SetTextResult Do(InputActionContext context, string text)
     {
         var result = SetText(context, text);

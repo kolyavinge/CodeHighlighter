@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Infrastructure;
+
+namespace CodeHighlighter.InputActions;
 
 internal interface IGotoLineInputAction
 {
@@ -8,14 +10,19 @@ internal interface IGotoLineInputAction
 [InputAction]
 internal class GotoLineInputAction : InputAction, IGotoLineInputAction
 {
-    public static readonly GotoLineInputAction Instance = new();
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public GotoLineInputAction(IInputActionsFactory inputActionsFactory)
+    {
+        _inputActionsFactory = inputActionsFactory;
+    }
 
     public void Do(InputActionContext context, int lineIndex)
     {
         if (lineIndex < 0) throw new ArgumentException(nameof(lineIndex));
         lineIndex = CalculateLineIndex(lineIndex, context.Text.LinesCount);
         var offsetLine = CalculateOffsetLine(lineIndex, context.Viewport.GetLinesCountInViewport());
-        MoveCursorToInputAction.Instance.Do(context, new(lineIndex, 0));
+        _inputActionsFactory.Get<IMoveCursorToInputAction>().Do(context, new(lineIndex, 0));
         context.Viewport.VerticalScrollBarValue = CalculateVerticalScrollBarValue(offsetLine, context.TextMeasures.LineHeight);
     }
 

@@ -12,7 +12,7 @@ internal class LeftDeleteHistoryActionIntegration : BaseHistoryActionIntegration
     public void Setup()
     {
         MakeContext();
-        _action = new LeftDeleteHistoryAction(_context);
+        _action = new LeftDeleteHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

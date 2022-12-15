@@ -6,16 +6,19 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class AppendCharInputActionIntegration : BaseInputActionIntegration
 {
+    private AppendCharInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new AppendCharInputAction();
     }
 
     [Test]
     public void AppendChar()
     {
-        var result = AppendCharInputAction.Instance.Do(_context, '0');
+        var result = _action.Do(_context, '0');
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 1), result.NewCursorPosition);
@@ -34,7 +37,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorEndLine();
         CompleteSelection();
-        var result = AppendCharInputAction.Instance.Do(_context, '0');
+        var result = _action.Do(_context, '0');
 
         Assert.AreEqual(new CursorPosition(0, 3), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 1), result.NewCursorPosition);
@@ -53,7 +56,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorStartLine();
         CompleteSelection();
-        var result = AppendCharInputAction.Instance.Do(_context, '0');
+        var result = _action.Do(_context, '0');
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 1), result.NewCursorPosition);
@@ -69,7 +72,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
     {
         SetText("    012\r\n");
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
-        var result = AppendCharInputAction.Instance.Do(_context, '9');
+        var result = _action.Do(_context, '9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);
@@ -85,7 +88,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         SetText("    012");
         MoveCursorEndLine();
         AppendNewLine();
-        var result = AppendCharInputAction.Instance.Do(_context, '9');
+        var result = _action.Do(_context, '9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);
@@ -103,7 +106,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 0));
         CompleteSelection();
-        var result = AppendCharInputAction.Instance.Do(_context, '9');
+        var result = _action.Do(_context, '9');
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);
@@ -121,7 +124,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = AppendCharInputAction.Instance.Do(_context, '9');
+        var result = _action.Do(_context, '9');
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 8), result.NewCursorPosition);
@@ -139,7 +142,7 @@ internal class AppendCharInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = AppendCharInputAction.Instance.Do(_context, '9');
+        var result = _action.Do(_context, '9');
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);

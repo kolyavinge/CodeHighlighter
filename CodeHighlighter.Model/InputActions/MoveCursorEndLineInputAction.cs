@@ -8,8 +8,6 @@ internal interface IMoveCursorEndLineInputAction
 [InputAction]
 internal class MoveCursorEndLineInputAction : InputAction, IMoveCursorEndLineInputAction
 {
-    public static readonly MoveCursorEndLineInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         context.TextCursor.MoveEndLine();

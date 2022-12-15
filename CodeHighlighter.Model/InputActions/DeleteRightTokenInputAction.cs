@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Infrastructure;
+using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
@@ -10,7 +11,12 @@ internal interface IDeleteRightTokenInputAction
 [InputAction]
 internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInputAction
 {
-    public static readonly DeleteRightTokenInputAction Instance = new();
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public DeleteRightTokenInputAction(IInputActionsFactory inputActionsFactory)
+    {
+        _inputActionsFactory = inputActionsFactory;
+    }
 
     public DeleteTokenResult Do(InputActionContext context)
     {
@@ -44,7 +50,7 @@ internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInput
             (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
         }
         var deletedSelectedText = context.TextSelector.GetSelectedText();
-        var deleteResult = RightDeleteInputAction.Instance.Do(context);
+        var deleteResult = _inputActionsFactory.Get<IRightDeleteInputAction>().Do(context);
         var newCursorPosition = context.TextCursor.Position;
 
         return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted);

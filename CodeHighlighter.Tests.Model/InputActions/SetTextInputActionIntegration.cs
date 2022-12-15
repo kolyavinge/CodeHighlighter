@@ -6,19 +6,22 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class SetTextInputActionIntegration : BaseInputActionIntegration
 {
+    private SetTextInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new SetTextInputAction();
     }
 
     [Test]
     public void SetText_ResetCursor_1()
     {
-        SetTextInputAction.Instance.Do(_context, "123");
+        _action.Do(_context, "123");
         MoveCursorTextEnd();
 
-        SetTextInputAction.Instance.Do(_context, "");
+        _action.Do(_context, "");
 
         Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }
@@ -26,10 +29,10 @@ internal class SetTextInputActionIntegration : BaseInputActionIntegration
     [Test]
     public void SetText_ResetCursor_2()
     {
-        SetTextInputAction.Instance.Do(_context, "123");
+        _action.Do(_context, "123");
         MoveCursorTextEnd();
 
-        SetTextInputAction.Instance.Do(_context, "1");
+        _action.Do(_context, "1");
 
         Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }

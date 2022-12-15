@@ -1,20 +1,23 @@
-﻿using CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Infrastructure;
+using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
 internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
 {
+    private readonly IInputActionsFactory _inputActionsFactory;
     private readonly string _insertedText;
 
-    public InsertTextHistoryAction(InputActionContext context, string insertedText) : base(context)
+    public InsertTextHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context, string insertedText) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
         _insertedText = insertedText;
     }
 
     public override bool Do()
     {
-        Result = InsertTextInputAction.Instance.Do(_context, _insertedText);
+        Result = _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText);
         if (Result.HasInserted) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasInserted;
@@ -29,12 +32,12 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
                 new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex),
                 new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex + _insertedText.Length));
 
-            InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
+            _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, Result.DeletedSelectedText);
         }
         else
         {
             _context.TextSelection.Set(Result.InsertStartPosition, Result.InsertEndPosition);
-            LeftDeleteInputAction.Instance.Do(_context);
+            _inputActionsFactory.Get<ILeftDeleteInputAction>().Do(_context);
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
@@ -52,7 +55,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             ResetSelection();
             SetCursorToStartPosition();
         }
-        InsertTextInputAction.Instance.Do(_context, _insertedText);
+        _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

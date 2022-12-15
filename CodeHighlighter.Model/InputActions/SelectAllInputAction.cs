@@ -8,8 +8,6 @@ internal interface ISelectAllInputAction
 [InputAction]
 internal class SelectAllInputAction : InputAction, ISelectAllInputAction
 {
-    public static readonly SelectAllInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         context.TextSelection.InProgress = false;

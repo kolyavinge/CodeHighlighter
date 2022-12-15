@@ -8,8 +8,6 @@ internal interface IMoveCursorStartLineInputAction
 [InputAction]
 internal class MoveCursorStartLineInputAction : InputAction, IMoveCursorStartLineInputAction
 {
-    public static readonly MoveCursorStartLineInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         context.TextCursor.MoveStartLine();

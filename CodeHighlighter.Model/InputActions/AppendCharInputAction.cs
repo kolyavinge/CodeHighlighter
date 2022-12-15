@@ -10,8 +10,6 @@ internal interface IAppendCharInputAction
 [InputAction]
 internal class AppendCharInputAction : InputAction, IAppendCharInputAction
 {
-    public static readonly AppendCharInputAction Instance = new();
-
     public AppendCharResult Do(InputActionContext context, char ch)
     {
         var result = AppendChar(context, ch);

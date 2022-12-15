@@ -8,8 +8,6 @@ internal interface IMoveCursorDownInputAction
 [InputAction]
 internal class MoveCursorDownInputAction : InputAction, IMoveCursorDownInputAction
 {
-    public static readonly MoveCursorDownInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         context.TextCursor.MoveDown();

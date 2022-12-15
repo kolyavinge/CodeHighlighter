@@ -2,6 +2,7 @@
 using CodeHighlighter.Contracts;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
+using CodeHighlighter.Tests.Model;
 using Moq;
 using NUnit.Framework;
 
@@ -19,6 +20,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
+    protected TestInputActionsFactory _inputActionsFactory;
     protected InputActionContext _context;
 
     protected BaseHistoryActionIntegration()
@@ -32,6 +34,7 @@ internal class BaseHistoryActionIntegration
         _viewportContext = new();
         _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
         _textEvents = new(_text);
+        _inputActionsFactory = new();
     }
 
     protected void MakeContext()
@@ -53,17 +56,17 @@ internal class BaseHistoryActionIntegration
 
     protected void SetText(string text)
     {
-        SetTextInputAction.Instance.Do(_context, text);
+        new SetTextInputAction().Do(_context, text);
     }
 
     protected void MoveCursorTo(CursorPosition position)
     {
-        MoveCursorToInputAction.Instance.Do(_context, position);
+        new MoveCursorToInputAction().Do(_context, position);
     }
 
     protected void MoveCursorStartLine()
     {
-        MoveCursorStartLineInputAction.Instance.Do(_context);
+        new MoveCursorStartLineInputAction().Do(_context);
     }
 
     protected void ActivateSelection()

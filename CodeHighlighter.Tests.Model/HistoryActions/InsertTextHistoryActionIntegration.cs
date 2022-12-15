@@ -14,14 +14,14 @@ internal class InsertTextHistoryActionIntegrationIntegration : BaseHistoryAction
     {
         _insertedText = "123";
         MakeContext();
-        _action = new InsertTextHistoryAction(_context, _insertedText);
+        _action = new InsertTextHistoryAction(_inputActionsFactory, _context, _insertedText);
     }
 
     [Test]
     public void NoInsertion()
     {
         SetText("text\r\nfor 1");
-        _action = new InsertTextHistoryAction(_context, "");
+        _action = new InsertTextHistoryAction(_inputActionsFactory, _context, "");
         Assert.False(_action.Do());
         InvalidateVisualCallNever();
     }

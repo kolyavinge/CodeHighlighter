@@ -10,8 +10,6 @@ internal interface IMoveCursorToInputAction
 [InputAction]
 internal class MoveCursorToInputAction : InputAction, IMoveCursorToInputAction
 {
-    public static readonly MoveCursorToInputAction Instance = new();
-
     public void Do(InputActionContext context, CursorPosition position)
     {
         context.TextCursor.MoveTo(position);

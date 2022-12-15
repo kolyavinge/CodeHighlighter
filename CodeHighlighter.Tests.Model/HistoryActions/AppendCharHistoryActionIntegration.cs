@@ -14,7 +14,7 @@ internal class AppendCharHistoryActionIntegration : BaseHistoryActionIntegration
     {
         _appendedChar = 'A';
         MakeContext();
-        _action = new AppendCharHistoryAction(_context, _appendedChar);
+        _action = new AppendCharHistoryAction(_inputActionsFactory, _context, _appendedChar);
     }
 
     [Test]

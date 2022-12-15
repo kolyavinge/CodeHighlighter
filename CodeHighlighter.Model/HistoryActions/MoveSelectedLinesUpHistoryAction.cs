@@ -1,3 +1,4 @@
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
@@ -5,13 +6,16 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class MoveSelectedLinesUpHistoryAction : TextHistoryAction<MoveSelectedLinesResult>
 {
-    public MoveSelectedLinesUpHistoryAction(InputActionContext context) : base(context)
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public MoveSelectedLinesUpHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
     }
 
     public override bool Do()
     {
-        Result = MoveSelectedLinesUpInputAction.Instance.Do(_context);
+        Result = _inputActionsFactory.Get<IMoveSelectedLinesUpInputAction>().Do(_context);
         if (Result.HasMoved) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasMoved;
@@ -28,7 +32,7 @@ internal class MoveSelectedLinesUpHistoryAction : TextHistoryAction<MoveSelected
             ResetSelection();
             SetCursorToEndPosition();
         }
-        MoveSelectedLinesDownInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveSelectedLinesDownInputAction>().Do(_context);
         SetCursorToStartPosition();
         RestoreSelection();
         _context.CodeTextBox.InvalidateVisual();
@@ -46,7 +50,7 @@ internal class MoveSelectedLinesUpHistoryAction : TextHistoryAction<MoveSelected
             ResetSelection();
             SetCursorToStartPosition();
         }
-        MoveSelectedLinesUpInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IMoveSelectedLinesUpInputAction>().Do(_context);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

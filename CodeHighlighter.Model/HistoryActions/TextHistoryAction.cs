@@ -26,12 +26,12 @@ internal abstract class TextHistoryAction<TEditTextResult> : HistoryAction where
 
     protected void SetCursorToStartPosition()
     {
-        MoveCursorToInputAction.Instance.Do(_context, Result.OldCursorPosition);
+        new MoveCursorToInputAction().Do(_context, Result.OldCursorPosition);
     }
 
     protected void SetCursorToEndPosition()
     {
-        MoveCursorToInputAction.Instance.Do(_context, Result.NewCursorPosition);
+        new MoveCursorToInputAction().Do(_context, Result.NewCursorPosition);
     }
 
     protected void RestoreSelection()

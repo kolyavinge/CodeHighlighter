@@ -1,3 +1,4 @@
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
@@ -5,13 +6,16 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResult>
 {
-    public AppendNewLineHistoryAction(InputActionContext context) : base(context)
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public AppendNewLineHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
     }
 
     public override bool Do()
     {
-        Result = AppendNewLineInputAction.Instance.Do(_context);
+        Result = _inputActionsFactory.Get<IAppendNewLineInputAction>().Do(_context);
         _context.CodeTextBox.InvalidateVisual();
 
         return true;
@@ -28,10 +32,10 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
         {
             SetCursorToStartPosition();
         }
-        RightDeleteInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IRightDeleteInputAction>().Do(_context);
         if (Result.IsSelectionExist)
         {
-            InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
+            _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, Result.DeletedSelectedText);
         }
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
@@ -49,7 +53,7 @@ internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResul
             ResetSelection();
             SetCursorToStartPosition();
         }
-        AppendNewLineInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IAppendNewLineInputAction>().Do(_context);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

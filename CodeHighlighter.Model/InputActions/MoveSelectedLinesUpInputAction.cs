@@ -10,8 +10,6 @@ internal interface IMoveSelectedLinesUpInputAction
 [InputAction]
 internal class MoveSelectedLinesUpInputAction : InputAction, IMoveSelectedLinesUpInputAction
 {
-    public static readonly MoveSelectedLinesUpInputAction Instance = new();
-
     public MoveSelectedLinesResult Do(InputActionContext context)
     {
         var result = MoveSelectedLinesUp(context);

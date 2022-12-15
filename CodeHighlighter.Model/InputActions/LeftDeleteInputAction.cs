@@ -10,8 +10,6 @@ internal interface ILeftDeleteInputAction
 [InputAction]
 internal class LeftDeleteInputAction : InputAction, ILeftDeleteInputAction
 {
-    public static readonly LeftDeleteInputAction Instance = new();
-
     public DeleteResult Do(InputActionContext context)
     {
         var result = LeftDelete(context);

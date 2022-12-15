@@ -12,7 +12,7 @@ internal class MoveSelectedLinesDownHistoryActionIntegration : BaseHistoryAction
     public void Setup()
     {
         MakeContext();
-        _action = new MoveSelectedLinesDownHistoryAction(_context);
+        _action = new MoveSelectedLinesDownHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

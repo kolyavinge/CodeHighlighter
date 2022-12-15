@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Infrastructure;
+using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
@@ -10,7 +11,12 @@ internal interface IDeleteLeftTokenInputAction
 [InputAction]
 internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAction
 {
-    public static readonly DeleteLeftTokenInputAction Instance = new();
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public DeleteLeftTokenInputAction(IInputActionsFactory inputActionsFactory)
+    {
+        _inputActionsFactory = inputActionsFactory;
+    }
 
     public DeleteTokenResult Do(InputActionContext context)
     {
@@ -35,14 +41,14 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
             }
             var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
             var deletedSelectedText = context.TextSelector.GetSelectedText();
-            var deleteResult = LeftDeleteInputAction.Instance.Do(context);
+            var deleteResult = _inputActionsFactory.Get<ILeftDeleteInputAction>().Do(context);
             var newCursorPosition = context.TextCursor.Position;
 
             return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted);
         }
         else
         {
-            var deleteResult = LeftDeleteInputAction.Instance.Do(context);
+            var deleteResult = _inputActionsFactory.Get<ILeftDeleteInputAction>().Do(context);
             var newCursorPosition = context.TextCursor.Position;
 
             return new(oldCursorPosition, newCursorPosition, deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText, deleteResult.HasDeleted);

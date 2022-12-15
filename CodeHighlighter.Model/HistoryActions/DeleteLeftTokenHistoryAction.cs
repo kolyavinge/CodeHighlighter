@@ -1,3 +1,4 @@
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
@@ -5,13 +6,16 @@ namespace CodeHighlighter.HistoryActions;
 
 internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResult>
 {
-    public DeleteLeftTokenHistoryAction(InputActionContext context) : base(context)
+    private readonly IInputActionsFactory _inputActionsFactory;
+
+    public DeleteLeftTokenHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
     }
 
     public override bool Do()
     {
-        Result = DeleteLeftTokenInputAction.Instance.Do(_context);
+        Result = _inputActionsFactory.Get<IDeleteLeftTokenInputAction>().Do(_context);
         if (Result.HasDeleted || Result.OldCursorPosition.Kind == CursorPositionKind.Virtual) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasDeleted;
@@ -21,7 +25,7 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
     {
         ResetSelection();
         SetCursorToEndPosition();
-        InsertTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
+        _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, Result.DeletedSelectedText);
         ClearLineIfVirtualCursor();
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();
@@ -38,7 +42,7 @@ internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResul
         {
             RestoreSelection();
         }
-        DeleteLeftTokenInputAction.Instance.Do(_context);
+        _inputActionsFactory.Get<IDeleteLeftTokenInputAction>().Do(_context);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

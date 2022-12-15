@@ -1,20 +1,23 @@
-﻿using CodeHighlighter.InputActions;
+﻿using CodeHighlighter.Infrastructure;
+using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
 internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>
 {
+    private readonly IInputActionsFactory _inputActionsFactory;
     public readonly string _text;
 
-    public SetTextHistoryAction(InputActionContext context, string text) : base(context)
+    public SetTextHistoryAction(IInputActionsFactory inputActionsFactory, InputActionContext context, string text) : base(context)
     {
+        _inputActionsFactory = inputActionsFactory;
         _text = text;
     }
 
     public override bool Do()
     {
-        Result = SetTextInputAction.Instance.Do(_context, _text);
+        Result = _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text);
         _context.CodeTextBox.InvalidateVisual();
 
         return true;
@@ -22,14 +25,14 @@ internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>
 
     public override void Undo()
     {
-        SetTextInputAction.Instance.Do(_context, Result.DeletedSelectedText);
+        _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, Result.DeletedSelectedText);
         SetCursorToStartPosition();
         _context.CodeTextBox.InvalidateVisual();
     }
 
     public override void Redo()
     {
-        SetTextInputAction.Instance.Do(_context, _text);
+        _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

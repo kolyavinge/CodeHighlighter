@@ -10,8 +10,6 @@ internal interface ISetTextCaseInputAction
 [InputAction]
 internal class SetTextCaseInputAction : InputAction, ISetTextCaseInputAction
 {
-    public static readonly SetTextCaseInputAction Instance = new();
-
     public CaseResult Do(InputActionContext context, TextCase textCase)
     {
         var cursorPosition = context.TextCursor.Position;

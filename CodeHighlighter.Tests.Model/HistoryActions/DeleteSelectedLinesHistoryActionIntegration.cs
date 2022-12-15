@@ -12,7 +12,7 @@ internal class DeleteSelectedLinesHistoryActionIntegration : BaseHistoryActionIn
     public void Setup()
     {
         MakeContext();
-        _action = new DeleteSelectedLinesHistoryAction(_context);
+        _action = new DeleteSelectedLinesHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

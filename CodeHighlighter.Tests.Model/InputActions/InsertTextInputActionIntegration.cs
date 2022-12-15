@@ -6,16 +6,19 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class InsertTextInputActionIntegration : BaseInputActionIntegration
 {
+    private InsertTextInputAction _action;
+
     [SetUp]
     public void Setup()
     {
         Init();
+        _action = new InsertTextInputAction();
     }
 
     [Test]
     public void InsertText()
     {
-        var result = InsertTextInputAction.Instance.Do(_context, "XXX\nYYY\nZZZ");
+        var result = _action.Do(_context, "XXX\nYYY\nZZZ");
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 3), result.NewCursorPosition);
@@ -37,7 +40,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(0, 7));
         CompleteSelection();
-        var result = InsertTextInputAction.Instance.Do(_context, "XXX\nYYY\nZZZ");
+        var result = _action.Do(_context, "XXX\nYYY\nZZZ");
 
         Assert.AreEqual(new CursorPosition(0, 7), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 3), result.NewCursorPosition);
@@ -54,7 +57,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
     [Test]
     public void InsertText_Empty()
     {
-        var result = InsertTextInputAction.Instance.Do(_context, "");
+        var result = _action.Do(_context, "");
 
         Assert.AreEqual(new CursorPosition(0, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 0), result.NewCursorPosition);
@@ -74,7 +77,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         SetText("    125\r\n");
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
-        var result = InsertTextInputAction.Instance.Do(_context, "333");
+        var result = _action.Do(_context, "333");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 7), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
@@ -90,7 +93,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         MoveCursorEndLine();
         AppendNewLine();
 
-        var result = InsertTextInputAction.Instance.Do(_context, "333");
+        var result = _action.Do(_context, "333");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 7), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
@@ -105,7 +108,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         SetText("    125\r\n");
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
 
-        var result = InsertTextInputAction.Instance.Do(_context, "3\n4");
+        var result = _action.Do(_context, "3\n4");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 1), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.SelectionStart);
@@ -121,7 +124,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         MoveCursorEndLine();
         AppendNewLine();
 
-        var result = InsertTextInputAction.Instance.Do(_context, "3\n4");
+        var result = _action.Do(_context, "3\n4");
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(2, 1), result.NewCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 7), result.SelectionStart);
@@ -138,7 +141,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 0));
         CompleteSelection();
-        var result = InsertTextInputAction.Instance.Do(_context, "9");
+        var result = _action.Do(_context, "9");
 
         Assert.AreEqual(new CursorPosition(2, 0), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);
@@ -156,7 +159,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(1, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = InsertTextInputAction.Instance.Do(_context, "9");
+        var result = _action.Do(_context, "9");
 
         Assert.AreEqual(new CursorPosition(1, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(0, 8), result.NewCursorPosition);
@@ -174,7 +177,7 @@ internal class InsertTextInputActionIntegration : BaseInputActionIntegration
         ActivateSelection();
         MoveCursorTo(new(2, 4, CursorPositionKind.Virtual));
         CompleteSelection();
-        var result = InsertTextInputAction.Instance.Do(_context, "9");
+        var result = _action.Do(_context, "9");
 
         Assert.AreEqual(new CursorPosition(2, 4, CursorPositionKind.Virtual), result.OldCursorPosition);
         Assert.AreEqual(new CursorPosition(1, 5), result.NewCursorPosition);

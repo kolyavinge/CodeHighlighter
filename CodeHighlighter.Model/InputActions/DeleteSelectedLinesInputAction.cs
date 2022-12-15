@@ -11,8 +11,6 @@ internal interface IDeleteSelectedLinesInputAction
 [InputAction]
 internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLinesInputAction
 {
-    public static readonly DeleteSelectedLinesInputAction Instance = new();
-
     public DeleteSelectedLinesResult Do(InputActionContext context)
     {
         var result = DeleteSelectedLines(context);

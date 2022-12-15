@@ -12,7 +12,7 @@ internal class MoveSelectedLinesUpHistoryActionIntegration : BaseHistoryActionIn
     public void Setup()
     {
         MakeContext();
-        _action = new MoveSelectedLinesUpHistoryAction(_context);
+        _action = new MoveSelectedLinesUpHistoryAction(_inputActionsFactory, _context);
     }
 
     [Test]

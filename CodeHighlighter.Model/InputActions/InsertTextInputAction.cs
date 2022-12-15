@@ -10,8 +10,6 @@ internal interface IInsertTextInputAction
 [InputAction]
 internal class InsertTextInputAction : InputAction, IInsertTextInputAction
 {
-    public static readonly InsertTextInputAction Instance = new();
-
     public InsertTextResult Do(InputActionContext context, string insertedText)
     {
         var insertResult = InsertText(context, insertedText);

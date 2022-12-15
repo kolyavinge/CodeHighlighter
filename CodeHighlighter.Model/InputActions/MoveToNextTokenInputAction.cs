@@ -10,8 +10,6 @@ internal interface IMoveToNextTokenInputAction
 [InputAction]
 internal class MoveToNextTokenInputAction : InputAction, IMoveToNextTokenInputAction
 {
-    public static readonly MoveToNextTokenInputAction Instance = new();
-
     public void Do(InputActionContext context)
     {
         var navigator = new TokenNavigator();

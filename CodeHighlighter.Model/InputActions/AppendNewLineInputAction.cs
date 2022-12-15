@@ -11,8 +11,6 @@ internal interface IAppendNewLineInputAction
 [InputAction]
 internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
 {
-    public static readonly AppendNewLineInputAction Instance = new();
-
     public AppendNewLineResult Do(InputActionContext context)
     {
         var result = AppendNewLine(context);
