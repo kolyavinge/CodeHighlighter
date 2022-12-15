@@ -9,9 +9,6 @@ public class CodeTextBoxModel
     private readonly InputActionContext _context;
     private ICodeTextBox _codeTextBox;
 
-    public event EventHandler? TextSet;
-    public event EventHandler? TextChanged;
-
     public IText Text { get; }
     public ITokens Tokens { get; }
     public ITokensColors TokensColors { get; }
@@ -21,10 +18,10 @@ public class CodeTextBoxModel
     internal ITextSelector TextSelector { get; }
     public IHistory History { get; }
     public ILinesDecorationCollection LinesDecoration { get; }
-    public bool IsReadOnly { get; set; }
-
     public IViewport Viewport { get; private set; }
     public IBracketsHighlighter BracketsHighlighter { get; }
+    public ITextEvents TextEvents { get; }
+    public bool IsReadOnly { get; set; }
 
     public CodeTextBoxModel(
         IText text,
@@ -38,6 +35,7 @@ public class CodeTextBoxModel
         ITextSelector textSelector,
         IViewport viewport,
         IBracketsHighlighter bracketsHighlighter,
+        ITextEvents textEvents,
         ICodeProvider codeProvider,
         CodeTextBoxModelAdditionalParams additionalParams)
     {
@@ -53,6 +51,7 @@ public class CodeTextBoxModel
         TextSelector = textSelector;
         Viewport = viewport;
         BracketsHighlighter = bracketsHighlighter;
+        TextEvents = textEvents;
         IsReadOnly = additionalParams.IsReadOnly;
         _context = new InputActionContext(
             codeProvider,
@@ -64,17 +63,8 @@ public class CodeTextBoxModel
             Tokens,
             TokensColors,
             Viewport,
-            () => TextChanged?.Invoke(this, EventArgs.Empty),
-            () => TextSet?.Invoke(this, EventArgs.Empty));
+            TextEvents);
         SetCodeProvider(codeProvider);
-    }
-
-    public void AttachCodeTextBox(ICodeTextBox codeTextBox)
-    {
-        _codeTextBox = codeTextBox;
-        Viewport = new Viewport(Text, codeTextBox, TextCursor, TextMeasures);
-        _context.CodeTextBox = _codeTextBox;
-        _context.Viewport = Viewport;
     }
 
     private void SetCodeProvider(ICodeProvider codeProvider)
@@ -88,6 +78,14 @@ public class CodeTextBoxModel
                 _codeTextBox.InvalidateVisual();
             };
         }
+    }
+
+    public void AttachCodeTextBox(ICodeTextBox codeTextBox)
+    {
+        _codeTextBox = codeTextBox;
+        Viewport = new Viewport(Text, codeTextBox, TextCursor, TextMeasures);
+        _context.CodeTextBox = _codeTextBox;
+        _context.Viewport = Viewport;
     }
 
     public void SetText(string text)

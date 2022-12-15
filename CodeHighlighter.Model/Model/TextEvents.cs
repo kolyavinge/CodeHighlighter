@@ -1,10 +1,21 @@
 ﻿namespace CodeHighlighter.Model;
 
-public class TextEvents
+public interface ITextEvents
+{
+    event EventHandler? TextSet;
+    event EventHandler? TextChanged;
+    event EventHandler<LinesCountChangedEventArgs>? LinesCountChanged;
+    void RaiseTextSet();
+    void RaiseTextChanged();
+}
+
+public class TextEvents : ITextEvents
 {
     private readonly IText _text;
     private int _linesCount;
 
+    public event EventHandler? TextSet;
+    public event EventHandler? TextChanged;
     public event EventHandler<LinesCountChangedEventArgs>? LinesCountChanged;
 
     public TextEvents(IText text)
@@ -13,8 +24,14 @@ public class TextEvents
         _linesCount = _text.LinesCount;
     }
 
-    public void OnTextChanged()
+    public void RaiseTextSet()
     {
+        TextSet?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void RaiseTextChanged()
+    {
+        TextChanged?.Invoke(this, EventArgs.Empty);
         if (_text.LinesCount != _linesCount)
         {
             _linesCount = _text.LinesCount;

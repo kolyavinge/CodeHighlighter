@@ -14,8 +14,7 @@ internal class InputActionContext
     public readonly ITokens Tokens;
     public readonly ITokensColors TokenColors;
     public IViewport Viewport;
-    public readonly Action RaiseTextChanged;
-    public readonly Action RaiseTextSet;
+    public readonly ITextEvents TextEvents;
     public ICodeTextBox CodeTextBox;
 
     public InputActionContext(
@@ -28,8 +27,7 @@ internal class InputActionContext
         ITokens tokens,
         ITokensColors tokenColors,
         IViewport viewport,
-        Action raiseTextChanged,
-        Action raiseTextSet)
+        ITextEvents textEvents)
     {
         CodeProvider = codeProvider;
         Text = text;
@@ -40,8 +38,7 @@ internal class InputActionContext
         Tokens = tokens;
         TokenColors = tokenColors;
         Viewport = viewport;
-        RaiseTextChanged = raiseTextChanged;
-        RaiseTextSet = raiseTextSet;
+        TextEvents = textEvents;
         CodeTextBox = DummyCodeTextBox.Instance;
     }
 }

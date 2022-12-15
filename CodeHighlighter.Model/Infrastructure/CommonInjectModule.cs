@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Contracts;
+using CodeHighlighter.Model;
 using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
@@ -19,6 +20,7 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<IViewportContext, DummyViewportContext>().ToSingleton();
         bindingProvider.Bind<IViewport, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
+        bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
         bindingProvider.Bind<CodeTextBoxModel, CodeTextBoxModel>().ToSingleton();
     }
 }

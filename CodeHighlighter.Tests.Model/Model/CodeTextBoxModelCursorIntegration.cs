@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using CodeHighlighter.Contracts;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;

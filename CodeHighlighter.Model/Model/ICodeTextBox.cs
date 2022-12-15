@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.Model;
+﻿using CodeHighlighter.Contracts;
+
+namespace CodeHighlighter.Model;
 
 public interface ICodeTextBox : IViewportContext
 {

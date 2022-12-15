@@ -11,7 +11,7 @@ internal class LeftDeleteInputAction : InputAction
         var result = LeftDelete(context);
         context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
-        context.RaiseTextChanged();
+        context.TextEvents.RaiseTextChanged();
 
         return result;
     }

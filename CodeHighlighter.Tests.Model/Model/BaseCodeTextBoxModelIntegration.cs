@@ -18,6 +18,7 @@ internal class BaseCodeTextBoxModelIntegration
         var textSelector = new TextSelector(text, textCursor, textSelection);
         var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
+        var textEvents = new TextEvents(text);
 
         return new CodeTextBoxModel(
             text,
@@ -31,6 +32,7 @@ internal class BaseCodeTextBoxModelIntegration
             textSelector,
             viewport,
             bracketsHighlighter,
+            textEvents,
             new SqlCodeProvider(),
             new CodeTextBoxModelAdditionalParams());
     }

@@ -15,7 +15,7 @@ internal class SetTextCaseInputAction : InputAction
         var changedText = context.TextSelector.GetSelectedText();
         UpdateTokensForLines(context, selectionStart.LineIndex, selectionEnd.LineIndex - selectionStart.LineIndex + 1);
         var result = new CaseResult(cursorPosition, selectionStart, selectionEnd, deletedSelectedText, changedText);
-        context.RaiseTextChanged();
+        context.TextEvents.RaiseTextChanged();
 
         return result;
     }

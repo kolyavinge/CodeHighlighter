@@ -175,10 +175,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
         textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
         textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
-        var textEvents = new TextEvents(model.Text);
-        model.TextSet += (s, e) => textEvents.OnTextChanged();
-        model.TextChanged += (s, e) => textEvents.OnTextChanged();
-        textEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
+        model.TextEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
         codeTextBox.TextLinesCount = model.Text.LinesCount;
         UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, model.TextMeasures);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;

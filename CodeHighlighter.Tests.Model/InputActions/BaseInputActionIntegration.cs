@@ -1,5 +1,5 @@
-﻿using System;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Contracts;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 using Moq;
@@ -16,8 +16,7 @@ internal class BaseInputActionIntegration
     protected Tokens _tokens;
     protected Viewport _viewport;
     protected Mock<IViewportContext> _viewportContext;
-    protected Action _raiseTextChanged;
-    protected Action _raiseTextSet;
+    protected TextEvents _textEvents;
     protected InputActionContext _context;
 
     protected void Init()
@@ -30,8 +29,7 @@ internal class BaseInputActionIntegration
         _tokens = new();
         _viewportContext = new();
         _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
-        _raiseTextChanged = () => { };
-        _raiseTextSet = () => { };
+        _textEvents = new(_text);
         _context = new(
             new SqlCodeProvider(),
             _text,
@@ -42,8 +40,7 @@ internal class BaseInputActionIntegration
             _tokens,
             new TokensColors(),
             _viewport,
-            _raiseTextChanged,
-            _raiseTextSet);
+            _textEvents);
         SetText("");
     }
 

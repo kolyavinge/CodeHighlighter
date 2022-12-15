@@ -1,5 +1,5 @@
-﻿using System;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Contracts;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 using Moq;
@@ -17,8 +17,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Tokens _tokens;
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
-    protected readonly Action _raiseTextChanged;
-    protected readonly Action _raiseTextSet;
+    protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
     protected InputActionContext _context;
 
@@ -32,8 +31,7 @@ internal class BaseHistoryActionIntegration
         _tokens = new();
         _viewportContext = new();
         _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
-        _raiseTextChanged = () => { };
-        _raiseTextSet = () => { };
+        _textEvents = new(_text);
     }
 
     protected void MakeContext()
@@ -48,8 +46,7 @@ internal class BaseHistoryActionIntegration
             _tokens,
             new TokensColors(),
             _viewport,
-            _raiseTextChanged,
-            _raiseTextSet);
+            _textEvents);
         _codeTextBox = new();
         _context.CodeTextBox = _codeTextBox.Object;
     }

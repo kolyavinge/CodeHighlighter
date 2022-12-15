@@ -12,7 +12,7 @@ internal class DeleteSelectedLinesInputAction
         var result = DeleteSelectedLines(context);
         context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
-        context.RaiseTextChanged();
+        context.TextEvents.RaiseTextChanged();
 
         return result;
     }

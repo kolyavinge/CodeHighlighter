@@ -11,7 +11,7 @@ internal class DeleteLeftTokenInputAction : InputAction
         var result = DeleteLeftToken(context);
         context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
-        context.RaiseTextChanged();
+        context.TextEvents.RaiseTextChanged();
 
         return result;
     }

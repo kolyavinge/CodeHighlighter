@@ -12,7 +12,7 @@ internal class AppendNewLineInputAction : InputAction
         var result = AppendNewLine(context);
         context.Viewport.CorrectByCursorPosition();
         context.Viewport.UpdateScrollbarsMaximumValues();
-        context.RaiseTextChanged();
+        context.TextEvents.RaiseTextChanged();
 
         return result;
     }
