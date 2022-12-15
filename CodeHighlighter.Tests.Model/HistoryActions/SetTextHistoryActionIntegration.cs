@@ -14,7 +14,8 @@ internal class SetTextHistoryActionIntegration : BaseHistoryActionIntegration
     {
         _textForSet = "123";
         MakeContext();
-        _action = new SetTextHistoryAction(_inputActionsFactory, _context, _textForSet);
+        _action = new SetTextHistoryAction(_inputActionsFactory, _context);
+        _action.SetParams(_textForSet);
     }
 
     [Test]

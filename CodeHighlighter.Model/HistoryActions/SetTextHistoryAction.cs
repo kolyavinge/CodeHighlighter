@@ -4,20 +4,31 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>
+internal interface ISetTextHistoryAction : IHistoryAction
+{
+    ISetTextHistoryAction SetParams(string text);
+}
+
+[HistoryAction]
+internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>, ISetTextHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
-    public readonly string _text;
+    public string? _text;
 
-    public SetTextHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context, string text) : base(context)
+    public SetTextHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
+    }
+
+    public ISetTextHistoryAction SetParams(string text)
+    {
         _text = text;
+        return this;
     }
 
     public override bool Do()
     {
-        Result = _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text);
+        Result = _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text!);
         _context.CodeTextBox.InvalidateVisual();
 
         return true;
@@ -32,7 +43,7 @@ internal class SetTextHistoryAction : TextHistoryAction<SetTextResult>
 
     public override void Redo()
     {
-        _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text);
+        _inputActionsFactory.Get<ISetTextInputAction>().Do(_context, _text!);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

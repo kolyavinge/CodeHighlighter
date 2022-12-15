@@ -4,7 +4,10 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>
+internal interface IRightDeleteHistoryAction : IHistoryAction { }
+
+[HistoryAction]
+internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>, IRightDeleteHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 

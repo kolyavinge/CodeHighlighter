@@ -1,10 +1,11 @@
-﻿using DependencyInjection;
+﻿using CodeHighlighter.InputActions;
+using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
 
 public interface IInputActionsFactory
 {
-    TInputAction Get<TInputAction>();
+    TInputAction Get<TInputAction>();//where TInputAction : InputAction;
 }
 
 internal class InputActionsFactory : IInputActionsFactory
@@ -16,7 +17,7 @@ internal class InputActionsFactory : IInputActionsFactory
         _provider = provider;
     }
 
-    public TInputAction Get<TInputAction>()
+    public TInputAction Get<TInputAction>() //where TInputAction : InputAction
     {
         return _provider.Resolve<TInputAction>();
     }

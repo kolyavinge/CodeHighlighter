@@ -5,7 +5,7 @@ using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
 
-internal class InputAndHistoryActionsInjectModule : InjectModule
+internal class InputActionsInjectModule : InjectModule
 {
     public override void Init(IBindingProvider bindingProvider)
     {

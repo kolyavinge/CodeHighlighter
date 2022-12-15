@@ -4,20 +4,31 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>
+internal interface ISetTextCaseHistoryAction : IHistoryAction
+{
+    ISetTextCaseHistoryAction SetParams(TextCase textCase);
+}
+
+[HistoryAction]
+internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>, ISetTextCaseHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
-    private readonly TextCase _textCase;
+    private TextCase? _textCase;
 
-    public SetTextCaseHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context, TextCase textCase) : base(context)
+    public SetTextCaseHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
+    }
+
+    public ISetTextCaseHistoryAction SetParams(TextCase textCase)
+    {
         _textCase = textCase;
+        return this;
     }
 
     public override bool Do()
     {
-        Result = _inputActionsFactory.Get<ISetTextCaseInputAction>().Do(_context, _textCase);
+        Result = _inputActionsFactory.Get<ISetTextCaseInputAction>().Do(_context, _textCase!.Value);
         if (Result.HasChanged) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasChanged;
@@ -34,7 +45,7 @@ internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>
     public override void Redo()
     {
         RestoreSelection();
-        _inputActionsFactory.Get<ISetTextCaseInputAction>().Do(_context, _textCase);
+        _inputActionsFactory.Get<ISetTextCaseInputAction>().Do(_context, _textCase!.Value);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

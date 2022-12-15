@@ -4,7 +4,10 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelectedLinesResult>
+internal interface IMoveSelectedLinesDownHistoryAction : IHistoryAction { }
+
+[HistoryAction]
+internal class MoveSelectedLinesDownHistoryAction : TextHistoryAction<MoveSelectedLinesResult>, IMoveSelectedLinesDownHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
 

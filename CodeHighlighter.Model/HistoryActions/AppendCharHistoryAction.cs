@@ -4,18 +4,26 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>
+internal interface IAppendCharHistoryAction : IHistoryAction
+{
+    IAppendCharHistoryAction SetParams(char appendedChar);
+}
+
+[HistoryAction]
+internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>, IAppendCharHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
-    private readonly char _appendedChar;
+    private char _appendedChar;
 
-    public AppendCharHistoryAction(
-        IInputActionsFactory inputActionsFactory,
-        IInputActionContext context,
-        char appendedChar) : base(context)
+    public AppendCharHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
+    }
+
+    public IAppendCharHistoryAction SetParams(char appendedChar)
+    {
         _appendedChar = appendedChar;
+        return this;
     }
 
     public override bool Do()

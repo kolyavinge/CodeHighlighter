@@ -9,6 +9,7 @@ public class CodeTextBoxModel
 {
     private readonly IInputActionContext _inputActionContext;
     private readonly IInputActionsFactory _inputActionsFactory;
+    private readonly IHistoryActionsFactory _historyActionsFactory;
     private ICodeTextBox _codeTextBox;
 
     public IText Text { get; }
@@ -40,6 +41,7 @@ public class CodeTextBoxModel
         ITextEvents textEvents,
         ICodeProvider codeProvider,
         IInputActionsFactory inputActionsFactory,
+        IHistoryActionsFactory historyActionsFactory,
         IInputActionContext inputActionContext,
         CodeTextBoxModelAdditionalParams additionalParams)
     {
@@ -57,6 +59,7 @@ public class CodeTextBoxModel
         BracketsHighlighter = bracketsHighlighter;
         TextEvents = textEvents;
         _inputActionsFactory = inputActionsFactory;
+        _historyActionsFactory = historyActionsFactory;
         _inputActionContext = inputActionContext;
         IsReadOnly = additionalParams.IsReadOnly;
         SetCodeProvider(codeProvider);
@@ -86,7 +89,7 @@ public class CodeTextBoxModel
     public void SetText(string text)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new SetTextHistoryAction(_inputActionsFactory, _inputActionContext, text));
+        History.AddAndDo(_historyActionsFactory.Get<ISetTextHistoryAction>().SetParams(text));
     }
 
     public string GetSelectedText()
@@ -163,13 +166,13 @@ public class CodeTextBoxModel
     public void MoveSelectedLinesUp()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new MoveSelectedLinesUpHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IMoveSelectedLinesUpHistoryAction>());
     }
 
     public void MoveSelectedLinesDown()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new MoveSelectedLinesDownHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IMoveSelectedLinesDownHistoryAction>());
     }
 
     public void ActivateSelection()
@@ -228,55 +231,55 @@ public class CodeTextBoxModel
     public void DeleteLeftToken()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteLeftTokenHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IDeleteLeftTokenHistoryAction>());
     }
 
     public void DeleteRightToken()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteRightTokenHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IDeleteRightTokenHistoryAction>());
     }
 
     public void AppendChar(char ch)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new AppendCharHistoryAction(_inputActionsFactory, _inputActionContext, ch));
+        History.AddAndDo(_historyActionsFactory.Get<IAppendCharHistoryAction>().SetParams(ch));
     }
 
     public void AppendNewLine()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new AppendNewLineHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IAppendNewLineHistoryAction>());
     }
 
     public void InsertText(string insertedText)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new InsertTextHistoryAction(_inputActionsFactory, _inputActionContext, insertedText));
+        History.AddAndDo(_historyActionsFactory.Get<IInsertTextHistoryAction>().SetParams(insertedText));
     }
 
     public void DeleteSelectedLines()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new DeleteSelectedLinesHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IDeleteSelectedLinesHistoryAction>());
     }
 
     public void LeftDelete()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new LeftDeleteHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<ILeftDeleteHistoryAction>());
     }
 
     public void RightDelete()
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new RightDeleteHistoryAction(_inputActionsFactory, _inputActionContext));
+        History.AddAndDo(_historyActionsFactory.Get<IRightDeleteHistoryAction>());
     }
 
     public void SetTextCase(TextCase textCase)
     {
         if (IsReadOnly) return;
-        History.AddAndDo(new SetTextCaseHistoryAction(_inputActionsFactory, _inputActionContext, textCase));
+        History.AddAndDo(_historyActionsFactory.Get<ISetTextCaseHistoryAction>().SetParams(textCase));
     }
 }
 

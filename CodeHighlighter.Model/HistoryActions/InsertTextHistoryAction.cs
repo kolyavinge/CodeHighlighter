@@ -4,20 +4,31 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 
-internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
+internal interface IInsertTextHistoryAction : IHistoryAction
+{
+    IInsertTextHistoryAction SetParams(string insertedText);
+}
+
+[HistoryAction]
+internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>, IInsertTextHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
-    private readonly string _insertedText;
+    private string? _insertedText;
 
-    public InsertTextHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context, string insertedText) : base(context)
+    public InsertTextHistoryAction(IInputActionsFactory inputActionsFactory, IInputActionContext context) : base(context)
     {
         _inputActionsFactory = inputActionsFactory;
+    }
+
+    public IInsertTextHistoryAction SetParams(string insertedText)
+    {
         _insertedText = insertedText;
+        return this;
     }
 
     public override bool Do()
     {
-        Result = _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText);
+        Result = _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText!);
         if (Result.HasInserted) _context.CodeTextBox.InvalidateVisual();
 
         return Result.HasInserted;
@@ -30,7 +41,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
         {
             _context.TextSelection.Set(
                 new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex),
-                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex + _insertedText.Length));
+                new(Result.SelectionStart.LineIndex, Result.SelectionStart.ColumnIndex + _insertedText!.Length));
 
             _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, Result.DeletedSelectedText);
         }
@@ -55,7 +66,7 @@ internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>
             ResetSelection();
             SetCursorToStartPosition();
         }
-        _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText);
+        _inputActionsFactory.Get<IInsertTextInputAction>().Do(_context, _insertedText!);
         _context.CodeTextBox.InvalidateVisual();
     }
 }

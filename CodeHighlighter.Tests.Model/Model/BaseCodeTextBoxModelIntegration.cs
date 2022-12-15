@@ -21,6 +21,7 @@ internal class BaseCodeTextBoxModelIntegration
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var textEvents = new TextEvents(text);
         var codeProvider = new SqlCodeProvider();
+        var inputActionsFactory = new TestInputActionsFactory();
         var inputActionContext = new InputActionContext(
             codeProvider,
             text,
@@ -32,6 +33,7 @@ internal class BaseCodeTextBoxModelIntegration
             tokensColors,
             viewport,
             textEvents);
+        var historyActionsFactory = new TestHistoryActionsFactory(inputActionsFactory, inputActionContext);
 
         return new CodeTextBoxModel(
             text,
@@ -47,7 +49,8 @@ internal class BaseCodeTextBoxModelIntegration
             bracketsHighlighter,
             textEvents,
             codeProvider,
-            new TestInputActionsFactory(),
+            inputActionsFactory,
+            historyActionsFactory,
             inputActionContext,
             new CodeTextBoxModelAdditionalParams());
     }
