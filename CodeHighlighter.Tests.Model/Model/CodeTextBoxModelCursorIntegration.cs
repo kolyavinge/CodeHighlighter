@@ -18,7 +18,7 @@ internal class CodeTextBoxModelCursorIntegration : BaseCodeTextBoxModelIntegrati
         _viewportContext = _codeTextBox.As<IViewportContext>();
         _model = MakeModel();
         _model.AttachCodeTextBox(_codeTextBox.Object);
-        _model.TextMeasures.UpdateMeasures(10, 10);
+        _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
         _model.Text = "";
     }
 

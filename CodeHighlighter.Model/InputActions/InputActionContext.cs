@@ -10,7 +10,7 @@ internal interface IInputActionContext
     IText Text { get; }
     ITextCursor TextCursor { get; }
     ITextEvents TextEvents { get; }
-    ITextMeasures TextMeasures { get; }
+    ITextMeasuresInternal TextMeasures { get; }
     ITextSelectionInternal TextSelection { get; }
     ITextSelector TextSelector { get; }
     ITokensColors TokenColors { get; }
@@ -23,7 +23,7 @@ internal class InputActionContext : IInputActionContext
     public ICodeProvider CodeProvider { get; }
     public IText Text { get; }
     public ITextCursor TextCursor { get; }
-    public ITextMeasures TextMeasures { get; }
+    public ITextMeasuresInternal TextMeasures { get; }
     public ITextSelectionInternal TextSelection { get; }
     public ITextSelector TextSelector { get; }
     public ITokens Tokens { get; }
@@ -36,7 +36,7 @@ internal class InputActionContext : IInputActionContext
         ICodeProvider codeProvider,
         IText text,
         ITextCursor textCursor,
-        ITextMeasures textMeasures,
+        ITextMeasuresInternal textMeasures,
         ITextSelectionInternal textSelection,
         ITextSelector textSelector,
         ITokens tokens,

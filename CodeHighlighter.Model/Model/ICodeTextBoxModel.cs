@@ -13,6 +13,7 @@ public interface ICodeTextBoxModel
     ITextSelection TextSelection { get; }
     ITextMeasures TextMeasures { get; }
     ITextEvents TextEvents { get; }
+    ITextMeasuresEvents TextMeasuresEvents { get; }
     ITokenCollection Tokens { get; }
     ITokensColorCollection TokensColors { get; }
     IHistory History { get; }

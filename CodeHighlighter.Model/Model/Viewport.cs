@@ -27,7 +27,7 @@ internal class Viewport : IViewportInternal
     private readonly IText _text;
     private readonly IViewportContext _context;
     private readonly ITextCursor _textCursor;
-    private readonly ITextMeasures _textMeasures;
+    private readonly ITextMeasuresInternal _textMeasures;
 
     public double ActualWidth => _context.ActualWidth;
 
@@ -57,7 +57,7 @@ internal class Viewport : IViewportInternal
         set => _context.HorizontalScrollBarMaximum = value;
     }
 
-    public Viewport(IText text, IViewportContext context, ITextCursor textCursor, ITextMeasures textMeasures)
+    public Viewport(IText text, IViewportContext context, ITextCursor textCursor, ITextMeasuresInternal textMeasures)
     {
         _text = text;
         _context = context;

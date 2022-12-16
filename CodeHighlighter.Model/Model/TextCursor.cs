@@ -191,6 +191,6 @@ internal class TextCursor : ITextCursor
 
 internal static class TextCursorExt
 {
-    public static Point GetAbsolutePosition(this ITextCursor cursor, ITextMeasures measures) =>
+    public static Point GetAbsolutePosition(this ITextCursor cursor, ITextMeasuresInternal measures) =>
         new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);
 }

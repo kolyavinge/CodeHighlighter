@@ -2,13 +2,17 @@
 
 public interface ITextMeasures
 {
-    event EventHandler? MeasuresUpdated;
-    double LetterWidth { get; }
     double LineHeight { get; }
+    double LetterWidth { get; }
+}
+
+internal interface ITextMeasuresInternal : ITextMeasures
+{
+    event EventHandler? MeasuresUpdated;
     void UpdateMeasures(double lineHeight, double letterWidth);
 }
 
-internal class TextMeasures : ITextMeasures
+internal class TextMeasures : ITextMeasuresInternal
 {
     public event EventHandler? MeasuresUpdated;
 

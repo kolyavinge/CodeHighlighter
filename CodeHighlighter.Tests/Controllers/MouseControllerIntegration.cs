@@ -17,9 +17,10 @@ internal class MouseControllerIntegration
     public void Setup()
     {
         _codeTextBox = new Mock<ICodeTextBox>();
+        _codeTextBox = new Mock<ICodeTextBox>();
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
-        _model.TextMeasures.UpdateMeasures(10, 10);
         _model.AttachCodeTextBox(_codeTextBox.Object);
+        _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
         _controller = new MouseController();
     }
 

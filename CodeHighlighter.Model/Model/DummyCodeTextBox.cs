@@ -4,6 +4,7 @@ internal class DummyCodeTextBox : ICodeTextBox
 {
     public static readonly DummyCodeTextBox Instance = new();
 
+    public event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
     public event EventHandler? ViewportSizeChanged;
 
     public double ActualWidth => 0;

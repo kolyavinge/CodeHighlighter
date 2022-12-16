@@ -2,20 +2,24 @@
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
+using Moq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Controllers;
 
 internal class KeyboardControllerIntegration
 {
+    private Mock<ICodeTextBox> _codeTextBox;
     private ICodeTextBoxModel _model;
     private KeyboardController _controller;
 
     [SetUp]
     public void Setup()
     {
+        _codeTextBox = new Mock<ICodeTextBox>();
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
-        _model.TextMeasures.UpdateMeasures(10, 10);
+        _model.AttachCodeTextBox(_codeTextBox.Object);
+        _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
         _controller = new KeyboardController();
     }
 

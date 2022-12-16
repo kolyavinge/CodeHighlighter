@@ -11,7 +11,7 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<ITextCursor, TextCursor>().ToSingleton();
         bindingProvider.Bind<ITokens, Tokens>().ToSingleton();
         bindingProvider.Bind<ITokensColors, TokensColors>().ToSingleton();
-        bindingProvider.Bind<ITextMeasures, TextMeasures>().ToSingleton();
+        bindingProvider.Bind<ITextMeasuresInternal, TextMeasures>().ToSingleton();
         bindingProvider.Bind<IHistoryInternal, History>().ToSingleton();
         bindingProvider.Bind<ILinesDecorationCollection, LinesDecorationCollection>().ToSingleton();
         bindingProvider.Bind<ITextSelectionInternal, TextSelection>().ToSingleton();
@@ -20,6 +20,7 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<IViewportInternal, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
+        bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
         bindingProvider.Bind<ICodeTextBoxModel, CodeTextBoxModel>().ToSingleton();
     }
 }

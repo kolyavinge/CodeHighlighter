@@ -14,6 +14,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     private readonly IText _text;
     private readonly ITextCursor _textCursor;
     private readonly ITextSelector _textSelector;
+    private readonly ITextMeasuresInternal _textMeasures;
     private readonly ITokens _tokens;
     private readonly IHistoryInternal _history;
     private IViewportInternal _viewport;
@@ -37,13 +38,15 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public CursorPosition CursorPosition => _textCursor.Position;
 
-    public Point AbsoluteCursorPosition => _textCursor.GetAbsolutePosition(TextMeasures);
+    public Point AbsoluteCursorPosition => _textCursor.GetAbsolutePosition(_textMeasures);
 
     public ITextSelection TextSelection { get; }
 
-    public ITextMeasures TextMeasures { get; }
+    public ITextMeasures TextMeasures => _textMeasures;
 
     public ITextEvents TextEvents { get; }
+
+    public ITextMeasuresEvents TextMeasuresEvents { get; }
 
     public ITokenCollection Tokens => _tokens;
 
@@ -65,8 +68,9 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITextCursor textCursor,
         ITextSelectionInternal textSelection,
         ITextSelector textSelector,
-        ITextMeasures textMeasures,
+        ITextMeasuresInternal textMeasures,
         ITextEvents textEvents,
+        ITextMeasuresEvents textMeasuresEvents,
         ITokens tokens,
         ITokensColors tokensColors,
         IHistoryInternal history,
@@ -82,6 +86,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _text = text;
         _textCursor = textCursor;
         _textSelector = textSelector;
+        _textMeasures = textMeasures;
         _tokens = tokens;
         _history = history;
         _viewport = viewport;
@@ -89,8 +94,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _inputActionsFactory = inputActionsFactory;
         _historyActionsFactory = historyActionsFactory;
         TextSelection = textSelection;
-        TextMeasures = textMeasures;
         TextEvents = textEvents;
+        TextMeasuresEvents = textMeasuresEvents;
         TokensColors = tokensColors;
         LinesDecoration = linesDecoration;
         BracketsHighlighter = bracketsHighlighter;
@@ -114,7 +119,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        _viewport = new Viewport(_text, codeTextBox, _textCursor, TextMeasures);
+        _codeTextBox.FontSettingsChanged += (s, e) => { _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth); };
+        _viewport = new Viewport(_text, codeTextBox, _textCursor, _textMeasures);
         _inputActionContext.CodeTextBox = _codeTextBox;
         _inputActionContext.Viewport = _viewport;
     }

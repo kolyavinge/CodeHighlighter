@@ -15,6 +15,7 @@ internal class BaseCodeTextBoxModelIntegration
         var textSelector = new TextSelector(text, textCursor, textSelection);
         var textMeasures = new TextMeasures();
         var textEvents = new TextEvents(text);
+        var textMeasuresEvents = new TextMeasuresEvents(textMeasures);
         var tokens = new Tokens();
         var tokensColors = new TokensColors();
         var history = new History();
@@ -43,6 +44,7 @@ internal class BaseCodeTextBoxModelIntegration
             textSelector,
             textMeasures,
             textEvents,
+            textMeasuresEvents,
             tokens,
             tokensColors,
             history,
