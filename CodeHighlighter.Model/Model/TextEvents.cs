@@ -9,7 +9,7 @@ public interface ITextEvents
     void RaiseTextChanged();
 }
 
-public class TextEvents : ITextEvents
+internal class TextEvents : ITextEvents
 {
     private readonly IText _text;
     private int _linesCount;

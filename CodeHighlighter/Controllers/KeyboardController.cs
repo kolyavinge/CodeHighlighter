@@ -7,7 +7,7 @@ namespace CodeHighlighter.Controllers;
 
 internal class KeyboardController
 {
-    public bool OnKeyDown(CodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed)
+    public bool OnKeyDown(ICodeTextBoxModel model, Key key, bool controlPressed, bool altPressed, bool shiftPressed)
     {
         var isHandled = true;
         // with control pressed
@@ -129,14 +129,14 @@ internal class KeyboardController
         return isHandled;
     }
 
-    public void OnTextInput(CodeTextBoxModel codeTextBoxModel, string inputText)
+    public void OnTextInput(ICodeTextBoxModel codeTextBoxModel, string inputText)
     {
-        var inputTextList = inputText.Where(ch => !Text.NotAllowedSymbols.Contains(ch)).ToList();
+        var inputTextList = inputText.Where(ch => !NotAllowedSymbols.Value.Contains(ch)).ToList();
         if (!inputTextList.Any()) return;
         foreach (var ch in inputText) codeTextBoxModel.AppendChar(ch);
     }
 
-    private void ActivateOrCompleteSelection(CodeTextBoxModel codeTextBoxModel, bool shiftPressed)
+    private void ActivateOrCompleteSelection(ICodeTextBoxModel codeTextBoxModel, bool shiftPressed)
     {
         if (shiftPressed) codeTextBoxModel.ActivateSelection();
         else codeTextBoxModel.CompleteSelection();

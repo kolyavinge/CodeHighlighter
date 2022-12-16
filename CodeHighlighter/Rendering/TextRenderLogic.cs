@@ -7,12 +7,12 @@ namespace CodeHighlighter.Rendering;
 
 internal class TextRenderLogic
 {
-    public void DrawText(CodeTextBoxModel model, FontSettings fontSettings, DrawingContext context, Brush defaultForeground)
+    public void DrawText(ICodeTextBoxModel model, FontSettings fontSettings, DrawingContext context, Brush defaultForeground)
     {
         var textMeasures = model.TextMeasures;
         var viewport = model.Viewport;
         var typeface = new Typeface(fontSettings.FontFamily, fontSettings.FontStyle, fontSettings.FontWeight, fontSettings.FontStretch);
-        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
+        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.TextLinesCount))
         {
             var lineTokens = model.Tokens.GetTokens(line.Index);
             foreach (var token in lineTokens)

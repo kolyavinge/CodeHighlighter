@@ -4,13 +4,17 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-public interface ITokensColors
+public interface ITokensColorCollection
 {
     Color? GetColor(byte tokenKind);
+}
+
+public interface ITokensColors : ITokensColorCollection
+{
     void SetColors(IEnumerable<TokenColor> tokenColors);
 }
 
-public class TokensColors : ITokensColors
+internal class TokensColors : ITokensColors
 {
     private readonly Dictionary<byte, Color> _colors = new();
 

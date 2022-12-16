@@ -19,16 +19,20 @@ public readonly struct TextSelectionLine
 public interface ITextSelection
 {
     bool IsExist { get; }
-    bool InProgress { get; set; }
     CursorPosition StartPosition { get; set; }
     CursorPosition EndPosition { get; set; }
     IEnumerable<TextSelectionLine> GetSelectedLines();
-    (CursorPosition, CursorPosition) GetSortedPositions();
-    void Reset();
-    ITextSelection Set(CursorPosition selectionStart, CursorPosition selectionEnd);
 }
 
-public class TextSelection : ITextSelection
+internal interface ITextSelectionInternal : ITextSelection
+{
+    bool InProgress { get; set; }
+    (CursorPosition, CursorPosition) GetSortedPositions();
+    void Reset();
+    ITextSelectionInternal Set(CursorPosition selectionStart, CursorPosition selectionEnd);
+}
+
+internal class TextSelection : ITextSelectionInternal
 {
     private readonly IText _text;
 
@@ -42,7 +46,7 @@ public class TextSelection : ITextSelection
         _text = text;
     }
 
-    public ITextSelection Set(CursorPosition selectionStart, CursorPosition selectionEnd)
+    public ITextSelectionInternal Set(CursorPosition selectionStart, CursorPosition selectionEnd)
     {
         InProgress = false;
         StartPosition = selectionStart;

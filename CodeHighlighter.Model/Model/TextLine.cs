@@ -5,7 +5,7 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-public class TextLine : IEnumerable<char>
+internal class TextLine : IEnumerable<char>
 {
     private readonly List<char> _symbs;
 
@@ -18,27 +18,27 @@ public class TextLine : IEnumerable<char>
         _symbs = str.ToCharArray().ToList();
     }
 
-    internal string GetSubstring(int startIndex, int length)
+    public string GetSubstring(int startIndex, int length)
     {
         return new(_symbs.Skip(startIndex).Take(length).ToArray());
     }
 
-    internal int FindIndex(int startIndex, int count, Predicate<char> match)
+    public int FindIndex(int startIndex, int count, Predicate<char> match)
     {
         return _symbs.FindIndex(startIndex, count, match);
     }
 
-    internal void AppendChar(int columnIndex, char ch)
+    public void AppendChar(int columnIndex, char ch)
     {
         _symbs.Insert(columnIndex, ch);
     }
 
-    internal void AppendLine(TextLine line)
+    public void AppendLine(TextLine line)
     {
         _symbs.AddRange(line._symbs);
     }
 
-    internal void AppendLine(TextLine appendedLine, int appendedLineColumnIndex, int appendedLineCount)
+    public void AppendLine(TextLine appendedLine, int appendedLineColumnIndex, int appendedLineCount)
     {
         var endColumnIndex = appendedLineColumnIndex + appendedLineCount - 1;
         for (int i = appendedLineColumnIndex; i <= endColumnIndex; i++)
@@ -47,7 +47,7 @@ public class TextLine : IEnumerable<char>
         }
     }
 
-    internal void InsertLine(int columnIndex, TextLine appendedLine)
+    public void InsertLine(int columnIndex, TextLine appendedLine)
     {
         for (int i = 0; i < appendedLine.Length; i++)
         {
@@ -55,22 +55,22 @@ public class TextLine : IEnumerable<char>
         }
     }
 
-    internal void RemoveAt(int columnIndex)
+    public void RemoveAt(int columnIndex)
     {
         _symbs.RemoveAt(columnIndex);
     }
 
-    internal void RemoveRange(int columnIndex, int count)
+    public void RemoveRange(int columnIndex, int count)
     {
         _symbs.RemoveRange(columnIndex, count);
     }
 
-    internal void Clear()
+    public void Clear()
     {
         _symbs.Clear();
     }
 
-    internal void SetCase(int startColumnIndex, int length, TextCase textCase)
+    public void SetCase(int startColumnIndex, int length, TextCase textCase)
     {
         if (textCase == TextCase.Upper)
         {

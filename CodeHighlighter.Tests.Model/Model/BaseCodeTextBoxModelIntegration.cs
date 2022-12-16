@@ -8,19 +8,19 @@ internal class BaseCodeTextBoxModelIntegration
 {
     protected CodeTextBoxModel MakeModel()
     {
+        var codeProvider = new SqlCodeProvider();
         var text = new Text();
         var textCursor = new TextCursor(text);
-        var tokens = new Tokens();
-        var tokensColors = new TokensColors();
-        var textMeasures = new TextMeasures();
-        var history = new History();
-        var linesDecoration = new LinesDecorationCollection();
         var textSelection = new TextSelection(text);
         var textSelector = new TextSelector(text, textCursor, textSelection);
+        var textMeasures = new TextMeasures();
+        var textEvents = new TextEvents(text);
+        var tokens = new Tokens();
+        var tokensColors = new TokensColors();
+        var history = new History();
+        var linesDecoration = new LinesDecorationCollection();
         var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
-        var textEvents = new TextEvents(text);
-        var codeProvider = new SqlCodeProvider();
         var inputActionsFactory = new TestInputActionsFactory();
         var inputActionContext = new InputActionContext(
             codeProvider,
@@ -36,22 +36,22 @@ internal class BaseCodeTextBoxModelIntegration
         var historyActionsFactory = new TestHistoryActionsFactory(inputActionsFactory, inputActionContext);
 
         return new CodeTextBoxModel(
+            codeProvider,
             text,
             textCursor,
-            tokens,
-            tokensColors,
-            textMeasures,
-            history,
-            linesDecoration,
             textSelection,
             textSelector,
+            textMeasures,
+            textEvents,
+            tokens,
+            tokensColors,
+            history,
+            linesDecoration,
             viewport,
             bracketsHighlighter,
-            textEvents,
-            codeProvider,
+            inputActionContext,
             inputActionsFactory,
             historyActionsFactory,
-            inputActionContext,
-            new CodeTextBoxModelAdditionalParams());
+            new());
     }
 }

@@ -10,7 +10,7 @@ namespace CodeHighlighter.Tests.Controllers;
 internal class MouseControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
-    private CodeTextBoxModel _model;
+    private ICodeTextBoxModel _model;
     private MouseController _controller;
 
     [SetUp]
@@ -30,7 +30,7 @@ internal class MouseControllerIntegration
          * qwert
          * asdfg
          */
-        _model.SetText("12345\r\nqwert\r\nasdfg");
+        _model.Text = "12345\r\nqwert\r\nasdfg";
 
         _controller.OnMouseDown(_codeTextBox.Object, _model, new(0, 0), true);
         _controller.OnMouseDown(_codeTextBox.Object, _model, new(100, 100), true);
@@ -47,7 +47,7 @@ internal class MouseControllerIntegration
          * qwert
          * asdfg
          */
-        _model.SetText("12345\r\nqwert\r\nasdfg");
+        _model.Text = "12345\r\nqwert\r\nasdfg";
 
         _controller.OnMouseMove(_codeTextBox.Object, _model, new(0, 0), MouseButtonState.Pressed);
         _controller.OnMouseMove(_codeTextBox.Object, _model, new(100, 100), MouseButtonState.Pressed);

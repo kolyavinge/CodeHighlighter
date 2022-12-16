@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using CodeEditor.Mvvm;
+using CodeHighlighter;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 
@@ -9,7 +10,7 @@ namespace CodeEditor.ViewModel;
 
 public class MainViewModel
 {
-    public CodeTextBoxModel CodeTextBoxModel { get; }
+    public ICodeTextBoxModel CodeTextBoxModel { get; }
 
     public ICodeProvider CodeProvider { get; }
 
@@ -39,14 +40,14 @@ public class MainViewModel
             _isAlterLinesColor = value;
             if (value)
             {
-                for (int i = 0; i < CodeTextBoxModel.Text.LinesCount; i += 2)
+                for (int i = 0; i < CodeTextBoxModel.TextLinesCount; i += 2)
                 {
                     CodeTextBoxModel.LinesDecoration[i] = new LineDecoration { Background = new(250, 220, 160) };
                 }
             }
             else
             {
-                for (int i = 0; i < CodeTextBoxModel.Text.LinesCount; i++)
+                for (int i = 0; i < CodeTextBoxModel.TextLinesCount; i++)
                 {
                     CodeTextBoxModel.LinesDecoration[i] = null;
                 }
@@ -58,7 +59,7 @@ public class MainViewModel
     {
         CodeProvider = new SqlCodeProvider();
         CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
-        CodeTextBoxModel.SetText(File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt"));
+        CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 

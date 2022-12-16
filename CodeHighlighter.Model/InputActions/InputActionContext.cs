@@ -3,7 +3,7 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
-public interface IInputActionContext
+internal interface IInputActionContext
 {
     ICodeProvider CodeProvider { get; }
     ICodeTextBox CodeTextBox { get; set; }
@@ -11,7 +11,7 @@ public interface IInputActionContext
     ITextCursor TextCursor { get; }
     ITextEvents TextEvents { get; }
     ITextMeasures TextMeasures { get; }
-    ITextSelection TextSelection { get; }
+    ITextSelectionInternal TextSelection { get; }
     ITextSelector TextSelector { get; }
     ITokensColors TokenColors { get; }
     ITokens Tokens { get; }
@@ -24,7 +24,7 @@ internal class InputActionContext : IInputActionContext
     public IText Text { get; }
     public ITextCursor TextCursor { get; }
     public ITextMeasures TextMeasures { get; }
-    public ITextSelection TextSelection { get; }
+    public ITextSelectionInternal TextSelection { get; }
     public ITextSelector TextSelector { get; }
     public ITokens Tokens { get; }
     public ITokensColors TokenColors { get; }
@@ -37,7 +37,7 @@ internal class InputActionContext : IInputActionContext
         IText text,
         ITextCursor textCursor,
         ITextMeasures textMeasures,
-        ITextSelection textSelection,
+        ITextSelectionInternal textSelection,
         ITextSelector textSelector,
         ITokens tokens,
         ITokensColors tokenColors,

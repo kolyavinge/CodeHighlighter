@@ -12,7 +12,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
     public void Setup()
     {
         _model = MakeModel();
-        _model.SetText("");
+        _model.Text = "";
     }
 
     [Test]
@@ -192,8 +192,8 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
 
         Assert.AreEqual("012210", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
-        Assert.AreEqual(0, _model.TextCursor.LineIndex);
-        Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(0, _model.CursorPosition.LineIndex);
+        Assert.AreEqual(3, _model.CursorPosition.ColumnIndex);
     }
 
     [Test]
@@ -210,8 +210,8 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
 
         Assert.AreEqual("012210", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
-        Assert.AreEqual(0, _model.TextCursor.LineIndex);
-        Assert.AreEqual(3, _model.TextCursor.ColumnIndex);
+        Assert.AreEqual(0, _model.CursorPosition.LineIndex);
+        Assert.AreEqual(3, _model.CursorPosition.ColumnIndex);
     }
 
     [Test]
@@ -280,22 +280,22 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.SelectToken(new(0, 0));
         Assert.AreEqual(new CursorPosition(0, 0), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 6), _model.TextSelection.EndPosition);
-        Assert.AreEqual(new CursorPosition(0, 6), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 6), _model.CursorPosition);
 
         _model.SelectToken(new(0, 8));
         Assert.AreEqual(new CursorPosition(0, 7), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 11), _model.TextSelection.EndPosition);
-        Assert.AreEqual(new CursorPosition(0, 11), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 11), _model.CursorPosition);
 
         _model.SelectToken(new(0, 12));
         Assert.AreEqual(new CursorPosition(0, 12), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 16), _model.TextSelection.EndPosition);
-        Assert.AreEqual(new CursorPosition(0, 16), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 16), _model.CursorPosition);
 
         _model.SelectToken(new(0, 20));
         Assert.AreEqual(new CursorPosition(0, 17), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 22), _model.TextSelection.EndPosition);
-        Assert.AreEqual(new CursorPosition(0, 22), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 22), _model.CursorPosition);
     }
 
     [Test]
@@ -349,17 +349,17 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.MoveCursorTo(new(0, 3));
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.CursorPosition);
 
         _model.MoveCursorTo(new(0, 5));
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.CursorPosition);
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.CursorPosition);
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.CursorPosition);
     }
 
     [Test]
@@ -376,7 +376,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(0, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 0), _model.CursorPosition);
         Assert.AreEqual("789", _model.Text.ToString());
         Assert.AreEqual(1, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -396,7 +396,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(1, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 0), _model.CursorPosition);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -417,7 +417,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
 
         _model.DeleteSelectedLines();
-        Assert.AreEqual(new CursorPosition(1, 0), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 0), _model.CursorPosition);
         Assert.AreEqual("123\r\n", _model.Text.ToString());
         Assert.AreEqual(2, _model.Tokens.LinesCount);
         Assert.AreEqual(1, _model.Tokens.GetTokens(0).Count);
@@ -444,22 +444,22 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
     [Test]
     public void MoveSelectedLinesUp_OneLine()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
         _model.MoveCursorTo(new(1, 2));
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.CursorPosition);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n123\r\n789", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.CursorPosition);
     }
 
     [Test]
     public void MoveSelectedLinesUp_TwoLines_1()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
 
         _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
@@ -467,14 +467,14 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
@@ -483,7 +483,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
     [Test]
     public void MoveSelectedLinesUp_TwoLines_2()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
 
         _model.MoveCursorTo(new(2, 2));
         _model.ActivateSelection();
@@ -491,14 +491,14 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesUp();
         Assert.AreEqual("456\r\n789\r\n123", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(0, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(0, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(0, 2), _model.TextSelection.EndPosition);
@@ -507,22 +507,22 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
     [Test]
     public void MoveSelectedLinesDown_OneLine()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
         _model.MoveCursorTo(new(1, 2));
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.CursorPosition);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("123\r\n789\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.CursorPosition);
     }
 
     [Test]
     public void MoveSelectedLinesDown_TwoLines_1()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
 
         _model.MoveCursorTo(new(0, 2));
         _model.ActivateSelection();
@@ -530,14 +530,14 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(2, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(2, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.EndPosition);
@@ -546,7 +546,7 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
     [Test]
     public void MoveSelectedLinesDown_TwoLines_2()
     {
-        _model.SetText("123\n456\n789");
+        _model.Text = "123\n456\n789";
 
         _model.MoveCursorTo(new(1, 2));
         _model.ActivateSelection();
@@ -554,14 +554,14 @@ internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegr
         _model.CompleteSelection();
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);
 
         _model.MoveSelectedLinesDown();
         Assert.AreEqual("789\r\n123\r\n456", _model.Text.ToString());
-        Assert.AreEqual(new CursorPosition(1, 2), _model.TextCursor.Position);
+        Assert.AreEqual(new CursorPosition(1, 2), _model.CursorPosition);
         Assert.AreEqual(true, _model.TextSelection.IsExist);
         Assert.AreEqual(new CursorPosition(2, 2), _model.TextSelection.StartPosition);
         Assert.AreEqual(new CursorPosition(1, 2), _model.TextSelection.EndPosition);

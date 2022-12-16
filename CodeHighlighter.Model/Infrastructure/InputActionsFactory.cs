@@ -1,5 +1,4 @@
-﻿using CodeHighlighter.InputActions;
-using DependencyInjection;
+﻿using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
 

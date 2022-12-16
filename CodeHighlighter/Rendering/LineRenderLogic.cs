@@ -5,7 +5,7 @@ namespace CodeHighlighter.Rendering;
 
 internal class LineRenderLogic
 {
-    public void DrawLines(CodeTextBoxModel model, DrawingContext context, double actualWidth)
+    public void DrawLines(ICodeTextBoxModel model, DrawingContext context, double actualWidth)
     {
         var linesDecorationCollection = model.LinesDecoration;
         if (!linesDecorationCollection.AnyItems) return;
@@ -13,7 +13,7 @@ internal class LineRenderLogic
         var textMeasures = model.TextMeasures;
         var viewport = model.Viewport;
 
-        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.Text.LinesCount))
+        foreach (var line in LineNumber.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, model.TextLinesCount))
         {
             var lineDecoration = linesDecorationCollection[line.Index];
             if (lineDecoration != null)

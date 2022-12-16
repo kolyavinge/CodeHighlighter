@@ -8,7 +8,7 @@ public interface ITextMeasures
     void UpdateMeasures(double lineHeight, double letterWidth);
 }
 
-public class TextMeasures : ITextMeasures
+internal class TextMeasures : ITextMeasures
 {
     public event EventHandler? MeasuresUpdated;
 

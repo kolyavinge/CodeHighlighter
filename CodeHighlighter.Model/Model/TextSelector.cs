@@ -13,9 +13,9 @@ internal class TextSelector : ITextSelector
 {
     private readonly IText _text;
     private readonly ITextCursor _textCursor;
-    private readonly ITextSelection _textSelection;
+    private readonly ITextSelectionInternal _textSelection;
 
-    public TextSelector(IText text, ITextCursor textCursor, ITextSelection textSelection)
+    public TextSelector(IText text, ITextCursor textCursor, ITextSelectionInternal textSelection)
     {
         _text = text;
         _textCursor = textCursor;

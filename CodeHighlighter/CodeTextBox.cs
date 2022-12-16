@@ -25,17 +25,17 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #region Model
-    public CodeTextBoxModel? Model
+    public ICodeTextBoxModel? Model
     {
-        get => (CodeTextBoxModel?)GetValue(ModelProperty);
+        get => (ICodeTextBoxModel?)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
-    public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(CodeTextBoxModel), typeof(CodeTextBox), new PropertyMetadata(ModelPropertyChangedCallback));
+    public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(ICodeTextBoxModel), typeof(CodeTextBox), new PropertyMetadata(ModelPropertyChangedCallback));
 
     private static void ModelPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var model = (CodeTextBoxModel)e.NewValue ?? throw new ArgumentNullException(nameof(Model));
+        var model = (ICodeTextBoxModel)e.NewValue ?? throw new ArgumentNullException(nameof(Model));
         var codeTextBox = (CodeTextBox)d;
         InitModel(codeTextBox, model);
     }
@@ -169,14 +169,14 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         DependencyProperty.Register("ViewportHeight", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-    private static void InitModel(CodeTextBox codeTextBox, CodeTextBoxModel model)
+    private static void InitModel(CodeTextBox codeTextBox, ICodeTextBoxModel model)
     {
         model.AttachCodeTextBox(codeTextBox);
         var textMeasuresEvents = new TextMeasuresEvents(model.TextMeasures);
         textMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
         textMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
         model.TextEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
-        codeTextBox.TextLinesCount = model.Text.LinesCount;
+        codeTextBox.TextLinesCount = model.TextLinesCount;
         UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, model.TextMeasures);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;

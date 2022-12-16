@@ -8,7 +8,7 @@ namespace CodeHighlighter.Tests.Controllers;
 
 internal class KeyboardControllerIntegration
 {
-    private CodeTextBoxModel _model;
+    private ICodeTextBoxModel _model;
     private KeyboardController _controller;
 
     [SetUp]
@@ -26,7 +26,7 @@ internal class KeyboardControllerIntegration
          * qwert
          * asdfg
          */
-        _model.SetText("12345\r\nqwert\r\nasdfg");
+        _model.Text = "12345\r\nqwert\r\nasdfg";
         _model.MoveCursorTo(new(1, 3));
 
         KeyDownWithShift(Key.Left);
@@ -62,7 +62,7 @@ internal class KeyboardControllerIntegration
     [Test]
     public void KeyDownWithoutShift_SelectionReset()
     {
-        _model.SetText("0");
+        _model.Text = "0";
 
         _model.SelectAll();
         KeyDownWithoutShift(Key.Left);

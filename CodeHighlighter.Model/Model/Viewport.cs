@@ -1,5 +1,4 @@
 ﻿using CodeHighlighter.Common;
-using CodeHighlighter.Contracts;
 
 namespace CodeHighlighter.Model;
 
@@ -19,7 +18,7 @@ public interface IViewport
     void UpdateScrollbarsMaximumValues();
 }
 
-public class Viewport : IViewport
+internal class Viewport : IViewport
 {
     private readonly IText _text;
     private readonly IViewportContext _context;

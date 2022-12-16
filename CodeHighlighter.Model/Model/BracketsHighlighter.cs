@@ -1,14 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static CodeHighlighter.Model.IBracketsHighlighter;
 
 namespace CodeHighlighter.Model;
 
 public interface IBracketsHighlighter
 {
-    BracketsHighlighter.HighlightResult GetHighlightedBrackets(CursorPosition position);
+    HighlightResult GetHighlightedBrackets(CursorPosition position);
+
+    internal struct BracketPair
+    {
+        public readonly char Open;
+        public readonly char Close;
+        public BracketPair(char open, char close)
+        {
+            Open = open;
+            Close = close;
+        }
+    }
+
+    public readonly struct BracketPosition
+    {
+        public readonly int LineIndex;
+        public readonly int ColumnIndex;
+        public BracketPosition(int lineIndex, int columnIndex)
+        {
+            LineIndex = lineIndex;
+            ColumnIndex = columnIndex;
+        }
+    }
+
+    public enum HighlightKind
+    {
+        NoHighlight,
+        Highlighted,
+        NoPair
+    }
+
+    public readonly struct HighlightResult
+    {
+        public readonly BracketPosition Open;
+        public readonly BracketPosition Close;
+        public readonly HighlightKind Kind;
+        public HighlightResult(HighlightKind kind, BracketPosition open, BracketPosition close)
+        {
+            Open = open;
+            Close = close;
+            Kind = kind;
+        }
+    }
 }
 
-public class BracketsHighlighter : IBracketsHighlighter
+internal class BracketsHighlighter : IBracketsHighlighter
 {
     private readonly List<BracketPair> _bracketPairs = new();
     private readonly IText _text;
@@ -102,47 +145,5 @@ public class BracketsHighlighter : IBracketsHighlighter
         }
 
         return _lastResult;
-    }
-
-    readonly struct BracketPair
-    {
-        public readonly char Open;
-        public readonly char Close;
-        public BracketPair(char open, char close)
-        {
-            Open = open;
-            Close = close;
-        }
-    }
-
-    public readonly struct BracketPosition
-    {
-        public readonly int LineIndex;
-        public readonly int ColumnIndex;
-        public BracketPosition(int lineIndex, int columnIndex)
-        {
-            LineIndex = lineIndex;
-            ColumnIndex = columnIndex;
-        }
-    }
-
-    public enum HighlightKind
-    {
-        NoHighlight,
-        Highlighted,
-        NoPair
-    }
-
-    public readonly struct HighlightResult
-    {
-        public readonly BracketPosition Open;
-        public readonly BracketPosition Close;
-        public readonly HighlightKind Kind;
-        public HighlightResult(HighlightKind kind, BracketPosition open, BracketPosition close)
-        {
-            Open = open;
-            Close = close;
-            Kind = kind;
-        }
     }
 }

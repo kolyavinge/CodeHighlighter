@@ -1,4 +1,10 @@
-﻿namespace CodeHighlighter.Contracts;
+﻿namespace CodeHighlighter;
+
+public interface ICodeTextBox : IViewportContext
+{
+    bool Focus();
+    void InvalidateVisual();
+}
 
 public interface IViewportContext
 {

@@ -5,7 +5,7 @@ namespace CodeHighlighter.Model;
 
 internal class HistoryActionAttribute : Attribute { }
 
-public interface IHistoryAction
+internal interface IHistoryAction
 {
     bool Do();
     void Undo();
@@ -23,17 +23,21 @@ public interface IHistory
 {
     bool CanRedo { get; }
     bool CanUndo { get; }
-    void AddAndDo(IHistoryAction action);
     void Redo();
     void Undo();
 }
 
-public class History : IHistory
+internal interface IHistoryInternal : IHistory
 {
-    internal const int ActionsLimit = 1000;
+    void AddAndDo(IHistoryAction action);
+}
 
-    internal readonly LimitedCollection<IHistoryAction> _actions = new(ActionsLimit);
-    internal int _activeActionIndex = -1;
+internal class History : IHistoryInternal
+{
+    public const int ActionsLimit = 1000;
+
+    public readonly LimitedCollection<IHistoryAction> _actions = new(ActionsLimit);
+    public int _activeActionIndex = -1;
 
     public bool CanRedo => _actions.Any() && !IsLastActive();
 

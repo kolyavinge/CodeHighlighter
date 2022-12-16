@@ -1,12 +1,4 @@
-﻿using CodeHighlighter.Contracts;
-
-namespace CodeHighlighter.Model;
-
-public interface ICodeTextBox : IViewportContext
-{
-    bool Focus();
-    void InvalidateVisual();
-}
+﻿namespace CodeHighlighter.Model;
 
 internal class DummyCodeTextBox : ICodeTextBox
 {

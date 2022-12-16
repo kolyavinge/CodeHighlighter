@@ -26,9 +26,9 @@ internal class CursorRenderLogic
         _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
     }
 
-    public void DrawCursor(CodeTextBoxModel model)
+    public void DrawCursor(ICodeTextBoxModel model)
     {
-        var cursorAbsolutePoint = model.TextCursor.GetAbsolutePosition(model.TextMeasures);
+        var cursorAbsolutePoint = model.AbsoluteCursorPosition;
         cursorAbsolutePoint.X -= model.Viewport.HorizontalScrollBarValue;
         cursorAbsolutePoint.Y -= model.Viewport.VerticalScrollBarValue;
         _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor is not cropped to the left
@@ -45,10 +45,10 @@ internal class CursorRenderLogic
         _cursorLine.Y2 = 0;
     }
 
-    public void DrawHighlightedCursorLine(CodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
+    public void DrawHighlightedCursorLine(ICodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
     {
         var x = 0.0;
-        var y = model.TextCursor.LineIndex * model.TextMeasures.LineHeight - model.Viewport.VerticalScrollBarValue;
+        var y = model.CursorPosition.LineIndex * model.TextMeasures.LineHeight - model.Viewport.VerticalScrollBarValue;
         var width = actualWidth;
         var height = model.TextMeasures.LineHeight;
         context.DrawRectangle(background, null, new(x, y, width, height));

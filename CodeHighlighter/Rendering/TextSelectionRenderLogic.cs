@@ -9,7 +9,7 @@ internal class TextSelectionRenderLogic
     private readonly TextSelectionRect _textSelectionRect = new();
 
     public void DrawSelectedLines(
-        CodeTextBoxModel model, DrawingContext context, Brush brush)
+        ICodeTextBoxModel model, DrawingContext context, Brush brush)
     {
         var selectedLines = model.TextSelection.GetSelectedLines();
         _textSelectionRect

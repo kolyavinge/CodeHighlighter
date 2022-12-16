@@ -2,7 +2,7 @@
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
-using static CodeHighlighter.Model.BracketsHighlighter;
+using static CodeHighlighter.Model.IBracketsHighlighter;
 
 namespace CodeHighlighter.Tests.Model;
 

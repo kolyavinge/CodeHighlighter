@@ -1,13 +1,12 @@
 ﻿using System.Windows.Input;
 using CodeHighlighter.Common;
-using CodeHighlighter.Contracts;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Controllers;
 
 internal class MouseController
 {
-    public void OnMouseDown(ICodeTextBox codeTextBox, CodeTextBoxModel model, Point positionInControl, bool shiftPressed)
+    public void OnMouseDown(ICodeTextBox codeTextBox, ICodeTextBoxModel model, Point positionInControl, bool shiftPressed)
     {
         codeTextBox.Focus();
         var pos = model.Viewport.GetCursorPosition(positionInControl);
@@ -17,7 +16,7 @@ internal class MouseController
         codeTextBox.InvalidateVisual();
     }
 
-    public void OnMouseMove(ICodeTextBox codeTextBox, CodeTextBoxModel model, Point positionInControl, MouseButtonState leftButton)
+    public void OnMouseMove(ICodeTextBox codeTextBox, ICodeTextBoxModel model, Point positionInControl, MouseButtonState leftButton)
     {
         if (leftButton == MouseButtonState.Pressed)
         {
@@ -34,7 +33,7 @@ internal class MouseController
         codeTextBox.InvalidateVisual();
     }
 
-    public void OnMouseDoubleClick(ICodeTextBox codeTextBox, CodeTextBoxModel model, Point positionInControl)
+    public void OnMouseDoubleClick(ICodeTextBox codeTextBox, ICodeTextBoxModel model, Point positionInControl)
     {
         var pos = model.Viewport.GetCursorPosition(positionInControl);
         model.SelectToken(pos);

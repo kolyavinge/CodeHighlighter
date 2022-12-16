@@ -28,7 +28,7 @@ public readonly struct CursorPosition
     public override string ToString() => Kind == CursorPositionKind.Real ? $"{LineIndex}:{ColumnIndex}" : $"[{LineIndex}:{ColumnIndex}]";
 }
 
-public interface ITextCursor
+internal interface ITextCursor
 {
     int ColumnIndex { get; }
     CursorPositionKind Kind { get; set; }
@@ -47,7 +47,7 @@ public interface ITextCursor
     void MoveUp();
 }
 
-public class TextCursor : ITextCursor
+internal class TextCursor : ITextCursor
 {
     private readonly IText _text;
 
@@ -189,7 +189,7 @@ public class TextCursor : ITextCursor
     }
 }
 
-public static class TextCursorExt
+internal static class TextCursorExt
 {
     public static Point GetAbsolutePosition(this ITextCursor cursor, ITextMeasures measures) =>
         new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);

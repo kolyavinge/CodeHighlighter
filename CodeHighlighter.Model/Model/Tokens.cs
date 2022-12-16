@@ -3,14 +3,18 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-public interface ITokens
+public interface ITokenCollection
+{
+    int LinesCount { get; }
+    TokenList GetTokens(int lineIndex);
+}
+
+public interface ITokens : ITokenCollection
 {
     IEnumerable<Token> AllTokens { get; }
-    int LinesCount { get; }
     void DeleteLine(int lineIndex);
     void DeleteLines(int lineIndex, int count);
     TokenCursorPosition? GetTokenOnPosition(CursorPosition position);
-    TokenList GetTokens(int lineIndex);
     void InsertEmptyLine(int lineIndex);
     void InsertEmptyLines(int lineIndex, int count);
     void ReplaceLines(int sourceLineIndex, int destinationLineIndex);

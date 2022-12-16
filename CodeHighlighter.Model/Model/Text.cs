@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Model;
 
-public interface IText
+internal interface IText
 {
     bool IsEmpty { get; }
     IEnumerable<TextLine> Lines { get; }
@@ -25,7 +25,7 @@ public interface IText
     string ToString();
 }
 
-public class Text : IText
+internal class Text : IText
 {
     private readonly List<TextLine> _lines = new();
 
@@ -72,17 +72,15 @@ public class Text : IText
         }
     }
 
-    public static readonly IReadOnlyCollection<char> NotAllowedSymbols = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
-
     public void AppendChar(CursorPosition position, char ch)
     {
-        if (NotAllowedSymbols.Contains(ch)) throw new ArgumentException(nameof(ch));
+        if (NotAllowedSymbols.Value.Contains(ch)) throw new ArgumentException(nameof(ch));
         _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
     }
 
     public void AppendChar(CursorPosition position, char ch, int count)
     {
-        if (NotAllowedSymbols.Contains(ch)) throw new ArgumentException(nameof(ch));
+        if (NotAllowedSymbols.Value.Contains(ch)) throw new ArgumentException(nameof(ch));
         for (int i = 0; i < count; i++)
         {
             _lines[position.LineIndex].AppendChar(position.ColumnIndex, ch);
@@ -251,4 +249,9 @@ public class Text : IText
 internal static class TextExt
 {
     public static int GetMaxLineWidth(this IText text) => text.Lines.Select(x => x.Length).Max();
+}
+
+public static class NotAllowedSymbols
+{
+    public static readonly IReadOnlyCollection<char> Value = new HashSet<char>(new[] { '\n', '\r', '\b', '\u001B' });
 }
