@@ -16,6 +16,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     private readonly ITextSelector _textSelector;
     private readonly ITokens _tokens;
     private readonly IHistoryInternal _history;
+    private IViewportInternal _viewport;
     private readonly IInputActionContext _inputActionContext;
     private readonly IInputActionsFactory _inputActionsFactory;
     private readonly IHistoryActionsFactory _historyActionsFactory;
@@ -30,7 +31,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         }
     }
 
-    public IEnumerable<string> TextLines => _text.Lines.Select(x => x.ToString()).ToList();
+    public IEnumerable<string> TextLines => _text.Lines.Select(x => x.ToString());
 
     public int TextLinesCount => _text.LinesCount;
 
@@ -52,7 +53,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public ILinesDecorationCollection LinesDecoration { get; }
 
-    public IViewport Viewport { get; private set; }
+    public IViewport Viewport => _viewport;
 
     public IBracketsHighlighter BracketsHighlighter { get; }
 
@@ -70,7 +71,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITokensColors tokensColors,
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,
-        IViewport viewport,
+        IViewportInternal viewport,
         IBracketsHighlighter bracketsHighlighter,
         IInputActionContext inputActionContext,
         IInputActionsFactory inputActionsFactory,
@@ -83,6 +84,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _textSelector = textSelector;
         _tokens = tokens;
         _history = history;
+        _viewport = viewport;
         _inputActionContext = inputActionContext;
         _inputActionsFactory = inputActionsFactory;
         _historyActionsFactory = historyActionsFactory;
@@ -91,7 +93,6 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         TextEvents = textEvents;
         TokensColors = tokensColors;
         LinesDecoration = linesDecoration;
-        Viewport = viewport;
         BracketsHighlighter = bracketsHighlighter;
         IsReadOnly = additionalParams.IsReadOnly;
         SetCodeProvider(codeProvider);
@@ -113,9 +114,9 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        Viewport = new Viewport(_text, codeTextBox, _textCursor, TextMeasures);
+        _viewport = new Viewport(_text, codeTextBox, _textCursor, TextMeasures);
         _inputActionContext.CodeTextBox = _codeTextBox;
-        _inputActionContext.Viewport = Viewport;
+        _inputActionContext.Viewport = _viewport;
     }
 
     public string GetSelectedText()

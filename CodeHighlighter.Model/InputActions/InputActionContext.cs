@@ -15,7 +15,7 @@ internal interface IInputActionContext
     ITextSelector TextSelector { get; }
     ITokensColors TokenColors { get; }
     ITokens Tokens { get; }
-    IViewport Viewport { get; set; }
+    IViewportInternal Viewport { get; set; }
 }
 
 internal class InputActionContext : IInputActionContext
@@ -28,7 +28,7 @@ internal class InputActionContext : IInputActionContext
     public ITextSelector TextSelector { get; }
     public ITokens Tokens { get; }
     public ITokensColors TokenColors { get; }
-    public IViewport Viewport { get; set; }
+    public IViewportInternal Viewport { get; set; }
     public ITextEvents TextEvents { get; }
     public ICodeTextBox CodeTextBox { get; set; }
 
@@ -41,7 +41,7 @@ internal class InputActionContext : IInputActionContext
         ITextSelector textSelector,
         ITokens tokens,
         ITokensColors tokenColors,
-        IViewport viewport,
+        IViewportInternal viewport,
         ITextEvents textEvents)
     {
         CodeProvider = codeProvider;

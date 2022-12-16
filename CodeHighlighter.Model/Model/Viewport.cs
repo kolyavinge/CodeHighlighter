@@ -10,15 +10,19 @@ public interface IViewport
     double VerticalScrollBarMaximum { get; set; }
     double HorizontalScrollBarValue { get; set; }
     double HorizontalScrollBarMaximum { get; set; }
-    void CorrectByCursorPosition();
     CursorPosition GetCursorPosition(Point cursorClickPosition);
     int GetLinesCountInViewport();
+}
+
+internal interface IViewportInternal : IViewport
+{
+    void CorrectByCursorPosition();
     void ScrollLineDown();
     void ScrollLineUp();
     void UpdateScrollbarsMaximumValues();
 }
 
-internal class Viewport : IViewport
+internal class Viewport : IViewportInternal
 {
     private readonly IText _text;
     private readonly IViewportContext _context;
@@ -53,13 +57,13 @@ internal class Viewport : IViewport
         set => _context.HorizontalScrollBarMaximum = value;
     }
 
-
     public Viewport(IText text, IViewportContext context, ITextCursor textCursor, ITextMeasures textMeasures)
     {
         _text = text;
         _context = context;
         _textCursor = textCursor;
         _textMeasures = textMeasures;
+        _context.ViewportSizeChanged += (s, e) => UpdateScrollbarsMaximumValues();
     }
 
     public int GetLinesCountInViewport()
@@ -149,6 +153,7 @@ internal class Viewport : IViewport
 
 internal class DummyViewportContext : IViewportContext
 {
+    public event EventHandler? ViewportSizeChanged;
     public double ActualWidth => 0;
     public double ActualHeight => 0;
     public double VerticalScrollBarValue { get; set; }

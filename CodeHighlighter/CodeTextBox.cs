@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,6 +23,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     private readonly MouseSettings _mouseSettings;
     private readonly FontSettings _fontSettings;
 
+    public event EventHandler? ViewportSizeChanged;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #region Model
@@ -180,7 +182,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         UpdateFontSettings(codeTextBox, codeTextBox._fontSettings, model.TextMeasures);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
-        model.Viewport.UpdateScrollbarsMaximumValues();
+        codeTextBox.ViewportSizeChanged?.Invoke(codeTextBox, EventArgs.Empty);
     }
 
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -289,7 +291,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         if (Model == null) return;
         ViewportHeight = sizeInfo.NewSize.Height;
         ViewportWidth = sizeInfo.NewSize.Width;
-        Model.Viewport.UpdateScrollbarsMaximumValues();
+        ViewportSizeChanged?.Invoke(this, EventArgs.Empty);
         InvalidateVisual();
     }
 

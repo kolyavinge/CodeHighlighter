@@ -17,7 +17,7 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<ITextSelectionInternal, TextSelection>().ToSingleton();
         bindingProvider.Bind<ITextSelector, TextSelector>().ToSingleton();
         bindingProvider.Bind<IViewportContext, DummyViewportContext>().ToSingleton();
-        bindingProvider.Bind<IViewport, Viewport>().ToSingleton();
+        bindingProvider.Bind<IViewportInternal, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
         bindingProvider.Bind<ICodeTextBoxModel, CodeTextBoxModel>().ToSingleton();

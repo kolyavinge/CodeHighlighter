@@ -2,7 +2,7 @@
 
 namespace CodeHighlighter.Infrastructure;
 
-public interface IInputActionsFactory
+internal interface IInputActionsFactory
 {
     TInputAction Get<TInputAction>();//where TInputAction : InputAction;
 }

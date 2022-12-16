@@ -8,6 +8,8 @@ public interface ICodeTextBox : IViewportContext
 
 public interface IViewportContext
 {
+    event EventHandler? ViewportSizeChanged;
+
     double ActualWidth { get; }
     double ActualHeight { get; }
     double VerticalScrollBarValue { get; set; }
