@@ -1,4 +1,5 @@
 ﻿using CodeHighlighter.Model;
+using static CodeHighlighter.Model.IText;
 
 namespace CodeHighlighter.InputActions;
 
@@ -22,7 +23,7 @@ internal class LeftDeleteInputAction : InputAction, ILeftDeleteInputAction
 
     private DeleteResult LeftDelete(IInputActionContext context)
     {
-        var charDeleteResult = default(Text.CharDeleteResult);
+        var charDeleteResult = default(CharDeleteResult);
         var oldCursorPosition = context.TextCursor.Position;
         var (selectionStart, selectionEnd) = context.TextSelection.GetSortedPositions();
         var deletedSelectedText = context.TextSelector.GetSelectedText();

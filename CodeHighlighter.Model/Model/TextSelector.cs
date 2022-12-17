@@ -2,7 +2,7 @@
 
 namespace CodeHighlighter.Model;
 
-public interface ITextSelector
+internal interface ITextSelector
 {
     void ActivateSelection();
     void CompleteSelection();

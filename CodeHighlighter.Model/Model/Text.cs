@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using static CodeHighlighter.Model.IText;
 
 namespace CodeHighlighter.Model;
 
@@ -14,15 +15,47 @@ internal interface IText
     void AppendNewLine(CursorPosition position);
     void DeleteLine(int lineIndex);
     void DeleteLines(int lineIndex, int count);
-    Text.DeleteSelectionResult DeleteSelection(IEnumerable<TextSelectionLine> selectedLines);
+    DeleteSelectionResult DeleteSelection(IEnumerable<TextSelectionLine> selectedLines);
     CursorPosition GetCursorPositionAfterLeftDelete(CursorPosition current);
     TextLine GetLine(int lineIndex);
-    Text.InsertResult Insert(CursorPosition position, IText insertedText);
-    Text.CharDeleteResult LeftDelete(CursorPosition position);
+    InsertResult Insert(CursorPosition position, IText insertedText);
+    CharDeleteResult LeftDelete(CursorPosition position);
     void ReplaceLines(int sourceLineIndex, int destinationLineIndex);
-    Text.CharDeleteResult RightDelete(CursorPosition position);
+    CharDeleteResult RightDelete(CursorPosition position);
     void SetSelectedTextCase(IEnumerable<TextSelectionLine> selectedLines, TextCase textCase);
     string ToString();
+
+    public readonly struct InsertResult
+    {
+        public readonly CursorPosition StartPosition;
+        public readonly CursorPosition EndPosition;
+        public bool HasInserted => !StartPosition.Equals(EndPosition);
+
+        public InsertResult(CursorPosition startPosition, CursorPosition endPosition)
+        {
+            StartPosition = startPosition;
+            EndPosition = endPosition;
+        }
+    }
+
+    public struct CharDeleteResult
+    {
+        public char DeletedChar;
+        public bool IsLineDeleted;
+        public bool HasDeleted => DeletedChar != 0 || IsLineDeleted;
+    }
+
+    public readonly struct DeleteSelectionResult
+    {
+        public readonly int FirstDeletedLineIndex;
+        public readonly int DeletedLinesCount;
+
+        public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
+        {
+            FirstDeletedLineIndex = firstDeletedLineIndex;
+            DeletedLinesCount = deletedLinesCount;
+        }
+    }
 }
 
 internal class Text : IText
@@ -212,38 +245,6 @@ internal class Text : IText
     }
 
     public override string ToString() => String.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
-
-    public readonly struct InsertResult
-    {
-        public readonly CursorPosition StartPosition;
-        public readonly CursorPosition EndPosition;
-        public bool HasInserted => !StartPosition.Equals(EndPosition);
-
-        public InsertResult(CursorPosition startPosition, CursorPosition endPosition)
-        {
-            StartPosition = startPosition;
-            EndPosition = endPosition;
-        }
-    }
-
-    public struct CharDeleteResult
-    {
-        public char DeletedChar;
-        public bool IsLineDeleted;
-        public bool HasDeleted => DeletedChar != 0 || IsLineDeleted;
-    }
-
-    public readonly struct DeleteSelectionResult
-    {
-        public readonly int FirstDeletedLineIndex;
-        public readonly int DeletedLinesCount;
-
-        public DeleteSelectionResult(int firstDeletedLineIndex, int deletedLinesCount)
-        {
-            FirstDeletedLineIndex = firstDeletedLineIndex;
-            DeletedLinesCount = deletedLinesCount;
-        }
-    }
 }
 
 internal static class TextExt

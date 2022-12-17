@@ -15,6 +15,12 @@ internal class TokensTest
     }
 
     [Test]
+    public void Constructor()
+    {
+        Assert.AreEqual(1, _tokens.LinesCount);
+    }
+
+    [Test]
     public void SetTokens_Init()
     {
         var tokens = new List<CodeHighlighter.CodeProvidering.Token>

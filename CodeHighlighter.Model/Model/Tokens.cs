@@ -7,29 +7,32 @@ public interface ITokenCollection
 {
     int LinesCount { get; }
     TokenList GetTokens(int lineIndex);
+    TokenCursorPosition? GetTokenOnPosition(CursorPosition position);
 }
 
-public interface ITokens : ITokenCollection
+internal interface ITokens : ITokenCollection
 {
     IEnumerable<Token> AllTokens { get; }
     void DeleteLine(int lineIndex);
     void DeleteLines(int lineIndex, int count);
-    TokenCursorPosition? GetTokenOnPosition(CursorPosition position);
     void InsertEmptyLine(int lineIndex);
     void InsertEmptyLines(int lineIndex, int count);
     void ReplaceLines(int sourceLineIndex, int destinationLineIndex);
     void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount);
 }
 
-public class Tokens : ITokens
+internal class Tokens : ITokens
 {
-    private readonly List<TokenList> _tokens = new();
+    private readonly List<TokenList> _tokens;
 
     public int LinesCount => _tokens.Count;
 
     public IEnumerable<Token> AllTokens => _tokens.SelectMany(x => x);
 
-    public Tokens() { }
+    public Tokens()
+    {
+        _tokens = new() { new() };
+    }
 
     public TokenList GetTokens(int lineIndex)
     {

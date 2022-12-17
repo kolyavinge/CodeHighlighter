@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using static CodeHighlighter.Model.IText;
 
 namespace CodeHighlighter.Model;
 
@@ -74,7 +75,7 @@ internal class InsertTextResult : EditTextResult
 
 internal class DeleteResult : EditTextResult
 {
-    public readonly Text.CharDeleteResult CharCharDeleteResult;
+    public readonly CharDeleteResult CharCharDeleteResult;
     public bool HasDeleted => DeletedSelectedText.Any() || CharCharDeleteResult.HasDeleted;
 
     public DeleteResult(
@@ -83,7 +84,7 @@ internal class DeleteResult : EditTextResult
         CursorPosition selectionStart,
         CursorPosition selectionEnd,
         string deletedSelectedText,
-        Text.CharDeleteResult charCharDeleteResult)
+        CharDeleteResult charCharDeleteResult)
         : base(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText)
     {
         CharCharDeleteResult = charCharDeleteResult;
