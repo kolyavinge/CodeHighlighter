@@ -9,7 +9,6 @@ internal interface IInsertTextHistoryAction : IHistoryAction
     IInsertTextHistoryAction SetParams(string insertedText);
 }
 
-[HistoryAction]
 internal class InsertTextHistoryAction : TextHistoryAction<InsertTextResult>, IInsertTextHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

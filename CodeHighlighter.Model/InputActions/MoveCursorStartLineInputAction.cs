@@ -5,7 +5,6 @@ internal interface IMoveCursorStartLineInputAction
     void Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class MoveCursorStartLineInputAction : InputAction, IMoveCursorStartLineInputAction
 {
     public void Do(IInputActionContext context)

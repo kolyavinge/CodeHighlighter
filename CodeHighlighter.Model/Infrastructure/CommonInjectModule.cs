@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.InputActions;
+using CodeHighlighter.Model;
 using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
@@ -21,6 +22,11 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
+
+        bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();
+        bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();
+        bindingProvider.Bind<IHistoryActionsFactory, HistoryActionsFactory>().ToSingleton();
+
         bindingProvider.Bind<ICodeTextBoxModel, CodeTextBoxModel>().ToSingleton();
     }
 }

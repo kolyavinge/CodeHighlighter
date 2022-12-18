@@ -6,7 +6,6 @@ namespace CodeHighlighter.HistoryActions;
 
 internal interface IDeleteLeftTokenHistoryAction : IHistoryAction { }
 
-[HistoryAction]
 internal class DeleteLeftTokenHistoryAction : TextHistoryAction<DeleteTokenResult>, IDeleteLeftTokenHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

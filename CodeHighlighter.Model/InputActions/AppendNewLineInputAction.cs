@@ -8,7 +8,6 @@ internal interface IAppendNewLineInputAction
     AppendNewLineResult Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
 {
     public AppendNewLineResult Do(IInputActionContext context)

@@ -1,7 +1,7 @@
 ﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
-using CodeHighlighter.Tests.Model;
 using Moq;
 
 namespace CodeHighlighter.Tests.InputActions;
@@ -17,7 +17,7 @@ internal class BaseInputActionIntegration
     protected Viewport _viewport;
     protected Mock<IViewportContext> _viewportContext;
     protected TextEvents _textEvents;
-    protected TestInputActionsFactory _inputActionFactory;
+    protected InputActionsFactory _inputActionFactory;
     protected InputActionContext _context;
 
     protected void Init()

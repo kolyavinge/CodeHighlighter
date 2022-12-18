@@ -7,7 +7,6 @@ internal interface ISetTextCaseInputAction
     CaseResult Do(IInputActionContext context, TextCase textCase);
 }
 
-[InputAction]
 internal class SetTextCaseInputAction : InputAction, ISetTextCaseInputAction
 {
     public CaseResult Do(IInputActionContext context, TextCase textCase)

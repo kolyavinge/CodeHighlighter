@@ -8,7 +8,6 @@ internal interface IRightDeleteInputAction
     DeleteResult Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class RightDeleteInputAction : InputAction, IRightDeleteInputAction
 {
     public DeleteResult Do(IInputActionContext context)

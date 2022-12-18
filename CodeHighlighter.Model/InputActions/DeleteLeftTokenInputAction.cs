@@ -8,7 +8,6 @@ internal interface IDeleteLeftTokenInputAction
     DeleteTokenResult Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

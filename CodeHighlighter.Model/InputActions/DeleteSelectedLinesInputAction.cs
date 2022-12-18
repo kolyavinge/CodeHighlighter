@@ -8,7 +8,6 @@ internal interface IDeleteSelectedLinesInputAction
     DeleteSelectedLinesResult Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLinesInputAction
 {
     public DeleteSelectedLinesResult Do(IInputActionContext context)

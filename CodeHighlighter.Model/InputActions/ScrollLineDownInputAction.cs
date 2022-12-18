@@ -5,7 +5,6 @@ internal interface IScrollLineDownInputAction
     void Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class ScrollLineDownInputAction : IScrollLineDownInputAction
 {
     public void Do(IInputActionContext context)

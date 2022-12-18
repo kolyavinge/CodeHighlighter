@@ -6,7 +6,6 @@ namespace CodeHighlighter.HistoryActions;
 
 internal interface IDeleteSelectedLinesHistoryAction : IHistoryAction { }
 
-[HistoryAction]
 internal class DeleteSelectedLinesHistoryAction : TextHistoryAction<DeleteSelectedLinesResult>, IDeleteSelectedLinesHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

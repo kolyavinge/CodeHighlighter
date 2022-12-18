@@ -1,7 +1,7 @@
 ﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
-using CodeHighlighter.Tests.Model;
 using Moq;
 using NUnit.Framework;
 
@@ -19,7 +19,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Mock<IViewportContext> _viewportContext;
     protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
-    protected TestInputActionsFactory _inputActionsFactory;
+    protected InputActionsFactory _inputActionsFactory;
     protected InputActionContext _context;
 
     protected BaseHistoryActionIntegration()

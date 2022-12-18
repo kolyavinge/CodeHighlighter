@@ -6,7 +6,6 @@ namespace CodeHighlighter.HistoryActions;
 
 internal interface IRightDeleteHistoryAction : IHistoryAction { }
 
-[HistoryAction]
 internal class RightDeleteHistoryAction : TextHistoryAction<DeleteResult>, IRightDeleteHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

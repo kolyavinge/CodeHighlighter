@@ -3,8 +3,6 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-internal class HistoryActionAttribute : Attribute { }
-
 internal interface IHistoryAction
 {
     bool Do();

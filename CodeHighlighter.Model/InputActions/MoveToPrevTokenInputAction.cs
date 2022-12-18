@@ -7,7 +7,6 @@ internal interface IMoveToPrevTokenInputAction
     void Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class MoveToPrevTokenInputAction : InputAction, IMoveToPrevTokenInputAction
 {
     public void Do(IInputActionContext context)

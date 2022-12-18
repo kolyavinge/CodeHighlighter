@@ -1,4 +1,5 @@
 ﻿using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
 
@@ -22,7 +23,7 @@ internal class BaseCodeTextBoxModelIntegration
         var linesDecoration = new LinesDecorationCollection();
         var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
-        var inputActionsFactory = new TestInputActionsFactory();
+        var inputActionsFactory = new InputActionsFactory();
         var inputActionContext = new InputActionContext(
             codeProvider,
             text,
@@ -34,7 +35,7 @@ internal class BaseCodeTextBoxModelIntegration
             tokensColors,
             viewport,
             textEvents);
-        var historyActionsFactory = new TestHistoryActionsFactory(inputActionsFactory, inputActionContext);
+        var historyActionsFactory = new HistoryActionsFactory(inputActionsFactory, inputActionContext);
 
         return new CodeTextBoxModel(
             codeProvider,

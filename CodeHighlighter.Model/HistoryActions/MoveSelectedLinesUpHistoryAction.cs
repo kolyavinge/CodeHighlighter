@@ -6,7 +6,6 @@ namespace CodeHighlighter.HistoryActions;
 
 internal interface IMoveSelectedLinesUpHistoryAction : IHistoryAction { }
 
-[HistoryAction]
 internal class MoveSelectedLinesUpHistoryAction : TextHistoryAction<MoveSelectedLinesResult>, IMoveSelectedLinesUpHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

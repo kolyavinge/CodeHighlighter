@@ -90,8 +90,14 @@ internal class Tokens : ITokens
 
     public void DeleteLine(int lineIndex)
     {
-        if (lineIndex == 0 && !_tokens.Any()) return;
-        _tokens.RemoveAt(lineIndex);
+        if (lineIndex == 0 && _tokens.Count == 1)
+        {
+            _tokens.First().Clear();
+        }
+        else
+        {
+            _tokens.RemoveAt(lineIndex);
+        }
     }
 
     public void DeleteLines(int lineIndex, int count)

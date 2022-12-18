@@ -7,7 +7,6 @@ internal interface IInsertTextInputAction
     InsertTextResult Do(IInputActionContext context, string insertedText);
 }
 
-[InputAction]
 internal class InsertTextInputAction : InputAction, IInsertTextInputAction
 {
     public InsertTextResult Do(IInputActionContext context, string insertedText)

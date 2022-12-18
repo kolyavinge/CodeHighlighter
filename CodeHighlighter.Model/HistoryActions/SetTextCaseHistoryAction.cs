@@ -9,7 +9,6 @@ internal interface ISetTextCaseHistoryAction : IHistoryAction
     ISetTextCaseHistoryAction SetParams(TextCase textCase);
 }
 
-[HistoryAction]
 internal class SetTextCaseHistoryAction : TextHistoryAction<CaseResult>, ISetTextCaseHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

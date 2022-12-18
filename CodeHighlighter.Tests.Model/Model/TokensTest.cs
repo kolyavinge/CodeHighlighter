@@ -67,9 +67,9 @@ internal class TokensTest
     [Test]
     public void DeleteLine()
     {
-        Assert.AreEqual(0, _tokens.LinesCount);
+        Assert.AreEqual(1, _tokens.LinesCount);
         _tokens.DeleteLine(0);
-        Assert.AreEqual(0, _tokens.LinesCount);
+        Assert.AreEqual(1, _tokens.LinesCount);
     }
 
     [Test]

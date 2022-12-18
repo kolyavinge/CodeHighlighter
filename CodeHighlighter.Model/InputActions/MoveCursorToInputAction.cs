@@ -7,7 +7,6 @@ internal interface IMoveCursorToInputAction
     void Do(IInputActionContext context, CursorPosition position);
 }
 
-[InputAction]
 internal class MoveCursorToInputAction : InputAction, IMoveCursorToInputAction
 {
     public void Do(IInputActionContext context, CursorPosition position)

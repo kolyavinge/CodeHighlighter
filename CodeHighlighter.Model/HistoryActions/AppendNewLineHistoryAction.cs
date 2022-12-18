@@ -6,7 +6,6 @@ namespace CodeHighlighter.HistoryActions;
 
 internal interface IAppendNewLineHistoryAction : IHistoryAction { }
 
-[HistoryAction]
 internal class AppendNewLineHistoryAction : TextHistoryAction<AppendNewLineResult>, IAppendNewLineHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

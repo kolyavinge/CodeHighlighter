@@ -9,7 +9,6 @@ internal interface IAppendCharHistoryAction : IHistoryAction
     IAppendCharHistoryAction SetParams(char appendedChar);
 }
 
-[HistoryAction]
 internal class AppendCharHistoryAction : TextHistoryAction<AppendCharResult>, IAppendCharHistoryAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;

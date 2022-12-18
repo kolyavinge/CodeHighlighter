@@ -7,7 +7,6 @@ internal interface IMoveToNextTokenInputAction
     void Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class MoveToNextTokenInputAction : InputAction, IMoveToNextTokenInputAction
 {
     public void Do(IInputActionContext context)

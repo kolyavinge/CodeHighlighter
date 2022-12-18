@@ -9,7 +9,7 @@ internal class DependencyContainer
     public DependencyContainer()
     {
         _container = DependencyContainerFactory.MakeLiteContainer();
-        _container.InitFromModules(new CommonInjectModule(), new InputActionsInjectModule(), new HistoryActionsInjectModule());
+        _container.InitFromModules(new CommonInjectModule());
     }
 
     public void BindSingleton<TDependency>(object obj)

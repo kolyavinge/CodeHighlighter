@@ -7,7 +7,6 @@ internal interface IAppendCharInputAction
     AppendCharResult Do(IInputActionContext context, char ch);
 }
 
-[InputAction]
 internal class AppendCharInputAction : InputAction, IAppendCharInputAction
 {
     public AppendCharResult Do(IInputActionContext context, char ch)

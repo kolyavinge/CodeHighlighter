@@ -7,7 +7,6 @@ internal interface ISelectTokenInputAction
     void Do(IInputActionContext context, CursorPosition position);
 }
 
-[InputAction]
 internal class SelectTokenInputAction : InputAction, ISelectTokenInputAction
 {
     public void Do(IInputActionContext context, CursorPosition position)

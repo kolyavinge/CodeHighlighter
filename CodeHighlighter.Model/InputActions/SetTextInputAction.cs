@@ -7,7 +7,6 @@ internal interface ISetTextInputAction
     SetTextResult Do(IInputActionContext context, string text);
 }
 
-[InputAction]
 internal class SetTextInputAction : InputAction, ISetTextInputAction
 {
     public SetTextResult Do(IInputActionContext context, string text)

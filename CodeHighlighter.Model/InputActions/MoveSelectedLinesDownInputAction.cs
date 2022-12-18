@@ -7,7 +7,6 @@ internal interface IMoveSelectedLinesDownInputAction
     MoveSelectedLinesResult Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class MoveSelectedLinesDownInputAction : InputAction, IMoveSelectedLinesDownInputAction
 {
     public MoveSelectedLinesResult Do(IInputActionContext context)

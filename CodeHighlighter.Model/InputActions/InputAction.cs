@@ -3,8 +3,6 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;
 
-internal class InputActionAttribute : Attribute { }
-
 internal class InputAction
 {
     protected void SetSelection(IInputActionContext context)

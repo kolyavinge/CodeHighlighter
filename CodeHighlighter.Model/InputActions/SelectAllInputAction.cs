@@ -5,7 +5,6 @@ internal interface ISelectAllInputAction
     void Do(IInputActionContext context);
 }
 
-[InputAction]
 internal class SelectAllInputAction : InputAction, ISelectAllInputAction
 {
     public void Do(IInputActionContext context)

@@ -7,7 +7,6 @@ internal interface IGotoLineInputAction
     void Do(IInputActionContext context, int lineIndex);
 }
 
-[InputAction]
 internal class GotoLineInputAction : InputAction, IGotoLineInputAction
 {
     private readonly IInputActionsFactory _inputActionsFactory;
