@@ -21,17 +21,22 @@ internal class TextEvents : ITextEvents
     public TextEvents(IText text)
     {
         _text = text;
-        _linesCount = _text.LinesCount;
     }
 
     public void RaiseTextSet()
     {
         TextSet?.Invoke(this, EventArgs.Empty);
+        RaiseLinesCountChangedIfNeeded();
     }
 
     public void RaiseTextChanged()
     {
         TextChanged?.Invoke(this, EventArgs.Empty);
+        RaiseLinesCountChangedIfNeeded();
+    }
+
+    private void RaiseLinesCountChangedIfNeeded()
+    {
         if (_text.LinesCount != _linesCount)
         {
             _linesCount = _text.LinesCount;

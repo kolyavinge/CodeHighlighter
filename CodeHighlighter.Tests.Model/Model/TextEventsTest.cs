@@ -19,6 +19,21 @@ internal class TextEventsTest
     }
 
     [Test]
+    public void SetText()
+    {
+        _text = new Text();
+        _text.TextContent = "123\n123";
+        _events = new TextEvents(_text);
+        _events.LinesCountChanged += (s, e) => _linesCount = e.LinesCount;
+        _events.RaiseTextSet();
+        Assert.AreEqual(2, _linesCount);
+
+        _text.TextContent = "";
+        _events.RaiseTextChanged();
+        Assert.AreEqual(1, _linesCount);
+    }
+
+    [Test]
     public void SetText_RaiseTextChanged()
     {
         _text.TextContent = "123\n123";
