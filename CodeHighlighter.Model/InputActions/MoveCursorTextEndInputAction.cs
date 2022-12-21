@@ -10,7 +10,7 @@ internal class MoveCursorTextEndInputAction : InputAction, IMoveCursorTextEndInp
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveTextEnd();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

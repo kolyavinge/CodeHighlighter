@@ -11,7 +11,7 @@ internal class MoveCursorPageDownInputAction : InputAction, IMoveCursorPageDownI
     {
         var pageSize = context.Viewport.GetLinesCountInViewport();
         context.TextCursor.MovePageDown(pageSize);
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

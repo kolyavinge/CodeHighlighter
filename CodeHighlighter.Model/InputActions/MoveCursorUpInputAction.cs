@@ -10,7 +10,7 @@ internal class MoveCursorUpInputAction : InputAction, IMoveCursorUpInputAction
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveUp();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

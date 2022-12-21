@@ -10,7 +10,7 @@ internal class MoveCursorTextBeginInputAction : InputAction, IMoveCursorTextBegi
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveTextBegin();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

@@ -6,6 +6,7 @@ internal interface ITextSelector
 {
     void ActivateSelection();
     void CompleteSelection();
+    void SetSelection();
     string GetSelectedText();
 }
 
@@ -35,6 +36,19 @@ internal class TextSelector : ITextSelector
     public void CompleteSelection()
     {
         _textSelection.InProgress = false;
+    }
+
+    public void SetSelection()
+    {
+        if (_textSelection.InProgress)
+        {
+            _textSelection.EndPosition = _textCursor.Position;
+        }
+        else
+        {
+            _textSelection.StartPosition = _textCursor.Position;
+            _textSelection.EndPosition = _textCursor.Position;
+        }
     }
 
     public string GetSelectedText()

@@ -10,7 +10,7 @@ internal class MoveCursorLeftInputAction : InputAction, IMoveCursorLeftInputActi
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveLeft();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

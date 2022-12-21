@@ -10,7 +10,7 @@ internal class MoveCursorDownInputAction : InputAction, IMoveCursorDownInputActi
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveDown();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

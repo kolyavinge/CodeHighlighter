@@ -10,7 +10,7 @@ internal class MoveCursorStartLineInputAction : InputAction, IMoveCursorStartLin
     public void Do(IInputActionContext context)
     {
         context.TextCursor.MoveStartLine();
-        SetSelection(context);
+        context.TextSelector.SetSelection();
         context.Viewport.CorrectByCursorPosition();
     }
 }

@@ -5,19 +5,6 @@ namespace CodeHighlighter.InputActions;
 
 internal class InputAction
 {
-    protected void SetSelection(IInputActionContext context)
-    {
-        if (context.TextSelection.InProgress)
-        {
-            context.TextSelection.EndPosition = context.TextCursor.Position;
-        }
-        else
-        {
-            context.TextSelection.StartPosition = context.TextCursor.Position;
-            context.TextSelection.EndPosition = context.TextCursor.Position;
-        }
-    }
-
     protected void DeleteSelection(IInputActionContext context)
     {
         var deleteResult = context.Text.DeleteSelection(context.TextSelection.GetSelectedLines());
