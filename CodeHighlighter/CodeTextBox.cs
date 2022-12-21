@@ -299,8 +299,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (Model == null) return;
         var positionInControl = e.GetPosition(this);
-        var shiftPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
-        _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y), shiftPressed);
+        _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y));
         Mouse.Capture(this);
     }
 
@@ -315,6 +314,8 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         base.OnMouseUp(e);
         Mouse.Capture(null);
+        if (Model == null) return;
+        _mouseController.OnMouseUp(Model);
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
@@ -333,10 +334,17 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (Model == null) return;
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
-        var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+        //var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, altPressed, shiftPressed);
+        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, shiftPressed);
+    }
+
+    protected override void OnKeyUp(KeyEventArgs e)
+    {
+        if (Model == null) return;
+        var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+        e.Handled = _keyboardController.OnKeyUp(Model, shiftPressed);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)

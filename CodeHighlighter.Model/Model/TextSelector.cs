@@ -24,12 +24,12 @@ internal class TextSelector : ITextSelector
 
     public void ActivateSelection()
     {
-        if (!_textSelection.InProgress)
+        if (!_textSelection.IsExist)
         {
-            _textSelection.InProgress = true;
             _textSelection.StartPosition = _textCursor.Position;
             _textSelection.EndPosition = _textCursor.Position;
         }
+        _textSelection.InProgress = true;
     }
 
     public void CompleteSelection()

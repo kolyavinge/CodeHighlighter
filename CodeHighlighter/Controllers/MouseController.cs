@@ -6,12 +6,10 @@ namespace CodeHighlighter.Controllers;
 
 internal class MouseController
 {
-    public void OnMouseDown(ICodeTextBox codeTextBox, ICodeTextBoxModel model, Point positionInControl, bool shiftPressed)
+    public void OnMouseDown(ICodeTextBox codeTextBox, ICodeTextBoxModel model, Point positionInControl)
     {
         codeTextBox.Focus();
         var pos = model.Viewport.GetCursorPosition(positionInControl);
-        if (shiftPressed) model.ActivateSelection();
-        else model.CompleteSelection();
         model.MoveCursorTo(pos);
         codeTextBox.InvalidateVisual();
     }
@@ -25,6 +23,11 @@ internal class MouseController
             model.MoveCursorTo(pos);
             codeTextBox.InvalidateVisual();
         }
+    }
+
+    public void OnMouseUp(ICodeTextBoxModel model)
+    {
+        model.CompleteSelection();
     }
 
     public void OnMouseWheel(ICodeTextBox codeTextBox, IViewportContext viewportContext, ITextMeasures textMeasures, int pages, bool up)
