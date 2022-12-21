@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
         <LangVersion>preview</LangVersion>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFramework>net7.0</TargetFramework>
 		<RootNamespace>CodeHighlighter.Tests</RootNamespace>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
