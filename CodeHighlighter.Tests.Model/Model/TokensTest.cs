@@ -25,10 +25,10 @@ internal class TokensTest
     {
         var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
-            new("", 0, 0, 2, 0),
-            new("", 0, 2, 1, 1),
-            new("", 2, 0, 1, 0),
-            new("", 2, 1, 2, 1),
+            new("xx", 0, 0, 0),
+            new("x", 0, 2, 1),
+            new("x", 2, 0, 0),
+            new("xx", 2, 1, 1),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
@@ -43,18 +43,18 @@ internal class TokensTest
     {
         var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
-            new("", 0, 0, 2, 0),
-            new("", 0, 2, 1, 1),
-            new("", 2, 0, 1, 0),
-            new("", 2, 1, 2, 1),
+            new("xx", 0, 0, 0),
+            new("x", 0, 2, 1),
+            new("x", 2, 0, 0),
+            new("xx", 2, 1, 1),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
         tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
-            new("", 0, 0, 3, 0),
-            new("", 1, 0, 1, 0),
-            new("", 1, 1, 2, 1),
+            new("xxx", 0, 0, 0),
+            new("x", 1, 0, 0),
+            new("xx", 1, 1, 1),
         };
         _tokens.SetTokens(tokens, 0, 2);
 
@@ -77,17 +77,17 @@ internal class TokensTest
     {
         var tokens = new List<CodeHighlighter.CodeProvidering.Token>
         {
-            new("", 0, 0, 2, 0),
-            new("", 1, 2, 1, 1),
-            new("", 1, 3, 1, 1),
-            new("", 2, 0, 1, 0),
+            new("xx", 0, 0, 0),
+            new("x", 1, 2, 1),
+            new("x", 1, 3, 1),
+            new("x", 2, 0, 0),
         };
         _tokens.SetTokens(tokens, 0, 3);
 
         _tokens.ReplaceLines(0, 2);
 
-        Assert.AreEqual(new[] { new Token("", 2, 1, 1), new Token("", 3, 1, 1) }, _tokens.GetTokens(0));
-        Assert.AreEqual(new[] { new Token("", 0, 1, 0) }, _tokens.GetTokens(1));
-        Assert.AreEqual(new[] { new Token("", 0, 2, 0) }, _tokens.GetTokens(2));
+        Assert.AreEqual(new[] { new Token("x", 2, 1), new Token("x", 3, 1) }, _tokens.GetTokens(0));
+        Assert.AreEqual(new[] { new Token("x", 0, 0) }, _tokens.GetTokens(1));
+        Assert.AreEqual(new[] { new Token("xx", 0, 0) }, _tokens.GetTokens(2));
     }
 }

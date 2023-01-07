@@ -48,9 +48,9 @@ internal class TokenSelectorTest
         // '  xx  yzz'
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0), // x
-            new("y", 6, 1, 1), // y
-            new("zz", 7, 2, 2), // z
+            new("xx", 2, 0), // x
+            new("y", 6, 1), // y
+            new("zz", 7, 2), // z
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);

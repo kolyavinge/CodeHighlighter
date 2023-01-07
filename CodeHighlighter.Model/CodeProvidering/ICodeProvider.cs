@@ -19,12 +19,12 @@ public class Token
     public readonly byte Kind;
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-    public Token(string name, int lineIndex, int startColumnIndex, int length, byte kind)
+    public Token(string name, int lineIndex, int startColumnIndex, byte kind)
     {
         Name = name;
         LineIndex = lineIndex;
         StartColumnIndex = startColumnIndex;
-        Length = length;
+        Length = name.Length;
         Kind = kind;
     }
 
@@ -32,10 +32,9 @@ public class Token
         Name == token.Name &&
         LineIndex == token.LineIndex &&
         StartColumnIndex == token.StartColumnIndex &&
-        Length == token.Length &&
         Kind == token.Kind;
 
-    public override int GetHashCode() => HashCode.Combine(Name, LineIndex, StartColumnIndex, Length, Kind);
+    public override int GetHashCode() => HashCode.Combine(Name, LineIndex, StartColumnIndex, Kind);
 }
 
 public readonly struct TokenColor

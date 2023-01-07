@@ -77,7 +77,7 @@ public class SqlCodeProvider : ICodeProvider
                     tokenLineIndex = textIterator.LineIndex;
                     tokenStartColumn = textIterator.ColumnIndex;
                     tokenKind = TokenKind.Delimiter;
-                    tokens.Add(new(textIterator.Char.ToString(), tokenLineIndex, tokenStartColumn, 1, (byte)tokenKind));
+                    tokens.Add(new(textIterator.Char.ToString(), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     textIterator.MoveNext();
                     goto case State.General;
                 }
@@ -94,7 +94,7 @@ public class SqlCodeProvider : ICodeProvider
                 if (IsSpace(textIterator.Char) || IsReturn(textIterator.Char) || IsDelimiter(textIterator.Char))
                 {
                     tokenKind = GetTokenKind(tokenNameArray, tokenNameArrayIndex);
-                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     tokenNameArrayIndex = 0;
                     goto case State.General;
                 }
@@ -103,7 +103,7 @@ public class SqlCodeProvider : ICodeProvider
                     tokenLineIndex = textIterator.LineIndex;
                     tokenStartColumn = textIterator.ColumnIndex;
                     tokenKind = TokenKind.Other;
-                    tokens.Add(new(new string(tokenNameArray, 0, 1), tokenLineIndex, tokenStartColumn, 1, (byte)tokenKind));
+                    tokens.Add(new(new string(tokenNameArray, 0, 1), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     tokenNameArrayIndex = 0;
                     goto case State.General;
                 }
@@ -117,7 +117,7 @@ public class SqlCodeProvider : ICodeProvider
                 if (textIterator.Eof) goto case State.End;
                 if (IsReturn(textIterator.Char))
                 {
-                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     tokenNameArrayIndex = 0;
                     textIterator.MoveNext();
                     goto case State.General;
@@ -133,7 +133,7 @@ public class SqlCodeProvider : ICodeProvider
                 if (textIterator.Char == '\'')
                 {
                     tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
-                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     tokenNameArrayIndex = 0;
                     textIterator.MoveNext();
                     goto case State.General;
@@ -153,7 +153,7 @@ public class SqlCodeProvider : ICodeProvider
                 else if (textIterator.Char == ']')
                 {
                     tokenNameArray[tokenNameArrayIndex++] = textIterator.Char;
-                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                    tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                     tokenNameArrayIndex = 0;
                     textIterator.MoveNext();
                     goto case State.General;
@@ -166,10 +166,10 @@ public class SqlCodeProvider : ICodeProvider
                 }
             case State.EndUnknownToken:
                 tokenKind = GetTokenKind(tokenNameArray, tokenNameArrayIndex);
-                tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                 break;
             case State.End:
-                tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, tokenNameArrayIndex, (byte)tokenKind));
+                tokens.Add(new(new string(tokenNameArray, 0, tokenNameArrayIndex), tokenLineIndex, tokenStartColumn, (byte)tokenKind));
                 break;
         }
 

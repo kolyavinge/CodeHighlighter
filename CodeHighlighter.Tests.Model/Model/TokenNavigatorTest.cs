@@ -25,9 +25,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -60,9 +60,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -79,9 +79,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -98,9 +98,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -118,15 +118,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         var tokens2 = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);
@@ -144,9 +144,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -179,9 +179,9 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         var tokens = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.SetupGet(x => x.LinesCount).Returns(1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens);
@@ -199,15 +199,15 @@ internal class TokenNavigatorTest
         _text.SetupGet(x => x.LinesCount).Returns(2);
         var tokens1 = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         var tokens2 = new TokenList
         {
-            new("xx", 2, 2, 0),
-            new("y", 6, 1, 1),
-            new("zz", 7, 2, 2)
+            new("xx", 2, 0),
+            new("y", 6, 1),
+            new("zz", 7, 2)
         };
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens1);
         _tokens.Setup(x => x.GetTokens(0)).Returns(tokens2);

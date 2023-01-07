@@ -115,7 +115,7 @@ internal class Tokens : ITokens
 
 public class Token
 {
-    public static readonly Token Default = new("", 0, 0, 0);
+    public static readonly Token Default = new("", 0, 0);
 
     public string Name { get; }
     public int StartColumnIndex { get; }
@@ -123,21 +123,20 @@ public class Token
     public byte Kind { get; set; }
     public int EndColumnIndex => StartColumnIndex + Length - 1;
 
-    public Token(string name, int startColumnIndex, int length, byte kind)
+    public Token(string name, int startColumnIndex, byte kind)
     {
         Name = name;
         StartColumnIndex = startColumnIndex;
-        Length = length;
+        Length = name.Length;
         Kind = kind;
     }
 
-    internal static Token FromCodeProviderToken(CodeProvidering.Token token) => new(token.Name, token.StartColumnIndex, token.Length, token.Kind);
+    internal static Token FromCodeProviderToken(CodeProvidering.Token token) => new(token.Name, token.StartColumnIndex, token.Kind);
 
     public override bool Equals(object? obj) => obj is Token token &&
         Name == token.Name &&
         StartColumnIndex == token.StartColumnIndex &&
-        Length == token.Length &&
         Kind == token.Kind;
 
-    public override int GetHashCode() => HashCode.Combine(Name, StartColumnIndex, Length, Kind);
+    public override int GetHashCode() => HashCode.Combine(Name, StartColumnIndex, Kind);
 }
