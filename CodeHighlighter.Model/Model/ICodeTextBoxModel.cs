@@ -55,4 +55,7 @@ public interface ICodeTextBoxModel
     void LeftDelete();
     void RightDelete();
     void SetTextCase(TextCase textCase);
+    void Copy();
+    void Paste();
+    void Cut();
 }

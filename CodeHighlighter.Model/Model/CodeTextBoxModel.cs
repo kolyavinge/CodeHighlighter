@@ -314,6 +314,22 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         if (IsReadOnly) return;
         _history.AddAndDo(_historyActionsFactory.Make<ISetTextCaseHistoryAction>().SetParams(textCase));
     }
+
+    public void Copy()
+    {
+        _codeTextBox.ClipboardSetText(GetSelectedText());
+    }
+
+    public void Paste()
+    {
+        InsertText(_codeTextBox.ClipboardGetText());
+    }
+
+    public void Cut()
+    {
+        _codeTextBox.ClipboardSetText(GetSelectedText());
+        LeftDelete();
+    }
 }
 
 public class CodeTextBoxModelAdditionalParams

@@ -298,9 +298,12 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
         if (Model == null) return;
-        var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y));
-        Mouse.Capture(this);
+        if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            var positionInControl = e.GetPosition(this);
+            _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y));
+            Mouse.Capture(this);
+        }
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
@@ -358,5 +361,15 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         base.OnLostFocus(e);
         _cursorRenderLogic.HideCursor();
         InvalidateVisual();
+    }
+
+    public void ClipboardSetText(string text)
+    {
+        Clipboard.SetText(text);
+    }
+
+    public string ClipboardGetText()
+    {
+        return Clipboard.GetText();
     }
 }

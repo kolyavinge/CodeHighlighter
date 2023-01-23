@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter;
 
-public interface ICodeTextBox : IViewportContext
+public interface ICodeTextBox : IViewportContext, IClipboard
 {
     event EventHandler<FontSettingsChangedEventArgs> FontSettingsChanged;
 
@@ -18,6 +18,12 @@ public interface IViewportContext
     double VerticalScrollBarMaximum { get; set; }
     double HorizontalScrollBarValue { get; set; }
     double HorizontalScrollBarMaximum { get; set; }
+}
+
+public interface IClipboard
+{
+    void ClipboardSetText(string text);
+    string ClipboardGetText();
 }
 
 public class FontSettingsChangedEventArgs : EventArgs

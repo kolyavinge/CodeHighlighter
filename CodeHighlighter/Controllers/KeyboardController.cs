@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Windows;
 using System.Windows.Input;
 using CodeHighlighter.Model;
 
@@ -53,16 +52,15 @@ internal class KeyboardController
         }
         else if (controlPressed && key == Key.X)
         {
-            Clipboard.SetText(model.GetSelectedText());
-            model.LeftDelete();
+            model.Cut();
         }
         else if (controlPressed && key == Key.C)
         {
-            Clipboard.SetText(model.GetSelectedText());
+            model.Copy();
         }
         else if (controlPressed && key == Key.V)
         {
-            model.InsertText(Clipboard.GetText());
+            model.Paste();
         }
         // without any modifiers
         else if (key == Key.Up)

@@ -13,7 +13,9 @@ internal class DummyCodeTextBox : ICodeTextBox
     public double VerticalScrollBarMaximum { get => 0; set { } }
     public double HorizontalScrollBarValue { get => 0; set { } }
     public double HorizontalScrollBarMaximum { get => 0; set { } }
+    private DummyCodeTextBox() { }
     public bool Focus() => false;
     public void InvalidateVisual() { }
-    private DummyCodeTextBox() { }
+    public void ClipboardSetText(string text) { }
+    public string ClipboardGetText() => "";
 }
