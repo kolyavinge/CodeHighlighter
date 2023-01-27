@@ -1,5 +1,4 @@
 ﻿using CodeHighlighter.CodeProvidering;
-using CodeHighlighter.Controllers;
 using CodeHighlighter.Infrastructure;
 using CodeHighlighter.Model;
 
@@ -16,15 +15,5 @@ public static class CodeTextBoxModelFactory
         var model = container.Resolve<ICodeTextBoxModel>();
 
         return model;
-    }
-
-    public static IKeyboardController MakeKeyboardController(ICodeTextBoxModel model)
-    {
-        return new KeyboardController(model);
-    }
-
-    public static IMouseController MakeMouseController(ICodeTextBox codeTextBox, ICodeTextBoxModel model)
-    {
-        return new MouseController(codeTextBox, model, new PointInTextSelection(model.TextSelection));
     }
 }

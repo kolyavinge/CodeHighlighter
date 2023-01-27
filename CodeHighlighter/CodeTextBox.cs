@@ -18,7 +18,6 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     private RenderingContext? _renderingContext;
     private readonly MouseSettings _mouseSettings;
     private readonly CursorRenderLogic _cursorRenderLogic;
-    private bool _isLeftButtonPressed;
 
     public event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
     public event EventHandler? ViewportSizeChanged;
@@ -181,8 +180,8 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
         codeTextBox.ViewportSizeChanged?.Invoke(codeTextBox, EventArgs.Empty);
-        codeTextBox._keyboardController = CodeTextBoxModelFactory.MakeKeyboardController(model);
-        codeTextBox._mouseController = CodeTextBoxModelFactory.MakeMouseController(codeTextBox, model);
+        codeTextBox._keyboardController = ControllerFactory.MakeKeyboardController(model);
+        codeTextBox._mouseController = ControllerFactory.MakeMouseController(codeTextBox, model);
         codeTextBox._renderingContext = new RenderingContext(codeTextBox);
         codeTextBox._renderingModel = RenderingModelFactory.MakeModel(model, codeTextBox._renderingContext);
     }
@@ -301,7 +300,6 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         var positionInControl = e.GetPosition(this);
         if (e.ChangedButton == MouseButton.Left)
         {
-            _isLeftButtonPressed = true;
             _mouseController.LeftButtonDown(new(positionInControl.X, positionInControl.Y));
             Mouse.Capture(this);
         }
@@ -315,10 +313,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (_mouseController == null) return;
         var positionInControl = e.GetPosition(this);
-        if (_isLeftButtonPressed)
-        {
-            _mouseController.LeftButtonMove(new(positionInControl.X, positionInControl.Y));
-        }
+        _mouseController.Move(new(positionInControl.X, positionInControl.Y));
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -326,7 +321,6 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         if (_mouseController == null) return;
         if (e.ChangedButton == MouseButton.Left)
         {
-            _isLeftButtonPressed = false;
             _mouseController.LeftButtonUp();
             Mouse.Capture(null);
         }
@@ -349,7 +343,6 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         if (_keyboardController == null) return;
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
-        //var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
         e.Handled = _keyboardController.KeyDown((Controllers.Key)key, controlPressed, shiftPressed);

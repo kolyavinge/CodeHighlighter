@@ -19,7 +19,7 @@ internal class KeyboardControllerIntegration
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
-        _controller = CodeTextBoxModelFactory.MakeKeyboardController(_model);
+        _controller = ControllerFactory.MakeKeyboardController(_model);
     }
 
     [Test]

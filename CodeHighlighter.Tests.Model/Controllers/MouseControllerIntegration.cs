@@ -21,8 +21,8 @@ internal class MouseControllerIntegration
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
-        _keybaordController = CodeTextBoxModelFactory.MakeKeyboardController(_model);
-        _mouseController = CodeTextBoxModelFactory.MakeMouseController(_codeTextBox.Object, _model);
+        _keybaordController = ControllerFactory.MakeKeyboardController(_model);
+        _mouseController = ControllerFactory.MakeMouseController(_codeTextBox.Object, _model);
     }
 
     [Test]
@@ -52,9 +52,10 @@ internal class MouseControllerIntegration
          * asdfg
          */
         _model.Text = "12345\r\nqwert\r\nasdfg";
+        _mouseController.LeftButtonDown(new(0, 0));
 
-        _mouseController.LeftButtonMove(new(0, 0));
-        _mouseController.LeftButtonMove(new(100, 100));
+        _mouseController.Move(new(0, 0));
+        _mouseController.Move(new(100, 100));
         Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
     }
 }

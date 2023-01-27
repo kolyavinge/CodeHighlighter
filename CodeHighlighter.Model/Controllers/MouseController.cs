@@ -7,7 +7,7 @@ public interface IMouseController
 {
     void LeftButtonDown(Point positionInControl);
     void RightButtonDown(Point positionInControl);
-    void LeftButtonMove(Point positionInControl);
+    void Move(Point positionInControl);
     void LeftButtonUp();
     void ScrollWheel(int pages, bool up);
     void LeftButtonDoubleClick(Point positionInControl);
@@ -18,6 +18,7 @@ internal class MouseController : IMouseController
     private readonly ICodeTextBox _codeTextBox;
     private readonly ICodeTextBoxModel _model;
     private readonly IPointInTextSelection _pointInTextSelection;
+    private bool _isLeftButtonPressed;
 
     public MouseController(ICodeTextBox codeTextBox, ICodeTextBoxModel model, IPointInTextSelection pointInTextSelection)
     {
@@ -28,6 +29,7 @@ internal class MouseController : IMouseController
 
     public void LeftButtonDown(Point positionInControl)
     {
+        _isLeftButtonPressed = true;
         _codeTextBox.Focus();
         var pos = _model.Viewport.GetCursorPosition(positionInControl);
         _model.MoveCursorTo(pos);
@@ -49,16 +51,20 @@ internal class MouseController : IMouseController
         }
     }
 
-    public void LeftButtonMove(Point positionInControl)
+    public void Move(Point positionInControl)
     {
-        _model.ActivateSelection();
-        var pos = _model.Viewport.GetCursorPosition(positionInControl);
-        _model.MoveCursorTo(pos);
-        _codeTextBox.InvalidateVisual();
+        if (_isLeftButtonPressed)
+        {
+            _model.ActivateSelection();
+            var pos = _model.Viewport.GetCursorPosition(positionInControl);
+            _model.MoveCursorTo(pos);
+            _codeTextBox.InvalidateVisual();
+        }
     }
 
     public void LeftButtonUp()
     {
+        _isLeftButtonPressed = false;
         _model.CompleteSelection();
     }
 
