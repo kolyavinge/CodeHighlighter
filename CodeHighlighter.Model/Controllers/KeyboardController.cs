@@ -1,115 +1,128 @@
 ﻿using System.Linq;
-using System.Windows.Input;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Controllers;
 
-internal class KeyboardController
+public interface IKeyboardController
 {
-    public bool OnKeyDown(ICodeTextBoxModel model, Key key, bool controlPressed, bool shiftPressed)
+    bool KeyDown(Key key, bool controlPressed, bool shiftPressed);
+    bool KeyUp(bool shiftPressed);
+    void TextInput(string inputText);
+}
+
+internal class KeyboardController : IKeyboardController
+{
+    private readonly ICodeTextBoxModel _model;
+
+    public KeyboardController(ICodeTextBoxModel model)
+    {
+        _model = model;
+    }
+
+    public bool KeyDown(Key key, bool controlPressed, bool shiftPressed)
     {
         var isHandled = true;
         if (shiftPressed)
         {
-            model.ActivateSelection();
+            _model.ActivateSelection();
         }
         // with control pressed
         if (controlPressed && key == Key.Up)
         {
-            model.ScrollLineUp();
+            _model.ScrollLineUp();
         }
         else if (controlPressed && key == Key.Down)
         {
-            model.ScrollLineDown();
+            _model.ScrollLineDown();
         }
         else if (controlPressed && key == Key.Left)
         {
-            model.MoveToPrevToken();
+            _model.MoveToPrevToken();
         }
         else if (controlPressed && key == Key.Right)
         {
-            model.MoveToNextToken();
+            _model.MoveToNextToken();
         }
         else if (controlPressed && key == Key.Home)
         {
-            model.MoveCursorTextBegin();
+            _model.MoveCursorTextBegin();
         }
         else if (controlPressed && key == Key.End)
         {
-            model.MoveCursorTextEnd();
+            _model.MoveCursorTextEnd();
         }
         else if (controlPressed && key == Key.Back)
         {
-            model.DeleteLeftToken();
+            _model.DeleteLeftToken();
         }
         else if (controlPressed && key == Key.Delete)
         {
-            model.DeleteRightToken();
+            _model.DeleteRightToken();
         }
         else if (controlPressed && key == Key.A)
         {
-            model.SelectAll();
+            _model.SelectAll();
         }
         else if (controlPressed && key == Key.X)
         {
-            model.Cut();
+            _model.Cut();
         }
         else if (controlPressed && key == Key.C)
         {
-            model.Copy();
+            _model.Copy();
         }
         else if (controlPressed && key == Key.V)
         {
-            model.Paste();
+            _model.Paste();
         }
         // without any modifiers
         else if (key == Key.Up)
         {
-            model.MoveCursorUp();
+            _model.MoveCursorUp();
         }
         else if (key == Key.Down)
         {
-            model.MoveCursorDown();
+            _model.MoveCursorDown();
         }
         else if (key == Key.Left)
         {
-            model.MoveCursorLeft();
+            _model.MoveCursorLeft();
         }
         else if (key == Key.Right)
         {
-            model.MoveCursorRight();
+            _model.MoveCursorRight();
         }
         else if (key == Key.Home)
         {
-            model.MoveCursorStartLine();
+            _model.MoveCursorStartLine();
         }
         else if (key == Key.End)
         {
-            model.MoveCursorEndLine();
+            _model.MoveCursorEndLine();
         }
         else if (key == Key.PageUp)
         {
-            model.MoveCursorPageUp();
+            _model.MoveCursorPageUp();
         }
         else if (key == Key.PageDown)
         {
-            model.MoveCursorPageDown();
+            _model.MoveCursorPageDown();
         }
         else if (key == Key.Return)
         {
-            model.AppendNewLine();
+            _model.AppendNewLine();
         }
         else if (key == Key.Back)
         {
-            model.LeftDelete();
+            _model.LeftDelete();
         }
         else if (key == Key.Delete)
         {
-            model.RightDelete();
+            _model.RightDelete();
         }
         else if (key == Key.Tab)
         {
-            model.InsertText("    ");
+            _model.InsertText("    ");
         }
         else
         {
@@ -119,12 +132,12 @@ internal class KeyboardController
         return isHandled;
     }
 
-    public bool OnKeyUp(ICodeTextBoxModel model, bool shiftPressed)
+    public bool KeyUp(bool shiftPressed)
     {
         var isHandled = true;
         if (!shiftPressed)
         {
-            model.CompleteSelection();
+            _model.CompleteSelection();
         }
         else
         {
@@ -134,10 +147,10 @@ internal class KeyboardController
         return isHandled;
     }
 
-    public void OnTextInput(ICodeTextBoxModel codeTextBoxModel, string inputText)
+    public void TextInput(string inputText)
     {
         var inputTextList = inputText.Where(ch => !NotAllowedSymbols.Value.Contains(ch)).ToList();
         if (!inputTextList.Any()) return;
-        foreach (var ch in inputText) codeTextBoxModel.AppendChar(ch);
+        foreach (var ch in inputText) _model.AppendChar(ch);
     }
 }

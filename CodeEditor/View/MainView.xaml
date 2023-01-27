@@ -63,6 +63,11 @@
                         <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
+                <highlighter:CodeTextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Menu item 1" />
+                    </ContextMenu>
+                </highlighter:CodeTextBox.ContextMenu>
             </highlighter:CodeTextBox>
 
             <ScrollBar

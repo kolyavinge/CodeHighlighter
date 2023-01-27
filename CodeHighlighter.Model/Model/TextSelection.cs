@@ -21,15 +21,15 @@ public interface ITextSelection
     bool IsExist { get; }
     CursorPosition StartPosition { get; set; }
     CursorPosition EndPosition { get; set; }
+    (CursorPosition, CursorPosition) GetSortedPositions();
     IEnumerable<TextSelectionLine> GetSelectedLines();
 }
 
 internal interface ITextSelectionInternal : ITextSelection
 {
     bool InProgress { get; set; }
-    (CursorPosition, CursorPosition) GetSortedPositions();
-    void Reset();
     ITextSelectionInternal Set(CursorPosition selectionStart, CursorPosition selectionEnd);
+    void Reset();
 }
 
 internal class TextSelection : ITextSelectionInternal

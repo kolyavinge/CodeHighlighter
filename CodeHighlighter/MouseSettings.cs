@@ -1,6 +1,6 @@
 ﻿using CodeHighlighter.Utils;
 
-namespace CodeHighlighter.Controllers;
+namespace CodeHighlighter;
 
 internal class MouseSettings
 {

@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
 using Moq;
@@ -11,8 +10,8 @@ internal class MouseControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private ICodeTextBoxModel _model;
-    private KeyboardController _keybaordController;
-    private MouseController _mouseController;
+    private IKeyboardController _keybaordController;
+    private IMouseController _mouseController;
 
     [SetUp]
     public void Setup()
@@ -22,12 +21,12 @@ internal class MouseControllerIntegration
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
-        _keybaordController = new KeyboardController();
-        _mouseController = new MouseController();
+        _keybaordController = CodeTextBoxModelFactory.MakeKeyboardController(_model);
+        _mouseController = CodeTextBoxModelFactory.MakeMouseController(_codeTextBox.Object, _model);
     }
 
     [Test]
-    public void OnMouseDown()
+    public void MouseDown()
     {
         /* 12345
          * qwert
@@ -35,18 +34,18 @@ internal class MouseControllerIntegration
          */
         _model.Text = "12345\r\nqwert\r\nasdfg";
 
-        _mouseController.OnMouseDown(_codeTextBox.Object, _model, new(0, 0));
-        _keybaordController.OnKeyDown(_model, Key.LeftShift, false, true);
-        _mouseController.OnMouseDown(_codeTextBox.Object, _model, new(100, 100));
+        _mouseController.LeftButtonDown(new(0, 0));
+        _keybaordController.KeyDown(Key.LeftShift, false, true);
+        _mouseController.LeftButtonDown(new(100, 100));
         Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
 
-        _keybaordController.OnKeyUp(_model, false);
-        _mouseController.OnMouseDown(_codeTextBox.Object, _model, new(0, 0));
+        _keybaordController.KeyUp(false);
+        _mouseController.LeftButtonDown(new(0, 0));
         Assert.AreEqual("", _model.GetSelectedText());
     }
 
     [Test]
-    public void OnMouseMove()
+    public void MouseMove()
     {
         /* 12345
          * qwert
@@ -54,8 +53,8 @@ internal class MouseControllerIntegration
          */
         _model.Text = "12345\r\nqwert\r\nasdfg";
 
-        _mouseController.OnMouseMove(_codeTextBox.Object, _model, new(0, 0), MouseButtonState.Pressed);
-        _mouseController.OnMouseMove(_codeTextBox.Object, _model, new(100, 100), MouseButtonState.Pressed);
+        _mouseController.LeftButtonMove(new(0, 0));
+        _mouseController.LeftButtonMove(new(100, 100));
         Assert.AreEqual("12345\r\nqwert\r\nasdfg", _model.GetSelectedText());
     }
 }

@@ -12,15 +12,16 @@ namespace CodeHighlighter;
 
 public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 {
+    private IKeyboardController? _keyboardController;
+    private IMouseController? _mouseController;
+    private readonly MouseSettings _mouseSettings;
+    private readonly FontSettings _fontSettings;
     private readonly TextRenderLogic _textRenderLogic;
     private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
     private readonly CursorRenderLogic _cursorRenderLogic;
-    private readonly KeyboardController _keyboardController;
-    private readonly MouseController _mouseController;
     private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
     private readonly LineRenderLogic _lineRenderLogic;
-    private readonly MouseSettings _mouseSettings;
-    private readonly FontSettings _fontSettings;
+    private bool _isLeftButtonPressed;
 
     public event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
     public event EventHandler? ViewportSizeChanged;
@@ -183,6 +184,8 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
         codeTextBox.ViewportSizeChanged?.Invoke(codeTextBox, EventArgs.Empty);
+        codeTextBox._keyboardController = CodeTextBoxModelFactory.MakeKeyboardController(model);
+        codeTextBox._mouseController = CodeTextBoxModelFactory.MakeMouseController(codeTextBox, model);
     }
 
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -243,8 +246,6 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         _textRenderLogic = new TextRenderLogic();
         _textSelectionRenderLogic = new TextSelectionRenderLogic();
         _cursorRenderLogic = new CursorRenderLogic();
-        _keyboardController = new KeyboardController();
-        _mouseController = new MouseController();
         _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
         _lineRenderLogic = new LineRenderLogic();
         _mouseSettings = new MouseSettings();
@@ -297,63 +298,75 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
-        if (Model == null) return;
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (_mouseController == null) return;
+        var positionInControl = e.GetPosition(this);
+        if (e.ChangedButton == MouseButton.Left)
         {
-            var positionInControl = e.GetPosition(this);
-            _mouseController.OnMouseDown(this, Model, new(positionInControl.X, positionInControl.Y));
+            _isLeftButtonPressed = true;
+            _mouseController.LeftButtonDown(new(positionInControl.X, positionInControl.Y));
             Mouse.Capture(this);
+        }
+        else if (e.ChangedButton == MouseButton.Right)
+        {
+            _mouseController.RightButtonDown(new(positionInControl.X, positionInControl.Y));
         }
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        if (Model == null) return;
+        if (_mouseController == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseMove(this, Model, new(positionInControl.X, positionInControl.Y), e.LeftButton);
+        if (_isLeftButtonPressed)
+        {
+            _mouseController.LeftButtonMove(new(positionInControl.X, positionInControl.Y));
+        }
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
     {
-        base.OnMouseUp(e);
-        Mouse.Capture(null);
-        if (Model == null) return;
-        _mouseController.OnMouseUp(Model);
+        if (_mouseController == null) return;
+        if (e.ChangedButton == MouseButton.Left)
+        {
+            _isLeftButtonPressed = false;
+            _mouseController.LeftButtonUp();
+            Mouse.Capture(null);
+        }
     }
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
-        _mouseController.OnMouseWheel(this, this, Model!.TextMeasures, _mouseSettings.VerticalScrollLinesCount, e.Delta > 0);
+        if (_mouseController == null) return;
+        _mouseController.ScrollWheel(_mouseSettings.VerticalScrollLinesCount, e.Delta > 0);
     }
 
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
     {
-        if (Model == null) return;
+        if (_mouseController == null) return;
         var positionInControl = e.GetPosition(this);
-        _mouseController.OnMouseDoubleClick(this, Model, new(positionInControl.X, positionInControl.Y));
+        _mouseController.LeftButtonDoubleClick(new(positionInControl.X, positionInControl.Y));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (Model == null) return;
+        if (_keyboardController == null) return;
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
         //var altPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-        var key = e.Key == Key.System ? e.SystemKey : e.Key;
-        e.Handled = _keyboardController.OnKeyDown(Model, key, controlPressed, shiftPressed);
+        var key = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
+        e.Handled = _keyboardController.KeyDown((Controllers.Key)key, controlPressed, shiftPressed);
     }
 
     protected override void OnKeyUp(KeyEventArgs e)
     {
-        if (Model == null) return;
+        if (_keyboardController == null) return;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
-        e.Handled = _keyboardController.OnKeyUp(Model, shiftPressed);
+        e.Handled = _keyboardController.KeyUp(shiftPressed);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)
     {
-        if (Model == null) return;
-        _keyboardController.OnTextInput(Model, e.Text);
+        if (_keyboardController == null) return;
+        _keyboardController.TextInput(e.Text);
     }
 
     protected override void OnLostFocus(RoutedEventArgs e)

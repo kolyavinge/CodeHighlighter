@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
 using Moq;
@@ -11,7 +10,7 @@ internal class KeyboardControllerIntegration
 {
     private Mock<ICodeTextBox> _codeTextBox;
     private ICodeTextBoxModel _model;
-    private KeyboardController _controller;
+    private IKeyboardController _controller;
 
     [SetUp]
     public void Setup()
@@ -20,7 +19,7 @@ internal class KeyboardControllerIntegration
         _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
-        _controller = new KeyboardController();
+        _controller = CodeTextBoxModelFactory.MakeKeyboardController(_model);
     }
 
     [Test]
@@ -106,16 +105,16 @@ internal class KeyboardControllerIntegration
 
     private void KeyDownWithoutShift(Key key)
     {
-        _controller.OnKeyDown(_model, key, false, false);
+        _controller.KeyDown(key, false, false);
     }
 
     private void KeyDownWithShift(Key key)
     {
-        _controller.OnKeyDown(_model, key, false, true);
+        _controller.KeyDown(key, false, true);
     }
 
     private void KeyDownWithShiftAndControl(Key key)
     {
-        _controller.OnKeyDown(_model, key, true, true);
+        _controller.KeyDown(key, true, true);
     }
 }
