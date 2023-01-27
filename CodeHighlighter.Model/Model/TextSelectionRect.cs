@@ -4,7 +4,16 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-public class TextSelectionRect
+public interface ITextSelectionRect
+{
+    IEnumerable<Rect> GetCalculatedRects(
+        IEnumerable<TextSelectionLine> selectedLines,
+        ITextMeasures textMeasures,
+        double horizontalScrollBarValue,
+        double verticalScrollBarValue);
+}
+
+internal class TextSelectionRect : ITextSelectionRect
 {
     public IEnumerable<Rect> GetCalculatedRects(
         IEnumerable<TextSelectionLine> selectedLines,

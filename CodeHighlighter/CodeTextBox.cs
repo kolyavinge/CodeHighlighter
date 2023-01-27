@@ -14,13 +14,10 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 {
     private IKeyboardController? _keyboardController;
     private IMouseController? _mouseController;
+    private IRenderingModel? _renderingModel;
+    private RenderingContext? _renderingContext;
     private readonly MouseSettings _mouseSettings;
-    private readonly FontSettings _fontSettings;
-    private readonly TextRenderLogic _textRenderLogic;
-    private readonly TextSelectionRenderLogic _textSelectionRenderLogic;
     private readonly CursorRenderLogic _cursorRenderLogic;
-    private readonly HighlightBracketsRenderLogic _highlightBracketsRenderLogic;
-    private readonly LineRenderLogic _lineRenderLogic;
     private bool _isLeftButtonPressed;
 
     public event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
@@ -180,12 +177,14 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         model.TextMeasuresEvents.LineHeightChanged += (s, e) => { codeTextBox.TextLineHeight = e.LineHeight; };
         model.TextEvents.LinesCountChanged += (s, e) => { codeTextBox.TextLinesCount = e.LinesCount; };
         codeTextBox.TextLinesCount = model.TextLinesCount;
-        UpdateFontSettings(codeTextBox, codeTextBox._fontSettings);
+        UpdateFontSettings(codeTextBox, codeTextBox.FontSettings);
         codeTextBox.ViewportHeight = codeTextBox.ActualHeight;
         codeTextBox.ViewportWidth = codeTextBox.ActualWidth;
         codeTextBox.ViewportSizeChanged?.Invoke(codeTextBox, EventArgs.Empty);
         codeTextBox._keyboardController = CodeTextBoxModelFactory.MakeKeyboardController(model);
         codeTextBox._mouseController = CodeTextBoxModelFactory.MakeMouseController(codeTextBox, model);
+        codeTextBox._renderingContext = new RenderingContext(codeTextBox);
+        codeTextBox._renderingModel = RenderingModelFactory.MakeModel(model, codeTextBox._renderingContext);
     }
 
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -198,7 +197,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     {
         var codeTextBox = (CodeTextBox)d;
         if (codeTextBox.Model == null) return;
-        UpdateFontSettings(codeTextBox, codeTextBox._fontSettings);
+        UpdateFontSettings(codeTextBox, codeTextBox.FontSettings);
     }
 
     private static void UpdateFontSettings(CodeTextBox codeTextBox, FontSettings fontSettings)
@@ -219,6 +218,8 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
         FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
     }
+
+    internal FontSettings FontSettings { get; private set; }
 
     private int _textLinesCount;
     public int TextLinesCount
@@ -243,13 +244,9 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 
     public CodeTextBox()
     {
-        _textRenderLogic = new TextRenderLogic();
-        _textSelectionRenderLogic = new TextSelectionRenderLogic();
         _cursorRenderLogic = new CursorRenderLogic();
-        _highlightBracketsRenderLogic = new HighlightBracketsRenderLogic();
-        _lineRenderLogic = new LineRenderLogic();
         _mouseSettings = new MouseSettings();
-        _fontSettings = new FontSettings();
+        FontSettings = new FontSettings();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
         var template = new ControlTemplate(typeof(CodeTextBox));
@@ -270,16 +267,18 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     protected override void OnRender(DrawingContext context)
     {
         if (Model == null) return;
+        if (_renderingModel == null) return;
+        _renderingContext!.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
         if (IsFocused)
         {
             _cursorRenderLogic.DrawHighlightedCursorLine(Model, context, CursorLineHighlightingBrush, ActualWidth);
         }
-        _lineRenderLogic.DrawLines(Model, context, ActualWidth);
-        _textSelectionRenderLogic.DrawSelectedLines(Model, context, SelectionBrush);
-        _highlightBracketsRenderLogic.DrawHighlightedBrackets(Model, context, HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
-        _textRenderLogic.DrawText(Model, _fontSettings, context, Foreground);
+        _renderingModel.LinesDecoration.Render(ActualWidth);
+        _renderingModel.TextSelection.Render(SelectionBrush);
+        _renderingModel.HighlightBrackets.Render(HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
+        _renderingModel.Text.Render();
         if (IsFocused)
         {
             _cursorRenderLogic.DrawCursor(Model);
