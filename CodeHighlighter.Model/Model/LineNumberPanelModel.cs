@@ -2,34 +2,22 @@
 
 namespace CodeHighlighter.Model;
 
-public class LineNumberPanelModel
+internal class LineNumberPanelModel : ILineNumberPanelModel
 {
-    public LineNumberGapCollection Gaps { get; } = new();
+    private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
-    public IEnumerable<LineNumber> GetLines(
-        double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
+    public ILineNumberGapCollection Gaps { get; }
+
+    public LineNumberPanelModel(
+        IExtendedLineNumberGenerator lineNumberGenerator,
+        ILineNumberGapCollection gaps)
     {
-        if (Gaps.AnyItems)
-        {
-            return GetLineNumbersModified(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount);
-        }
-        else
-        {
-            return LineNumber.GetLineNumbers(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount);
-        }
+        _lineNumberGenerator = lineNumberGenerator;
+        Gaps = gaps;
     }
 
-    private IEnumerable<LineNumber> GetLineNumbersModified(
-        double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
+    public IEnumerable<LineNumber> GetLines(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
-        var absoluteOffsetY = 0.0;
-        foreach (var line in LineNumber.GetLineNumbers(controlHeight + verticalScrollBarValue, 0, textLineHeight, textLinesCount))
-        {
-            var gap = Gaps[line.Index];
-            if (gap != null) absoluteOffsetY += gap.CountBefore * textLineHeight;
-            if (absoluteOffsetY - verticalScrollBarValue >= controlHeight) yield break;
-            else if (absoluteOffsetY + textLineHeight > verticalScrollBarValue) yield return new(line.Index, absoluteOffsetY - verticalScrollBarValue);
-            absoluteOffsetY += textLineHeight;
-        }
+        return _lineNumberGenerator.GetLineNumbers(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount);
     }
 }

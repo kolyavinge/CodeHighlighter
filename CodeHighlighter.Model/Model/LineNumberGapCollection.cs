@@ -2,7 +2,14 @@
 
 namespace CodeHighlighter.Model;
 
-public class LineNumberGapCollection : SpreadCollection<LineNumberGap>
+public interface ILineNumberGapCollection
+{
+    bool AnyItems { get; }
+    LineNumberGap? this[int lineIndex] { get; set; }
+    void Clear();
+}
+
+public class LineNumberGapCollection : SpreadCollection<LineNumberGap>, ILineNumberGapCollection
 {
 }
 

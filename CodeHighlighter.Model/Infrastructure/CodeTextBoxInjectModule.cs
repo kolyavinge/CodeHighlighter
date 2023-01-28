@@ -4,7 +4,7 @@ using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;
 
-internal class CommonInjectModule : InjectModule
+internal class CodeTextBoxInjectModule : InjectModule
 {
     public override void Init(IBindingProvider bindingProvider)
     {
@@ -22,6 +22,7 @@ internal class CommonInjectModule : InjectModule
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
+        bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>();
 
         bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();
         bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();

@@ -10,14 +10,14 @@ namespace CodeHighlighter;
 public class LineNumberPanel : Control
 {
     #region Model
-    public LineNumberPanelModel Model
+    public ILineNumberPanelModel Model
     {
-        get => (LineNumberPanelModel)GetValue(ModelProperty);
+        get => (ILineNumberPanelModel)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(LineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(new LineNumberPanelModel(), ModelChangedCallback));
+        DependencyProperty.Register("Model", typeof(ILineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(ModelChangedCallback));
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -77,6 +77,11 @@ public class LineNumberPanel : Control
         panel.InvalidateVisual();
     }
     #endregion
+
+    public LineNumberPanel()
+    {
+        Model = LineNumberPanelModelFactory.MakeModel();
+    }
 
     protected override void OnRender(DrawingContext context)
     {

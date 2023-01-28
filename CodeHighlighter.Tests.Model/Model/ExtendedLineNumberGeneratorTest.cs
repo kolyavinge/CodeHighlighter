@@ -4,21 +4,23 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class LineNumberPanelModelTest
+internal class ExtendedLineNumberGeneratorTest
 {
     private readonly double TextLineHeight = 10;
-    private LineNumberPanelModel _model;
+    private LineNumberGapCollection _gaps;
+    private ExtendedLineNumberGenerator _generator;
 
     [SetUp]
     public void Setup()
     {
-        _model = new LineNumberPanelModel();
+        _gaps = new LineNumberGapCollection();
+        _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps);
     }
 
     [Test]
     public void GetLineNumbers_LinesOutControl()
     {
-        var lines = _model.GetLines(100, 0, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 0, TextLineHeight, 100).ToList();
 
         Assert.That(lines.Count, Is.EqualTo(10));
 
@@ -29,10 +31,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 0, TextLineHeight, 3).ToList();
+        var lines = _generator.GetLineNumbers(100, 0, TextLineHeight, 3).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(3));
 
@@ -44,10 +46,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_LinesOutControl()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 0, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 0, TextLineHeight, 100).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(5));
 
@@ -61,10 +63,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 30, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 30, TextLineHeight, 100).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(7));
 
@@ -80,10 +82,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven_2()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 50, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 50, TextLineHeight, 100).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(8));
 
@@ -100,10 +102,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 45, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 45, TextLineHeight, 100).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(8));
 
@@ -120,10 +122,10 @@ internal class LineNumberPanelModelTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd_2()
     {
-        _model.Gaps[0] = new(2);
-        _model.Gaps[2] = new(3);
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
 
-        var lines = _model.GetLines(100, 25, TextLineHeight, 100).ToList();
+        var lines = _generator.GetLineNumbers(100, 25, TextLineHeight, 100).ToList();
 
         Assert.That(lines, Has.Count.EqualTo(8));
 

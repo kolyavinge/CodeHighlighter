@@ -12,9 +12,16 @@ public readonly struct LineNumber
         Index = lineIndex;
         OffsetY = offsetY;
     }
+}
 
-    public static IEnumerable<LineNumber> GetLineNumbers(
-        double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
+public interface ILineNumberGenerator
+{
+    IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
+}
+
+internal class LineNumberGenerator : ILineNumberGenerator
+{
+    public IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
         var startLine = (int)(verticalScrollBarValue / textLineHeight);
         var linesCount = (int)Math.Ceiling(controlHeight / textLineHeight);
