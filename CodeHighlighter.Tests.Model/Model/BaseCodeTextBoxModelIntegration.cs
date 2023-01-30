@@ -21,6 +21,7 @@ internal class BaseCodeTextBoxModelIntegration
         var tokensColors = new TokensColors();
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
+        var gaps = new LineGapCollection();
         var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var inputActionsFactory = new InputActionsFactory();
@@ -50,6 +51,7 @@ internal class BaseCodeTextBoxModelIntegration
             tokensColors,
             history,
             linesDecoration,
+            gaps,
             viewport,
             bracketsHighlighter,
             inputActionContext,

@@ -18,6 +18,7 @@ public interface ICodeTextBoxModel
     ITokensColorCollection TokensColors { get; }
     IHistory History { get; }
     ILinesDecorationCollection LinesDecoration { get; }
+    ILineGapCollection Gaps { get; }
     IViewport Viewport { get; }
     IBracketsHighlighter BracketsHighlighter { get; }
     bool IsReadOnly { get; set; }

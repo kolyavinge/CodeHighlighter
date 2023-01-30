@@ -56,6 +56,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public ILinesDecorationCollection LinesDecoration { get; }
 
+    public ILineGapCollection Gaps { get; }
+
     public IViewport Viewport => _viewport;
 
     public IBracketsHighlighter BracketsHighlighter { get; }
@@ -75,6 +77,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITokensColors tokensColors,
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,
+        ILineGapCollection gaps,
         IViewportInternal viewport,
         IBracketsHighlighter bracketsHighlighter,
         IInputActionContext inputActionContext,
@@ -98,6 +101,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         TextMeasuresEvents = textMeasuresEvents;
         TokensColors = tokensColors;
         LinesDecoration = linesDecoration;
+        Gaps = gaps;
         BracketsHighlighter = bracketsHighlighter;
         IsReadOnly = additionalParams.IsReadOnly;
         SetCodeProvider(codeProvider);
