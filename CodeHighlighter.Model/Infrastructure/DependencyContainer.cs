@@ -16,6 +16,11 @@ internal class DependencyContainer
         _container.InitFromModules(modules);
     }
 
+    public void BindSingleton<TDependency, TImplementation>()
+    {
+        _container.Bind<TDependency, TImplementation>().ToSingleton();
+    }
+
     public void BindSingleton<TDependency>(object obj)
     {
         _container.Bind<TDependency>().ToMethod(_ => obj).ToSingleton();

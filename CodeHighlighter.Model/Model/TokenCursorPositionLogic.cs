@@ -16,7 +16,7 @@ public class TokenCursorPosition
 
     public override bool Equals(object? obj) => obj is TokenCursorPosition position &&
         EqualityComparer<Token>.Default.Equals(TokenOnPosition, position.TokenOnPosition) &&
-        EqualityComparer<Token>.Default.Equals(NeighbourToken, position.NeighbourToken);
+        EqualityComparer<Token>.Default.Equals(NeighbourToken ?? Token.Default, position.NeighbourToken ?? Token.Default);
 
     public override int GetHashCode() => HashCode.Combine(TokenOnPosition, NeighbourToken);
 }

@@ -4,8 +4,10 @@ internal class DummyCodeTextBox : ICodeTextBox
 {
     public static readonly DummyCodeTextBox Instance = new();
 
+#pragma warning disable CS0067
     public event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
     public event EventHandler? ViewportSizeChanged;
+#pragma warning restore CS0067
 
     public double ActualWidth => 0;
     public double ActualHeight => 0;

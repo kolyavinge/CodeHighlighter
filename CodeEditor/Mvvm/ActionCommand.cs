@@ -11,12 +11,12 @@ public abstract class Command : ICommand
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 
-    public bool CanExecute(object parameter)
+    public bool CanExecute(object? parameter)
     {
         return true;
     }
 
-    public abstract void Execute(object parameter);
+    public abstract void Execute(object? parameter);
 }
 
 public class ActionCommand : Command
@@ -28,7 +28,7 @@ public class ActionCommand : Command
         _action = action;
     }
 
-    public override void Execute(object parameter)
+    public override void Execute(object? parameter)
     {
         _action();
     }
@@ -43,8 +43,8 @@ public class ActionCommand<TParameter> : Command
         _action = action;
     }
 
-    public override void Execute(object parameter)
+    public override void Execute(object? parameter)
     {
-        _action((TParameter)parameter);
+        _action((TParameter)parameter!);
     }
 }

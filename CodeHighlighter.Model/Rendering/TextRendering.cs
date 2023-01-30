@@ -12,12 +12,12 @@ internal class TextRendering : ITextRendering
 {
     private readonly ICodeTextBoxModel _model;
     private readonly IRenderingContext _renderingContext;
-    private readonly ILineNumberGenerator _lineNumberGenerator;
+    private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
     public TextRendering(
         ICodeTextBoxModel model,
         IRenderingContext renderingContext,
-        ILineNumberGenerator lineNumberGenerator)
+        IExtendedLineNumberGenerator lineNumberGenerator)
     {
         _model = model;
         _renderingContext = renderingContext;

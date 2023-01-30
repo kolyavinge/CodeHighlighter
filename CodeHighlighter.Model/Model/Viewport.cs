@@ -153,7 +153,9 @@ internal class Viewport : IViewportInternal
 
 internal class DummyViewportContext : IViewportContext
 {
+#pragma warning disable CS0067
     public event EventHandler? ViewportSizeChanged;
+#pragma warning restore CS0067
     public double ActualWidth => 0;
     public double ActualHeight => 0;
     public double VerticalScrollBarValue { get; set; }

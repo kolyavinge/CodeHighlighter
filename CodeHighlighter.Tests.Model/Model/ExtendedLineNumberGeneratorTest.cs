@@ -7,13 +7,13 @@ namespace CodeHighlighter.Tests.Model;
 internal class ExtendedLineNumberGeneratorTest
 {
     private readonly double TextLineHeight = 10;
-    private LineNumberGapCollection _gaps;
+    private LineGapCollection _gaps;
     private ExtendedLineNumberGenerator _generator;
 
     [SetUp]
     public void Setup()
     {
-        _gaps = new LineNumberGapCollection();
+        _gaps = new LineGapCollection();
         _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps);
     }
 

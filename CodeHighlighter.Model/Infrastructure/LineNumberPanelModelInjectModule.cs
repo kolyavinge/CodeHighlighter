@@ -7,10 +7,10 @@ internal class LineNumberPanelModelInjectModule : InjectModule
 {
     public override void Init(IBindingProvider bindingProvider)
     {
-        bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>();
-        bindingProvider.Bind<IExtendedLineNumberGenerator, ExtendedLineNumberGenerator>();
-        bindingProvider.Bind<ILineNumberGapCollection, LineNumberGapCollection>();
+        bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>().ToSingleton();
+        bindingProvider.Bind<IExtendedLineNumberGenerator, ExtendedLineNumberGenerator>().ToSingleton();
+        bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
 
-        bindingProvider.Bind<ILineNumberPanelModel, LineNumberPanelModel>();
+        bindingProvider.Bind<ILineNumberPanelModel, LineNumberPanelModel>().ToSingleton();
     }
 }

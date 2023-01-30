@@ -17,7 +17,7 @@ public class LineNumberPanel : Control
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(ILineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(ModelChangedCallback));
+        DependencyProperty.Register("Model", typeof(ILineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(LineNumberPanelModelFactory.MakeModel(), ModelChangedCallback));
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
@@ -77,11 +77,6 @@ public class LineNumberPanel : Control
         panel.InvalidateVisual();
     }
     #endregion
-
-    public LineNumberPanel()
-    {
-        Model = LineNumberPanelModelFactory.MakeModel();
-    }
 
     protected override void OnRender(DrawingContext context)
     {

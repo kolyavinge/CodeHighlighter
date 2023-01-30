@@ -22,7 +22,9 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
-        bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>();
+        bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
+        bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>().ToSingleton();
+        bindingProvider.Bind<IExtendedLineNumberGenerator, ExtendedLineNumberGenerator>().ToSingleton();
 
         bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();
         bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();

@@ -6,11 +6,11 @@ internal class LineNumberPanelModel : ILineNumberPanelModel
 {
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
-    public ILineNumberGapCollection Gaps { get; }
+    public ILineGapCollection Gaps { get; }
 
     public LineNumberPanelModel(
         IExtendedLineNumberGenerator lineNumberGenerator,
-        ILineNumberGapCollection gaps)
+        ILineGapCollection gaps)
     {
         _lineNumberGenerator = lineNumberGenerator;
         Gaps = gaps;

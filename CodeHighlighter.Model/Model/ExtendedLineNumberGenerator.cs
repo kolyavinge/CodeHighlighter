@@ -10,11 +10,11 @@ public interface IExtendedLineNumberGenerator
 internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
 {
     private readonly ILineNumberGenerator _lineNumberGenerator;
-    private readonly ILineNumberGapCollection _gaps;
+    private readonly ILineGapCollection _gaps;
 
     public ExtendedLineNumberGenerator(
         ILineNumberGenerator lineNumberGenerator,
-        ILineNumberGapCollection gaps)
+        ILineGapCollection gaps)
     {
         _lineNumberGenerator = lineNumberGenerator;
         _gaps = gaps;
