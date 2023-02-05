@@ -15,7 +15,7 @@ internal interface IInputActionContext
     ITextSelector TextSelector { get; }
     ITokensColors TokenColors { get; }
     ITokens Tokens { get; }
-    IViewportInternal Viewport { get; set; }
+    IViewportInternal Viewport { get; }
 }
 
 internal class InputActionContext : IInputActionContext

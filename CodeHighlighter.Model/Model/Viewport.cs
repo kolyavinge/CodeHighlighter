@@ -12,22 +12,36 @@ public interface IViewport
     double HorizontalScrollBarMaximum { get; set; }
     CursorPosition GetCursorPosition(Point cursorClickPosition);
     int GetLinesCountInViewport();
+    void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy);
+    void UpdateScrollbarsMaximumValues();
 }
 
 internal interface IViewportInternal : IViewport
 {
+    IViewportContext Context { get; set; }
     void CorrectByCursorPosition();
     void ScrollLineDown();
     void ScrollLineUp();
-    void UpdateScrollbarsMaximumValues();
 }
 
 internal class Viewport : IViewportInternal
 {
-    private readonly IText _text;
-    private readonly IViewportContext _context;
     private readonly ITextCursor _textCursor;
     private readonly ITextMeasuresInternal _textMeasures;
+    private readonly IViewportVerticalOffsetUpdater _verticalOffsetUpdater;
+    private readonly IVerticalScrollBarMaximumValueStrategy _verticalScrollBarMaximumValueStrategy;
+    private IHorizontalScrollBarMaximumValueStrategy _horizontalScrollBarMaximumValueStrategy;
+    private IViewportContext _context;
+
+    public IViewportContext Context
+    {
+        get => _context;
+        set
+        {
+            _context = value;
+            _context.ViewportSizeChanged += (s, e) => UpdateIsHorizontalScrollBarVisible();
+        }
+    }
 
     public double ActualWidth => _context.ActualWidth;
 
@@ -57,13 +71,20 @@ internal class Viewport : IViewportInternal
         set => _context.HorizontalScrollBarMaximum = value;
     }
 
-    public Viewport(IText text, IViewportContext context, ITextCursor textCursor, ITextMeasuresInternal textMeasures)
+    public Viewport(
+        IViewportContext context,
+        ITextCursor textCursor,
+        ITextMeasuresInternal textMeasures,
+        IViewportVerticalOffsetUpdater verticalOffsetUpdater,
+        IVerticalScrollBarMaximumValueStrategy verticalScrollBarMaximumValueStrategy,
+        IHorizontalScrollBarMaximumValueStrategy horizontalScrollBarMaximumValueStrategy)
     {
-        _text = text;
         _context = context;
         _textCursor = textCursor;
         _textMeasures = textMeasures;
-        _context.ViewportSizeChanged += (s, e) => UpdateScrollbarsMaximumValues();
+        _verticalOffsetUpdater = verticalOffsetUpdater;
+        _verticalScrollBarMaximumValueStrategy = verticalScrollBarMaximumValueStrategy;
+        _horizontalScrollBarMaximumValueStrategy = horizontalScrollBarMaximumValueStrategy;
     }
 
     public int GetLinesCountInViewport()
@@ -72,6 +93,11 @@ internal class Viewport : IViewportInternal
         if (_context.ActualHeight % _textMeasures.LineHeight != 0) result++;
 
         return result;
+    }
+
+    public void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy)
+    {
+        _horizontalScrollBarMaximumValueStrategy = strategy;
     }
 
     public CursorPosition GetCursorPosition(Point cursorClickPosition)
@@ -83,11 +109,8 @@ internal class Viewport : IViewportInternal
 
     public void CorrectByCursorPosition()
     {
-        CorrectByCursorPosition(_textCursor.GetAbsolutePosition(_textMeasures));
-    }
+        var cursorAbsolutePoint = _textCursor.GetAbsolutePosition(_textMeasures);
 
-    private void CorrectByCursorPosition(Point cursorAbsolutePoint)
-    {
         if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
         {
             _context.HorizontalScrollBarValue = cursorAbsolutePoint.X;
@@ -109,57 +132,27 @@ internal class Viewport : IViewportInternal
 
     public void UpdateScrollbarsMaximumValues()
     {
-        var maxLineWidthInPixels = _text.GetMaxLineWidth() * _textMeasures.LetterWidth;
-        _context.HorizontalScrollBarMaximum = _context.ActualWidth < maxLineWidthInPixels ? maxLineWidthInPixels : 0;
-        if (_context.HorizontalScrollBarMaximum == 0)
+        _context.HorizontalScrollBarMaximum = _horizontalScrollBarMaximumValueStrategy.GetValue();
+        _context.VerticalScrollBarMaximum = _verticalScrollBarMaximumValueStrategy.GetValue();
+        UpdateIsHorizontalScrollBarVisible();
+    }
+
+    private void UpdateIsHorizontalScrollBarVisible()
+    {
+        _context.IsHorizontalScrollBarVisible = _context.HorizontalScrollBarMaximum > _context.ActualWidth;
+        if (!_context.IsHorizontalScrollBarVisible)
         {
             _context.HorizontalScrollBarValue = 0;
         }
-        _context.VerticalScrollBarMaximum = _text.LinesCount * _textMeasures.LineHeight;
     }
 
     public void ScrollLineUp()
     {
-        _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineUp(_context.VerticalScrollBarValue, _textMeasures.LineHeight);
-    }
-
-    public static double GetVerticalOffsetAfterScrollLineUp(double verticalScrollBarValue, double lineHeight)
-    {
-        var offset = verticalScrollBarValue;
-        var delta = verticalScrollBarValue % lineHeight;
-        if (delta == 0) offset -= lineHeight;
-        else offset -= delta;
-        if (offset < 0) offset = 0;
-
-        return offset;
+        _context.VerticalScrollBarValue = _verticalOffsetUpdater.GetVerticalOffsetAfterScrollLineUp(_context.VerticalScrollBarValue, _textMeasures.LineHeight);
     }
 
     public void ScrollLineDown()
     {
-        _context.VerticalScrollBarValue = GetVerticalOffsetAfterScrollLineDown(_context.VerticalScrollBarValue, _context.VerticalScrollBarMaximum, _textMeasures.LineHeight);
+        _context.VerticalScrollBarValue = _verticalOffsetUpdater.GetVerticalOffsetAfterScrollLineDown(_context.VerticalScrollBarValue, _context.VerticalScrollBarMaximum, _textMeasures.LineHeight);
     }
-
-    public static double GetVerticalOffsetAfterScrollLineDown(double verticalScrollBarValue, double verticalScrollBarMaximum, double lineHeight)
-    {
-        var offset = verticalScrollBarValue;
-        var delta = verticalScrollBarValue % lineHeight;
-        if (delta == 0) offset += lineHeight;
-        else offset += delta;
-        if (offset > verticalScrollBarMaximum) offset = verticalScrollBarMaximum;
-
-        return offset;
-    }
-}
-
-internal class DummyViewportContext : IViewportContext
-{
-#pragma warning disable CS0067
-    public event EventHandler? ViewportSizeChanged;
-#pragma warning restore CS0067
-    public double ActualWidth => 0;
-    public double ActualHeight => 0;
-    public double VerticalScrollBarValue { get; set; }
-    public double VerticalScrollBarMaximum { get; set; }
-    public double HorizontalScrollBarValue { get; set; }
-    public double HorizontalScrollBarMaximum { get; set; }
 }

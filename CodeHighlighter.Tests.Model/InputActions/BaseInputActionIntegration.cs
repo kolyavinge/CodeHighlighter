@@ -14,6 +14,7 @@ internal class BaseInputActionIntegration
     protected TextSelection _textSelection;
     protected TextSelector _textSelector;
     protected Tokens _tokens;
+    protected LineGapCollection _gaps;
     protected Viewport _viewport;
     protected Mock<IViewportContext> _viewportContext;
     protected TextEvents _textEvents;
@@ -28,8 +29,15 @@ internal class BaseInputActionIntegration
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
+        _gaps = new();
         _viewportContext = new();
-        _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
+        _viewport = new(
+            _viewportContext.Object,
+            _textCursor,
+            _textMeasures,
+            new ViewportVerticalOffsetUpdater(),
+            new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
+            new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _textEvents = new(_text);
         _inputActionFactory = new();
         _context = new(

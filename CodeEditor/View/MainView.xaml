@@ -9,6 +9,9 @@
         WindowStartupLocation="CenterScreen"
         Height="800" Width="1200">
     <Grid>
+        <Grid.Resources>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </Grid.Resources>
         <StackPanel Orientation="Horizontal" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top">
             <ComboBox Name="fontSizeComboBox" SelectedIndex="3">
                 <ComboBox.Items>
@@ -90,6 +93,7 @@
                 Value="{Binding HorizontalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
                 ViewportSize="{Binding ViewportWidth, ElementName=codeTextBox, Mode=TwoWay}"
                 VerticalAlignment="Bottom"
+                Visibility="{Binding IsHorizontalScrollBarVisible, ElementName=codeTextBox, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Cursor="Arrow" />
         </Grid>
     </Grid>

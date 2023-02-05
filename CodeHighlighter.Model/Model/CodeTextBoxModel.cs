@@ -17,7 +17,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly ITokens _tokens;
     private readonly IHistoryInternal _history;
-    private IViewportInternal _viewport;
+    private readonly IViewportInternal _viewport;
     private readonly IInputActionContext _inputActionContext;
     private readonly IInputActionsFactory _inputActionsFactory;
     private readonly IHistoryActionsFactory _historyActionsFactory;
@@ -64,6 +64,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public bool IsReadOnly { get; set; }
 
+    public ICodeTextBoxModelAdditionalInfo AdditionalInfo { get; }
+
     public CodeTextBoxModel(
         ICodeProvider codeProvider,
         IText text,
@@ -83,6 +85,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         IInputActionContext inputActionContext,
         IInputActionsFactory inputActionsFactory,
         IHistoryActionsFactory historyActionsFactory,
+        ICodeTextBoxModelAdditionalInfo additionalInfo,
         CodeTextBoxModelAdditionalParams additionalParams)
     {
         _codeTextBox = DummyCodeTextBox.Instance;
@@ -104,6 +107,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         Gaps = gaps;
         BracketsHighlighter = bracketsHighlighter;
         IsReadOnly = additionalParams.IsReadOnly;
+        AdditionalInfo = additionalInfo;
         SetCodeProvider(codeProvider);
     }
 
@@ -123,10 +127,13 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        _codeTextBox.FontSettingsChanged += (s, e) => { _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth); };
-        _viewport = new Viewport(_text, codeTextBox, _textCursor, _textMeasures);
+        _viewport.Context = codeTextBox;
         _inputActionContext.CodeTextBox = _codeTextBox;
-        _inputActionContext.Viewport = _viewport;
+        _codeTextBox.FontSettingsChanged += (s, e) =>
+        {
+            _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth);
+            _viewport.UpdateScrollbarsMaximumValues();
+        };
     }
 
     public string GetSelectedText()

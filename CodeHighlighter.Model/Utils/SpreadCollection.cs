@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CodeHighlighter.Utils;
 
-public class SpreadCollection<T>
+public class SpreadCollection<T> : IEnumerable<T>
 {
     public readonly Dictionary<int, T> _items = new();
 
@@ -40,4 +41,8 @@ public class SpreadCollection<T>
     {
         _items.Clear();
     }
+
+    public IEnumerator<T> GetEnumerator() => _items.Values.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _items.Values.GetEnumerator();
 }

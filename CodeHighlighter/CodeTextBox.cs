@@ -241,6 +241,13 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         set { _textLetterWidth = value; PropertyChanged?.Invoke(this, new(nameof(TextLetterWidth))); }
     }
 
+    private bool _isHorizontalScrollBarVisible;
+    public bool IsHorizontalScrollBarVisible
+    {
+        get => _isHorizontalScrollBarVisible;
+        set { _isHorizontalScrollBarVisible = value; PropertyChanged?.Invoke(this, new(nameof(IsHorizontalScrollBarVisible))); }
+    }
+
     public CodeTextBox()
     {
         _cursorRenderLogic = new CursorRenderLogic();

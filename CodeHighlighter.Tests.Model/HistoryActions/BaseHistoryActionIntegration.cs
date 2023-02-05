@@ -17,6 +17,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Tokens _tokens;
     protected readonly Viewport _viewport;
     protected readonly Mock<IViewportContext> _viewportContext;
+    protected readonly LineGapCollection _gaps;
     protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
     protected InputActionsFactory _inputActionsFactory;
@@ -31,7 +32,14 @@ internal class BaseHistoryActionIntegration
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _viewportContext = new();
-        _viewport = new(_text, _viewportContext.Object, _textCursor, _textMeasures);
+        _gaps = new();
+        _viewport = new(
+            _viewportContext.Object,
+            _textCursor,
+            _textMeasures,
+            new ViewportVerticalOffsetUpdater(),
+            new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
+            new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _textEvents = new(_text);
         _inputActionsFactory = new();
     }

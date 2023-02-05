@@ -1,8 +1,9 @@
-﻿using CodeHighlighter.Utils;
+﻿using System.Collections.Generic;
+using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
-public interface ILineGapCollection
+public interface ILineGapCollection : IEnumerable<LineGap>
 {
     bool AnyItems { get; }
     LineGap? this[int lineIndex] { get; set; }

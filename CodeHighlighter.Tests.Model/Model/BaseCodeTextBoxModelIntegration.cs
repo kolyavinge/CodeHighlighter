@@ -22,7 +22,14 @@ internal class BaseCodeTextBoxModelIntegration
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
         var gaps = new LineGapCollection();
-        var viewport = new Viewport(text, new DummyViewportContext(), textCursor, textMeasures);
+        var viewportContext = new DummyViewportContext();
+        var viewport = new Viewport(
+            viewportContext,
+            textCursor,
+            textMeasures,
+            new ViewportVerticalOffsetUpdater(),
+            new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps),
+            new DefaultHorizontalScrollBarMaximumValueStrategy(text, textMeasures));
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var inputActionsFactory = new InputActionsFactory();
         var inputActionContext = new InputActionContext(
@@ -57,6 +64,7 @@ internal class BaseCodeTextBoxModelIntegration
             inputActionContext,
             inputActionsFactory,
             historyActionsFactory,
+            new CodeTextBoxModelAdditionalInfo(text),
             new());
     }
 }

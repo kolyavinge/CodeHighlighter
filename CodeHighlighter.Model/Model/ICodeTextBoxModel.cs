@@ -22,7 +22,7 @@ public interface ICodeTextBoxModel
     IViewport Viewport { get; }
     IBracketsHighlighter BracketsHighlighter { get; }
     bool IsReadOnly { get; set; }
-
+    ICodeTextBoxModelAdditionalInfo AdditionalInfo { get; }
     void AttachCodeTextBox(ICodeTextBox codeTextBox);
     string GetSelectedText();
     void MoveCursorTo(CursorPosition position);
