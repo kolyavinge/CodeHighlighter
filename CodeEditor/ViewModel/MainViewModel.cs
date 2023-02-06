@@ -12,6 +12,8 @@ public class MainViewModel
 {
     public ICodeTextBoxModel CodeTextBoxModel { get; }
 
+    public ILineNumberPanelModel LineNumberPanelModel { get; }
+
     public ICodeProvider CodeProvider { get; }
 
     public ICommand CopyTextCommand => new ActionCommand(CopyText);
@@ -55,11 +57,37 @@ public class MainViewModel
         }
     }
 
+    private bool _isGapEnabled;
+    public bool IsGapEnabled
+    {
+        get => _isGapEnabled;
+        set
+        {
+            _isGapEnabled = value;
+            if (_isGapEnabled)
+            {
+                CodeTextBoxModel.Gaps[3] = new(3);
+                CodeTextBoxModel.Gaps[8] = new(2);
+                CodeTextBoxModel.Gaps[12] = new(5);
+                LineNumberPanelModel.Gaps[3] = new(3);
+                LineNumberPanelModel.Gaps[8] = new(2);
+                LineNumberPanelModel.Gaps[12] = new(5);
+            }
+            else
+            {
+                CodeTextBoxModel.Gaps.Clear();
+                LineNumberPanelModel.Gaps.Clear();
+            }
+            CodeTextBoxModel.Viewport.UpdateScrollbarsMaximumValues();
+        }
+    }
+
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
         CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
+        LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel();
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 

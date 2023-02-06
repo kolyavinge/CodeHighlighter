@@ -14,4 +14,9 @@ public readonly struct Rect
         Width = width;
         Height = height;
     }
+
+    public override string ToString()
+    {
+        return $"({X}:{Y}) ({Width}, {Height})";
+    }
 }

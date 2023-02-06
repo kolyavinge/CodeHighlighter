@@ -37,10 +37,10 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
         var absoluteOffsetY = 0.0;
         foreach (var line in _lineNumberGenerator.GetLineNumbers(controlHeight + verticalScrollBarValue, 0, textLineHeight, textLinesCount))
         {
-            var gap = _gaps[line.Index];
+            var gap = _gaps[line.LineIndex];
             if (gap != null) absoluteOffsetY += gap.CountBefore * textLineHeight;
             if (absoluteOffsetY - verticalScrollBarValue >= controlHeight) yield break;
-            else if (absoluteOffsetY + textLineHeight > verticalScrollBarValue) yield return new(line.Index, absoluteOffsetY - verticalScrollBarValue);
+            else if (absoluteOffsetY + textLineHeight > verticalScrollBarValue) yield return new(line.LineIndex, absoluteOffsetY - verticalScrollBarValue);
             absoluteOffsetY += textLineHeight;
         }
     }

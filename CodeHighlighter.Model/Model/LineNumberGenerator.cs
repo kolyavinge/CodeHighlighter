@@ -4,12 +4,12 @@ namespace CodeHighlighter.Model;
 
 public readonly struct LineNumber
 {
-    public readonly int Index;
+    public readonly int LineIndex;
     public readonly double OffsetY;
 
     public LineNumber(int lineIndex, double offsetY)
     {
-        Index = lineIndex;
+        LineIndex = lineIndex;
         OffsetY = offsetY;
     }
 }

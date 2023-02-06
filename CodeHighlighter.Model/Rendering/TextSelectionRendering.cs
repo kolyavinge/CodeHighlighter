@@ -26,7 +26,7 @@ internal class TextSelectionRendering : ITextSelectionRendering
     {
         var selectedLines = _model.TextSelection.GetSelectedLines();
         _textSelectionRect
-            .GetCalculatedRects(selectedLines, _model.TextMeasures, _model.Viewport.HorizontalScrollBarValue, _model.Viewport.VerticalScrollBarValue)
+            .GetCalculatedRects(selectedLines, _model.TextMeasures, _model.Viewport.ActualHeight, _model.Viewport.HorizontalScrollBarValue, _model.Viewport.VerticalScrollBarValue)
             .Each(rect => _renderingContext.DrawRectangle(platformColor, rect));
     }
 }

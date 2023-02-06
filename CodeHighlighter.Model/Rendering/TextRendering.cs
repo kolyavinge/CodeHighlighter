@@ -30,7 +30,7 @@ internal class TextRendering : ITextRendering
         var viewport = _model.Viewport;
         foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLinesCount))
         {
-            var lineTokens = _model.Tokens.GetTokens(line.Index);
+            var lineTokens = _model.Tokens.GetTokens(line.LineIndex);
             foreach (var token in lineTokens)
             {
                 var tokenColor = _model.TokensColors.GetColor(token.Kind);

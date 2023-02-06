@@ -33,11 +33,11 @@ internal class LinesDecorationRendering : ILinesDecorationRendering
 
         foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLinesCount))
         {
-            var lineDecoration = linesDecorationCollection[line.Index];
+            var lineDecoration = linesDecorationCollection[line.LineIndex];
             if (lineDecoration != null)
             {
                 var x = 0.0;
-                var y = line.Index * textMeasures.LineHeight - viewport.VerticalScrollBarValue;
+                var y = line.LineIndex * textMeasures.LineHeight - viewport.VerticalScrollBarValue;
                 var width = lineWidth;
                 var height = textMeasures.LineHeight;
                 var background = lineDecoration.Background;

@@ -87,12 +87,12 @@ public class LineNumberPanel : Control
         var lines = Model.GetLines(ActualHeight, VerticalScrollBarValue, TextLineHeight, TextLinesCount);
         foreach (var line in lines)
         {
-            var lineNumber = (line.Index + 1).ToString();
+            var lineNumber = (line.LineIndex + 1).ToString();
             var formattedText = new FormattedText(lineNumber, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0);
             context.DrawText(formattedText, new Point(ActualWidth - formattedText.Width, line.OffsetY));
         }
         context.Pop();
-        Width = lines.LastOrDefault().Index.ToString().Length * GetLetterWidth(typeface);
+        Width = lines.LastOrDefault().LineIndex.ToString().Length * GetLetterWidth(typeface);
     }
 
     private double GetLetterWidth(Typeface typeface) => new FormattedText("A", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0).Width;
