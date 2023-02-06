@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using CodeHighlighter.Common;
+﻿using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
@@ -12,27 +11,22 @@ internal class TextCursorAbsolutePosition : ITextCursorAbsolutePosition
 {
     private readonly ITextCursor _cursor;
     private readonly ITextMeasuresInternal _measures;
-    private readonly ILineGapCollection _gaps;
+    private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
-    public TextCursorAbsolutePosition(ITextCursor cursor, ITextMeasuresInternal measures, ILineGapCollection gaps)
+    public TextCursorAbsolutePosition(
+        ITextCursor cursor, ITextMeasuresInternal measures, IExtendedLineNumberGenerator lineNumberGenerator)
     {
         _cursor = cursor;
         _measures = measures;
-        _gaps = gaps;
+        _lineNumberGenerator = lineNumberGenerator;
     }
 
     public Point Position
     {
         get
         {
-            var lineIndex = _cursor.LineIndex;
-
-            if (_gaps.AnyItems)
-            {
-                lineIndex += (int)(Enumerable.Range(0, _cursor.LineIndex + 1).Sum(i => _gaps[i]?.CountBefore) ?? 0);
-            }
-
-            return new(_cursor.ColumnIndex * _measures.LetterWidth, lineIndex * _measures.LineHeight);
+            var offsetY = _lineNumberGenerator.GetLineOffsetY(_cursor.LineIndex, _measures.LineHeight);
+            return new(_cursor.ColumnIndex * _measures.LetterWidth, offsetY);
         }
     }
 }

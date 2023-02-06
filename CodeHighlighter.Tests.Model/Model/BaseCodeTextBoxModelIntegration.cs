@@ -22,11 +22,10 @@ internal class BaseCodeTextBoxModelIntegration
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
         var gaps = new LineGapCollection();
-        var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, gaps);
+        var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), gaps));
         var viewportContext = new DummyViewportContext();
         var viewport = new Viewport(
             viewportContext,
-            textCursor,
             textCursorAbsolutePosition,
             textMeasures,
             new ViewportVerticalOffsetUpdater(),

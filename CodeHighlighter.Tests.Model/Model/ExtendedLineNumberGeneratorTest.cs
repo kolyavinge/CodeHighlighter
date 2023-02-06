@@ -138,4 +138,15 @@ internal class ExtendedLineNumberGeneratorTest
         Assert.That(lines[6], Is.EqualTo(new LineNumber(6, 8 * TextLineHeight + 5)));
         Assert.That(lines[7], Is.EqualTo(new LineNumber(7, 9 * TextLineHeight + 5)));
     }
+
+    [Test]
+    public void GetLineOffsetY()
+    {
+        _gaps[0] = new(2);
+        _gaps[2] = new(3);
+
+        var result = _generator.GetLineOffsetY(7, TextLineHeight);
+
+        Assert.That(result, Is.EqualTo((7 + 5) * TextLineHeight));
+    }
 }

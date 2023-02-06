@@ -34,10 +34,9 @@ internal class BaseHistoryActionIntegration
         _tokens = new();
         _viewportContext = new();
         _gaps = new();
-        _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, _gaps);
+        _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
         _viewport = new(
             _viewportContext.Object,
-            _textCursor,
             _textCursorAbsolutePosition,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),

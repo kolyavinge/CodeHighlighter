@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeHighlighter.Model;
 
 public interface IExtendedLineNumberGenerator
 {
     IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
+    double GetLineOffsetY(int lineIndex, double textLineHeight);
 }
 
 internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
@@ -43,5 +45,15 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
             else if (absoluteOffsetY + textLineHeight > verticalScrollBarValue) yield return new(line.LineIndex, absoluteOffsetY - verticalScrollBarValue);
             absoluteOffsetY += textLineHeight;
         }
+    }
+
+    public double GetLineOffsetY(int lineIndex, double textLineHeight)
+    {
+        if (_gaps.AnyItems)
+        {
+            lineIndex += (int)(Enumerable.Range(0, lineIndex + 1).Sum(i => _gaps[i]?.CountBefore) ?? 0);
+        }
+
+        return lineIndex * textLineHeight;
     }
 }

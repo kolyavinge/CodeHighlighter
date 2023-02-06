@@ -31,11 +31,10 @@ internal class BaseInputActionIntegration
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _gaps = new();
-        _textCursorAbsolutePosition = new(_textCursor, _textMeasures, _gaps);
+        _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
         _viewportContext = new();
         _viewport = new(
             _viewportContext.Object,
-            _textCursor,
             _textCursorAbsolutePosition,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
