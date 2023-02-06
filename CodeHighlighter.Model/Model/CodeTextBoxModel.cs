@@ -13,6 +13,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     private ICodeTextBox _codeTextBox;
     private readonly IText _text;
     private readonly ITextCursor _textCursor;
+    private readonly ITextCursorAbsolutePosition _textCursorAbsolutePosition;
     private readonly ITextSelector _textSelector;
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly ITokens _tokens;
@@ -38,7 +39,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public CursorPosition CursorPosition => _textCursor.Position;
 
-    public Point AbsoluteCursorPosition => _textCursor.GetAbsolutePosition(_textMeasures);
+    public Point AbsoluteCursorPosition => _textCursorAbsolutePosition.Position;
 
     public ITextSelection TextSelection { get; }
 
@@ -70,6 +71,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ICodeProvider codeProvider,
         IText text,
         ITextCursor textCursor,
+        ITextCursorAbsolutePosition textCursorAbsolutePosition,
         ITextSelectionInternal textSelection,
         ITextSelector textSelector,
         ITextMeasuresInternal textMeasures,
@@ -91,6 +93,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox = DummyCodeTextBox.Instance;
         _text = text;
         _textCursor = textCursor;
+        _textCursorAbsolutePosition = textCursorAbsolutePosition;
         _textSelector = textSelector;
         _textMeasures = textMeasures;
         _tokens = tokens;

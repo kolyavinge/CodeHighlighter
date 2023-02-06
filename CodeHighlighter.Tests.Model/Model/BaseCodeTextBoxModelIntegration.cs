@@ -22,10 +22,12 @@ internal class BaseCodeTextBoxModelIntegration
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
         var gaps = new LineGapCollection();
+        var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, gaps);
         var viewportContext = new DummyViewportContext();
         var viewport = new Viewport(
             viewportContext,
             textCursor,
+            textCursorAbsolutePosition,
             textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps),
@@ -49,6 +51,7 @@ internal class BaseCodeTextBoxModelIntegration
             codeProvider,
             text,
             textCursor,
+            textCursorAbsolutePosition,
             textSelection,
             textSelector,
             textMeasures,

@@ -10,6 +10,7 @@ internal class CodeTextBoxInjectModule : InjectModule
     {
         bindingProvider.Bind<IText, Text>().ToSingleton();
         bindingProvider.Bind<ITextCursor, TextCursor>().ToSingleton();
+        bindingProvider.Bind<ITextCursorAbsolutePosition, TextCursorAbsolutePosition>().ToSingleton();
         bindingProvider.Bind<ITokens, Tokens>().ToSingleton();
         bindingProvider.Bind<ITokensColors, TokensColors>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresInternal, TextMeasures>().ToSingleton();

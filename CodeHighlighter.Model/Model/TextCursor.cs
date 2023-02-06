@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
@@ -187,10 +186,4 @@ internal class TextCursor : ITextCursor
             else if (ColumnIndex > lineLength) ColumnIndex = lineLength;
         }
     }
-}
-
-internal static class TextCursorExt
-{
-    public static Point GetAbsolutePosition(this ITextCursor cursor, ITextMeasuresInternal measures) =>
-        new(cursor.ColumnIndex * measures.LetterWidth, cursor.LineIndex * measures.LineHeight);
 }

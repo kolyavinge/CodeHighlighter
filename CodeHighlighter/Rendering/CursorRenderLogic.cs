@@ -48,7 +48,7 @@ internal class CursorRenderLogic
     public void DrawHighlightedCursorLine(ICodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
     {
         var x = 0.0;
-        var y = model.CursorPosition.LineIndex * model.TextMeasures.LineHeight - model.Viewport.VerticalScrollBarValue;
+        var y = model.AbsoluteCursorPosition.Y - model.Viewport.VerticalScrollBarValue;
         var width = actualWidth;
         var height = model.TextMeasures.LineHeight;
         context.DrawRectangle(background, null, new(x, y, width, height));

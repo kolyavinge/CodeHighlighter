@@ -10,6 +10,7 @@ internal class BaseInputActionIntegration
 {
     protected Text _text;
     protected TextCursor _textCursor;
+    protected TextCursorAbsolutePosition _textCursorAbsolutePosition;
     protected TextMeasures _textMeasures;
     protected TextSelection _textSelection;
     protected TextSelector _textSelector;
@@ -30,10 +31,12 @@ internal class BaseInputActionIntegration
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _gaps = new();
+        _textCursorAbsolutePosition = new(_textCursor, _textMeasures, _gaps);
         _viewportContext = new();
         _viewport = new(
             _viewportContext.Object,
             _textCursor,
+            _textCursorAbsolutePosition,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),

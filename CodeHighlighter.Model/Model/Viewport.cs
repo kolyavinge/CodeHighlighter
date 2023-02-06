@@ -27,6 +27,7 @@ internal interface IViewportInternal : IViewport
 internal class Viewport : IViewportInternal
 {
     private readonly ITextCursor _textCursor;
+    private readonly ITextCursorAbsolutePosition _textCursorAbsolutePosition;
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly IViewportVerticalOffsetUpdater _verticalOffsetUpdater;
     private readonly IVerticalScrollBarMaximumValueStrategy _verticalScrollBarMaximumValueStrategy;
@@ -74,6 +75,7 @@ internal class Viewport : IViewportInternal
     public Viewport(
         IViewportContext context,
         ITextCursor textCursor,
+        ITextCursorAbsolutePosition textCursorAbsolutePosition,
         ITextMeasuresInternal textMeasures,
         IViewportVerticalOffsetUpdater verticalOffsetUpdater,
         IVerticalScrollBarMaximumValueStrategy verticalScrollBarMaximumValueStrategy,
@@ -81,6 +83,7 @@ internal class Viewport : IViewportInternal
     {
         _context = context;
         _textCursor = textCursor;
+        _textCursorAbsolutePosition = textCursorAbsolutePosition;
         _textMeasures = textMeasures;
         _verticalOffsetUpdater = verticalOffsetUpdater;
         _verticalScrollBarMaximumValueStrategy = verticalScrollBarMaximumValueStrategy;
@@ -109,7 +112,7 @@ internal class Viewport : IViewportInternal
 
     public void CorrectByCursorPosition()
     {
-        var cursorAbsolutePoint = _textCursor.GetAbsolutePosition(_textMeasures);
+        var cursorAbsolutePoint = _textCursorAbsolutePosition.Position;
 
         if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
         {

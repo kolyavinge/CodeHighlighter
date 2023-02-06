@@ -11,6 +11,7 @@ internal class BaseHistoryActionIntegration
 {
     protected readonly Text _text;
     protected readonly TextCursor _textCursor;
+    protected readonly TextCursorAbsolutePosition _textCursorAbsolutePosition;
     protected readonly TextMeasures _textMeasures;
     protected readonly TextSelection _textSelection;
     protected readonly TextSelector _textSelector;
@@ -33,9 +34,11 @@ internal class BaseHistoryActionIntegration
         _tokens = new();
         _viewportContext = new();
         _gaps = new();
+        _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, _gaps);
         _viewport = new(
             _viewportContext.Object,
             _textCursor,
+            _textCursorAbsolutePosition,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
