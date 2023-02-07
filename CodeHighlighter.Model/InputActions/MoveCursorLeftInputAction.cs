@@ -11,6 +11,6 @@ internal class MoveCursorLeftInputAction : InputAction, IMoveCursorLeftInputActi
     {
         context.TextCursor.MoveLeft();
         context.TextSelector.SetSelection();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }

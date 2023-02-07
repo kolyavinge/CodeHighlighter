@@ -26,11 +26,11 @@ internal class BaseCodeTextBoxModelIntegration
         var viewportContext = new DummyViewportContext();
         var viewport = new Viewport(
             viewportContext,
-            textCursorAbsolutePosition,
             textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(text, textMeasures));
+        var cursorPositionCorrector = new ViewportCursorPositionCorrector(viewport, textMeasures, textCursorAbsolutePosition);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var inputActionsFactory = new InputActionsFactory();
         var inputActionContext = new InputActionContext(
@@ -43,6 +43,7 @@ internal class BaseCodeTextBoxModelIntegration
             tokens,
             tokensColors,
             viewport,
+            cursorPositionCorrector,
             textEvents);
         var historyActionsFactory = new HistoryActionsFactory(inputActionsFactory, inputActionContext);
 

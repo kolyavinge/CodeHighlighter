@@ -135,7 +135,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox.FontSettingsChanged += (s, e) =>
         {
             _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth);
-            _viewport.UpdateScrollbarsMaximumValues();
+            _viewport.UpdateScrollBarsMaximumValues();
         };
     }
 

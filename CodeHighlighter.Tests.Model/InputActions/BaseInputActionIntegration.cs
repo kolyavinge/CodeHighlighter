@@ -17,6 +17,7 @@ internal class BaseInputActionIntegration
     protected Tokens _tokens;
     protected LineGapCollection _gaps;
     protected Viewport _viewport;
+    protected ViewportCursorPositionCorrector _cursorPositionCorrector;
     protected Mock<IViewportContext> _viewportContext;
     protected TextEvents _textEvents;
     protected InputActionsFactory _inputActionFactory;
@@ -35,11 +36,11 @@ internal class BaseInputActionIntegration
         _viewportContext = new();
         _viewport = new(
             _viewportContext.Object,
-            _textCursorAbsolutePosition,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
+        _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _textEvents = new(_text);
         _inputActionFactory = new();
         _context = new(
@@ -52,6 +53,7 @@ internal class BaseInputActionIntegration
             _tokens,
             new TokensColors(),
             _viewport,
+            _cursorPositionCorrector,
             _textEvents);
         SetText("");
     }

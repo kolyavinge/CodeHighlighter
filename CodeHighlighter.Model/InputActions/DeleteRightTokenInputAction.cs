@@ -20,8 +20,8 @@ internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInput
     public DeleteTokenResult Do(IInputActionContext context)
     {
         var result = DeleteRightToken(context);
-        context.Viewport.CorrectByCursorPosition();
-        context.Viewport.UpdateScrollbarsMaximumValues();
+        context.CursorPositionCorrector.CorrectPosition();
+        context.Viewport.UpdateScrollBarsMaximumValues();
         context.TextEvents.RaiseTextChanged();
 
         return result;

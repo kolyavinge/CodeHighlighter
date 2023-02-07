@@ -12,7 +12,7 @@ internal class MoveSelectedLinesDownInputAction : InputAction, IMoveSelectedLine
     public MoveSelectedLinesResult Do(IInputActionContext context)
     {
         var result = MoveSelectedLinesDown(context);
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
 
         return result;
     }

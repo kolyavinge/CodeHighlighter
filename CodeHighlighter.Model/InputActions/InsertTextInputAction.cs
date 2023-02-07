@@ -12,8 +12,8 @@ internal class InsertTextInputAction : InputAction, IInsertTextInputAction
     public InsertTextResult Do(IInputActionContext context, string insertedText)
     {
         var insertResult = InsertText(context, insertedText);
-        context.Viewport.CorrectByCursorPosition();
-        context.Viewport.UpdateScrollbarsMaximumValues();
+        context.CursorPositionCorrector.CorrectPosition();
+        context.Viewport.UpdateScrollBarsMaximumValues();
         context.TextEvents.RaiseTextChanged();
 
         return insertResult;

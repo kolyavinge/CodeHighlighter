@@ -12,8 +12,8 @@ internal class AppendCharInputAction : InputAction, IAppendCharInputAction
     public AppendCharResult Do(IInputActionContext context, char ch)
     {
         var result = AppendChar(context, ch);
-        context.Viewport.CorrectByCursorPosition();
-        context.Viewport.UpdateScrollbarsMaximumValues();
+        context.CursorPositionCorrector.CorrectPosition();
+        context.Viewport.UpdateScrollBarsMaximumValues();
         context.TextEvents.RaiseTextChanged();
 
         return result;

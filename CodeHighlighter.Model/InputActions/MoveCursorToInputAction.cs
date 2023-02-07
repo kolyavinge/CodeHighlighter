@@ -13,6 +13,6 @@ internal class MoveCursorToInputAction : InputAction, IMoveCursorToInputAction
     {
         context.TextCursor.MoveTo(position);
         context.TextSelector.SetSelection();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }

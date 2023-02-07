@@ -11,6 +11,6 @@ internal class MoveCursorTextBeginInputAction : InputAction, IMoveCursorTextBegi
     {
         context.TextCursor.MoveTextBegin();
         context.TextSelector.SetSelection();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }

@@ -12,8 +12,8 @@ internal class SetTextInputAction : InputAction, ISetTextInputAction
     public SetTextResult Do(IInputActionContext context, string text)
     {
         var result = SetText(context, text);
-        context.Viewport.CorrectByCursorPosition();
-        context.Viewport.UpdateScrollbarsMaximumValues();
+        context.CursorPositionCorrector.CorrectPosition();
+        context.Viewport.UpdateScrollBarsMaximumValues();
         context.TextEvents.RaiseTextSet();
 
         return result;

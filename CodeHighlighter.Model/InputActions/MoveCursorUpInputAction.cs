@@ -11,6 +11,6 @@ internal class MoveCursorUpInputAction : InputAction, IMoveCursorUpInputAction
     {
         context.TextCursor.MoveUp();
         context.TextSelector.SetSelection();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }

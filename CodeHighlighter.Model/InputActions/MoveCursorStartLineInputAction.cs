@@ -11,6 +11,6 @@ internal class MoveCursorStartLineInputAction : InputAction, IMoveCursorStartLin
     {
         context.TextCursor.MoveStartLine();
         context.TextSelector.SetSelection();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }

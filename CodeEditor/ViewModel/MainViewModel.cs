@@ -66,9 +66,11 @@ public class MainViewModel
             _isGapEnabled = value;
             if (_isGapEnabled)
             {
+                CodeTextBoxModel.Gaps[0] = new(3);
                 CodeTextBoxModel.Gaps[3] = new(3);
                 CodeTextBoxModel.Gaps[8] = new(2);
                 CodeTextBoxModel.Gaps[12] = new(5);
+                LineNumberPanelModel.Gaps[0] = new(3);
                 LineNumberPanelModel.Gaps[3] = new(3);
                 LineNumberPanelModel.Gaps[8] = new(2);
                 LineNumberPanelModel.Gaps[12] = new(5);
@@ -78,7 +80,7 @@ public class MainViewModel
                 CodeTextBoxModel.Gaps.Clear();
                 LineNumberPanelModel.Gaps.Clear();
             }
-            CodeTextBoxModel.Viewport.UpdateScrollbarsMaximumValues();
+            CodeTextBoxModel.Viewport.UpdateScrollBarsMaximumValues();
         }
     }
 

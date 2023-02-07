@@ -29,6 +29,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<IVerticalScrollBarMaximumValueStrategy, DefaultVerticalScrollBarMaximumValueStrategy>().ToSingleton();
         bindingProvider.Bind<IHorizontalScrollBarMaximumValueStrategy, DefaultHorizontalScrollBarMaximumValueStrategy>().ToSingleton();
         bindingProvider.Bind<IViewportVerticalOffsetUpdater, ViewportVerticalOffsetUpdater>().ToSingleton();
+        bindingProvider.Bind<IViewportCursorPositionCorrector, ViewportCursorPositionCorrector>().ToSingleton();
         bindingProvider.Bind<ICodeTextBoxModelAdditionalInfo, CodeTextBoxModelAdditionalInfo>().ToSingleton();
 
         bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();

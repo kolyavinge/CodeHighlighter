@@ -16,6 +16,7 @@ internal interface IInputActionContext
     ITokensColors TokenColors { get; }
     ITokens Tokens { get; }
     IViewportInternal Viewport { get; }
+    IViewportCursorPositionCorrector CursorPositionCorrector { get; }
 }
 
 internal class InputActionContext : IInputActionContext
@@ -29,6 +30,7 @@ internal class InputActionContext : IInputActionContext
     public ITokens Tokens { get; }
     public ITokensColors TokenColors { get; }
     public IViewportInternal Viewport { get; set; }
+    public IViewportCursorPositionCorrector CursorPositionCorrector { get; }
     public ITextEvents TextEvents { get; }
     public ICodeTextBox CodeTextBox { get; set; }
 
@@ -42,6 +44,7 @@ internal class InputActionContext : IInputActionContext
         ITokens tokens,
         ITokensColors tokenColors,
         IViewportInternal viewport,
+        IViewportCursorPositionCorrector cursorPositionCorrector,
         ITextEvents textEvents)
     {
         CodeProvider = codeProvider;
@@ -53,6 +56,7 @@ internal class InputActionContext : IInputActionContext
         Tokens = tokens;
         TokenColors = tokenColors;
         Viewport = viewport;
+        CursorPositionCorrector = cursorPositionCorrector;
         TextEvents = textEvents;
         CodeTextBox = DummyCodeTextBox.Instance;
     }

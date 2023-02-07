@@ -10,20 +10,18 @@ public interface IViewport
     double HorizontalScrollBarMaximum { get; set; }
     int GetLinesCountInViewport();
     void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy);
-    void UpdateScrollbarsMaximumValues();
+    void UpdateScrollBarsMaximumValues();
 }
 
 internal interface IViewportInternal : IViewport
 {
     IViewportContext Context { get; set; }
-    void CorrectByCursorPosition();
     void ScrollLineDown();
     void ScrollLineUp();
 }
 
 internal class Viewport : IViewportInternal
 {
-    private readonly ITextCursorAbsolutePosition _textCursorAbsolutePosition;
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly IViewportVerticalOffsetUpdater _verticalOffsetUpdater;
     private readonly IVerticalScrollBarMaximumValueStrategy _verticalScrollBarMaximumValueStrategy;
@@ -70,14 +68,12 @@ internal class Viewport : IViewportInternal
 
     public Viewport(
         IViewportContext context,
-        ITextCursorAbsolutePosition textCursorAbsolutePosition,
         ITextMeasuresInternal textMeasures,
         IViewportVerticalOffsetUpdater verticalOffsetUpdater,
         IVerticalScrollBarMaximumValueStrategy verticalScrollBarMaximumValueStrategy,
         IHorizontalScrollBarMaximumValueStrategy horizontalScrollBarMaximumValueStrategy)
     {
         _context = context;
-        _textCursorAbsolutePosition = textCursorAbsolutePosition;
         _textMeasures = textMeasures;
         _verticalOffsetUpdater = verticalOffsetUpdater;
         _verticalScrollBarMaximumValueStrategy = verticalScrollBarMaximumValueStrategy;
@@ -97,30 +93,7 @@ internal class Viewport : IViewportInternal
         _horizontalScrollBarMaximumValueStrategy = strategy;
     }
 
-    public void CorrectByCursorPosition()
-    {
-        var cursorAbsolutePoint = _textCursorAbsolutePosition.Position;
-
-        if (cursorAbsolutePoint.X < _context.HorizontalScrollBarValue)
-        {
-            _context.HorizontalScrollBarValue = cursorAbsolutePoint.X;
-        }
-        else if (cursorAbsolutePoint.X + _textMeasures.LetterWidth > _context.HorizontalScrollBarValue + _context.ActualWidth)
-        {
-            _context.HorizontalScrollBarValue = cursorAbsolutePoint.X - _context.ActualWidth + _textMeasures.LetterWidth;
-        }
-
-        if (cursorAbsolutePoint.Y < _context.VerticalScrollBarValue)
-        {
-            _context.VerticalScrollBarValue = cursorAbsolutePoint.Y;
-        }
-        else if (cursorAbsolutePoint.Y + _textMeasures.LineHeight > _context.VerticalScrollBarValue + _context.ActualHeight)
-        {
-            _context.VerticalScrollBarValue = cursorAbsolutePoint.Y - _context.ActualHeight + _textMeasures.LineHeight;
-        }
-    }
-
-    public void UpdateScrollbarsMaximumValues()
+    public void UpdateScrollBarsMaximumValues()
     {
         _context.HorizontalScrollBarMaximum = _horizontalScrollBarMaximumValueStrategy.GetValue();
         _context.VerticalScrollBarMaximum = _verticalScrollBarMaximumValueStrategy.GetValue();

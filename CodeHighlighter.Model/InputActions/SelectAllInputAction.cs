@@ -13,6 +13,6 @@ internal class SelectAllInputAction : InputAction, ISelectAllInputAction
         context.TextSelection.StartPosition = new(0, 0);
         context.TextSelection.EndPosition = new(context.Text.LinesCount - 1, context.Text.GetLine(context.Text.LinesCount - 1).Length);
         context.TextCursor.MoveTextEnd();
-        context.Viewport.CorrectByCursorPosition();
+        context.CursorPositionCorrector.CorrectPosition();
     }
 }
