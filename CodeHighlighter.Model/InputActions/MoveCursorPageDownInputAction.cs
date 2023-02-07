@@ -9,8 +9,8 @@ internal class MoveCursorPageDownInputAction : InputAction, IMoveCursorPageDownI
 {
     public void Do(IInputActionContext context)
     {
-        var pageSize = context.Viewport.GetLinesCountInViewport();
-        context.TextCursor.MovePageDown(pageSize);
+        var newLineIndex = context.Viewport.GetCursorLineIndexAfterScrollPageDown(context.TextCursor.LineIndex);
+        context.TextCursor.MoveTo(new(newLineIndex, context.TextCursor.ColumnIndex));
         context.TextSelector.SetSelection();
         context.CursorPositionCorrector.CorrectPosition();
     }

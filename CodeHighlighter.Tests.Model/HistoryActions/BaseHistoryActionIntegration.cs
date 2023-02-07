@@ -36,6 +36,7 @@ internal class BaseHistoryActionIntegration
         _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
         _viewport = new(
             _textMeasures,
+            _gaps,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));

@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.Model;
+﻿using System.Linq;
+
+namespace CodeHighlighter.Model;
 
 public interface IViewport
 {
@@ -9,6 +11,8 @@ public interface IViewport
     double HorizontalScrollBarValue { get; set; }
     double HorizontalScrollBarMaximum { get; set; }
     int GetLinesCountInViewport();
+    int GetCursorLineIndexAfterScrollPageUp(int cursorLineIndex);
+    int GetCursorLineIndexAfterScrollPageDown(int cursorLineIndex);
     void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy);
     void UpdateScrollBarsMaximumValues();
 }
@@ -23,6 +27,7 @@ internal interface IViewportInternal : IViewport
 internal class Viewport : IViewportInternal
 {
     private readonly ITextMeasuresInternal _textMeasures;
+    private readonly ILineGapCollection _gaps;
     private readonly IViewportVerticalOffsetUpdater _verticalOffsetUpdater;
     private readonly IVerticalScrollBarMaximumValueStrategy _verticalScrollBarMaximumValueStrategy;
     private IHorizontalScrollBarMaximumValueStrategy _horizontalScrollBarMaximumValueStrategy;
@@ -58,12 +63,14 @@ internal class Viewport : IViewportInternal
 
     public Viewport(
         ITextMeasuresInternal textMeasures,
+        ILineGapCollection gaps,
         IViewportVerticalOffsetUpdater verticalOffsetUpdater,
         IVerticalScrollBarMaximumValueStrategy verticalScrollBarMaximumValueStrategy,
         IHorizontalScrollBarMaximumValueStrategy horizontalScrollBarMaximumValueStrategy)
     {
         _context = new DummyViewportContext();
         _textMeasures = textMeasures;
+        _gaps = gaps;
         _verticalOffsetUpdater = verticalOffsetUpdater;
         _verticalScrollBarMaximumValueStrategy = verticalScrollBarMaximumValueStrategy;
         _horizontalScrollBarMaximumValueStrategy = horizontalScrollBarMaximumValueStrategy;
@@ -81,6 +88,29 @@ internal class Viewport : IViewportInternal
         if (_context.ActualHeight % _textMeasures.LineHeight != 0) result++;
 
         return result;
+    }
+
+    public int GetCursorLineIndexAfterScrollPageUp(int cursorLineIndex)
+    {
+        var endCursorLineIndex = cursorLineIndex - GetLinesCountInViewport();
+        if (endCursorLineIndex < 0) endCursorLineIndex = 0;
+        if (_gaps.AnyItems)
+        {
+            endCursorLineIndex -= (int)(Enumerable.Range(endCursorLineIndex, cursorLineIndex - endCursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0);
+        }
+
+        return endCursorLineIndex;
+    }
+
+    public int GetCursorLineIndexAfterScrollPageDown(int cursorLineIndex)
+    {
+        var endCursorLineIndex = cursorLineIndex + GetLinesCountInViewport();
+        if (_gaps.AnyItems)
+        {
+            endCursorLineIndex -= (int)(Enumerable.Range(cursorLineIndex, endCursorLineIndex - cursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0);
+        }
+
+        return endCursorLineIndex;
     }
 
     public void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy)
