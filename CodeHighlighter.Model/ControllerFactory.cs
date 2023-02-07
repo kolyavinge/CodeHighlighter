@@ -12,6 +12,10 @@ public static class ControllerFactory
 
     public static IMouseController MakeMouseController(ICodeTextBox codeTextBox, ICodeTextBoxModel model)
     {
-        return new MouseController(codeTextBox, model, new PointInTextSelection(model.TextSelection));
+        return new MouseController(
+            codeTextBox,
+            model,
+            new PointInTextSelection(model.TextSelection),
+            new MouseCursorPosition(model.Viewport, model.TextMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), model.Gaps)));
     }
 }

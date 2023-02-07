@@ -5,8 +5,6 @@ namespace CodeHighlighter.Tests.Model;
 
 internal class ViewportTest
 {
-    
-
     [SetUp]
     public void Setup()
     {

@@ -7,6 +7,7 @@ public interface IExtendedLineNumberGenerator
 {
     IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
     double GetLineOffsetY(int lineIndex, double textLineHeight);
+    int GetLineIndex(double mouseY, double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
 }
 
 internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
@@ -55,5 +56,20 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
         }
 
         return lineIndex * textLineHeight;
+    }
+
+    public int GetLineIndex(double mouseY, double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
+    {
+        if (_gaps.AnyItems)
+        {
+            return
+                GetLineNumbersModified(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount)
+                .LastOrDefault(line => line.OffsetY < mouseY)
+                .LineIndex;
+        }
+        else
+        {
+            return (int)((mouseY + verticalScrollBarValue) / textLineHeight);
+        }
     }
 }

@@ -18,20 +18,26 @@ internal class MouseController : IMouseController
     private readonly ICodeTextBox _codeTextBox;
     private readonly ICodeTextBoxModel _model;
     private readonly IPointInTextSelection _pointInTextSelection;
+    private readonly IMouseCursorPosition _mouseCursorPosition;
     private bool _isLeftButtonPressed;
 
-    public MouseController(ICodeTextBox codeTextBox, ICodeTextBoxModel model, IPointInTextSelection pointInTextSelection)
+    public MouseController(
+        ICodeTextBox codeTextBox,
+        ICodeTextBoxModel model,
+        IPointInTextSelection pointInTextSelection,
+        IMouseCursorPosition mouseCursorPosition)
     {
         _codeTextBox = codeTextBox;
         _model = model;
         _pointInTextSelection = pointInTextSelection;
+        _mouseCursorPosition = mouseCursorPosition;
     }
 
     public void LeftButtonDown(Point positionInControl)
     {
         _isLeftButtonPressed = true;
         _codeTextBox.Focus();
-        var pos = _model.Viewport.GetCursorPosition(positionInControl);
+        var pos = _mouseCursorPosition.GetCursorPosition(positionInControl);
         _model.MoveCursorTo(pos);
         _codeTextBox.InvalidateVisual();
     }
@@ -39,7 +45,7 @@ internal class MouseController : IMouseController
     public void RightButtonDown(Point positionInControl)
     {
         _codeTextBox.Focus();
-        var pos = _model.Viewport.GetCursorPosition(positionInControl);
+        var pos = _mouseCursorPosition.GetCursorPosition(positionInControl);
         if (_model.TextSelection.IsExist && _pointInTextSelection.Check(pos))
         {
             return;
@@ -56,7 +62,7 @@ internal class MouseController : IMouseController
         if (_isLeftButtonPressed)
         {
             _model.ActivateSelection();
-            var pos = _model.Viewport.GetCursorPosition(positionInControl);
+            var pos = _mouseCursorPosition.GetCursorPosition(positionInControl);
             _model.MoveCursorTo(pos);
             _codeTextBox.InvalidateVisual();
         }
@@ -76,7 +82,7 @@ internal class MouseController : IMouseController
 
     public void LeftButtonDoubleClick(Point positionInControl)
     {
-        var pos = _model.Viewport.GetCursorPosition(positionInControl);
+        var pos = _mouseCursorPosition.GetCursorPosition(positionInControl);
         _model.SelectToken(pos);
         _codeTextBox.InvalidateVisual();
     }

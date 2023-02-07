@@ -1,6 +1,4 @@
-﻿using CodeHighlighter.Common;
-
-namespace CodeHighlighter.Model;
+﻿namespace CodeHighlighter.Model;
 
 public interface IViewport
 {
@@ -10,7 +8,6 @@ public interface IViewport
     double VerticalScrollBarMaximum { get; set; }
     double HorizontalScrollBarValue { get; set; }
     double HorizontalScrollBarMaximum { get; set; }
-    CursorPosition GetCursorPosition(Point cursorClickPosition);
     int GetLinesCountInViewport();
     void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy);
     void UpdateScrollbarsMaximumValues();
@@ -98,14 +95,6 @@ internal class Viewport : IViewportInternal
     public void SetHorizontalScrollBarMaximumValueStrategy(IHorizontalScrollBarMaximumValueStrategy strategy)
     {
         _horizontalScrollBarMaximumValueStrategy = strategy;
-    }
-
-    public CursorPosition GetCursorPosition(Point cursorClickPosition)
-    {
-        var lineIndex = (int)((cursorClickPosition.Y + _context.VerticalScrollBarValue) / _textMeasures.LineHeight);
-        var columnIndex = (int)((cursorClickPosition.X + _textMeasures.LetterWidth / 2.0 + _context.HorizontalScrollBarValue) / _textMeasures.LetterWidth);
-
-        return new(lineIndex, columnIndex);
     }
 
     public void CorrectByCursorPosition()

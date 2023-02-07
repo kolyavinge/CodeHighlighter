@@ -149,4 +149,34 @@ internal class ExtendedLineNumberGeneratorTest
 
         Assert.That(result, Is.EqualTo((7 + 5) * TextLineHeight));
     }
+
+    [Test]
+    public void GetLineIndex()
+    {
+        Assert.That(_generator.GetLineIndex(20, 100, 10, 10, 1000), Is.EqualTo(3));
+    }
+
+    [Test]
+    public void GetLineIndexWithGaps_CursorBelowGap()
+    {
+        _gaps[0] = new(2);
+
+        Assert.That(_generator.GetLineIndex(50, 100, 10, 10, 1000), Is.EqualTo(3));
+    }
+
+    [Test]
+    public void GetLineIndexWithGaps_CursorInGapFirstLine()
+    {
+        _gaps[0] = new(2);
+
+        Assert.That(_generator.GetLineIndex(10, 100, 0, 10, 1000), Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetLineIndexWithGaps_CursorInGap()
+    {
+        _gaps[1] = new(2);
+
+        Assert.That(_generator.GetLineIndex(25, 100, 0, 10, 1000), Is.EqualTo(0));
+    }
 }
