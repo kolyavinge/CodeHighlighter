@@ -15,7 +15,7 @@ public interface IViewport
 
 internal interface IViewportInternal : IViewport
 {
-    IViewportContext Context { get; set; }
+    void SetContext(IViewportContext context);
     void ScrollLineDown();
     void ScrollLineUp();
 }
@@ -27,16 +27,6 @@ internal class Viewport : IViewportInternal
     private readonly IVerticalScrollBarMaximumValueStrategy _verticalScrollBarMaximumValueStrategy;
     private IHorizontalScrollBarMaximumValueStrategy _horizontalScrollBarMaximumValueStrategy;
     private IViewportContext _context;
-
-    public IViewportContext Context
-    {
-        get => _context;
-        set
-        {
-            _context = value;
-            _context.ViewportSizeChanged += (s, e) => UpdateIsHorizontalScrollBarVisible();
-        }
-    }
 
     public double ActualWidth => _context.ActualWidth;
 
@@ -67,17 +57,22 @@ internal class Viewport : IViewportInternal
     }
 
     public Viewport(
-        IViewportContext context,
         ITextMeasuresInternal textMeasures,
         IViewportVerticalOffsetUpdater verticalOffsetUpdater,
         IVerticalScrollBarMaximumValueStrategy verticalScrollBarMaximumValueStrategy,
         IHorizontalScrollBarMaximumValueStrategy horizontalScrollBarMaximumValueStrategy)
     {
-        _context = context;
+        _context = new DummyViewportContext();
         _textMeasures = textMeasures;
         _verticalOffsetUpdater = verticalOffsetUpdater;
         _verticalScrollBarMaximumValueStrategy = verticalScrollBarMaximumValueStrategy;
         _horizontalScrollBarMaximumValueStrategy = horizontalScrollBarMaximumValueStrategy;
+    }
+
+    public void SetContext(IViewportContext context)
+    {
+        _context = context;
+        _context.ViewportSizeChanged += (s, e) => UpdateIsHorizontalScrollBarVisible();
     }
 
     public int GetLinesCountInViewport()

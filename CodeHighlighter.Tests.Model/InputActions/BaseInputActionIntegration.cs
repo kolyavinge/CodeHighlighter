@@ -18,7 +18,6 @@ internal class BaseInputActionIntegration
     protected LineGapCollection _gaps;
     protected Viewport _viewport;
     protected ViewportCursorPositionCorrector _cursorPositionCorrector;
-    protected Mock<IViewportContext> _viewportContext;
     protected TextEvents _textEvents;
     protected InputActionsFactory _inputActionFactory;
     protected InputActionContext _context;
@@ -33,9 +32,7 @@ internal class BaseInputActionIntegration
         _tokens = new();
         _gaps = new();
         _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
-        _viewportContext = new();
         _viewport = new(
-            _viewportContext.Object,
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),

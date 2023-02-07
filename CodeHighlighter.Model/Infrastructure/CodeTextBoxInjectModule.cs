@@ -18,7 +18,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<ILinesDecorationCollection, LinesDecorationCollection>().ToSingleton();
         bindingProvider.Bind<ITextSelectionInternal, TextSelection>().ToSingleton();
         bindingProvider.Bind<ITextSelector, TextSelector>().ToSingleton();
-        bindingProvider.Bind<IViewportContext, DummyViewportContext>().ToSingleton();
+        // IViewportContext не нужно добавлять в контейнер
         bindingProvider.Bind<IViewportInternal, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();

@@ -130,7 +130,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     public void AttachCodeTextBox(ICodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
-        _viewport.Context = codeTextBox;
+        _viewport.SetContext(codeTextBox);
         _inputActionContext.CodeTextBox = _codeTextBox;
         _codeTextBox.FontSettingsChanged += (s, e) =>
         {
