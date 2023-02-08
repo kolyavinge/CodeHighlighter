@@ -6,6 +6,7 @@ public interface IRenderingModel
     ITextSelectionRendering TextSelection { get; }
     ILinesDecorationRendering LinesDecoration { get; }
     IHighlightBracketsRendering HighlightBrackets { get; }
+    ILineGapRendering LineGap { get; }
 }
 
 internal class RenderingModel : IRenderingModel
@@ -14,16 +15,19 @@ internal class RenderingModel : IRenderingModel
     public ITextSelectionRendering TextSelection { get; }
     public ILinesDecorationRendering LinesDecoration { get; }
     public IHighlightBracketsRendering HighlightBrackets { get; }
+    public ILineGapRendering LineGap { get; }
 
     public RenderingModel(
         ITextRendering textRendering,
         ITextSelectionRendering textSelectionRendering,
         ILinesDecorationRendering linesDecorationRendering,
-        IHighlightBracketsRendering highlightBracketsRendering)
+        IHighlightBracketsRendering highlightBracketsRendering,
+        ILineGapRendering lineGap)
     {
         Text = textRendering;
         TextSelection = textSelectionRendering;
         LinesDecoration = linesDecorationRendering;
         HighlightBrackets = highlightBracketsRendering;
+        LineGap = lineGap;
     }
 }

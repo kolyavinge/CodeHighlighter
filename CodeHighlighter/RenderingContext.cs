@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using CodeHighlighter.Rendering;
@@ -43,5 +45,17 @@ internal class RenderingContext : IRenderingContext
     {
         var brush = new SolidColorBrush(new() { R = color.R, G = color.G, B = color.B, A = color.A });
         _context!.DrawRectangle(brush, null, new(rect.X, rect.Y, rect.Width, rect.Height));
+    }
+
+    public void DrawPolygon(object platformColor, IEnumerable<Common.Point> points)
+    {
+        var pointsArray = points.ToArray();
+        var drawingPen = new Pen((Brush)platformColor, 1);
+        for (int i = 1; i < pointsArray.Length; i++)
+        {
+            var p1 = new Point(pointsArray[i - 1].X, pointsArray[i - 1].Y);
+            var p2 = new Point(pointsArray[i].X, pointsArray[i].Y);
+            _context!.DrawLine(drawingPen, p1, p2);
+        }
     }
 }

@@ -85,6 +85,17 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         DependencyProperty.Register("CursorLineHighlightingBrush", typeof(Brush), typeof(CodeTextBox));
     #endregion
 
+    #region LineGapBrush
+    public Brush LineGapBrush
+    {
+        get => (Brush)GetValue(LineGapBrushProperty);
+        set => SetValue(LineGapBrushProperty, value);
+    }
+
+    public static readonly DependencyProperty LineGapBrushProperty =
+        DependencyProperty.Register("LineGapBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(Brushes.Gray));
+    #endregion
+
     #region VerticalScrollBarValue
     public double VerticalScrollBarValue
     {
@@ -285,6 +296,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         _renderingModel.TextSelection.Render(SelectionBrush);
         _renderingModel.HighlightBrackets.Render(HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
         _renderingModel.Text.Render();
+        _renderingModel.LineGap.Render(LineGapBrush);
         if (IsFocused)
         {
             _cursorRenderLogic.DrawCursor(Model);
