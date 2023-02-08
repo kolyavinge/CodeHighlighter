@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CodeHighlighter.Common;
-using CodeHighlighter.Sql;
+using CodeHighlighter.CodeProvidering.Sql;
 
 namespace CodeHighlighter.CodeProvidering;
 

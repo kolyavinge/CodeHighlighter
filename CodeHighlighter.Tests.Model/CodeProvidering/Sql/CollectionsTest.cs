@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.Sql;
+using CodeHighlighter.CodeProvidering.Sql;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Sql;
+namespace CodeHighlighter.Tests.CodeProvidering.Sql;
 
 internal class CollectionsTest
 {

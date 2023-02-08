@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace CodeHighlighter.Sql;
+namespace CodeHighlighter.CodeProvidering.Sql;
 
 internal class FunctionsCollection : IEnumerable<string>
 {
