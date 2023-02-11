@@ -23,6 +23,10 @@ internal class LineNumberGenerator : ILineNumberGenerator
 {
     public IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
+        if (controlHeight <= 0.0) yield break;
+        if (verticalScrollBarValue < 0.0) yield break;
+        if (textLineHeight <= 0.0) yield break;
+
         var startLine = (int)(verticalScrollBarValue / textLineHeight);
         var linesCount = (int)Math.Ceiling(controlHeight / textLineHeight);
         if (verticalScrollBarValue % textLineHeight != 0) linesCount++;

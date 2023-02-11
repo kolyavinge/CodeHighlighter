@@ -9,7 +9,7 @@ internal class MoveCursorPageUpInputAction : InputAction, IMoveCursorPageUpInput
 {
     public void Do(IInputActionContext context)
     {
-        var newLineIndex = context.Viewport.GetCursorLineIndexAfterScrollPageUp(context.TextCursor.LineIndex);
+        var newLineIndex = context.PageScroller.GetCursorLineIndexAfterScrollPageUp(context.TextCursor.LineIndex);
         context.TextCursor.MoveTo(new(newLineIndex, context.TextCursor.ColumnIndex));
         context.TextSelector.SetSelection();
         context.CursorPositionCorrector.CorrectPosition();

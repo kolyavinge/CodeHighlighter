@@ -292,7 +292,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         {
             _cursorRenderLogic.DrawHighlightedCursorLine(Model, context, CursorLineHighlightingBrush, ActualWidth);
         }
-        _renderingModel.LinesDecoration.Render(ActualWidth);
+        _renderingModel.LinesDecoration.Render();
         _renderingModel.TextSelection.Render(SelectionBrush);
         _renderingModel.HighlightBrackets.Render(HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
         _renderingModel.Text.Render();

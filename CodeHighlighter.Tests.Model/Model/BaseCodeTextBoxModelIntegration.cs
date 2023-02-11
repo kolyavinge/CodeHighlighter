@@ -25,11 +25,11 @@ internal class BaseCodeTextBoxModelIntegration
         var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), gaps));
         var viewport = new Viewport(
             textMeasures,
-            gaps,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(text, textMeasures));
         var cursorPositionCorrector = new ViewportCursorPositionCorrector(viewport, textMeasures, textCursorAbsolutePosition);
+        var pageScroller = new PageScroller(viewport, gaps);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
         var inputActionsFactory = new InputActionsFactory();
         var inputActionContext = new InputActionContext(
@@ -43,6 +43,7 @@ internal class BaseCodeTextBoxModelIntegration
             tokensColors,
             viewport,
             cursorPositionCorrector,
+            pageScroller,
             textEvents);
         var historyActionsFactory = new HistoryActionsFactory(inputActionsFactory, inputActionContext);
 

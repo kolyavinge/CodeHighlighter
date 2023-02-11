@@ -9,7 +9,7 @@ public interface IMouseController
     void RightButtonDown(Point positionInControl);
     void Move(Point positionInControl);
     void LeftButtonUp();
-    void ScrollWheel(int pages, bool up);
+    void ScrollWheel(int lines, bool up);
     void LeftButtonDoubleClick(Point positionInControl);
 }
 
@@ -74,10 +74,10 @@ internal class MouseController : IMouseController
         _model.CompleteSelection();
     }
 
-    public void ScrollWheel(int pages, bool up)
+    public void ScrollWheel(int lines, bool up)
     {
-        _model.Viewport.VerticalScrollBarValue += (up ? -1 : 1) * pages * _model.TextMeasures.LineHeight;
-        _codeTextBox.InvalidateVisual();
+        _model.Viewport.VerticalScrollBarValue += (up ? -1 : 1) * lines * _model.TextMeasures.LineHeight;
+        _codeTextBox.InvalidateVisual(); // лишнее ?
     }
 
     public void LeftButtonDoubleClick(Point positionInControl)

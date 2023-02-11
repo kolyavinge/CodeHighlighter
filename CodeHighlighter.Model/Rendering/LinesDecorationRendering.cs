@@ -4,7 +4,7 @@ namespace CodeHighlighter.Rendering;
 
 public interface ILinesDecorationRendering
 {
-    void Render(double lineWidth);
+    void Render();
 }
 
 internal class LinesDecorationRendering : ILinesDecorationRendering
@@ -23,7 +23,7 @@ internal class LinesDecorationRendering : ILinesDecorationRendering
         _lineNumberGenerator = lineNumberGenerator;
     }
 
-    public void Render(double lineWidth)
+    public void Render()
     {
         var linesDecorationCollection = _model.LinesDecoration;
         if (!linesDecorationCollection.AnyItems) return;
@@ -38,10 +38,9 @@ internal class LinesDecorationRendering : ILinesDecorationRendering
             {
                 var x = 0.0;
                 var y = line.LineIndex * textMeasures.LineHeight - viewport.VerticalScrollBarValue;
-                var width = lineWidth;
                 var height = textMeasures.LineHeight;
                 var background = lineDecoration.Background;
-                _renderingContext.DrawRectangle(background, new(x, y, width, height));
+                _renderingContext.DrawRectangle(background, new(x, y, _model.Viewport.ActualWidth, height));
             }
         }
     }

@@ -2,7 +2,6 @@
 using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;
-using Moq;
 
 namespace CodeHighlighter.Tests.InputActions;
 
@@ -18,6 +17,7 @@ internal class BaseInputActionIntegration
     protected LineGapCollection _gaps;
     protected Viewport _viewport;
     protected ViewportCursorPositionCorrector _cursorPositionCorrector;
+    protected PageScroller _pageScroller;
     protected TextEvents _textEvents;
     protected InputActionsFactory _inputActionFactory;
     protected InputActionContext _context;
@@ -34,11 +34,11 @@ internal class BaseInputActionIntegration
         _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
         _viewport = new(
             _textMeasures,
-            _gaps,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
+        _pageScroller = new PageScroller(_viewport, _gaps);
         _textEvents = new(_text);
         _inputActionFactory = new();
         _context = new(
@@ -52,6 +52,7 @@ internal class BaseInputActionIntegration
             new TokensColors(),
             _viewport,
             _cursorPositionCorrector,
+            _pageScroller,
             _textEvents);
         SetText("");
     }

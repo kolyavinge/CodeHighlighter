@@ -18,6 +18,7 @@ internal class BaseHistoryActionIntegration
     protected readonly Tokens _tokens;
     protected readonly Viewport _viewport;
     protected readonly ViewportCursorPositionCorrector _cursorPositionCorrector;
+    protected readonly PageScroller _pageScroller;
     protected readonly LineGapCollection _gaps;
     protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
@@ -36,11 +37,11 @@ internal class BaseHistoryActionIntegration
         _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
         _viewport = new(
             _textMeasures,
-            _gaps,
             new ViewportVerticalOffsetUpdater(),
             new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
+        _pageScroller = new PageScroller(_viewport, _gaps);
         _textEvents = new(_text);
         _inputActionsFactory = new();
     }
@@ -58,6 +59,7 @@ internal class BaseHistoryActionIntegration
             new TokensColors(),
             _viewport,
             _cursorPositionCorrector,
+            _pageScroller,
             _textEvents);
         _codeTextBox = new();
         _context.CodeTextBox = _codeTextBox.Object;

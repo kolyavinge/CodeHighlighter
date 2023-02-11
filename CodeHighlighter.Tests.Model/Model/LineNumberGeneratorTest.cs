@@ -93,4 +93,36 @@ internal class LineNumberGeneratorTest
         Assert.That(lines.First(), Is.EqualTo(new LineNumber(0, 0)));
         Assert.That(lines.Last(), Is.EqualTo(new LineNumber(9, 90)));
     }
+
+    [Test]
+    public void GetLineNumbers_ZeroTextHeight()
+    {
+        var lines = _lineNumberGenerator.GetLineNumbers(100, 0, 0, 10).ToList();
+
+        Assert.That(lines.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetLineNumbers_NegativeVerticalScrollBarValue()
+    {
+        var lines = _lineNumberGenerator.GetLineNumbers(100, -100, 0, 10).ToList();
+
+        Assert.That(lines.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetLineNumbers_ZeroControlHeight()
+    {
+        var lines = _lineNumberGenerator.GetLineNumbers(0, 0, 10, 10).ToList();
+
+        Assert.That(lines.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void GetLineNumbers_ZeroControlHeightAndTextHeight()
+    {
+        var lines = _lineNumberGenerator.GetLineNumbers(0, 0, 0, 10).ToList();
+
+        Assert.That(lines.Count, Is.EqualTo(0));
+    }
 }

@@ -2,7 +2,7 @@
 
 public interface ICodeTextBox : IViewportContext, IClipboard
 {
-    event EventHandler<FontSettingsChangedEventArgs> FontSettingsChanged;
+    event EventHandler<FontSettingsChangedEventArgs>? FontSettingsChanged;
 
     bool Focus();
     void InvalidateVisual();
