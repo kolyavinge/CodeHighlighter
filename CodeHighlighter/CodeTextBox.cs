@@ -365,6 +365,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
         e.Handled = _keyboardController.KeyDown((Controllers.Key)key, controlPressed, shiftPressed);
+        _cursorRenderLogic.ResetAnimation();
     }
 
     protected override void OnKeyUp(KeyEventArgs e)

@@ -9,7 +9,17 @@ namespace CodeHighlighter.Rendering;
 internal class CursorRenderLogic
 {
     private static readonly double _cursorThickness = 1.0;
+    private readonly ObjectAnimationUsingKeyFrames _animation;
     private Line _cursorLine = new();
+
+    public CursorRenderLogic()
+    {
+        _animation = new ObjectAnimationUsingKeyFrames();
+        _animation.Duration = TimeSpan.FromSeconds(1.5);
+        _animation.RepeatBehavior = RepeatBehavior.Forever;
+        _animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Hidden, new TimeSpan(0, 0, 0, 0, 500)));
+        _animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Visible, new TimeSpan(0, 0, 1)));
+    }
 
     public void SetCursor(Line cursorLine, Brush foreground)
     {
@@ -18,12 +28,7 @@ internal class CursorRenderLogic
         _cursorLine.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
         _cursorLine.Stroke = foreground;
         _cursorLine.StrokeThickness = _cursorThickness;
-        var animation = new ObjectAnimationUsingKeyFrames();
-        animation.Duration = TimeSpan.FromSeconds(1.5);
-        animation.RepeatBehavior = RepeatBehavior.Forever;
-        animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Hidden, new TimeSpan(0, 0, 0, 0, 500)));
-        animation.KeyFrames.Add(new DiscreteObjectKeyFrame(Visibility.Visible, new TimeSpan(0, 0, 1)));
-        _cursorLine.BeginAnimation(Line.VisibilityProperty, animation);
+        _cursorLine.BeginAnimation(Line.VisibilityProperty, _animation);
     }
 
     public void DrawCursor(ICodeTextBoxModel model)
@@ -43,6 +48,12 @@ internal class CursorRenderLogic
         _cursorLine.Y1 = 0;
         _cursorLine.X2 = 0;
         _cursorLine.Y2 = 0;
+    }
+
+    public void ResetAnimation()
+    {
+        _cursorLine.BeginAnimation(Line.VisibilityProperty, null);
+        _cursorLine.BeginAnimation(Line.VisibilityProperty, _animation);
     }
 
     public void DrawHighlightedCursorLine(ICodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
