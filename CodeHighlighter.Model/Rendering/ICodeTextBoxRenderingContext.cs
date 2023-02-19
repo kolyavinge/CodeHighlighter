@@ -3,7 +3,7 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Rendering;
 
-public interface IRenderingContext
+public interface ICodeTextBoxRenderingContext
 {
     void DrawText(string text, Point position, Color? foreground);
 

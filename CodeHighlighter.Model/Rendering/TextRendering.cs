@@ -11,12 +11,12 @@ public interface ITextRendering
 internal class TextRendering : ITextRendering
 {
     private readonly ICodeTextBoxModel _model;
-    private readonly IRenderingContext _renderingContext;
+    private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
     public TextRendering(
         ICodeTextBoxModel model,
-        IRenderingContext renderingContext,
+        ICodeTextBoxRenderingContext renderingContext,
         IExtendedLineNumberGenerator lineNumberGenerator)
     {
         _model = model;

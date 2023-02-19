@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter.Rendering;
 
-public interface IRenderingModel
+public interface ICodeTextBoxRenderingModel
 {
     ITextRendering Text { get; }
     ITextSelectionRendering TextSelection { get; }
@@ -9,7 +9,7 @@ public interface IRenderingModel
     ILineGapRendering LineGap { get; }
 }
 
-internal class RenderingModel : IRenderingModel
+internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
 {
     public ITextRendering Text { get; }
     public ITextSelectionRendering TextSelection { get; }
@@ -17,7 +17,7 @@ internal class RenderingModel : IRenderingModel
     public IHighlightBracketsRendering HighlightBrackets { get; }
     public ILineGapRendering LineGap { get; }
 
-    public RenderingModel(
+    public CodeTextBoxRenderingModel(
         ITextRendering textRendering,
         ITextSelectionRendering textSelectionRendering,
         ILinesDecorationRendering linesDecorationRendering,

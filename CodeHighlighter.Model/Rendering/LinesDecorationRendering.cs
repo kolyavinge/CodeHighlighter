@@ -10,12 +10,12 @@ public interface ILinesDecorationRendering
 internal class LinesDecorationRendering : ILinesDecorationRendering
 {
     private readonly ICodeTextBoxModel _model;
-    private readonly IRenderingContext _renderingContext;
+    private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly ILineNumberGenerator _lineNumberGenerator;
 
     public LinesDecorationRendering(
         ICodeTextBoxModel model,
-        IRenderingContext renderingContext,
+        ICodeTextBoxRenderingContext renderingContext,
         ILineNumberGenerator lineNumberGenerator)
     {
         _model = model;

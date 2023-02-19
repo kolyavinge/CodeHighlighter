@@ -3,6 +3,16 @@ using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 
+public class LineGap
+{
+    public uint CountBefore { get; set; }
+
+    public LineGap(uint countBefore)
+    {
+        CountBefore = countBefore;
+    }
+}
+
 public interface ILineGapCollection : IEnumerable<LineGap>
 {
     bool AnyItems { get; }
@@ -12,14 +22,4 @@ public interface ILineGapCollection : IEnumerable<LineGap>
 
 public class LineGapCollection : SpreadCollection<LineGap>, ILineGapCollection
 {
-}
-
-public class LineGap
-{
-    public uint CountBefore { get; set; }
-
-    public LineGap(uint countBefore)
-    {
-        CountBefore = countBefore;
-    }
 }

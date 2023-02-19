@@ -12,11 +12,11 @@ public interface IHighlightBracketsRendering
 internal class HighlightBracketsRendering : IHighlightBracketsRendering
 {
     private readonly ICodeTextBoxModel _model;
-    private readonly IRenderingContext _renderingContext;
+    private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
     public HighlightBracketsRendering(
-        ICodeTextBoxModel model, IRenderingContext renderingContext, IExtendedLineNumberGenerator lineNumberGenerator)
+        ICodeTextBoxModel model, ICodeTextBoxRenderingContext renderingContext, IExtendedLineNumberGenerator lineNumberGenerator)
     {
         _model = model;
         _renderingContext = renderingContext;

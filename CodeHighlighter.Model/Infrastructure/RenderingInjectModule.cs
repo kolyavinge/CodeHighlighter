@@ -18,6 +18,6 @@ internal class RenderingInjectModule : InjectModule
         bindingProvider.Bind<IHighlightBracketsRendering, HighlightBracketsRendering>().ToSingleton();
         bindingProvider.Bind<ILineGapRendering, LineGapRendering>().ToSingleton();
 
-        bindingProvider.Bind<IRenderingModel, RenderingModel>().ToSingleton();
+        bindingProvider.Bind<ICodeTextBoxRenderingModel, CodeTextBoxRenderingModel>().ToSingleton();
     }
 }

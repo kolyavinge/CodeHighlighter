@@ -7,12 +7,12 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-internal class RenderingContext : IRenderingContext
+internal class CodeTextBoxRenderingContext : ICodeTextBoxRenderingContext
 {
     private DrawingContext? _context;
     private readonly CodeTextBox _codeTextBox;
 
-    public RenderingContext(CodeTextBox codeTextBox)
+    public CodeTextBoxRenderingContext(CodeTextBox codeTextBox)
     {
         _codeTextBox = codeTextBox;
     }
