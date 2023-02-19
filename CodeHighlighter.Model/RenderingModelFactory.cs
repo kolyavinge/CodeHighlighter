@@ -18,4 +18,9 @@ public static class RenderingModelFactory
 
         return renderingModel;
     }
+
+    public static INumberRendering MakeNumberRendering(ILineNumberPanelRenderingContext context)
+    {
+        return new NumberRendering(context);
+    }
 }

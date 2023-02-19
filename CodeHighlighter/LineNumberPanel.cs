@@ -4,11 +4,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CodeHighlighter.Model;
+using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
 public class LineNumberPanel : Control
 {
+    private readonly LineNumberPanelRenderingContext _context;
+    private INumberRendering? _numberRendering;
+
     #region Model
     public ILineNumberPanelModel Model
     {
@@ -22,6 +26,7 @@ public class LineNumberPanel : Control
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var panel = (LineNumberPanel)d;
+        panel._numberRendering = RenderingModelFactory.MakeNumberRendering(panel._context);
         panel.InvalidateVisual();
     }
     #endregion
@@ -78,22 +83,26 @@ public class LineNumberPanel : Control
     }
     #endregion
 
-    protected override void OnRender(DrawingContext context)
+    public LineNumberPanel()
     {
-        context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
-        context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
-        // draw numbers
-        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-        var lines = Model.GetLines(ActualHeight, VerticalScrollBarValue, TextLineHeight, TextLinesCount);
-        foreach (var line in lines)
-        {
-            var lineNumber = (line.LineIndex + 1).ToString();
-            var formattedText = new FormattedText(lineNumber, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0);
-            context.DrawText(formattedText, new Point(ActualWidth - formattedText.Width, line.OffsetY));
-        }
-        context.Pop();
-        Width = lines.LastOrDefault().LineIndex.ToString().Length * GetLetterWidth(typeface);
+        _context = new LineNumberPanelRenderingContext(this);
     }
 
-    private double GetLetterWidth(Typeface typeface) => new FormattedText("A", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0).Width;
+    protected override void OnRender(DrawingContext context)
+    {
+        if (_numberRendering == null) return;
+        _context.SetContext(context);
+        context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
+        context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
+        var lines = Model.GetLines(ActualHeight, VerticalScrollBarValue, TextLineHeight, TextLinesCount).ToList();
+        _numberRendering.Render(lines, ActualWidth);
+        context.Pop();
+        Width = lines.LastOrDefault().LineIndex.ToString().Length * GetLetterWidth();
+    }
+
+    private double GetLetterWidth()
+    {
+        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
+        return new FormattedText("A", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0).Width;
+    }
 }
