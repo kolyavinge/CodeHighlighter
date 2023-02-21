@@ -27,7 +27,7 @@ internal class RightDeleteInputActionIntegration : BaseInputActionIntegration
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionStart);
         Assert.AreEqual(new CursorPosition(0, 0), result.SelectionEnd);
         Assert.AreEqual("", result.DeletedSelectedText);
-        Assert.AreEqual('0', result.CharCharDeleteResult.DeletedChar);
+        Assert.AreEqual('0', result.CharDeleteResult.DeletedChar);
         Assert.True(result.HasDeleted);
         Assert.AreEqual("", _text.ToString());
     }

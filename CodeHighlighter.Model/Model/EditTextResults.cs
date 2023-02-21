@@ -75,8 +75,8 @@ internal class InsertTextResult : EditTextResult
 
 internal class DeleteResult : EditTextResult
 {
-    public readonly CharDeleteResult CharCharDeleteResult;
-    public bool HasDeleted => DeletedSelectedText.Any() || CharCharDeleteResult.HasDeleted;
+    public readonly CharDeleteResult CharDeleteResult;
+    public bool HasDeleted => DeletedSelectedText.Any() || CharDeleteResult.HasDeleted;
 
     public DeleteResult(
         CursorPosition oldCursorPosition,
@@ -84,10 +84,10 @@ internal class DeleteResult : EditTextResult
         CursorPosition selectionStart,
         CursorPosition selectionEnd,
         string deletedSelectedText,
-        CharDeleteResult charCharDeleteResult)
+        CharDeleteResult charDeleteResult)
         : base(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText)
     {
-        CharCharDeleteResult = charCharDeleteResult;
+        CharDeleteResult = charDeleteResult;
     }
 }
 
