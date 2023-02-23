@@ -43,14 +43,28 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
             var deleteResult = _inputActionsFactory.Get<ILeftDeleteInputAction>().Do(context);
             var newCursorPosition = context.TextCursor.Position;
 
-            return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted);
+            return new(
+                oldCursorPosition,
+                newCursorPosition,
+                selectionStart,
+                selectionEnd,
+                deletedSelectedText,
+                deleteResult.HasDeleted,
+                deleteResult.CharDeleteResult.IsLineDeleted);
         }
         else
         {
             var deleteResult = _inputActionsFactory.Get<ILeftDeleteInputAction>().Do(context);
             var newCursorPosition = context.TextCursor.Position;
 
-            return new(oldCursorPosition, newCursorPosition, deleteResult.SelectionStart, deleteResult.SelectionEnd, deleteResult.DeletedSelectedText, deleteResult.HasDeleted);
+            return new(
+                oldCursorPosition,
+                newCursorPosition,
+                deleteResult.SelectionStart,
+                deleteResult.SelectionEnd,
+                deleteResult.DeletedSelectedText,
+                deleteResult.HasDeleted,
+                deleteResult.CharDeleteResult.IsLineDeleted);
         }
     }
 }

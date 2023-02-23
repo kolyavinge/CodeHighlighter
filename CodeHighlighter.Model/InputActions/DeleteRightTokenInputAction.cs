@@ -52,6 +52,6 @@ internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInput
         var deleteResult = _inputActionsFactory.Get<IRightDeleteInputAction>().Do(context);
         var newCursorPosition = context.TextCursor.Position;
 
-        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted);
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted, deleteResult.CharDeleteResult.IsLineDeleted);
     }
 }

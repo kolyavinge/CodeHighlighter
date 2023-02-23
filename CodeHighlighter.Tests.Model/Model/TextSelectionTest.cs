@@ -99,6 +99,21 @@ internal class TextSelectionTest
     }
 
     [Test]
+    public void SelectAll_Reset()
+    {
+        _textSelection.Reset();
+
+        var result = _textSelection.GetSelectedLines().ToList();
+
+        Assert.False(_textSelection.IsExist);
+        Assert.AreEqual(0, result.Count);
+        Assert.AreEqual(0, _textSelection.StartPosition.LineIndex);
+        Assert.AreEqual(0, _textSelection.StartPosition.ColumnIndex);
+        Assert.AreEqual(0, _textSelection.EndPosition.LineIndex);
+        Assert.AreEqual(0, _textSelection.EndPosition.ColumnIndex);
+    }
+
+    [Test]
     public void VirtualCursor()
     {
         _text.TextContent = "    000\r\n\r\n111";
