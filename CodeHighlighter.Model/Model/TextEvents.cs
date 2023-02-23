@@ -1,5 +1,29 @@
 ﻿namespace CodeHighlighter.Model;
 
+public class TextChangedEventArgs : EventArgs
+{
+    public static readonly TextChangedEventArgs Default = new(default, default);
+
+    public readonly LinesChange AddedLines;
+    public readonly LinesChange DeletedLines;
+
+    public TextChangedEventArgs(LinesChange addedLines, LinesChange deletedLines)
+    {
+        AddedLines = addedLines;
+        DeletedLines = deletedLines;
+    }
+}
+
+public class LinesCountChangedEventArgs : EventArgs
+{
+    public readonly int LinesCount;
+
+    public LinesCountChangedEventArgs(int linesCount)
+    {
+        LinesCount = linesCount;
+    }
+}
+
 public interface ITextEvents
 {
     event EventHandler? TextSet;

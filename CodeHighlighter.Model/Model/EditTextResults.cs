@@ -102,15 +102,13 @@ internal class AppendNewLineResult : EditTextResult
 
 internal class DeleteTokenResult : EditTextResult
 {
-    public readonly bool IsLineDeleted;
     public readonly bool HasDeleted;
 
     public DeleteTokenResult(
-        CursorPosition oldCursorPosition, CursorPosition newCursorPosition, CursorPosition selectionStart, CursorPosition selectionEnd, string deletedSelectedText, bool hasDeleted, bool isLineDeleted)
+        CursorPosition oldCursorPosition, CursorPosition newCursorPosition, CursorPosition selectionStart, CursorPosition selectionEnd, string deletedSelectedText, bool hasDeleted)
         : base(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText)
     {
         HasDeleted = hasDeleted;
-        IsLineDeleted = isLineDeleted;
     }
 }
 
