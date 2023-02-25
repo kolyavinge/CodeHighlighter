@@ -15,7 +15,7 @@ internal class AppendNewLineInputAction : InputAction, IAppendNewLineInputAction
         var result = AppendNewLine(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
-        context.TextEvents.RaiseTextChanged();
+        context.TextEvents.RaiseTextChangedAfterAppendNewLine(result);
 
         return result;
     }

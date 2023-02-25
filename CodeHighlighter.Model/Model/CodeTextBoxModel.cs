@@ -75,7 +75,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITextSelectionInternal textSelection,
         ITextSelector textSelector,
         ITextMeasuresInternal textMeasures,
-        ITextEvents textEvents,
+        ITextEventsInternal textEvents,
         ITextMeasuresEvents textMeasuresEvents,
         ITokens tokens,
         ITokensColors tokensColors,

@@ -13,7 +13,7 @@ internal class TextEventsTest
     public void Setup()
     {
         _text = new Text();
-        _events = new TextEvents(_text);
+        _events = new TextEvents(_text, new TextChangedEventArgsFactory(new TextLinesChangingLogic()));
         _events.LinesCountChanged += (s, e) => _linesCount = e.LinesCount;
         _linesCount = _text.LinesCount;
     }
@@ -23,7 +23,7 @@ internal class TextEventsTest
     {
         _text = new Text();
         _text.TextContent = "123\n123";
-        _events = new TextEvents(_text);
+        _events = new TextEvents(_text, new TextChangedEventArgsFactory(new TextLinesChangingLogic()));
         _events.LinesCountChanged += (s, e) => _linesCount = e.LinesCount;
         _events.RaiseTextSet();
         Assert.AreEqual(2, _linesCount);

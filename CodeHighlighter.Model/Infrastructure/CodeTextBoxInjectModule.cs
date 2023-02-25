@@ -23,7 +23,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         // IViewportContext не нужно добавлять в контейнер
         bindingProvider.Bind<IViewportInternal, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
-        bindingProvider.Bind<ITextEvents, TextEvents>().ToSingleton();
+        bindingProvider.Bind<ITextEventsInternal, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
         bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
         bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>().ToSingleton();

@@ -9,7 +9,7 @@ internal interface IInputActionContext
     ICodeTextBox CodeTextBox { get; set; }
     IText Text { get; }
     ITextCursor TextCursor { get; }
-    ITextEvents TextEvents { get; }
+    ITextEventsInternal TextEvents { get; }
     ITextMeasuresInternal TextMeasures { get; }
     ITextSelectionInternal TextSelection { get; }
     ITextSelector TextSelector { get; }
@@ -33,7 +33,7 @@ internal class InputActionContext : IInputActionContext
     public IViewportInternal Viewport { get; set; }
     public IViewportCursorPositionCorrector CursorPositionCorrector { get; }
     public IPageScroller PageScroller { get; }
-    public ITextEvents TextEvents { get; }
+    public ITextEventsInternal TextEvents { get; }
     public ICodeTextBox CodeTextBox { get; set; }
 
     public InputActionContext(
@@ -48,7 +48,7 @@ internal class InputActionContext : IInputActionContext
         IViewportInternal viewport,
         IViewportCursorPositionCorrector cursorPositionCorrector,
         IPageScroller pageScroller,
-        ITextEvents textEvents)
+        ITextEventsInternal textEvents)
     {
         CodeProvider = codeProvider;
         Text = text;

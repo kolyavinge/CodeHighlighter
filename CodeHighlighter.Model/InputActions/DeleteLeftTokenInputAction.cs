@@ -22,7 +22,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
         var result = DeleteLeftToken(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
-        context.TextEvents.RaiseTextChanged();
+        context.TextEvents.RaiseTextChangedAfterDeleteToken(result);
 
         return result;
     }
@@ -49,8 +49,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
                 selectionStart,
                 selectionEnd,
                 deletedSelectedText,
-                deleteResult.HasDeleted,
-                deleteResult.CharDeleteResult.IsLineDeleted);
+                deleteResult.HasDeleted);
         }
         else
         {
@@ -63,8 +62,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
                 deleteResult.SelectionStart,
                 deleteResult.SelectionEnd,
                 deleteResult.DeletedSelectedText,
-                deleteResult.HasDeleted,
-                deleteResult.CharDeleteResult.IsLineDeleted);
+                deleteResult.HasDeleted);
         }
     }
 }

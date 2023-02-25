@@ -11,12 +11,12 @@ internal class InsertTextInputAction : InputAction, IInsertTextInputAction
 {
     public InsertTextResult Do(IInputActionContext context, string insertedText)
     {
-        var insertResult = InsertText(context, insertedText);
+        var result = InsertText(context, insertedText);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
-        context.TextEvents.RaiseTextChanged();
+        context.TextEvents.RaiseTextChangedAfterInsertText(result);
 
-        return insertResult;
+        return result;
     }
 
     private InsertTextResult InsertText(IInputActionContext context, string text)

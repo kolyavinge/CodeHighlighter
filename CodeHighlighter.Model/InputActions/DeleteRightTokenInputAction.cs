@@ -22,7 +22,7 @@ internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInput
         var result = DeleteRightToken(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
-        context.TextEvents.RaiseTextChanged();
+        context.TextEvents.RaiseTextChangedAfterDeleteToken(result);
 
         return result;
     }
@@ -52,6 +52,6 @@ internal class DeleteRightTokenInputAction : InputAction, IDeleteRightTokenInput
         var deleteResult = _inputActionsFactory.Get<IRightDeleteInputAction>().Do(context);
         var newCursorPosition = context.TextCursor.Position;
 
-        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted, deleteResult.CharDeleteResult.IsLineDeleted);
+        return new(oldCursorPosition, newCursorPosition, selectionStart, selectionEnd, deletedSelectedText, deleteResult.HasDeleted);
     }
 }

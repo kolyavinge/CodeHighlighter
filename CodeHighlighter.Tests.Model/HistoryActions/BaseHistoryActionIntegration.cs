@@ -42,7 +42,7 @@ internal class BaseHistoryActionIntegration
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _pageScroller = new PageScroller(_viewport, _gaps);
-        _textEvents = new(_text);
+        _textEvents = new(_text, new TextChangedEventArgsFactory(new TextLinesChangingLogic()));
         _inputActionsFactory = new();
     }
 
