@@ -27,7 +27,7 @@ internal class PageScroller : IPageScroller
         if (endCursorLineIndex < 0) endCursorLineIndex = 0;
         if (_gaps.AnyItems)
         {
-            endCursorLineIndex -= (int)(Enumerable.Range(endCursorLineIndex, cursorLineIndex - endCursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0);
+            endCursorLineIndex -= Enumerable.Range(endCursorLineIndex, cursorLineIndex - endCursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0;
         }
 
         return endCursorLineIndex;
@@ -38,7 +38,7 @@ internal class PageScroller : IPageScroller
         var endCursorLineIndex = cursorLineIndex + _viewport.GetLinesCountInViewport();
         if (_gaps.AnyItems)
         {
-            endCursorLineIndex -= (int)(Enumerable.Range(cursorLineIndex, endCursorLineIndex - cursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0);
+            endCursorLineIndex -= Enumerable.Range(cursorLineIndex, endCursorLineIndex - cursorLineIndex).Sum(i => _gaps[i]?.CountBefore) ?? 0;
         }
 
         return endCursorLineIndex;

@@ -5,9 +5,9 @@ namespace CodeHighlighter.Model;
 
 public class LineGap
 {
-    public uint CountBefore { get; set; }
+    public int CountBefore { get; set; }
 
-    public LineGap(uint countBefore)
+    public LineGap(int countBefore)
     {
         CountBefore = countBefore;
     }
