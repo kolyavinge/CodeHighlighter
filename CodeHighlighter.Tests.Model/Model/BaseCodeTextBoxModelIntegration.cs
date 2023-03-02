@@ -15,7 +15,7 @@ internal class BaseCodeTextBoxModelIntegration
         var textSelection = new TextSelection(text);
         var textSelector = new TextSelector(text, textCursor, textSelection);
         var textMeasures = new TextMeasures();
-        var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(new TextLinesChangingLogic()));
+        var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic())));
         var textMeasuresEvents = new TextMeasuresEvents(textMeasures);
         var tokens = new Tokens();
         var tokensColors = new TokensColors();

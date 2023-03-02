@@ -12,58 +12,46 @@ internal interface ITextChangedEventArgsFactory
 
 internal class TextChangedEventArgsFactory : ITextChangedEventArgsFactory
 {
-    private readonly ITextLinesChangingLogic _logic;
+    private readonly IEditTextResultToLinesChangeConverter _converter;
 
-    public TextChangedEventArgsFactory(ITextLinesChangingLogic textLinesChangingLogic)
+    public TextChangedEventArgsFactory(IEditTextResultToLinesChangeConverter converter)
     {
-        _logic = textLinesChangingLogic;
+        _converter = converter;
     }
 
     public TextChangedEventArgs MakeForAppendNewLine(AppendNewLineResult textResult)
     {
-        var result = _logic.AppendNewLine(textResult.OldCursorPosition.LineIndex, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex);
-
+        var result = _converter.MakeForAppendNewLine(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 
     public TextChangedEventArgs MakeForInsertText(InsertTextResult textResult)
     {
-        if (!textResult.HasInserted) return TextChangedEventArgs.Default;
-        var result = _logic.InsertText(
-            textResult.InsertStartPosition.LineIndex, textResult.InsertEndPosition.LineIndex, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex);
-
+        var result = _converter.MakeForInsertText(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 
     public TextChangedEventArgs MakeForLeftDelete(DeleteResult textResult)
     {
-        if (!(textResult.IsSelectionExist && textResult.HasDeleted) && !textResult.CharDeleteResult.IsLineDeleted) return TextChangedEventArgs.Default;
-        var result = _logic.LeftDelete(textResult.OldCursorPosition.LineIndex, textResult.IsSelectionExist, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex);
-
+        var result = _converter.MakeForLeftDelete(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 
     public TextChangedEventArgs MakeForRightDelete(DeleteResult textResult)
     {
-        if (!(textResult.IsSelectionExist && textResult.HasDeleted) && !textResult.CharDeleteResult.IsLineDeleted) return TextChangedEventArgs.Default;
-        var result = _logic.RightDelete(textResult.OldCursorPosition.LineIndex, textResult.IsSelectionExist, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex);
-
+        var result = _converter.MakeForRightDelete(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 
     public TextChangedEventArgs MakeForDeleteToken(DeleteTokenResult textResult)
     {
-        if (!textResult.HasDeleted) return TextChangedEventArgs.Default;
-        var result = _logic.LeftDelete(textResult.OldCursorPosition.LineIndex, textResult.IsSelectionExist, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex);
-
+        var result = _converter.MakeForDeleteToken(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 
     public TextChangedEventArgs MakeForDeleteSelectedLines(DeleteSelectedLinesResult textResult)
     {
-        if (!textResult.HasDeleted) return TextChangedEventArgs.Default;
-        var result = _logic.LeftDelete(textResult.OldCursorPosition.LineIndex, true, textResult.SelectionStart.LineIndex, textResult.SelectionEnd.LineIndex + 1);
-
+        var result = _converter.MakeForDeleteSelectedLines(textResult);
         return new(result.AddedLines, result.DeletedLines);
     }
 }

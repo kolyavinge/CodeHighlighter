@@ -39,7 +39,7 @@ internal class BaseInputActionIntegration
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _pageScroller = new PageScroller(_viewport, _gaps);
-        _textEvents = new(_text, new TextChangedEventArgsFactory(new TextLinesChangingLogic()));
+        _textEvents = new(_text, new TextChangedEventArgsFactory(new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic())));
         _inputActionFactory = new();
         _context = new(
             new SqlCodeProvider(),
