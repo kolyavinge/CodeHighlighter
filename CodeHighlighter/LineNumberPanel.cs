@@ -8,7 +8,7 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class LineNumberPanel : Control
+public class LineNumberPanel : Control, ILineNumberPanel
 {
     private readonly LineNumberPanelRenderingContext _context;
     private INumberRendering? _numberRendering;
@@ -25,7 +25,9 @@ public class LineNumberPanel : Control
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
+        var model = (ILineNumberPanelModel)e.NewValue;
         var panel = (LineNumberPanel)d;
+        model.AttachLineNumberPanel(panel);
         panel._numberRendering = RenderingModelFactory.MakeNumberRendering(panel._context);
         panel.InvalidateVisual();
     }

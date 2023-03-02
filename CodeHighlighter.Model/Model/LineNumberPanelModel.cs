@@ -16,6 +16,10 @@ internal class LineNumberPanelModel : ILineNumberPanelModel
         Gaps = gaps;
     }
 
+    public void AttachLineNumberPanel(ILineNumberPanel panel)
+    {
+    }
+
     public IEnumerable<LineNumber> GetLines(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
         return _lineNumberGenerator.GetLineNumbers(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount);
