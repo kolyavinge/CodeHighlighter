@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using CodeHighlighter.Model;
+using Moq;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
@@ -7,14 +8,16 @@ namespace CodeHighlighter.Tests.Model;
 internal class ExtendedLineNumberGeneratorTest
 {
     private readonly double TextLineHeight = 10;
-    private LineGapCollection _gaps;
+    private LineGapCollection _gaps; // TODO to mock
+    private Mock<ILineFolds> _folds;
     private ExtendedLineNumberGenerator _generator;
 
     [SetUp]
     public void Setup()
     {
         _gaps = new LineGapCollection();
-        _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps);
+        _folds = new Mock<ILineFolds>();
+        _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds.Object);
     }
 
     [Test]
@@ -140,7 +143,7 @@ internal class ExtendedLineNumberGeneratorTest
     }
 
     [Test]
-    public void GetLineOffsetY()
+    public void GetLineOffsetY_Gaps()
     {
         _gaps[0] = new(2);
         _gaps[2] = new(3);
@@ -148,6 +151,19 @@ internal class ExtendedLineNumberGeneratorTest
         var result = _generator.GetLineOffsetY(7, TextLineHeight);
 
         Assert.That(result, Is.EqualTo((7 + 5) * TextLineHeight));
+    }
+
+    [Test]
+    public void GetLineOffsetY_Folds()
+    {
+        _folds.SetupGet(x => x.AnyItems).Returns(true);
+        _folds.Setup(x => x.IsFolded(1)).Returns(true);
+        _folds.Setup(x => x.IsFolded(2)).Returns(true);
+        _folds.Setup(x => x.IsFolded(3)).Returns(true);
+
+        var result = _generator.GetLineOffsetY(7, TextLineHeight);
+
+        Assert.That(result, Is.EqualTo((7 - 3) * TextLineHeight));
     }
 
     [Test]

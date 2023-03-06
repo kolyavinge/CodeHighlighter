@@ -10,6 +10,8 @@ public readonly struct LinesChange
         StartLineIndex = startLineIndex;
         LinesCount = linesCount;
     }
+
+    public override string ToString() => $"{StartLineIndex}:{LinesCount}";
 }
 
 internal readonly struct LinesChangeResult
@@ -22,69 +24,102 @@ internal readonly struct LinesChangeResult
         AddedLines = addedLines;
         DeletedLines = deletedLines;
     }
+
+    public override string ToString() => $"AddedLines {AddedLines}, DeletedLines {DeletedLines}";
 }
 
 internal interface ITextLinesChangingLogic
 {
-    LinesChangeResult AppendNewLine(int cursorLineIndex, int selectionStartLineIndex, int selectionEndLineIndex);
-    LinesChangeResult InsertText(int insertStartLineIndex, int insertEndLineIndex, int selectionStartLineIndex, int selectionEndLineIndex);
-    LinesChangeResult LeftDelete(int cursorLineIndex, bool isSelectionExist, int selectionStartLineIndex, int selectionEndLineIndex);
-    LinesChangeResult RightDelete(int cursorLineIndex, bool isSelectionExist, int selectionStartLineIndex, int selectionEndLineIndex);
+    LinesChangeResult AppendNewLine(CursorPosition cursorStart, CursorPosition selectionStart, CursorPosition selectionEnd);
+    LinesChangeResult InsertText(CursorPosition insertStart, CursorPosition insertEnd, CursorPosition selectionStart, CursorPosition selectionEnd);
+    LinesChangeResult LeftDelete(CursorPosition cursorEnd, CursorPosition selectionStart, CursorPosition selectionEnd);
+    LinesChangeResult RightDelete(CursorPosition cursorStart, CursorPosition selectionStart, CursorPosition selectionEnd);
 }
 
 internal class TextLinesChangingLogic : ITextLinesChangingLogic
 {
-    public LinesChangeResult AppendNewLine(int cursorLineIndex, int selectionStartLineIndex, int selectionEndLineIndex)
+    public LinesChangeResult AppendNewLine(CursorPosition cursorStart, CursorPosition selectionStart, CursorPosition selectionEnd)
     {
-        var addedLines = new LinesChange(cursorLineIndex + 1, 1);
-        var deletedLines = selectionStartLineIndex != selectionEndLineIndex ? GetDeleteSelection(selectionStartLineIndex, selectionEndLineIndex) : default;
-
-        return new(addedLines, deletedLines);
-    }
-
-    public LinesChangeResult InsertText(int insertStartLineIndex, int insertEndLineIndex, int selectionStartLineIndex, int selectionEndLineIndex)
-    {
-        var addedLines = new LinesChange(insertStartLineIndex + 1, insertEndLineIndex - insertStartLineIndex);
-        var deletedLines = selectionStartLineIndex != selectionEndLineIndex ? GetDeleteSelection(selectionStartLineIndex, selectionEndLineIndex) : default;
-
-        return new(addedLines, deletedLines);
-    }
-
-    public LinesChangeResult LeftDelete(int cursorLineIndex, bool isSelectionExist, int selectionStartLineIndex, int selectionEndLineIndex)
-    {
-        LinesChange deletedLines;
-        if (isSelectionExist)
+        LinesChange addedLines;
+        if (cursorStart.ColumnIndex == 0)
         {
-            deletedLines = GetDeleteSelection(selectionStartLineIndex, selectionEndLineIndex);
+            addedLines = new LinesChange(cursorStart.LineIndex, 1);
         }
         else
         {
-            deletedLines = new LinesChange(cursorLineIndex, 1);
+            addedLines = new LinesChange(cursorStart.LineIndex + 1, 1);
+        }
+        var deletedLines = GetDeleteSelection(selectionStart, selectionEnd);
+
+        return new(addedLines, deletedLines);
+    }
+
+    public LinesChangeResult InsertText(CursorPosition insertStart, CursorPosition insertEnd, CursorPosition selectionStart, CursorPosition selectionEnd)
+    {
+        LinesChange addedLines;
+        if (insertStart.ColumnIndex == 0)
+        {
+            addedLines = new LinesChange(insertStart.LineIndex, insertEnd.LineIndex - insertStart.LineIndex + 1);
+        }
+        else
+        {
+            addedLines = new LinesChange(insertStart.LineIndex + 1, insertEnd.LineIndex - insertStart.LineIndex);
+        }
+        var deletedLines = GetDeleteSelection(selectionStart, selectionEnd);
+
+        return new(addedLines, deletedLines);
+    }
+
+    public LinesChangeResult LeftDelete(CursorPosition cursorEnd, CursorPosition selectionStart, CursorPosition selectionEnd)
+    {
+        LinesChange deletedLines;
+        if (!selectionStart.Equals(selectionEnd))
+        {
+            deletedLines = GetDeleteSelection(selectionStart, selectionEnd);
+        }
+        else if (cursorEnd.ColumnIndex == 0)
+        {
+            deletedLines = new LinesChange(cursorEnd.LineIndex, 1);
+        }
+        else
+        {
+            deletedLines = new LinesChange(cursorEnd.LineIndex + 1, 1);
         }
 
         return new(default, deletedLines);
     }
 
-    public LinesChangeResult RightDelete(int cursorLineIndex, bool isSelectionExist, int selectionStartLineIndex, int selectionEndLineIndex)
+    public LinesChangeResult RightDelete(CursorPosition cursorStart, CursorPosition selectionStart, CursorPosition selectionEnd)
     {
         LinesChange deletedLines;
-        if (isSelectionExist)
+        if (!selectionStart.Equals(selectionEnd))
         {
-            deletedLines = GetDeleteSelection(selectionStartLineIndex, selectionEndLineIndex);
+            deletedLines = GetDeleteSelection(selectionStart, selectionEnd);
+        }
+        else if (cursorStart.ColumnIndex == 0)
+        {
+            deletedLines = new LinesChange(cursorStart.LineIndex, 1);
         }
         else
         {
-            deletedLines = new LinesChange(cursorLineIndex + 1, 1);
+            deletedLines = new LinesChange(cursorStart.LineIndex + 1, 1);
         }
 
         return new(default, deletedLines);
     }
 
-    private LinesChange GetDeleteSelection(int selectionStartLineIndex, int selectionEndLineIndex)
+    private LinesChange GetDeleteSelection(CursorPosition selectionStart, CursorPosition selectionEnd)
     {
-        if (selectionStartLineIndex != selectionEndLineIndex)
+        if (selectionEnd.LineIndex != selectionStart.LineIndex)
         {
-            return new(selectionStartLineIndex + 1, selectionEndLineIndex - selectionStartLineIndex);
+            if (selectionStart.ColumnIndex == 0)
+            {
+                return new(selectionStart.LineIndex, selectionEnd.LineIndex - selectionStart.LineIndex);
+            }
+            else
+            {
+                return new(selectionStart.LineIndex + 1, selectionEnd.LineIndex - selectionStart.LineIndex);
+            }
         }
         else
         {

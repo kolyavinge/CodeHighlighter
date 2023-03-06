@@ -15,6 +15,7 @@ internal class RightDeleteInputAction : InputAction, IRightDeleteInputAction
         var result = RightDelete(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
+        context.LineFoldsUpdater.UpdateRightDelete(result);
         context.TextEvents.RaiseTextChangedAfterRightDelete(result);
 
         return result;

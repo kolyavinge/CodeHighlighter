@@ -30,6 +30,7 @@
             <TextBox Text="{Binding SelectedLineToGoto}" Margin="8,0,0,0" Width="50" />
             <CheckBox IsChecked="{Binding IsAlterLinesColor}" Content="Alter lines colors" Margin="8,3,0,0" />
             <CheckBox IsChecked="{Binding IsGapEnabled}" Content="Show gaps" Margin="8,3,0,0" />
+            <CheckBox IsChecked="{Binding IsFoldEnabled}" Content="Fold" Margin="8,3,0,0" />
         </StackPanel>
 
         <Grid Margin="0,24,0,24">

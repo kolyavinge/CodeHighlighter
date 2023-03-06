@@ -16,6 +16,6 @@ public static class ControllerFactory
             codeTextBox,
             model,
             new PointInTextSelection(model.TextSelection),
-            new MouseCursorPosition(model.Viewport, model.TextMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), model.Gaps)));
+            new MouseCursorPosition(model.Viewport, model.TextMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), model.Gaps, model.Folds)));
     }
 }

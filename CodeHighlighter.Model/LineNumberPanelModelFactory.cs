@@ -5,10 +5,10 @@ namespace CodeHighlighter;
 
 public static class LineNumberPanelModelFactory
 {
-    public static ILineNumberPanelModel MakeModel()
+    public static ILineNumberPanelModel MakeModel(ICodeTextBoxModel? codeTextBoxModel = null)
     {
         var container = new DependencyContainer();
-        container.InitFromModules(new LineNumberPanelModelInjectModule());
+        container.InitFromModules(new LineNumberPanelModelInjectModule(codeTextBoxModel));
 
         var model = container.Resolve<ILineNumberPanelModel>();
 

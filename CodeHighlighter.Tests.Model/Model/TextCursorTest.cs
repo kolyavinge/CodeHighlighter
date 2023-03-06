@@ -6,13 +6,15 @@ namespace CodeHighlighter.Tests.Model;
 internal class TextCursorTest
 {
     private Text _text;
+    private LineFolds _folds;
     private TextCursor _textCursor;
 
     [SetUp]
     public void Setup()
     {
         _text = new Text("12345\n1234\n123");
-        _textCursor = new TextCursor(_text);
+        _folds = new LineFolds();
+        _textCursor = new TextCursor(_text, _folds);
     }
 
     [Test]
@@ -36,7 +38,7 @@ internal class TextCursorTest
     [Test]
     public void MoveToEmptyText()
     {
-        _textCursor = new TextCursor(new Text(""));
+        _textCursor = new TextCursor(new Text(""), new LineFolds());
         _textCursor.MoveTo(new(1, 1));
         Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }

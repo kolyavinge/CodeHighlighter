@@ -22,6 +22,7 @@ internal class DeleteLeftTokenInputAction : InputAction, IDeleteLeftTokenInputAc
         var result = DeleteLeftToken(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
+        context.LineFoldsUpdater.UpdateDeleteToken(result);
         context.TextEvents.RaiseTextChangedAfterDeleteToken(result);
 
         return result;

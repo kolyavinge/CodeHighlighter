@@ -19,6 +19,7 @@ public interface ICodeTextBoxModel
     IHistory History { get; }
     ILinesDecorationCollection LinesDecoration { get; }
     ILineGapCollection Gaps { get; }
+    ILineFolds Folds { get; }
     IViewport Viewport { get; }
     IBracketsHighlighter BracketsHighlighter { get; }
     bool IsReadOnly { get; set; }

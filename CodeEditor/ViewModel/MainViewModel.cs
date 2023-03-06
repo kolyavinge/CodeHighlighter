@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using CodeEditor.Mvvm;
@@ -85,19 +86,38 @@ public class MainViewModel
         }
     }
 
+    private bool _isFoldEnabled;
+    public bool IsFoldEnabled
+    {
+        get => _isFoldEnabled;
+        set
+        {
+            _isFoldEnabled = value;
+            if (_isFoldEnabled)
+            {
+                CodeTextBoxModel.Folds.Activate(CodeTextBoxModel.Folds.Items.Select(x => x.LineIndex));
+            }
+            else
+            {
+                CodeTextBoxModel.Folds.Deactivate(CodeTextBoxModel.Folds.Items.Select(x => x.LineIndex));
+            }
+        }
+    }
+
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
         CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
         CodeTextBoxModel.TextEvents.TextChanged += OnTextChanged;
-        LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel();
+        CodeTextBoxModel.Folds.SetItems(new LineFold[] { new(8, 13), new(37, 91) });
+        LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        Debug.WriteLine($"{e.AddedLines.StartLineIndex+1}:{e.AddedLines.LinesCount} / {e.DeletedLines.StartLineIndex+1}:{e.DeletedLines.LinesCount}");
+        Debug.WriteLine($"{e.AddedLines.StartLineIndex + 1}:{e.AddedLines.LinesCount} / {e.DeletedLines.StartLineIndex + 1}:{e.DeletedLines.LinesCount}");
     }
 
     private void CopyText()

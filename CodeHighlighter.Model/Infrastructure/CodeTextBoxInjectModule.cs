@@ -27,6 +27,8 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<ITextEventsInternal, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
         bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
+        bindingProvider.Bind<ILineFolds, LineFolds>().ToSingleton();
+        bindingProvider.Bind<ILineFoldsUpdater, LineFoldsUpdater>().ToSingleton();
         bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>().ToSingleton();
         bindingProvider.Bind<IExtendedLineNumberGenerator, ExtendedLineNumberGenerator>().ToSingleton();
         bindingProvider.Bind<IVerticalScrollBarMaximumValueStrategy, DefaultVerticalScrollBarMaximumValueStrategy>().ToSingleton();
@@ -35,11 +37,9 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<IViewportCursorPositionCorrector, ViewportCursorPositionCorrector>().ToSingleton();
         bindingProvider.Bind<IPageScroller, PageScroller>().ToSingleton();
         bindingProvider.Bind<ICodeTextBoxModelAdditionalInfo, CodeTextBoxModelAdditionalInfo>().ToSingleton();
-
         bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();
         bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();
         bindingProvider.Bind<IHistoryActionsFactory, HistoryActionsFactory>().ToSingleton();
-
         bindingProvider.Bind<ICodeTextBoxModel, CodeTextBoxModel>().ToSingleton();
     }
 }

@@ -15,9 +15,12 @@ internal class BaseInputActionIntegration
     protected TextSelector _textSelector;
     protected Tokens _tokens;
     protected LineGapCollection _gaps;
+    protected LineFolds _folds;
+    protected LineFoldsUpdater _lineFoldsUpdater;
     protected Viewport _viewport;
     protected ViewportCursorPositionCorrector _cursorPositionCorrector;
     protected PageScroller _pageScroller;
+    protected EditTextResultToLinesChangeConverter _editTextResultToLinesChangeConverter;
     protected TextEvents _textEvents;
     protected InputActionsFactory _inputActionFactory;
     protected InputActionContext _context;
@@ -25,13 +28,16 @@ internal class BaseInputActionIntegration
     protected void Init()
     {
         _text = new();
-        _textCursor = new(_text);
         _textMeasures = new();
+        _gaps = new();
+        _folds = new();
+        _editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
+        _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
+        _textCursor = new(_text, _folds);
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
-        _gaps = new();
-        _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
+        _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds));
         _viewport = new(
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
@@ -39,7 +45,7 @@ internal class BaseInputActionIntegration
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _pageScroller = new PageScroller(_viewport, _gaps);
-        _textEvents = new(_text, new TextChangedEventArgsFactory(new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic())));
+        _textEvents = new(_text, new TextChangedEventArgsFactory(_editTextResultToLinesChangeConverter));
         _inputActionFactory = new();
         _context = new(
             new SqlCodeProvider(),
@@ -53,6 +59,7 @@ internal class BaseInputActionIntegration
             _viewport,
             _cursorPositionCorrector,
             _pageScroller,
+            _lineFoldsUpdater,
             _textEvents);
         SetText("");
     }

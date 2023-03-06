@@ -59,6 +59,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public ILineGapCollection Gaps { get; }
 
+    public ILineFolds Folds { get; }
+
     public IViewport Viewport => _viewport;
 
     public IBracketsHighlighter BracketsHighlighter { get; }
@@ -82,6 +84,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,
         ILineGapCollection gaps,
+        ILineFolds folds,
         IViewportInternal viewport,
         IBracketsHighlighter bracketsHighlighter,
         IInputActionContext inputActionContext,
@@ -108,6 +111,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         TokensColors = tokensColors;
         LinesDecoration = linesDecoration;
         Gaps = gaps;
+        Folds = folds;
         BracketsHighlighter = bracketsHighlighter;
         IsReadOnly = additionalParams.IsReadOnly;
         AdditionalInfo = additionalInfo;
@@ -132,6 +136,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox = codeTextBox;
         _viewport.SetContext(codeTextBox);
         _inputActionContext.CodeTextBox = _codeTextBox;
+        Folds.Activated += (s, e) => _codeTextBox.InvalidateVisual();
+        Folds.Deactivated += (s, e) => _codeTextBox.InvalidateVisual();
         _codeTextBox.FontSettingsChanged += (s, e) =>
         {
             _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth);

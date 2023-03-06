@@ -19,7 +19,10 @@ internal class DefaultVerticalScrollBarMaximumValueStrategy : IVerticalScrollBar
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly ILineGapCollection _gaps;
 
-    public DefaultVerticalScrollBarMaximumValueStrategy(IText text, ITextMeasuresInternal textMeasures, ILineGapCollection gaps)
+    public DefaultVerticalScrollBarMaximumValueStrategy(
+        IText text,
+        ITextMeasuresInternal textMeasures,
+        ILineGapCollection gaps)
     {
         _text = text;
         _textMeasures = textMeasures;

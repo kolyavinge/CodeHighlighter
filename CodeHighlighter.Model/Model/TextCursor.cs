@@ -49,6 +49,7 @@ internal interface ITextCursor
 internal class TextCursor : ITextCursor
 {
     private readonly IText _text;
+    private readonly ILineFolds _folds;
 
     public int LineIndex { get; private set; }
 
@@ -58,9 +59,10 @@ internal class TextCursor : ITextCursor
 
     public CursorPosition Position => new(LineIndex, ColumnIndex, Kind);
 
-    public TextCursor(IText text)
+    public TextCursor(IText text, ILineFolds folds)
     {
         _text = text;
+        _folds = folds;
         LineIndex = 0;
     }
 
@@ -75,12 +77,14 @@ internal class TextCursor : ITextCursor
     public void MoveUp()
     {
         LineIndex--;
+        SkipFoldedLinesUp();
         CorrectPosition();
     }
 
     public void MoveDown()
     {
         LineIndex++;
+        SkipFoldedLinesDown();
         CorrectPosition();
     }
 
@@ -135,12 +139,14 @@ internal class TextCursor : ITextCursor
     public void MovePageUp(int pageSize)
     {
         LineIndex -= pageSize;
+        SkipFoldedLinesUp();
         CorrectPosition();
     }
 
     public void MovePageDown(int pageSize)
     {
         LineIndex += pageSize;
+        SkipFoldedLinesDown();
         CorrectPosition();
     }
 
@@ -158,7 +164,7 @@ internal class TextCursor : ITextCursor
         CorrectPosition();
     }
 
-    private void CorrectPosition()
+    private void CorrectPosition() // TODO to new class with skip folded methods
     {
         if (LineIndex < 0) LineIndex = 0;
         else if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
@@ -184,6 +190,22 @@ internal class TextCursor : ITextCursor
         {
             if (ColumnIndex < 0) ColumnIndex = 0;
             else if (ColumnIndex > lineLength) ColumnIndex = lineLength;
+        }
+    }
+
+    private void SkipFoldedLinesUp()
+    {
+        if (_folds.IsFolded(LineIndex))
+        {
+            LineIndex = _folds.GetUnfoldedLineIndexUp(LineIndex);
+        }
+    }
+
+    private void SkipFoldedLinesDown()
+    {
+        if (_folds.IsFolded(LineIndex))
+        {
+            LineIndex = _folds.GetUnfoldedLineIndexDown(LineIndex);
         }
     }
 }

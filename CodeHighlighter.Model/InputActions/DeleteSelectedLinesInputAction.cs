@@ -15,6 +15,7 @@ internal class DeleteSelectedLinesInputAction : InputAction, IDeleteSelectedLine
         var result = DeleteSelectedLines(context);
         context.CursorPositionCorrector.CorrectPosition();
         context.Viewport.UpdateScrollBarsMaximumValues();
+        context.LineFoldsUpdater.UpdateDeleteSelectedLines(result);
         context.TextEvents.RaiseTextChangedAfterDeleteSelectedLines(result);
 
         return result;

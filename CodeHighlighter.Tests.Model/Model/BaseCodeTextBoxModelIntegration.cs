@@ -11,18 +11,21 @@ internal class BaseCodeTextBoxModelIntegration
     {
         var codeProvider = new SqlCodeProvider();
         var text = new Text();
-        var textCursor = new TextCursor(text);
         var textSelection = new TextSelection(text);
+        var gaps = new LineGapCollection();
+        var folds = new LineFolds();
+        var editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
+        var lineFoldsUpdater = new LineFoldsUpdater(folds, editTextResultToLinesChangeConverter);
+        var textCursor = new TextCursor(text, folds);
         var textSelector = new TextSelector(text, textCursor, textSelection);
         var textMeasures = new TextMeasures();
-        var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic())));
+        var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(editTextResultToLinesChangeConverter));
         var textMeasuresEvents = new TextMeasuresEvents(textMeasures);
         var tokens = new Tokens();
         var tokensColors = new TokensColors();
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
-        var gaps = new LineGapCollection();
-        var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), gaps));
+        var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), gaps, folds));
         var viewport = new Viewport(
             textMeasures,
             new ViewportVerticalOffsetUpdater(),
@@ -44,6 +47,7 @@ internal class BaseCodeTextBoxModelIntegration
             viewport,
             cursorPositionCorrector,
             pageScroller,
+            lineFoldsUpdater,
             textEvents);
         var historyActionsFactory = new HistoryActionsFactory(inputActionsFactory, inputActionContext);
 
@@ -62,6 +66,7 @@ internal class BaseCodeTextBoxModelIntegration
             history,
             linesDecoration,
             gaps,
+            folds,
             viewport,
             bracketsHighlighter,
             inputActionContext,

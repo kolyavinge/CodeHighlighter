@@ -19,7 +19,10 @@ internal class BaseHistoryActionIntegration
     protected readonly Viewport _viewport;
     protected readonly ViewportCursorPositionCorrector _cursorPositionCorrector;
     protected readonly PageScroller _pageScroller;
+    protected readonly EditTextResultToLinesChangeConverter _editTextResultToLinesChangeConverter;
     protected readonly LineGapCollection _gaps;
+    protected readonly LineFolds _folds;
+    protected readonly LineFoldsUpdater _lineFoldsUpdater;
     protected readonly TextEvents _textEvents;
     protected Mock<ICodeTextBox> _codeTextBox;
     protected InputActionsFactory _inputActionsFactory;
@@ -28,13 +31,16 @@ internal class BaseHistoryActionIntegration
     protected BaseHistoryActionIntegration()
     {
         _text = new();
-        _textCursor = new(_text);
         _textMeasures = new();
+        _gaps = new();
+        _folds = new();
+        _editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
+        _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
+        _textCursor = new(_text, _folds);
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
-        _gaps = new();
-        _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps));
+        _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds));
         _viewport = new(
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
@@ -42,7 +48,7 @@ internal class BaseHistoryActionIntegration
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _pageScroller = new PageScroller(_viewport, _gaps);
-        _textEvents = new(_text, new TextChangedEventArgsFactory(new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic())));
+        _textEvents = new(_text, new TextChangedEventArgsFactory(_editTextResultToLinesChangeConverter));
         _inputActionsFactory = new();
     }
 
@@ -60,6 +66,7 @@ internal class BaseHistoryActionIntegration
             _viewport,
             _cursorPositionCorrector,
             _pageScroller,
+            _lineFoldsUpdater,
             _textEvents);
         _codeTextBox = new();
         _context.CodeTextBox = _codeTextBox.Object;

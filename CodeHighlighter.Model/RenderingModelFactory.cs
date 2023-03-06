@@ -12,6 +12,7 @@ public static class RenderingModelFactory
         container.InitFromModules(new RenderingInjectModule());
         container.BindSingleton<ICodeTextBoxModel>(model);
         container.BindSingleton<ILineGapCollection>(model.Gaps);
+        container.BindSingleton<ILineFolds>(model.Folds);
         container.BindSingleton<ICodeTextBoxRenderingContext>(renderingContext);
 
         var renderingModel = container.Resolve<ICodeTextBoxRenderingModel>();

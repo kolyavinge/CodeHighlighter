@@ -18,6 +18,7 @@ internal interface IInputActionContext
     IViewportInternal Viewport { get; }
     IViewportCursorPositionCorrector CursorPositionCorrector { get; }
     IPageScroller PageScroller { get; }
+    ILineFoldsUpdater LineFoldsUpdater { get; }
 }
 
 internal class InputActionContext : IInputActionContext
@@ -33,6 +34,7 @@ internal class InputActionContext : IInputActionContext
     public IViewportInternal Viewport { get; set; }
     public IViewportCursorPositionCorrector CursorPositionCorrector { get; }
     public IPageScroller PageScroller { get; }
+    public ILineFoldsUpdater LineFoldsUpdater { get; }
     public ITextEventsInternal TextEvents { get; }
     public ICodeTextBox CodeTextBox { get; set; }
 
@@ -48,6 +50,7 @@ internal class InputActionContext : IInputActionContext
         IViewportInternal viewport,
         IViewportCursorPositionCorrector cursorPositionCorrector,
         IPageScroller pageScroller,
+        ILineFoldsUpdater lineFoldsUpdater,
         ITextEventsInternal textEvents)
     {
         CodeProvider = codeProvider;
@@ -61,6 +64,7 @@ internal class InputActionContext : IInputActionContext
         Viewport = viewport;
         CursorPositionCorrector = cursorPositionCorrector;
         PageScroller = pageScroller;
+        LineFoldsUpdater = lineFoldsUpdater;
         TextEvents = textEvents;
         CodeTextBox = DummyCodeTextBox.Instance;
     }
