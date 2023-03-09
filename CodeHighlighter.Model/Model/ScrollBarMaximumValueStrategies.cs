@@ -18,20 +18,23 @@ internal class DefaultVerticalScrollBarMaximumValueStrategy : IVerticalScrollBar
     private readonly IText _text;
     private readonly ITextMeasuresInternal _textMeasures;
     private readonly ILineGapCollection _gaps;
+    private readonly ILineFolds _folds;
 
     public DefaultVerticalScrollBarMaximumValueStrategy(
         IText text,
         ITextMeasuresInternal textMeasures,
-        ILineGapCollection gaps)
+        ILineGapCollection gaps,
+        ILineFolds folds)
     {
         _text = text;
         _textMeasures = textMeasures;
         _gaps = gaps;
+        _folds = folds;
     }
 
     public double GetValue()
     {
-        return (_text.LinesCount + _gaps.Sum(x => x.CountBefore)) * _textMeasures.LineHeight;
+        return (_text.LinesCount + _gaps.Sum(x => x.CountBefore) - _folds.FoldedLinesCount) * _textMeasures.LineHeight;
     }
 }
 

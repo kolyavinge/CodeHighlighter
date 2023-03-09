@@ -29,7 +29,7 @@ internal class BaseCodeTextBoxModelIntegration
         var viewport = new Viewport(
             textMeasures,
             new ViewportVerticalOffsetUpdater(),
-            new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps),
+            new DefaultVerticalScrollBarMaximumValueStrategy(text, textMeasures, gaps, folds),
             new DefaultHorizontalScrollBarMaximumValueStrategy(text, textMeasures));
         var cursorPositionCorrector = new ViewportCursorPositionCorrector(viewport, textMeasures, textCursorAbsolutePosition);
         var pageScroller = new PageScroller(viewport, gaps);

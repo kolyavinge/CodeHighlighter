@@ -136,8 +136,16 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox = codeTextBox;
         _viewport.SetContext(codeTextBox);
         _inputActionContext.CodeTextBox = _codeTextBox;
-        Folds.Activated += (s, e) => _codeTextBox.InvalidateVisual();
-        Folds.Deactivated += (s, e) => _codeTextBox.InvalidateVisual();
+        Folds.Activated += (s, e) =>
+        {
+            _codeTextBox.InvalidateVisual();
+            _viewport.UpdateScrollBarsMaximumValues();
+        };
+        Folds.Deactivated += (s, e) =>
+        {
+            _codeTextBox.InvalidateVisual();
+            _viewport.UpdateScrollBarsMaximumValues();
+        };
         _codeTextBox.FontSettingsChanged += (s, e) =>
         {
             _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth);

@@ -265,4 +265,14 @@ internal class LineFoldsTest
         Assert.True(_lineFolds.IsFolded(6));
         Assert.True(_lineFolds.IsFolded(7));
     }
+
+    [Test]
+    public void FoldedLinesCount()
+    {
+        var items = new LineFold[] { new(1, 3), new(5, 4) };
+        _lineFolds.SetItems(items);
+        _lineFolds.Activate(new[] { 5 });
+
+        Assert.That(_lineFolds.FoldedLinesCount, Is.EqualTo(4));
+    }
 }

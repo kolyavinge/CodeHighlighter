@@ -25,6 +25,7 @@ public interface ILineFolds
     event EventHandler<EventArgs>? Deactivated;
     IEnumerable<LineFold> Items { get; }
     bool AnyItems { get; }
+    int FoldedLinesCount { get; }
     void SetItems(IEnumerable<LineFold> lineFolds);
     void Activate(IEnumerable<int> lineIndexCollection);
     void Deactivate(IEnumerable<int> lineIndexCollection);
@@ -53,6 +54,8 @@ internal class LineFolds : ILineFolds
     public IEnumerable<LineFold> Items => _items;
 
     public bool AnyItems => _items.Any();
+
+    public int FoldedLinesCount => Items.Where(x => x.IsActive).Sum(x => x.LinesCount);
 
     public void SetItems(IEnumerable<LineFold> lineFolds)
     {

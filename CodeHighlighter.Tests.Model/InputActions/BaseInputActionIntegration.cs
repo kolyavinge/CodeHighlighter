@@ -41,7 +41,7 @@ internal class BaseInputActionIntegration
         _viewport = new(
             _textMeasures,
             new ViewportVerticalOffsetUpdater(),
-            new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps),
+            new DefaultVerticalScrollBarMaximumValueStrategy(_text, _textMeasures, _gaps, _folds),
             new DefaultHorizontalScrollBarMaximumValueStrategy(_text, _textMeasures));
         _cursorPositionCorrector = new ViewportCursorPositionCorrector(_viewport, _textMeasures, _textCursorAbsolutePosition);
         _pageScroller = new PageScroller(_viewport, _gaps);
