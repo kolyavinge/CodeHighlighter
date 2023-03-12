@@ -17,7 +17,32 @@ internal class LineFoldsTest
     [Test]
     public void Constructor()
     {
-        Assert.False(_lineFolds.AnyItems);
+        Assert.False(_lineFolds.AnyFoldedItems);
+    }
+
+    [Test]
+    public void AnyFoldedItems()
+    {
+        var items = new LineFold[] { new(5, 4) };
+        _lineFolds.SetItems(items);
+
+        Assert.False(_lineFolds.AnyFoldedItems);
+
+        _lineFolds.Activate(new[] { 5 });
+        Assert.True(_lineFolds.AnyFoldedItems);
+
+        _lineFolds.Deactivate(new[] { 5 });
+        Assert.False(_lineFolds.AnyFoldedItems);
+    }
+
+    [Test]
+    public void FoldedLinesCount()
+    {
+        var items = new LineFold[] { new(1, 3), new(5, 4) };
+        _lineFolds.SetItems(items);
+        _lineFolds.Activate(new[] { 5 });
+
+        Assert.That(_lineFolds.FoldedLinesCount, Is.EqualTo(4));
     }
 
     [Test]
@@ -30,8 +55,6 @@ internal class LineFoldsTest
             new(14, 3)
         };
         _lineFolds.SetItems(items);
-
-        Assert.True(_lineFolds.AnyItems);
 
         var lineFoldsItems = _lineFolds.Items.ToList();
         Assert.That(lineFoldsItems[0].LineIndex, Is.EqualTo(1));
@@ -264,15 +287,5 @@ internal class LineFoldsTest
         Assert.True(_lineFolds.IsFolded(5));
         Assert.True(_lineFolds.IsFolded(6));
         Assert.True(_lineFolds.IsFolded(7));
-    }
-
-    [Test]
-    public void FoldedLinesCount()
-    {
-        var items = new LineFold[] { new(1, 3), new(5, 4) };
-        _lineFolds.SetItems(items);
-        _lineFolds.Activate(new[] { 5 });
-
-        Assert.That(_lineFolds.FoldedLinesCount, Is.EqualTo(4));
     }
 }

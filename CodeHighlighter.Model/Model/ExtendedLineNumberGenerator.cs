@@ -28,7 +28,7 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
 
     public IEnumerable<LineNumber> GetLineNumbers(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
-        if (_gaps.AnyItems || _folds.AnyItems)
+        if (_gaps.AnyItems || _folds.AnyFoldedItems)
         {
             return GetLineNumbersModified(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount);
         }
@@ -42,7 +42,7 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
     {
         var absoluteOffsetY = 0.0;
         var lines = _lineNumberGenerator.GetLineNumbers(
-              controlHeight + verticalScrollBarValue + textLineHeight * _folds.Items.Where(x => x.IsActive).Sum(x => x.LinesCount),  // TODO improve it
+              controlHeight + verticalScrollBarValue + textLineHeight * _folds.FoldedLinesCount,  // TODO improve it
               0,
               textLineHeight,
               textLinesCount);
@@ -66,7 +66,7 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
         {
             lineIndex += Enumerable.Range(0, lineIndex + 1).Sum(i => _gaps[i]?.CountBefore) ?? 0;
         }
-        if (_folds.AnyItems)
+        if (_folds.AnyFoldedItems)
         {
             lineIndex -= Enumerable.Range(0, lineIndex + 1).Where(_folds.IsFolded).Count();
         }
@@ -76,7 +76,7 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
 
     public int GetLineIndex(double mouseY, double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount)
     {
-        if (_gaps.AnyItems || _folds.AnyItems)
+        if (_gaps.AnyItems || _folds.AnyFoldedItems)
         {
             return
                 GetLineNumbersModified(controlHeight, verticalScrollBarValue, textLineHeight, textLinesCount)

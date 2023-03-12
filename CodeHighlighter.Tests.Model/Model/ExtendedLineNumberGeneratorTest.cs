@@ -8,16 +8,16 @@ namespace CodeHighlighter.Tests.Model;
 internal class ExtendedLineNumberGeneratorTest
 {
     private readonly double TextLineHeight = 10;
-    private LineGapCollection _gaps; // TODO to mock
+    private Mock<ILineGapCollection> _gaps;
     private Mock<ILineFolds> _folds;
     private ExtendedLineNumberGenerator _generator;
 
     [SetUp]
     public void Setup()
     {
-        _gaps = new LineGapCollection();
+        _gaps = new Mock<ILineGapCollection>();
         _folds = new Mock<ILineFolds>();
-        _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds.Object);
+        _generator = new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps.Object, _folds.Object);
     }
 
     [Test]
@@ -34,8 +34,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 0, TextLineHeight, 3).ToList();
 
@@ -49,8 +50,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified_LinesOutControl()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 0, TextLineHeight, 100).ToList();
 
@@ -66,8 +68,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 30, TextLineHeight, 100).ToList();
 
@@ -85,8 +88,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollEven_2()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 50, TextLineHeight, 100).ToList();
 
@@ -105,8 +109,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 45, TextLineHeight, 100).ToList();
 
@@ -125,8 +130,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineNumbersModified_VerticalScrollOdd_2()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var lines = _generator.GetLineNumbers(100, 25, TextLineHeight, 100).ToList();
 
@@ -145,8 +151,9 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineOffsetY_Gaps()
     {
-        _gaps[0] = new(2);
-        _gaps[2] = new(3);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
+        _gaps.SetupGet(x => x[2]).Returns(new LineGap(3));
 
         var result = _generator.GetLineOffsetY(7, TextLineHeight);
 
@@ -156,7 +163,7 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineOffsetY_Folds()
     {
-        _folds.SetupGet(x => x.AnyItems).Returns(true);
+        _folds.SetupGet(x => x.AnyFoldedItems).Returns(true);
         _folds.Setup(x => x.IsFolded(1)).Returns(true);
         _folds.Setup(x => x.IsFolded(2)).Returns(true);
         _folds.Setup(x => x.IsFolded(3)).Returns(true);
@@ -175,7 +182,8 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineIndexWithGaps_CursorBelowGap()
     {
-        _gaps[0] = new(2);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
 
         Assert.That(_generator.GetLineIndex(50, 100, 10, 10, 1000), Is.EqualTo(3));
     }
@@ -183,7 +191,8 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineIndexWithGaps_CursorInGapFirstLine()
     {
-        _gaps[0] = new(2);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[0]).Returns(new LineGap(2));
 
         Assert.That(_generator.GetLineIndex(10, 100, 0, 10, 1000), Is.EqualTo(0));
     }
@@ -191,7 +200,8 @@ internal class ExtendedLineNumberGeneratorTest
     [Test]
     public void GetLineIndexWithGaps_CursorInGap()
     {
-        _gaps[1] = new(2);
+        _gaps.SetupGet(x => x.AnyItems).Returns(true);
+        _gaps.SetupGet(x => x[1]).Returns(new LineGap(2));
 
         Assert.That(_generator.GetLineIndex(25, 100, 0, 10, 1000), Is.EqualTo(0));
     }
