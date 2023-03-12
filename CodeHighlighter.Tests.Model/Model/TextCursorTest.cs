@@ -6,15 +6,17 @@ namespace CodeHighlighter.Tests.Model;
 internal class TextCursorTest
 {
     private Text _text;
-    private LineFolds _folds;
+    private LineFolds _lineFolds;
+    private TextCursorPositionCorrector _corrector;
     private TextCursor _textCursor;
 
     [SetUp]
     public void Setup()
     {
         _text = new Text("12345\n1234\n123");
-        _folds = new LineFolds();
-        _textCursor = new TextCursor(_text, _folds);
+        _lineFolds = new LineFolds();
+        _corrector = new TextCursorPositionCorrector(_text, _lineFolds);
+        _textCursor = new TextCursor(_text, _corrector);
     }
 
     [Test]
@@ -38,7 +40,7 @@ internal class TextCursorTest
     [Test]
     public void MoveToEmptyText()
     {
-        _textCursor = new TextCursor(new Text(""), new LineFolds());
+        _textCursor = new TextCursor(new Text(""), new TextCursorPositionCorrector(new Text(""), new LineFolds()));
         _textCursor.MoveTo(new(1, 1));
         Assert.AreEqual(new CursorPosition(0, 0), _textCursor.Position);
     }
@@ -372,5 +374,55 @@ internal class TextCursorTest
         _textCursor.MoveTextEnd();
 
         Assert.AreEqual(new CursorPosition(2, 0), _textCursor.Position);
+    }
+
+    [Test]
+    public void MoveUp_FoldedLines()
+    {
+        _text.TextContent = "\n\n\n\n";
+        _textCursor.MoveTo(new(2, 0));
+        _lineFolds.SetItems(new LineFold[] { new(1, 3) });
+        _lineFolds.Activate(new[] { 1 });
+
+        _textCursor.MoveUp();
+
+        Assert.AreEqual(new CursorPosition(1, 0), _textCursor.Position);
+    }
+
+    [Test]
+    public void MoveDown_FoldedLines()
+    {
+        _text.TextContent = "\n\n\n\n";
+        _lineFolds.SetItems(new LineFold[] { new(0, 3) });
+        _lineFolds.Activate(new[] { 0 });
+
+        _textCursor.MoveDown();
+
+        Assert.AreEqual(new CursorPosition(4, 0), _textCursor.Position);
+    }
+
+    [Test]
+    public void MovePageUp_FoldedLines()
+    {
+        _text.TextContent = "\n\n\n\n";
+        _textCursor.MoveTo(new(2, 0));
+        _lineFolds.SetItems(new LineFold[] { new(1, 3) });
+        _lineFolds.Activate(new[] { 1 });
+
+        _textCursor.MovePageUp(1);
+
+        Assert.AreEqual(new CursorPosition(1, 0), _textCursor.Position);
+    }
+
+    [Test]
+    public void MovePageDown_FoldedLines()
+    {
+        _text.TextContent = "\n\n\n\n";
+        _lineFolds.SetItems(new LineFold[] { new(0, 3) });
+        _lineFolds.Activate(new[] { 0 });
+
+        _textCursor.MovePageDown(1);
+
+        Assert.AreEqual(new CursorPosition(4, 0), _textCursor.Position);
     }
 }

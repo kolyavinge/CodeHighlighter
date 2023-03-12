@@ -33,7 +33,7 @@ internal class BaseInputActionIntegration
         _folds = new();
         _editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
         _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
-        _textCursor = new(_text, _folds);
+        _textCursor = new(_text, new TextCursorPositionCorrector(_text, _folds));
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();

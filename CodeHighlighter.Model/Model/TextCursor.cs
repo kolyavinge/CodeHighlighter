@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace CodeHighlighter.Model;
+﻿namespace CodeHighlighter.Model;
 
 public enum CursorPositionKind { Real, Virtual }
 
@@ -29,9 +27,9 @@ public readonly struct CursorPosition
 
 internal interface ITextCursor
 {
+    int LineIndex { get; }
     int ColumnIndex { get; }
     CursorPositionKind Kind { get; set; }
-    int LineIndex { get; }
     CursorPosition Position { get; }
     void MoveDown();
     void MoveEndLine();
@@ -49,43 +47,50 @@ internal interface ITextCursor
 internal class TextCursor : ITextCursor
 {
     private readonly IText _text;
-    private readonly ILineFolds _folds;
+    private readonly ITextCursorPositionCorrector _corrector;
+    private int _lineIndex;
+    private int _columnIndex;
+    private CursorPositionKind _kind;
 
-    public int LineIndex { get; private set; }
+    public int LineIndex => _lineIndex;
 
-    public int ColumnIndex { get; private set; }
+    public int ColumnIndex => _columnIndex;
 
-    public CursorPositionKind Kind { get; set; }
+    public CursorPositionKind Kind
+    {
+        get => _kind;
+        set => _kind = value;
+    }
 
-    public CursorPosition Position => new(LineIndex, ColumnIndex, Kind);
+    public CursorPosition Position => new(_lineIndex, _columnIndex, _kind);
 
-    public TextCursor(IText text, ILineFolds folds)
+    public TextCursor(IText text, ITextCursorPositionCorrector corrector)
     {
         _text = text;
-        _folds = folds;
-        LineIndex = 0;
+        _corrector = corrector;
+        _lineIndex = 0;
     }
 
     public void MoveTo(CursorPosition position)
     {
-        LineIndex = position.LineIndex;
-        ColumnIndex = position.ColumnIndex;
-        Kind = position.Kind;
-        CorrectPosition();
+        _lineIndex = position.LineIndex;
+        _columnIndex = position.ColumnIndex;
+        _kind = position.Kind;
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveUp()
     {
-        LineIndex--;
-        SkipFoldedLinesUp();
-        CorrectPosition();
+        _lineIndex--;
+        _corrector.SkipFoldedLinesUp(ref _lineIndex);
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveDown()
     {
-        LineIndex++;
-        SkipFoldedLinesDown();
-        CorrectPosition();
+        _lineIndex++;
+        _corrector.SkipFoldedLinesDown(ref _lineIndex);
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveLeft()
@@ -93,119 +98,74 @@ internal class TextCursor : ITextCursor
         if (LineIndex == 0 && ColumnIndex == 0) return;
         if (Kind == CursorPositionKind.Real)
         {
-            ColumnIndex--;
+            _columnIndex--;
             if (ColumnIndex == -1)
             {
-                LineIndex--;
-                ColumnIndex = int.MaxValue;
+                _lineIndex--;
+                _columnIndex = int.MaxValue;
             }
         }
         else
         {
-            ColumnIndex = 0;
+            _columnIndex = 0;
         }
-        CorrectPosition();
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveRight()
     {
         if (LineIndex == _text.LinesCount - 1 && ColumnIndex == _text.GetLine(LineIndex).Length) return;
-        if (Kind == CursorPositionKind.Real) ColumnIndex++;
+        if (Kind == CursorPositionKind.Real) _columnIndex++;
         if (Kind == CursorPositionKind.Virtual || ColumnIndex == _text.GetLine(LineIndex).Length + 1)
         {
-            LineIndex++;
-            ColumnIndex = 0;
+            _lineIndex++;
+            _columnIndex = 0;
         }
-        CorrectPosition();
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveStartLine()
     {
         var line = _text.GetLine(LineIndex);
         var spacesCount = line.FindIndex(0, line.Length, ch => ch != ' ');
-        if (spacesCount == -1) ColumnIndex = 0;
-        else if (ColumnIndex > spacesCount) ColumnIndex = spacesCount;
-        else if (ColumnIndex == spacesCount) ColumnIndex = 0;
-        else ColumnIndex = spacesCount;
-        CorrectPosition();
+        if (spacesCount == -1) _columnIndex = 0;
+        else if (ColumnIndex > spacesCount) _columnIndex = spacesCount;
+        else if (ColumnIndex == spacesCount) _columnIndex = 0;
+        else _columnIndex = spacesCount;
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveEndLine()
     {
-        ColumnIndex = Int32.MaxValue;
-        CorrectPosition();
+        _columnIndex = Int32.MaxValue;
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MovePageUp(int pageSize)
     {
-        LineIndex -= pageSize;
-        SkipFoldedLinesUp();
-        CorrectPosition();
+        _lineIndex -= pageSize;
+        _corrector.SkipFoldedLinesUp(ref _lineIndex);
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MovePageDown(int pageSize)
     {
-        LineIndex += pageSize;
-        SkipFoldedLinesDown();
-        CorrectPosition();
+        _lineIndex += pageSize;
+        _corrector.SkipFoldedLinesDown(ref _lineIndex);
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveTextBegin()
     {
-        ColumnIndex = 0;
-        LineIndex = 0;
-        CorrectPosition();
+        _columnIndex = 0;
+        _lineIndex = 0;
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 
     public void MoveTextEnd()
     {
-        LineIndex = _text.LinesCount - 1;
-        ColumnIndex = _text.GetLine(LineIndex).Length;
-        CorrectPosition();
-    }
-
-    private void CorrectPosition() // TODO to new class with skip folded methods
-    {
-        if (LineIndex < 0) LineIndex = 0;
-        else if (LineIndex >= _text.LinesCount) LineIndex = _text.LinesCount - 1;
-        var lineLength = _text.GetLine(LineIndex).Length;
-        Kind = CursorPositionKind.Real;
-        if (lineLength == 0 && ColumnIndex > 0 && LineIndex > 0)
-        {
-            var prevLineIndex = LineIndex - 1;
-            var prevLine = _text.GetLine(prevLineIndex);
-            while (!prevLine.Any() && prevLineIndex > 0) prevLine = _text.GetLine(--prevLineIndex);
-            var spacesCount = prevLine.FindIndex(0, prevLine.Length, ch => ch != ' ');
-            if (spacesCount != -1)
-            {
-                ColumnIndex = spacesCount;
-                if (ColumnIndex > 0) Kind = CursorPositionKind.Virtual;
-            }
-            else
-            {
-                ColumnIndex = 0;
-            }
-        }
-        else
-        {
-            if (ColumnIndex < 0) ColumnIndex = 0;
-            else if (ColumnIndex > lineLength) ColumnIndex = lineLength;
-        }
-    }
-
-    private void SkipFoldedLinesUp()
-    {
-        if (_folds.IsFolded(LineIndex))
-        {
-            LineIndex = _folds.GetUnfoldedLineIndexUp(LineIndex);
-        }
-    }
-
-    private void SkipFoldedLinesDown()
-    {
-        if (_folds.IsFolded(LineIndex))
-        {
-            LineIndex = _folds.GetUnfoldedLineIndexDown(LineIndex);
-        }
+        _lineIndex = _text.LinesCount - 1;
+        _columnIndex = _text.GetLine(LineIndex).Length;
+        _corrector.CorrectPosition(ref _lineIndex, ref _columnIndex, ref _kind);
     }
 }

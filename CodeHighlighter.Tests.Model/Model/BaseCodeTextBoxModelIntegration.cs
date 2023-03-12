@@ -16,7 +16,7 @@ internal class BaseCodeTextBoxModelIntegration
         var folds = new LineFolds();
         var editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
         var lineFoldsUpdater = new LineFoldsUpdater(folds, editTextResultToLinesChangeConverter);
-        var textCursor = new TextCursor(text, folds);
+        var textCursor = new TextCursor(text, new TextCursorPositionCorrector(text, folds));
         var textSelector = new TextSelector(text, textCursor, textSelection);
         var textMeasures = new TextMeasures();
         var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(editTextResultToLinesChangeConverter));
