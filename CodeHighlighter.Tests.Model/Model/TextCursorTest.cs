@@ -381,7 +381,7 @@ internal class TextCursorTest
     {
         _text.TextContent = "\n\n\n\n";
         _textCursor.MoveTo(new(2, 0));
-        _lineFolds.SetItems(new LineFold[] { new(1, 3) });
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
         _lineFolds.Activate(new[] { 1 });
 
         _textCursor.MoveUp();
@@ -393,7 +393,7 @@ internal class TextCursorTest
     public void MoveDown_FoldedLines()
     {
         _text.TextContent = "\n\n\n\n";
-        _lineFolds.SetItems(new LineFold[] { new(0, 3) });
+        _lineFolds.Items = new LineFold[] { new(0, 3) };
         _lineFolds.Activate(new[] { 0 });
 
         _textCursor.MoveDown();
@@ -406,7 +406,7 @@ internal class TextCursorTest
     {
         _text.TextContent = "\n\n\n\n";
         _textCursor.MoveTo(new(2, 0));
-        _lineFolds.SetItems(new LineFold[] { new(1, 3) });
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
         _lineFolds.Activate(new[] { 1 });
 
         _textCursor.MovePageUp(1);
@@ -418,7 +418,7 @@ internal class TextCursorTest
     public void MovePageDown_FoldedLines()
     {
         _text.TextContent = "\n\n\n\n";
-        _lineFolds.SetItems(new LineFold[] { new(0, 3) });
+        _lineFolds.Items = new LineFold[] { new(0, 3) };
         _lineFolds.Activate(new[] { 0 });
 
         _textCursor.MovePageDown(1);

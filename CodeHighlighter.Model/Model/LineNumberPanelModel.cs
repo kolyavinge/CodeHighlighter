@@ -21,6 +21,7 @@ internal class LineNumberPanelModel : ILineNumberPanelModel
 
     public void AttachLineNumberPanel(ILineNumberPanel panel)
     {
+        _folds.ItemsSet += (s, e) => panel.InvalidateVisual();
         _folds.Activated += (s, e) => panel.InvalidateVisual();
         _folds.Deactivated += (s, e) => panel.InvalidateVisual();
     }

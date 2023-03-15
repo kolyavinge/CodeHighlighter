@@ -23,8 +23,7 @@ internal class LineFoldsTest
     [Test]
     public void AnyFoldedItems()
     {
-        var items = new LineFold[] { new(5, 4) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(5, 4) };
 
         Assert.False(_lineFolds.AnyFoldedItems);
 
@@ -38,8 +37,7 @@ internal class LineFoldsTest
     [Test]
     public void FoldedLinesCount()
     {
-        var items = new LineFold[] { new(1, 3), new(5, 4) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 4) };
         _lineFolds.Activate(new[] { 5 });
 
         Assert.That(_lineFolds.FoldedLinesCount, Is.EqualTo(4));
@@ -48,13 +46,12 @@ internal class LineFoldsTest
     [Test]
     public void SetItems()
     {
-        var items = new LineFold[]
+        _lineFolds.Items = new LineFold[]
         {
             new(1, 5),
             new(8, 2),
             new(14, 3)
         };
-        _lineFolds.SetItems(items);
 
         var lineFoldsItems = _lineFolds.Items.ToList();
         Assert.That(lineFoldsItems[0].LineIndex, Is.EqualTo(1));
@@ -75,11 +72,10 @@ internal class LineFoldsTest
     {
         var raised = 0;
         _lineFolds.ItemsSet += (s, e) => raised++;
-        var items = new LineFold[]
+        _lineFolds.Items = new LineFold[]
         {
             new(1, 5)
         };
-        _lineFolds.SetItems(items);
 
         Assert.That(raised, Is.EqualTo(1));
     }
@@ -89,8 +85,7 @@ internal class LineFoldsTest
     {
         var raised = 0;
         _lineFolds.Activated += (s, e) => { raised++; };
-        var items = new LineFold[] { new(1, 5) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 5) };
 
         _lineFolds.Activate(new[] { 1 });
 
@@ -102,8 +97,7 @@ internal class LineFoldsTest
     {
         var raised = 0;
         _lineFolds.Deactivated += (s, e) => { raised++; };
-        var items = new LineFold[] { new(1, 5) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 5) };
 
         _lineFolds.Deactivate(new[] { 1 });
 
@@ -113,24 +107,21 @@ internal class LineFoldsTest
     [Test]
     public void Activate_WrongLine()
     {
-        var items = new LineFold[] { new(1, 5) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 5) };
         _lineFolds.Activate(new[] { 0 });
     }
 
     [Test]
     public void Deactivate_WrongLine()
     {
-        var items = new LineFold[] { new(1, 5) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 5) };
         _lineFolds.Deactivate(new[] { 0 });
     }
 
     [Test]
     public void IsFolded_ActivateDeactivate()
     {
-        var items = new LineFold[] { new(1, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
         Assert.False(_lineFolds.IsFolded(1));
         Assert.False(_lineFolds.IsFolded(2));
         Assert.False(_lineFolds.IsFolded(3));
@@ -152,8 +143,7 @@ internal class LineFoldsTest
     [Test]
     public void GetUnfoldedLineIndexUp()
     {
-        var items = new LineFold[] { new(1, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
         _lineFolds.Activate(new[] { 1 });
 
         Assert.That(_lineFolds.GetUnfoldedLineIndexUp(0), Is.EqualTo(0));
@@ -167,8 +157,7 @@ internal class LineFoldsTest
     [Test]
     public void GetUnfoldedLineIndexUp_NoActivation()
     {
-        var items = new LineFold[] { new(1, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
 
         Assert.That(_lineFolds.GetUnfoldedLineIndexUp(0), Is.EqualTo(0));
         Assert.That(_lineFolds.GetUnfoldedLineIndexUp(1), Is.EqualTo(1));
@@ -181,8 +170,7 @@ internal class LineFoldsTest
     [Test]
     public void GetUnfoldedLineIndexDown()
     {
-        var items = new LineFold[] { new(1, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
         _lineFolds.Activate(new[] { 1 });
 
         Assert.That(_lineFolds.GetUnfoldedLineIndexDown(0), Is.EqualTo(0));
@@ -196,8 +184,7 @@ internal class LineFoldsTest
     [Test]
     public void GetUnfoldedLineIndexDown_NoActivation()
     {
-        var items = new LineFold[] { new(1, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
 
         Assert.That(_lineFolds.GetUnfoldedLineIndexDown(0), Is.EqualTo(0));
         Assert.That(_lineFolds.GetUnfoldedLineIndexDown(1), Is.EqualTo(1));
@@ -210,8 +197,7 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineAdd_1()
     {
-        var items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
 
         _lineFolds.UpdateAfterLineAdd(3, 2);
 
@@ -227,8 +213,7 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineAdd_2()
     {
-        var items = new LineFold[] { new(0, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(0, 3) };
 
         _lineFolds.UpdateAfterLineAdd(0, 2);
 
@@ -241,8 +226,7 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineAdd_Activated()
     {
-        var items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
         _lineFolds.Activate(new[] { 5 });
 
         _lineFolds.UpdateAfterLineAdd(3, 2);
@@ -258,8 +242,7 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineDelete()
     {
-        var items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
 
         _lineFolds.UpdateAfterLineDelete(3, 1);
 
@@ -275,8 +258,7 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineDelete_Activated()
     {
-        var items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.SetItems(items);
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
         _lineFolds.Activate(new[] { 5 });
 
         _lineFolds.UpdateAfterLineDelete(3, 1);
