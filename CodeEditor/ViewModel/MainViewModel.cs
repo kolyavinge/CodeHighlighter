@@ -16,6 +16,8 @@ public class MainViewModel
 
     public ILineNumberPanelModel LineNumberPanelModel { get; }
 
+    public ILineFoldingPanelModel LineFoldingPanelModel { get; }
+
     public ICodeProvider CodeProvider { get; }
 
     public ICommand CopyTextCommand => new ActionCommand(CopyText);
@@ -112,6 +114,7 @@ public class MainViewModel
         CodeTextBoxModel.TextEvents.TextChanged += OnTextChanged;
         CodeTextBoxModel.Folds.Items = new LineFold[] { new(8, 13), new(37, 91) };
         LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
+        LineFoldingPanelModel = LineFoldingPanelModelFactory.MakeModel(CodeTextBoxModel);
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 

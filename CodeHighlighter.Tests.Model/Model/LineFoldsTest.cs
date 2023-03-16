@@ -141,6 +141,30 @@ internal class LineFoldsTest
     }
 
     [Test]
+    public void Switch()
+    {
+        _lineFolds.Items = new LineFold[] { new(1, 3) };
+
+        _lineFolds.Switch(1);
+        Assert.False(_lineFolds.IsFolded(1));
+        Assert.True(_lineFolds.IsFolded(2));
+        Assert.True(_lineFolds.IsFolded(3));
+        Assert.True(_lineFolds.IsFolded(4));
+
+        _lineFolds.Switch(1);
+        Assert.False(_lineFolds.IsFolded(1));
+        Assert.False(_lineFolds.IsFolded(2));
+        Assert.False(_lineFolds.IsFolded(3));
+        Assert.False(_lineFolds.IsFolded(4));
+    }
+
+    [Test]
+    public void Switch_InvalidLineIndex_NoError()
+    {
+        _lineFolds.Switch(1);
+    }
+
+    [Test]
     public void GetUnfoldedLineIndexUp()
     {
         _lineFolds.Items = new LineFold[] { new(1, 3) };

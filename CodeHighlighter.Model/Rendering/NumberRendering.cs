@@ -22,7 +22,7 @@ internal class NumberRendering : INumberRendering
         foreach (var line in lines)
         {
             var lineNumber = (line.LineIndex + 1).ToString();
-            _context.Render(line.OffsetY, lineNumber, controlWidth, new(0, line.OffsetY), TextAlign.Right);
+            _context.RenderNumber(line.OffsetY, lineNumber, TextAlign.Right);
         }
     }
 }

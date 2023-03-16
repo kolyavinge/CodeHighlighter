@@ -20,17 +20,17 @@ internal class LineNumberPanelRenderingContext : ILineNumberPanelRenderingContex
         _context = context;
     }
 
-    public void Render(double lineOffsetY, string lineNumber, double controlWidth, Common.Point value, TextAlign align)
+    public void RenderNumber(double offsetY, string lineNumber, TextAlign align)
     {
         var typeface = new Typeface(_lineNumberPanel.FontFamily, _lineNumberPanel.FontStyle, _lineNumberPanel.FontWeight, _lineNumberPanel.FontStretch);
         var formattedText = new FormattedText(lineNumber, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _lineNumberPanel.FontSize, _lineNumberPanel.Foreground, 1.0);
         if (align == TextAlign.Left)
         {
-            _context!.DrawText(formattedText, new(0, lineOffsetY));
+            _context!.DrawText(formattedText, new(0, offsetY));
         }
         else if (align == TextAlign.Right)
         {
-            _context!.DrawText(formattedText, new(_lineNumberPanel.ActualWidth - formattedText.Width, lineOffsetY));
+            _context!.DrawText(formattedText, new(_lineNumberPanel.ActualWidth - formattedText.Width, offsetY));
         }
     }
 }

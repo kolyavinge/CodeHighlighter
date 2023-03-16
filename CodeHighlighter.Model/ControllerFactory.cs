@@ -18,4 +18,9 @@ public static class ControllerFactory
             new PointInTextSelection(model.TextSelection),
             new MouseCursorPosition(model.Viewport, model.TextMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), model.Gaps, model.Folds)));
     }
+
+    public static ILineFoldingPanelMouseController MakeMouseController(ILineFoldingPanel panel, ILineFoldingPanelModel model)
+    {
+        return new LineFoldingPanelMouseController(panel, model);
+    }
 }

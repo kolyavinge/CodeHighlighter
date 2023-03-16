@@ -24,4 +24,9 @@ public static class RenderingModelFactory
     {
         return new NumberRendering(context);
     }
+
+    public static ILineFoldsRendering? MakeLineFoldsRendering(ILineFoldingPanelRenderingContext context)
+    {
+        return new LineFoldsRendering(context);
+    }
 }

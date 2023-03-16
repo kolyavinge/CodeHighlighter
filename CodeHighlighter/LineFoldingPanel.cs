@@ -1,33 +1,37 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
+using CodeHighlighter.Controllers;
 using CodeHighlighter.Model;
 using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class LineNumberPanel : Control, ILineNumberPanel
+public class LineFoldingPanel : Control, ILineFoldingPanel
 {
-    private readonly LineNumberPanelRenderingContext _context;
-    private INumberRendering? _numberRendering;
+    private readonly LineFoldingPanelRenderingContext _context;
+    private ILineFoldsRendering? _lineFoldsRendering;
+    private ILineFoldingPanelMouseController? _mouseController;
 
     #region Model
-    public ILineNumberPanelModel Model
+    public ILineFoldingPanelModel Model
     {
-        get => (ILineNumberPanelModel)GetValue(ModelProperty);
+        get => (ILineFoldingPanelModel)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(ILineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(LineNumberPanelModelFactory.MakeModel(), ModelChangedCallback));
+        DependencyProperty.Register("Model", typeof(ILineFoldingPanelModel), typeof(LineFoldingPanel), new PropertyMetadata(ModelChangedCallback));
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var model = (ILineNumberPanelModel)e.NewValue;
-        var panel = (LineNumberPanel)d;
-        model.AttachLineNumberPanel(panel);
+        var model = (ILineFoldingPanelModel)e.NewValue;
+        var panel = (LineFoldingPanel)d;
+        model.AttachLineFoldingPanel(panel);
+        panel._lineFoldsRendering = RenderingModelFactory.MakeLineFoldsRendering(panel._context);
+        panel._mouseController = ControllerFactory.MakeMouseController(panel, model);
         panel.InvalidateVisual();
     }
     #endregion
@@ -40,11 +44,11 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
-        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineNumberPanel), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
+        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineFoldingPanel), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
 
     private static void VerticalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineFoldingPanel)d;
         if ((double)e.NewValue < 0) panel.VerticalScrollBarValue = 0.0;
         panel.InvalidateVisual();
     }
@@ -58,11 +62,11 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty TextLinesCountProperty =
-        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineNumberPanel), new PropertyMetadata(TextLinesCountChangedCallback));
+        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineFoldingPanel), new PropertyMetadata(TextLinesCountChangedCallback));
 
     private static void TextLinesCountChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineFoldingPanel)d;
         panel.InvalidateVisual();
     }
     #endregion
@@ -75,36 +79,35 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty TextLineHeightProperty =
-        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineNumberPanel), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
+        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineFoldingPanel), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
 
     private static void TextLineHeightChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineFoldingPanel)d;
         panel.InvalidateVisual();
     }
     #endregion
 
-    public LineNumberPanel()
+    public LineFoldingPanel()
     {
-        _context = new LineNumberPanelRenderingContext(this);
-        _numberRendering = RenderingModelFactory.MakeNumberRendering(_context);
+        _context = new LineFoldingPanelRenderingContext(this);
     }
 
     protected override void OnRender(DrawingContext context)
     {
-        if (_numberRendering == null) return;
+        if (_lineFoldsRendering == null) return;
         _context.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
-        var lines = Model.GetLines(ActualHeight, VerticalScrollBarValue, TextLineHeight, TextLinesCount).ToList();
-        _numberRendering.Render(lines, ActualWidth);
+        var folds = Model.GetFolds(ActualHeight, VerticalScrollBarValue, TextLineHeight, TextLinesCount).ToList();
+        _lineFoldsRendering.Render(Foreground, TextLineHeight, folds);
         context.Pop();
-        Width = lines.LastOrDefault().LineIndex.ToString().Length * GetLetterWidth();
     }
 
-    private double GetLetterWidth()
+    protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
     {
-        var typeface = new Typeface(FontFamily, FontStyle, FontWeight, FontStretch);
-        return new FormattedText("A", CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, FontSize, Foreground, 1.0).Width;
+        if (_mouseController == null) return;
+        var positionInControl = e.GetPosition(this);
+        _mouseController.LeftButtonDown(new(positionInControl.X, positionInControl.Y));
     }
 }

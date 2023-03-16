@@ -28,6 +28,7 @@ public interface ILineFolds
     int FoldedLinesCount { get; }
     void Activate(IEnumerable<int> lineIndexCollection);
     void Deactivate(IEnumerable<int> lineIndexCollection);
+    void Switch(int lineIndex);
     bool IsFolded(int lineIndex);
     int GetUnfoldedLineIndexUp(int lineIndex);
     int GetUnfoldedLineIndexDown(int lineIndex);
@@ -98,6 +99,20 @@ internal class LineFolds : ILineFolds
         if (flag)
         {
             Deactivated?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public void Switch(int lineIndex)
+    {
+        var fold = _items.FirstOrDefault(x => x.LineIndex == lineIndex);
+        if (fold == null) return;
+        if (fold.IsActive)
+        {
+            Deactivate(new[] { lineIndex });
+        }
+        else
+        {
+            Activate(new[] { lineIndex });
         }
     }
 

@@ -36,6 +36,7 @@
         <Grid Margin="0,24,0,24">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="22" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -53,13 +54,25 @@
                 Foreground="DimGray"
                 MinWidth="50" />
 
-            <highlighter:CodeTextBox
+            <highlighter:LineFoldingPanel
                 Grid.Column="1"
+                Model="{Binding LineFoldingPanelModel}"
+                FontFamily="Consolas"
+                FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
+                VerticalScrollBarValue="{Binding VerticalScrollBarValue, ElementName=codeTextBox, Mode=TwoWay}"
+                TextLinesCount="{Binding TextLinesCount, ElementName=codeTextBox}"
+                TextLineHeight="{Binding TextLineHeight, ElementName=codeTextBox}"
+                Background="Linen"
+                Foreground="DimGray"
+                Width="{Binding TextLineHeight, ElementName=codeTextBox}" />
+
+            <highlighter:CodeTextBox
+                Grid.Column="2"
                 x:Name="codeTextBox"
                 Model="{Binding CodeTextBoxModel}"
                 FontFamily="Consolas"
                 FontSize="{Binding SelectedValue.Content, ElementName=fontSizeComboBox}"
-                Margin="4,0,0,17"
+                Margin="2,0,0,17"
                 Background="Azure"
                 HighlightPairBracketsBrush="GreenYellow"
                 HighlightNoPairBracketBrush="IndianRed"
@@ -78,7 +91,7 @@
             </highlighter:CodeTextBox>
 
             <ScrollBar
-                Grid.Column="1"
+                Grid.Column="2"
                 x:Name="verticalScrollBar"
                 Orientation="Vertical"
                 Maximum="{Binding VerticalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
@@ -90,7 +103,7 @@
                 Cursor="Arrow" />
 
             <ScrollBar
-                Grid.Column="1"
+                Grid.Column="2"
                 x:Name="horizontalScrollBar"
                 Orientation="Horizontal"
                 Maximum="{Binding HorizontalScrollBarMaximum, ElementName=codeTextBox, Mode=TwoWay}"
