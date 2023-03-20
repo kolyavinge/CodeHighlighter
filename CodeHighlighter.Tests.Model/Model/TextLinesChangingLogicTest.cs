@@ -58,7 +58,7 @@ internal class TextLinesChangingLogicTest
     public void InsertText_NoSelection_1()
     {
         _result = _logic.InsertText(new(2, 0), new(4, 0), default, default);
-        AssertAddedLines(2, 3);
+        AssertAddedLines(2, 2);
         AssertDeletedLines(0, 0);
     }
 

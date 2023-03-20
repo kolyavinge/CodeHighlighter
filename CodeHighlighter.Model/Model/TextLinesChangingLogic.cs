@@ -59,7 +59,7 @@ internal class TextLinesChangingLogic : ITextLinesChangingLogic
         LinesChange addedLines;
         if (insertStart.ColumnIndex == 0)
         {
-            addedLines = new LinesChange(insertStart.LineIndex, insertEnd.LineIndex - insertStart.LineIndex + 1);
+            addedLines = new LinesChange(insertStart.LineIndex, insertEnd.LineIndex - insertStart.LineIndex);
         }
         else
         {

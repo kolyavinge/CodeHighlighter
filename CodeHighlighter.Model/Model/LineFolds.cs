@@ -23,7 +23,7 @@ public interface ILineFolds
     event EventHandler? ItemsSet;
     event EventHandler<EventArgs>? Activated;
     event EventHandler<EventArgs>? Deactivated;
-    IEnumerable<LineFold> Items { get; set; }
+    IReadOnlyCollection<LineFold> Items { get; set; }
     bool AnyFoldedItems { get; }
     int FoldedLinesCount { get; }
     void Activate(IEnumerable<int> lineIndexCollection);
@@ -51,13 +51,15 @@ internal class LineFolds : ILineFolds
         _foldedLines = new HashSet<int>();
     }
 
-    public IEnumerable<LineFold> Items
+    public IReadOnlyCollection<LineFold> Items
     {
         get => _items;
         set
         {
             _items.Clear();
             _items.AddRange(value);
+            _foldedLines.Clear();
+            Activate(_items.Where(x => x.IsActive).Select(x => x.LineIndex).ToArray());
             ItemsSet?.Invoke(this, EventArgs.Empty);
         }
     }

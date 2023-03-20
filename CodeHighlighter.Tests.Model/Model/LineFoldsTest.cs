@@ -68,6 +68,39 @@ internal class LineFoldsTest
     }
 
     [Test]
+    public void SetItems_ClearFoldedLines()
+    {
+        _lineFolds.Items = new LineFold[]
+        {
+            new(1, 3)
+        };
+
+        _lineFolds.Activate(new[] { 1 });
+
+        _lineFolds.Items = new LineFold[]
+        {
+            new(1, 3)
+        };
+
+        Assert.IsFalse(_lineFolds.IsFolded(2));
+        Assert.IsFalse(_lineFolds.IsFolded(3));
+        Assert.IsFalse(_lineFolds.IsFolded(4));
+    }
+
+    [Test]
+    public void SetItemsWithActivated()
+    {
+        _lineFolds.Items = new LineFold[]
+        {
+            new(1, 3) { IsActive = true }
+        };
+
+        Assert.IsTrue(_lineFolds.IsFolded(2));
+        Assert.IsTrue(_lineFolds.IsFolded(3));
+        Assert.IsTrue(_lineFolds.IsFolded(4));
+    }
+
+    [Test]
     public void SetItems_RaiseItemsSet()
     {
         var raised = 0;
@@ -250,17 +283,20 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineAdd_Activated()
     {
-        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.Activate(new[] { 5 });
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3), new(10, 3) };
+        _lineFolds.Activate(new[] { 5, 10 });
 
-        _lineFolds.UpdateAfterLineAdd(3, 2);
+        _lineFolds.UpdateAfterLineAdd(9, 2);
 
         Assert.False(_lineFolds.IsFolded(2));
         Assert.False(_lineFolds.IsFolded(3));
         Assert.False(_lineFolds.IsFolded(4));
+        Assert.True(_lineFolds.IsFolded(6));
+        Assert.True(_lineFolds.IsFolded(7));
         Assert.True(_lineFolds.IsFolded(8));
-        Assert.True(_lineFolds.IsFolded(9));
-        Assert.True(_lineFolds.IsFolded(10));
+        Assert.True(_lineFolds.IsFolded(13));
+        Assert.True(_lineFolds.IsFolded(14));
+        Assert.True(_lineFolds.IsFolded(15));
     }
 
     [Test]
@@ -282,16 +318,19 @@ internal class LineFoldsTest
     [Test]
     public void UpdateAfterLineDelete_Activated()
     {
-        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3) };
-        _lineFolds.Activate(new[] { 5 });
+        _lineFolds.Items = new LineFold[] { new(1, 3), new(5, 3), new(10, 3) };
+        _lineFolds.Activate(new[] { 5, 10 });
 
-        _lineFolds.UpdateAfterLineDelete(3, 1);
+        _lineFolds.UpdateAfterLineDelete(9, 1);
 
         Assert.False(_lineFolds.IsFolded(1));
         Assert.False(_lineFolds.IsFolded(2));
         Assert.False(_lineFolds.IsFolded(3));
-        Assert.True(_lineFolds.IsFolded(5));
         Assert.True(_lineFolds.IsFolded(6));
         Assert.True(_lineFolds.IsFolded(7));
+        Assert.True(_lineFolds.IsFolded(8));
+        Assert.True(_lineFolds.IsFolded(10));
+        Assert.True(_lineFolds.IsFolded(11));
+        Assert.True(_lineFolds.IsFolded(12));
     }
 }
