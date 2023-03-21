@@ -119,15 +119,13 @@ public class Token
 
     public string Name { get; }
     public int StartColumnIndex { get; }
-    public int Length { get; }
     public byte Kind { get; set; }
-    public int EndColumnIndex => StartColumnIndex + Length - 1;
+    public int EndColumnIndex => StartColumnIndex + Name.Length - 1;
 
     public Token(string name, int startColumnIndex, byte kind)
     {
         Name = name;
         StartColumnIndex = startColumnIndex;
-        Length = name.Length;
         Kind = kind;
     }
 

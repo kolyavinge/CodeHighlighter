@@ -249,7 +249,7 @@ internal class Text : IText
 
 internal static class TextExt
 {
-    public static int GetMaxLineWidth(this IText text) => text.Lines.Select(x => x.Length).Max();
+    public static int GetMaxLineWidth(this IText text) => text.Lines.Max(x => x.Length);
 }
 
 public static class NotAllowedSymbols

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml.Linq;
 using CodeHighlighter.Common;
 using CodeHighlighter.Model;
 
@@ -15,16 +16,14 @@ public class Token
     public readonly string Name;
     public readonly int LineIndex;
     public readonly int StartColumnIndex;
-    public readonly int Length;
     public readonly byte Kind;
-    public int EndColumnIndex => StartColumnIndex + Length - 1;
+    public int EndColumnIndex => StartColumnIndex + Name.Length - 1;
 
     public Token(string name, int lineIndex, int startColumnIndex, byte kind)
     {
         Name = name;
         LineIndex = lineIndex;
         StartColumnIndex = startColumnIndex;
-        Length = name.Length;
         Kind = kind;
     }
 

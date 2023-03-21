@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-public interface ITokensColorCollection
+public interface ITokensColors : IEnumerable<Color>
 {
     Color? GetColor(byte tokenKind);
 }
 
-public interface ITokensColors : ITokensColorCollection
+internal interface ITokensColorsInternal : ITokensColors
 {
     void SetColors(IEnumerable<TokenColor> tokenColors);
 }
 
-internal class TokensColors : ITokensColors
+internal class TokensColors : ITokensColorsInternal
 {
     private readonly Dictionary<byte, Color> _colors = new();
 
@@ -28,4 +29,8 @@ internal class TokensColors : ITokensColors
     }
 
     public Color? GetColor(byte tokenKind) => _colors.ContainsKey(tokenKind) ? _colors[tokenKind] : null;
+
+    public IEnumerator<Color> GetEnumerator() => _colors.Values.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => _colors.Values.GetEnumerator();
 }

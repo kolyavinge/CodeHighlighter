@@ -15,7 +15,7 @@ internal class TextLine : IEnumerable<char>
 
     internal TextLine(string str)
     {
-        _symbs = str.ToCharArray().ToList();
+        _symbs = str.ToList();
     }
 
     public string GetSubstring(int startIndex, int length)

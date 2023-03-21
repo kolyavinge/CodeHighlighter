@@ -120,7 +120,7 @@ public class MainViewModel
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        Debug.WriteLine($"{e.AddedLines.StartLineIndex + 1}:{e.AddedLines.LinesCount} / {e.DeletedLines.StartLineIndex + 1}:{e.DeletedLines.LinesCount}");
+        //Debug.WriteLine($"{e.AddedLines.StartLineIndex + 1}:{e.AddedLines.LinesCount} / {e.DeletedLines.StartLineIndex + 1}:{e.DeletedLines.LinesCount}");
     }
 
     private void CopyText()
