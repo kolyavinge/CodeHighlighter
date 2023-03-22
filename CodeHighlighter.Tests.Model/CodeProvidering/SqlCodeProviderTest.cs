@@ -24,19 +24,19 @@ internal class SqlCodeProviderTest
         Assert.AreEqual(4, tokens.Count);
         int i = 0;
         Assert.AreEqual(0, tokens[i].StartColumnIndex);
-        Assert.AreEqual(6, tokens[i].Length);
+        Assert.AreEqual(6, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[i].Kind);
         i++;
         Assert.AreEqual(7, tokens[i].StartColumnIndex);
-        Assert.AreEqual(1, tokens[i].Length);
+        Assert.AreEqual(1, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Delimiter, tokens[i].Kind);
         i++;
         Assert.AreEqual(9, tokens[i].StartColumnIndex);
-        Assert.AreEqual(4, tokens[i].Length);
+        Assert.AreEqual(4, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[i].Kind);
         i++;
         Assert.AreEqual(14, tokens[i].StartColumnIndex);
-        Assert.AreEqual(7, tokens[i].Length);
+        Assert.AreEqual(7, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Identifier, tokens[i].Kind);
     }
 
@@ -57,35 +57,35 @@ internal class SqlCodeProviderTest
         Assert.AreEqual(8, tokens.Count);
         int i = 0;
         Assert.AreEqual(0, tokens[i].StartColumnIndex);
-        Assert.AreEqual(6, tokens[i].Length);
+        Assert.AreEqual(6, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[i].Kind);
         i++;
         Assert.AreEqual(7, tokens[i].StartColumnIndex);
-        Assert.AreEqual(1, tokens[i].Length);
+        Assert.AreEqual(1, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Delimiter, tokens[i].Kind);
         i++;
         Assert.AreEqual(9, tokens[i].StartColumnIndex);
-        Assert.AreEqual(4, tokens[i].Length);
+        Assert.AreEqual(4, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[i].Kind);
         i++;
         Assert.AreEqual(14, tokens[i].StartColumnIndex);
-        Assert.AreEqual(7, tokens[i].Length);
+        Assert.AreEqual(7, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Identifier, tokens[i].Kind);
         i++;
         Assert.AreEqual(22, tokens[i].StartColumnIndex);
-        Assert.AreEqual(5, tokens[i].Length);
+        Assert.AreEqual(5, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[i].Kind);
         i++;
         Assert.AreEqual(28, tokens[i].StartColumnIndex);
-        Assert.AreEqual(1, tokens[i].Length);
+        Assert.AreEqual(1, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Identifier, tokens[i].Kind);
         i++;
         Assert.AreEqual(30, tokens[i].StartColumnIndex);
-        Assert.AreEqual(1, tokens[i].Length);
+        Assert.AreEqual(1, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Delimiter, tokens[i].Kind);
         i++;
         Assert.AreEqual(32, tokens[i].StartColumnIndex);
-        Assert.AreEqual(1, tokens[i].Length);
+        Assert.AreEqual(1, tokens[i].Name.Length);
         Assert.AreEqual((byte)TokenKind.Other, tokens[i].Kind);
     }
 
@@ -96,7 +96,7 @@ internal class SqlCodeProviderTest
         var tokens = GetTokens(text);
         Assert.AreEqual(4, tokens.Count);
         Assert.AreEqual(7, tokens[1].StartColumnIndex);
-        Assert.AreEqual(7, tokens[1].Length);
+        Assert.AreEqual(7, tokens[1].Name.Length);
         Assert.AreEqual((byte)TokenKind.Identifier, tokens[1].Kind);
     }
 
@@ -109,11 +109,11 @@ internal class SqlCodeProviderTest
         Assert.AreEqual(4, tokens.Count);
 
         Assert.AreEqual(7, tokens[1].StartColumnIndex);
-        Assert.AreEqual(7, tokens[1].Length);
+        Assert.AreEqual(7, tokens[1].Name.Length);
         Assert.AreEqual((byte)TokenKind.Identifier, tokens[1].Kind);
 
         Assert.AreEqual(14, tokens[2].StartColumnIndex);
-        Assert.AreEqual(4, tokens[2].Length);
+        Assert.AreEqual(4, tokens[2].Name.Length);
         Assert.AreEqual((byte)TokenKind.Keyword, tokens[2].Kind);
     }
 
@@ -142,7 +142,7 @@ internal class SqlCodeProviderTest
         var tokens = GetTokens(text);
         Assert.AreEqual(5, tokens.Count);
         Assert.AreEqual(22, tokens[4].StartColumnIndex);
-        Assert.AreEqual(11, tokens[4].Length);
+        Assert.AreEqual(11, tokens[4].Name.Length);
         Assert.AreEqual((byte)TokenKind.Comment, tokens[4].Kind);
     }
 
@@ -153,7 +153,7 @@ internal class SqlCodeProviderTest
         var tokens = GetTokens(text);
         Assert.AreEqual(1, tokens.Count);
         Assert.AreEqual(0, tokens[0].StartColumnIndex);
-        Assert.AreEqual(29, tokens[0].Length);
+        Assert.AreEqual(29, tokens[0].Name.Length);
         Assert.AreEqual((byte)TokenKind.String, tokens[0].Kind);
     }
 
@@ -165,7 +165,7 @@ from MyTable'";
         var tokens = GetTokens(text);
         Assert.AreEqual(1, tokens.Count);
         Assert.AreEqual(0, tokens[0].StartColumnIndex);
-        Assert.AreEqual(29, tokens[0].Length);
+        Assert.AreEqual(29, tokens[0].Name.Length);
         Assert.AreEqual((byte)TokenKind.String, tokens[0].Kind);
     }
 

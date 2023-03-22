@@ -70,7 +70,7 @@ internal class TokenNavigator
     private CursorPosition GetNextCursorPosition(IText text, int lineIndex, TokenList lineTokens, Token token)
     {
         var index = lineTokens.FindIndex(x => x.Equals(token));
-        if (index == -1 || index == lineTokens.Count - 1) return new(lineIndex, text.GetLine(lineIndex).Length);
+        if (index == lineTokens.Count - 1) return new(lineIndex, text.GetLine(lineIndex).Length);
         var next = lineTokens[index + 1];
         return new(lineIndex, next.StartColumnIndex);
     }

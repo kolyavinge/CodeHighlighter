@@ -51,7 +51,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public ITokenCollection Tokens => _tokens;
 
-    public ITokensColorCollection TokensColors { get; }
+    public ITokensColors TokensColors { get; }
 
     public IHistory History => _history;
 
@@ -80,7 +80,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITextEventsInternal textEvents,
         ITextMeasuresEvents textMeasuresEvents,
         ITokens tokens,
-        ITokensColors tokensColors,
+        ITokensColorsInternal tokensColors,
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,
         ILineGapCollection gaps,

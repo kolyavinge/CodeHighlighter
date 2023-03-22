@@ -194,6 +194,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         codeTextBox._keyboardController = ControllerFactory.MakeKeyboardController(model);
         codeTextBox._mouseController = ControllerFactory.MakeMouseController(codeTextBox, model);
         codeTextBox._renderingContext = new CodeTextBoxRenderingContext(codeTextBox);
+        codeTextBox._renderingContext.SetColorsForText(model.TokensColors);
         codeTextBox._renderingModel = RenderingModelFactory.MakeModel(model, codeTextBox._renderingContext);
     }
 
