@@ -112,7 +112,7 @@ public class MainViewModel
         CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
         CodeTextBoxModel.TextEvents.TextChanged += OnTextChanged;
-        CodeTextBoxModel.Folds.Items = new LineFold[] { new(8, 13), new(37, 91) };
+        CodeTextBoxModel.Folds.Items = new LineFold[] { new(8, 13), new(37, 91), new(42, 8) };
         LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
         LineFoldingPanelModel = LineFoldingPanelModelFactory.MakeModel(CodeTextBoxModel);
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);

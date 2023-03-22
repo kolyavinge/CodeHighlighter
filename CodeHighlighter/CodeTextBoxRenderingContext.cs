@@ -34,7 +34,7 @@ internal class CodeTextBoxRenderingContext : ICodeTextBoxRenderingContext
     public void SetColorsForText(IEnumerable<Common.Color> colors)
     {
         _textBrushes.Clear();
-        foreach (var color in colors)
+        foreach (var color in colors.Distinct())
         {
             _textBrushes.Add(color, new SolidColorBrush(new() { R = color.R, G = color.G, B = color.B, A = color.A }));
         }
