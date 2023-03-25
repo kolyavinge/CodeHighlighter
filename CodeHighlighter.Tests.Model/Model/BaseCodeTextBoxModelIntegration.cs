@@ -22,7 +22,7 @@ internal class BaseCodeTextBoxModelIntegration
         var textEvents = new TextEvents(text, new TextChangedEventArgsFactory(editTextResultToLinesChangeConverter));
         var textMeasuresEvents = new TextMeasuresEvents(textMeasures);
         var tokens = new Tokens();
-        var tokensColors = new TokensColors();
+        var tokensColors = new TokensColors(codeProvider);
         var history = new History();
         var linesDecoration = new LinesDecorationCollection();
         var textCursorAbsolutePosition = new TextCursorAbsolutePosition(textCursor, textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), gaps, folds));

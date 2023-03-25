@@ -9,6 +9,7 @@ namespace CodeHighlighter.Tests.HistoryActions;
 
 internal class BaseHistoryActionIntegration
 {
+    protected readonly SqlCodeProvider _codeProvider;
     protected readonly Text _text;
     protected readonly TextCursor _textCursor;
     protected readonly TextCursorAbsolutePosition _textCursorAbsolutePosition;
@@ -16,6 +17,7 @@ internal class BaseHistoryActionIntegration
     protected readonly TextSelection _textSelection;
     protected readonly TextSelector _textSelector;
     protected readonly Tokens _tokens;
+    protected readonly TokensColors _tokensColors;
     protected readonly Viewport _viewport;
     protected readonly ViewportCursorPositionCorrector _cursorPositionCorrector;
     protected readonly PageScroller _pageScroller;
@@ -30,6 +32,7 @@ internal class BaseHistoryActionIntegration
 
     protected BaseHistoryActionIntegration()
     {
+        _codeProvider = new();
         _text = new();
         _textMeasures = new();
         _gaps = new();
@@ -40,6 +43,7 @@ internal class BaseHistoryActionIntegration
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
+        _tokensColors = new(_codeProvider);
         _textCursorAbsolutePosition = new TextCursorAbsolutePosition(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds));
         _viewport = new(
             _textMeasures,
@@ -55,14 +59,14 @@ internal class BaseHistoryActionIntegration
     protected void MakeContext()
     {
         _context = new(
-            new SqlCodeProvider(),
+            _codeProvider,
             _text,
             _textCursor,
             _textMeasures,
             _textSelection,
             _textSelector,
             _tokens,
-            new TokensColors(),
+            _tokensColors,
             _viewport,
             _cursorPositionCorrector,
             _pageScroller,

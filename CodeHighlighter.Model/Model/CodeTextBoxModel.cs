@@ -80,7 +80,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITextEventsInternal textEvents,
         ITextMeasuresEvents textMeasuresEvents,
         ITokens tokens,
-        ITokensColorsInternal tokensColors,
+        ITokensColors tokensColors,
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,
         ILineGapCollection gaps,

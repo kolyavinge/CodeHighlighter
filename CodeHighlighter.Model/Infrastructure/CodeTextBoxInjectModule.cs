@@ -13,7 +13,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<ITextCursorPositionCorrector, TextCursorPositionCorrector>().ToSingleton();
         bindingProvider.Bind<ITextCursorAbsolutePosition, TextCursorAbsolutePosition>().ToSingleton();
         bindingProvider.Bind<ITokens, Tokens>().ToSingleton();
-        bindingProvider.Bind<ITokensColorsInternal, TokensColors>().ToSingleton();
+        bindingProvider.Bind<ITokensColors, TokensColors>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresInternal, TextMeasures>().ToSingleton();
         bindingProvider.Bind<IHistoryInternal, History>().ToSingleton();
         bindingProvider.Bind<ILinesDecorationCollection, LinesDecorationCollection>().ToSingleton();

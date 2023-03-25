@@ -7,6 +7,7 @@ namespace CodeHighlighter.Tests.InputActions;
 
 internal class BaseInputActionIntegration
 {
+    protected SqlCodeProvider _codeProvider;
     protected Text _text;
     protected TextCursor _textCursor;
     protected TextCursorAbsolutePosition _textCursorAbsolutePosition;
@@ -14,6 +15,7 @@ internal class BaseInputActionIntegration
     protected TextSelection _textSelection;
     protected TextSelector _textSelector;
     protected Tokens _tokens;
+    protected TokensColors _tokensColors;
     protected LineGapCollection _gaps;
     protected LineFolds _folds;
     protected LineFoldsUpdater _lineFoldsUpdater;
@@ -27,6 +29,7 @@ internal class BaseInputActionIntegration
 
     protected void Init()
     {
+        _codeProvider = new();
         _text = new();
         _textMeasures = new();
         _gaps = new();
@@ -37,6 +40,7 @@ internal class BaseInputActionIntegration
         _textSelection = new(_text);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
+        _tokensColors = new(_codeProvider);
         _textCursorAbsolutePosition = new(_textCursor, _textMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), _gaps, _folds));
         _viewport = new(
             _textMeasures,
@@ -48,14 +52,14 @@ internal class BaseInputActionIntegration
         _textEvents = new(_text, new TextChangedEventArgsFactory(_editTextResultToLinesChangeConverter));
         _inputActionFactory = new();
         _context = new(
-            new SqlCodeProvider(),
+            _codeProvider,
             _text,
             _textCursor,
             _textMeasures,
             _textSelection,
             _textSelector,
             _tokens,
-            new TokensColors(),
+            _tokensColors,
             _viewport,
             _cursorPositionCorrector,
             _pageScroller,

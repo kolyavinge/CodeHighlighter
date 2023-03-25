@@ -10,16 +10,16 @@ public interface ITokensColors : IEnumerable<Color>
     Color? GetColor(byte tokenKind);
 }
 
-internal interface ITokensColorsInternal : ITokensColors
-{
-    void SetColors(IEnumerable<TokenColor> tokenColors);
-}
-
-internal class TokensColors : ITokensColorsInternal
+internal class TokensColors : ITokensColors
 {
     private readonly Dictionary<byte, Color> _colors = new();
 
-    public void SetColors(IEnumerable<TokenColor> tokenColors)
+    public TokensColors(ICodeProvider codeProvider)
+    {
+        SetColors(codeProvider.GetColors());
+    }
+
+    private void SetColors(IEnumerable<TokenColor> tokenColors)
     {
         _colors.Clear();
         foreach (var tokenColor in tokenColors)

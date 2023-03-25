@@ -18,7 +18,6 @@ internal class InputAction
     {
         var codeProviderTokens = context.CodeProvider.GetTokens(new ForwardTextIterator(context.Text, 0, context.Text.LinesCount - 1)).ToList();
         context.Tokens.SetTokens(codeProviderTokens, 0, context.Text.LinesCount);
-        context.TokenColors.SetColors(context.CodeProvider.GetColors());
     }
 
     protected void UpdateTokensForLines(IInputActionContext context, int startLineIndex, int count)
