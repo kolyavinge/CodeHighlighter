@@ -32,7 +32,8 @@ internal class LineFoldsRendering : ILineFoldsRendering
                         new(_delta, fold.OffsetY + _delta),
                         new(textLineHeight - _delta, fold.OffsetY + textLineHeight / 2.0),
                         new(_delta, fold.OffsetY + textLineHeight - _delta)
-                    });
+                    },
+                    1.5);
             }
             else
             {
@@ -43,7 +44,8 @@ internal class LineFoldsRendering : ILineFoldsRendering
                         new(_delta, fold.OffsetY + _delta),
                         new(textLineHeight / 2.0, fold.OffsetY + textLineHeight - _delta),
                         new(textLineHeight - _delta, fold.OffsetY + _delta)
-                    });
+                    },
+                    1.5);
             }
         }
     }

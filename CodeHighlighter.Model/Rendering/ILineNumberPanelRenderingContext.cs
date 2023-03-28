@@ -4,5 +4,5 @@ public enum TextAlign { Left, Right }
 
 public interface ILineNumberPanelRenderingContext
 {
-    void RenderNumber(double offsetY, string lineNumber, TextAlign align);
+    void DrawNumber(double offsetY, int number, TextAlign align);
 }

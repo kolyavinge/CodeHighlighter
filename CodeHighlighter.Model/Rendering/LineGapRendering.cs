@@ -37,8 +37,8 @@ internal class LineGapRendering : ILineGapRendering
             for (int i = 1; i <= gap.CountBefore; i++)
             {
                 var y = line.OffsetY - i * textMeasures.LineHeight;
-                _renderingContext.DrawPolygon(platformColor, GetPolygon1(y));
-                _renderingContext.DrawPolygon(platformColor, GetPolygon2(y));
+                _renderingContext.DrawPolygon(platformColor, GetPolygon1(y), 1.0);
+                _renderingContext.DrawPolygon(platformColor, GetPolygon2(y), 1.0);
             }
         }
     }

@@ -21,8 +21,7 @@ internal class NumberRendering : INumberRendering
     {
         foreach (var line in lines)
         {
-            var lineNumber = (line.LineIndex + 1).ToString();
-            _context.RenderNumber(line.OffsetY, lineNumber, TextAlign.Right);
+            _context.DrawNumber(line.OffsetY, line.LineIndex + 1, TextAlign.Right);
         }
     }
 }

@@ -4,5 +4,5 @@ namespace CodeHighlighter.Rendering;
 
 public interface ILineFoldingPanelRenderingContext
 {
-    void DrawPolygon(object platformColor, IEnumerable<Common.Point> points);
+    void DrawPolygon(object platformColor, IEnumerable<Common.Point> points, double thickness);
 }

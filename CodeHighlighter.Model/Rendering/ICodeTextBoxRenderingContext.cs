@@ -11,5 +11,5 @@ public interface ICodeTextBoxRenderingContext
 
     void DrawRectangle(Color color, Rect rect);
 
-    void DrawPolygon(object platformColor, IEnumerable<Point> points);
+    void DrawPolygon(object platformColor, IEnumerable<Point> points, double thickness);
 }

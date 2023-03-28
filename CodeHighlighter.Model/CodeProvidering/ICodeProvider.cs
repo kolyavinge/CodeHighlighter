@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Linq;
 using CodeHighlighter.Common;
 using CodeHighlighter.Model;
 

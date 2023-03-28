@@ -11,7 +11,7 @@ namespace CodeHighlighter;
 
 public class LineFoldingPanel : Control, ILineFoldingPanel
 {
-    private readonly LineFoldingPanelRenderingContext _context;
+    private readonly RenderingContext _context;
     private ILineFoldsRendering? _lineFoldsRendering;
     private ILineFoldingPanelMouseController? _mouseController;
 
@@ -90,7 +90,7 @@ public class LineFoldingPanel : Control, ILineFoldingPanel
 
     public LineFoldingPanel()
     {
-        _context = new LineFoldingPanelRenderingContext(this);
+        _context = new RenderingContext(this);
     }
 
     protected override void OnRender(DrawingContext context)

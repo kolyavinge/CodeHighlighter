@@ -15,7 +15,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     private IKeyboardController? _keyboardController;
     private IMouseController? _mouseController;
     private ICodeTextBoxRenderingModel? _renderingModel;
-    private CodeTextBoxRenderingContext? _renderingContext;
+    private RenderingContext? _renderingContext;
     private readonly MouseSettings _mouseSettings;
     private readonly CursorRenderLogic _cursorRenderLogic;
 
@@ -193,7 +193,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         codeTextBox.ViewportSizeChanged?.Invoke(codeTextBox, EventArgs.Empty);
         codeTextBox._keyboardController = ControllerFactory.MakeKeyboardController(model);
         codeTextBox._mouseController = ControllerFactory.MakeMouseController(codeTextBox, model);
-        codeTextBox._renderingContext = new CodeTextBoxRenderingContext(codeTextBox);
+        codeTextBox._renderingContext = new RenderingContext(codeTextBox);
         codeTextBox._renderingContext.SetColorsForText(model.TokensColors);
         codeTextBox._renderingModel = RenderingModelFactory.MakeModel(model, codeTextBox._renderingContext);
     }

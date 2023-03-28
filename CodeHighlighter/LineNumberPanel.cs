@@ -10,8 +10,8 @@ namespace CodeHighlighter;
 
 public class LineNumberPanel : Control, ILineNumberPanel
 {
-    private readonly LineNumberPanelRenderingContext _context;
-    private INumberRendering? _numberRendering;
+    private readonly RenderingContext _context;
+    private readonly INumberRendering? _numberRendering;
 
     #region Model
     public ILineNumberPanelModel Model
@@ -86,7 +86,7 @@ public class LineNumberPanel : Control, ILineNumberPanel
 
     public LineNumberPanel()
     {
-        _context = new LineNumberPanelRenderingContext(this);
+        _context = new RenderingContext(this);
         _numberRendering = RenderingModelFactory.MakeNumberRendering(_context);
     }
 

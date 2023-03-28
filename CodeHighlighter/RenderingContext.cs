@@ -2,27 +2,31 @@
 using System.Globalization;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-internal class CodeTextBoxRenderingContext : ICodeTextBoxRenderingContext
+internal class RenderingContext : ICodeTextBoxRenderingContext, ILineNumberPanelRenderingContext, ILineFoldingPanelRenderingContext
 {
-    private readonly CodeTextBox _codeTextBox;
+    private readonly Control _control;
     private readonly Dictionary<Common.Color, SolidColorBrush> _textBrushes;
     private Typeface? _typeface;
     private DrawingContext? _context;
 
-    public CodeTextBoxRenderingContext(CodeTextBox codeTextBox)
+    public RenderingContext(Control control)
     {
-        _codeTextBox = codeTextBox;
+        _control = control;
         _textBrushes = new Dictionary<Common.Color, SolidColorBrush>();
-        _typeface = new Typeface(_codeTextBox.FontSettings.FontFamily, _codeTextBox.FontSettings.FontStyle, _codeTextBox.FontSettings.FontWeight, _codeTextBox.FontSettings.FontStretch);
-        _codeTextBox.FontSettingsChanged += (s, e) =>
+        _typeface = new Typeface(_control.FontFamily, _control.FontStyle, _control.FontWeight, _control.FontStretch);
+    }
+
+    public RenderingContext(CodeTextBox codeTextBox) : this((Control)codeTextBox)
+    {
+        codeTextBox.FontSettingsChanged += (s, e) =>
         {
-            _typeface = new Typeface(
-                _codeTextBox.FontSettings.FontFamily, _codeTextBox.FontSettings.FontStyle, _codeTextBox.FontSettings.FontWeight, _codeTextBox.FontSettings.FontStretch);
+            _typeface = new Typeface(_control.FontFamily, _control.FontStyle, _control.FontWeight, _control.FontStretch);
         };
     }
 
@@ -42,9 +46,23 @@ internal class CodeTextBoxRenderingContext : ICodeTextBoxRenderingContext
 
     public void DrawText(string text, Common.Point position, Common.Color? foreground)
     {
-        var brush = foreground != null ? _textBrushes[foreground.Value] : _codeTextBox.Foreground;
-        var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, _typeface, _codeTextBox.FontSettings.FontSize, brush, 1.0);
+        var brush = foreground != null ? _textBrushes[foreground.Value] : _control.Foreground;
+        var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, _typeface, _control.FontSize, brush, 1.0);
         _context!.DrawText(formattedText, new(position.X, position.Y));
+    }
+
+    public void DrawNumber(double offsetY, int number, TextAlign align)
+    {
+        var typeface = new Typeface(_control.FontFamily, _control.FontStyle, _control.FontWeight, _control.FontStretch);
+        var formattedText = new FormattedText(number.ToString(), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, typeface, _control.FontSize, _control.Foreground, 1.0);
+        if (align == TextAlign.Left)
+        {
+            _context!.DrawText(formattedText, new(0, offsetY));
+        }
+        else if (align == TextAlign.Right)
+        {
+            _context!.DrawText(formattedText, new(_control.ActualWidth - formattedText.Width, offsetY));
+        }
     }
 
     public void DrawRectangle(object platformColor, Common.Rect rect)
@@ -58,10 +76,10 @@ internal class CodeTextBoxRenderingContext : ICodeTextBoxRenderingContext
         _context!.DrawRectangle(brush, null, new(rect.X, rect.Y, rect.Width, rect.Height));
     }
 
-    public void DrawPolygon(object platformColor, IEnumerable<Common.Point> points)
+    public void DrawPolygon(object platformColor, IEnumerable<Common.Point> points, double thickness)
     {
         var pointsArray = points.ToArray();
-        var drawingPen = new Pen((Brush)platformColor, 1);
+        var drawingPen = new Pen((Brush)platformColor, thickness);
         for (int i = 1; i < pointsArray.Length; i++)
         {
             var p1 = new Point(pointsArray[i - 1].X, pointsArray[i - 1].Y);
