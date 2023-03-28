@@ -77,7 +77,8 @@
                 HighlightPairBracketsBrush="GreenYellow"
                 HighlightNoPairBracketBrush="IndianRed"
                 CursorLineHighlightingBrush="Linen"
-                LineGapBrush="DarkGray">
+                LineGapBrush="DarkGray"
+                ActivatedFoldBrush="LightBlue">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewKeyDown">
                         <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />

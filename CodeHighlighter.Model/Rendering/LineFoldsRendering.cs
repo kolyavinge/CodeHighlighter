@@ -5,7 +5,7 @@ namespace CodeHighlighter.Rendering;
 
 public interface ILineFoldsRendering
 {
-    void Render(object platformColor, double textLineHeight, IEnumerable<ILineFoldingPanelModel.LineFoldWithOffsetY> folds);
+    void Render(object platformColor, double textLineHeight, IEnumerable<LineFoldWithOffsetY> folds);
 }
 
 internal class LineFoldsRendering : ILineFoldsRendering
@@ -19,33 +19,31 @@ internal class LineFoldsRendering : ILineFoldsRendering
         _context = context;
     }
 
-    public void Render(object platformColor, double textLineHeight, IEnumerable<ILineFoldingPanelModel.LineFoldWithOffsetY> folds)
+    public void Render(object platformColor, double textLineHeight, IEnumerable<LineFoldWithOffsetY> folds)
     {
         foreach (var fold in folds)
         {
             if (fold.IsActive)
             {
-                _context.DrawPolygon(
-                    platformColor,
-                    new Common.Point[]
-                    {
-                        new(_delta, fold.OffsetY + _delta),
-                        new(textLineHeight - _delta, fold.OffsetY + textLineHeight / 2.0),
-                        new(_delta, fold.OffsetY + textLineHeight - _delta)
-                    },
-                    1.5);
+                var points = new Common.Point[]
+                {
+                    new(_delta, fold.OffsetY + _delta),
+                    new(textLineHeight - _delta, fold.OffsetY + textLineHeight / 2.0),
+                    new(_delta, fold.OffsetY + textLineHeight - _delta)
+                };
+
+                _context.DrawPolygon(platformColor, points, 1.5);
             }
             else
             {
-                _context.DrawPolygon(
-                    platformColor,
-                    new Common.Point[]
-                    {
-                        new(_delta, fold.OffsetY + _delta),
-                        new(textLineHeight / 2.0, fold.OffsetY + textLineHeight - _delta),
-                        new(textLineHeight - _delta, fold.OffsetY + _delta)
-                    },
-                    1.5);
+                var points = new Common.Point[]
+                {
+                    new(_delta, fold.OffsetY + _delta),
+                    new(textLineHeight / 2.0, fold.OffsetY + textLineHeight - _delta),
+                    new(textLineHeight - _delta, fold.OffsetY + _delta)
+                };
+
+                _context.DrawPolygon(platformColor, points, 1.5);
             }
         }
     }

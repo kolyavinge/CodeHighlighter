@@ -8,6 +8,8 @@ public static class LineFoldingPanelModelFactory
     {
         return new LineFoldingPanelModel(
             codeTextBoxModel.Folds,
-            new ExtendedLineNumberGenerator(new LineNumberGenerator(), codeTextBoxModel.Gaps, codeTextBoxModel.Folds));
+            new LineFoldsNumberGenerator(
+                codeTextBoxModel.Folds,
+                new ExtendedLineNumberGenerator(new LineNumberGenerator(), codeTextBoxModel.Gaps, codeTextBoxModel.Folds)));
     }
 }
