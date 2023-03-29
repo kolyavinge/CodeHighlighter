@@ -300,12 +300,12 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         _renderingContext!.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
-        _renderingModel.LinesDecoration.Render();
         _renderingModel.ActivatedLineFolds.RenderActivatedFoldLines(ActivatedFoldBrush);
         if (IsFocused)
         {
             _cursorRenderLogic.DrawHighlightedCursorLine(Model, context, CursorLineHighlightingBrush, ActualWidth);
         }
+        _renderingModel.LinesDecoration.Render();
         _renderingModel.TextSelection.Render(SelectionBrush);
         _renderingModel.HighlightBrackets.Render(HighlightPairBracketsBrush, HighlightNoPairBracketBrush);
         _renderingModel.Text.Render();
