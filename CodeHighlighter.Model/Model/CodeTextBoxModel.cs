@@ -3,6 +3,7 @@ using System.Linq;
 using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Common;
+using CodeHighlighter.Core;
 using CodeHighlighter.HistoryActions;
 using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;

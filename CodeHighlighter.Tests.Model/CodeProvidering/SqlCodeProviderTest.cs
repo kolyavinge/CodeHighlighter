@@ -219,8 +219,8 @@ from MyTable'";
 
     private List<Token> GetTokens(string textString)
     {
-        var text = new CodeHighlighter.Model.Text();
+        var text = new CodeHighlighter.Core.Text();
         text.TextContent = textString;
-        return _provider.GetTokens(new CodeHighlighter.Model.ForwardTextIterator(text, 0, text.LinesCount - 1)).ToList();
+        return _provider.GetTokens(new CodeHighlighter.Core.ForwardTextIterator(text, 0, text.LinesCount - 1)).ToList();
     }
 }

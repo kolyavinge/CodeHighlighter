@@ -1,6 +1,6 @@
-﻿using CodeHighlighter.Infrastructure;
+﻿using CodeHighlighter.Core;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
-using CodeHighlighter.Model;
 
 namespace CodeHighlighter.HistoryActions;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using CodeHighlighter.Ancillary;
-using CodeHighlighter.Model;
+using CodeHighlighter.Core;
 using Moq;
 using NUnit.Framework;
 using static CodeHighlighter.Ancillary.IBracketsHighlighter;

@@ -1,5 +1,5 @@
 ﻿using CodeHighlighter.Ancillary;
-using CodeHighlighter.Model;
+using CodeHighlighter.Core;
 using CodeHighlighter.Rendering;
 using DependencyInjection;
 

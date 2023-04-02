@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Core;
+using CodeHighlighter.Model;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;

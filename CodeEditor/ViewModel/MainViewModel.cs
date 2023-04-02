@@ -7,6 +7,7 @@ using CodeEditor.Mvvm;
 using CodeHighlighter;
 using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Core;
 using CodeHighlighter.Model;
 
 namespace CodeEditor.ViewModel;

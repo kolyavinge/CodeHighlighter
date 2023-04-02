@@ -1,4 +1,4 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Core;
 
 namespace CodeHighlighter.InputActions;
 

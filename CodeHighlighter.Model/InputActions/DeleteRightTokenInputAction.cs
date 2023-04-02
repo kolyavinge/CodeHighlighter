@@ -1,5 +1,5 @@
-﻿using CodeHighlighter.Infrastructure;
-using CodeHighlighter.Model;
+﻿using CodeHighlighter.Core;
+using CodeHighlighter.Infrastructure;
 
 namespace CodeHighlighter.InputActions;
 

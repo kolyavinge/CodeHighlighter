@@ -1,5 +1,5 @@
-﻿using CodeHighlighter.HistoryActions;
-using CodeHighlighter.Model;
+﻿using CodeHighlighter.Core;
+using CodeHighlighter.HistoryActions;
 using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.HistoryActions;

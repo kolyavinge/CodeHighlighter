@@ -1,5 +1,6 @@
 ﻿using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Core;
 using CodeHighlighter.Model;
 
 namespace CodeHighlighter.InputActions;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.Core;
 using CodeHighlighter.Model;
 using static CodeHighlighter.Ancillary.IBracketsHighlighter;
 
