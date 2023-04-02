@@ -5,6 +5,8 @@ namespace CodeHighlighter.Model;
 
 public class TokenList : IEnumerable<Token>, IReadOnlyCollection<Token>, IReadOnlyList<Token>
 {
+    public static TokenList FromEnumerable(IEnumerable<Token> tokens) => new TokenList(tokens);
+
     private readonly List<Token> _list = new();
 
     public int Count => _list.Count;
@@ -12,6 +14,14 @@ public class TokenList : IEnumerable<Token>, IReadOnlyCollection<Token>, IReadOn
     public Token this[int index] => _list[index];
 
     internal TokenList() { }
+
+    private TokenList(IEnumerable<Token> tokens)
+    {
+        foreach (var token in tokens)
+        {
+            Add(token);
+        }
+    }
 
     internal void Add(Token token) => _list.Add(token);
 

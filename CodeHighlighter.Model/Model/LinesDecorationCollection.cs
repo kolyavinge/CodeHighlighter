@@ -1,5 +1,4 @@
 ﻿using CodeHighlighter.Common;
-using CodeHighlighter.Utils;
 
 namespace CodeHighlighter.Model;
 

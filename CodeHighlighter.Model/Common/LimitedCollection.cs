@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace CodeHighlighter.Utils;
+namespace CodeHighlighter.Common;
 
 internal class LimitedCollection<T> : IReadOnlyList<T>
 {

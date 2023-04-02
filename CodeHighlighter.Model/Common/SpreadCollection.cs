@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CodeHighlighter.Utils;
+namespace CodeHighlighter.Common;
 
 public class SpreadCollection<T> : IEnumerable<T>
 {

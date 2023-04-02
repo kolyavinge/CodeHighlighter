@@ -11,4 +11,8 @@
 	  <ProjectReference Include="..\..\DependencyInjection\DependencyInjection\DependencyInjection.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Ancillary\" />
+	</ItemGroup>
+
 </Project>

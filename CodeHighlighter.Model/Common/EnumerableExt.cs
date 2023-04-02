@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeHighlighter.Utils;
+namespace CodeHighlighter.Common;
 
 internal static class EnumerableExt
 {

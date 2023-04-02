@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CodeHighlighter.Utils;
+using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 

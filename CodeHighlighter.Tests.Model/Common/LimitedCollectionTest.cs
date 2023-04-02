@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using CodeHighlighter.Utils;
+using CodeHighlighter.Common;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Utils;
+namespace CodeHighlighter.Tests.Common;
 
 internal class LimitedCollectionTest
 {
