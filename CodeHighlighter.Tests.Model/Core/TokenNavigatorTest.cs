@@ -7,14 +7,14 @@ namespace CodeHighlighter.Tests.Core;
 internal class TokenNavigatorTest
 {
     private Mock<IText> _text;
-    private Mock<ITokens> _tokens;
+    private Mock<ITokensInternal> _tokens;
     private TokenNavigator _navigator;
 
     [SetUp]
     public void Setup()
     {
         _text = new Mock<IText>();
-        _tokens = new Mock<ITokens>();
+        _tokens = new Mock<ITokensInternal>();
         _navigator = new TokenNavigator();
     }
 

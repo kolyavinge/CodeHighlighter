@@ -4,7 +4,7 @@ internal class TokenNavigator
 {
     private readonly TokenCursorPositionLogic _tokenCursorPositionLogic = new();
 
-    public CursorPosition MoveRight(IText text, ITokens tokens, int lineIndex, int columnIndex)
+    public CursorPosition MoveRight(IText text, ITokensInternal tokens, int lineIndex, int columnIndex)
     {
         var line = text.GetLine(lineIndex);
         if (columnIndex == line.Length)
@@ -40,7 +40,7 @@ internal class TokenNavigator
         }
     }
 
-    public CursorPosition MoveLeft(IText text, ITokens tokens, int lineIndex, int columnIndex)
+    public CursorPosition MoveLeft(IText text, ITokensInternal tokens, int lineIndex, int columnIndex)
     {
         if (columnIndex == 0)
         {

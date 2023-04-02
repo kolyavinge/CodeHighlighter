@@ -6,9 +6,9 @@ namespace CodeHighlighter.Core;
 
 internal class TokenKindUpdater
 {
-    private readonly ITokens _tokens;
+    private readonly ITokensInternal _tokens;
 
-    public TokenKindUpdater(ITokens tokens)
+    public TokenKindUpdater(ITokensInternal tokens)
     {
         _tokens = tokens;
     }

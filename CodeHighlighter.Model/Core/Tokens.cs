@@ -3,14 +3,14 @@ using System.Linq;
 
 namespace CodeHighlighter.Core;
 
-public interface ITokenCollection
+public interface ITokens
 {
     int LinesCount { get; }
     TokenList GetTokens(int lineIndex);
     TokenCursorPosition? GetTokenOnPosition(CursorPosition position);
 }
 
-internal interface ITokens : ITokenCollection
+internal interface ITokensInternal : ITokens
 {
     IEnumerable<Token> AllTokens { get; }
     void DeleteLine(int lineIndex);
@@ -21,7 +21,7 @@ internal interface ITokens : ITokenCollection
     void SetTokens(IEnumerable<CodeProvidering.Token> tokens, int startLineIndex, int linesCount);
 }
 
-internal class Tokens : ITokens
+internal class Tokens : ITokensInternal
 {
     private readonly List<TokenList> _tokens;
 

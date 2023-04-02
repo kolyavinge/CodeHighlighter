@@ -2,7 +2,7 @@
 
 internal class TokenSelector
 {
-    public SelectedRange GetSelection(ITokens tokens, CursorPosition position)
+    public SelectedRange GetSelection(ITokensInternal tokens, CursorPosition position)
     {
         if (position.LineIndex >= tokens.LinesCount) return default;
         var lineTokens = tokens.GetTokens(position.LineIndex);

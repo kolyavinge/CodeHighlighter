@@ -18,7 +18,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     private readonly ITextCursorAbsolutePosition _textCursorAbsolutePosition;
     private readonly ITextSelector _textSelector;
     private readonly ITextMeasuresInternal _textMeasures;
-    private readonly ITokens _tokens;
+    private readonly ITokensInternal _tokens;
     private readonly IHistoryInternal _history;
     private readonly IViewportInternal _viewport;
     private readonly IInputActionContext _inputActionContext;
@@ -51,7 +51,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public ITextMeasuresEvents TextMeasuresEvents { get; }
 
-    public ITokenCollection Tokens => _tokens;
+    public ITokens Tokens => _tokens;
 
     public ITokensColors TokensColors { get; }
 
@@ -81,7 +81,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ITextMeasuresInternal textMeasures,
         ITextEventsInternal textEvents,
         ITextMeasuresEvents textMeasuresEvents,
-        ITokens tokens,
+        ITokensInternal tokens,
         ITokensColors tokensColors,
         IHistoryInternal history,
         ILinesDecorationCollection linesDecoration,

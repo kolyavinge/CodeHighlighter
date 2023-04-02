@@ -6,13 +6,13 @@ namespace CodeHighlighter.Tests.Core;
 
 internal class TokenSelectorTest
 {
-    private Mock<ITokens> _tokens;
+    private Mock<ITokensInternal> _tokens;
     private TokenSelector _selector;
 
     [SetUp]
     public void Setup()
     {
-        _tokens = new Mock<ITokens>();
+        _tokens = new Mock<ITokensInternal>();
         _selector = new TokenSelector();
     }
 

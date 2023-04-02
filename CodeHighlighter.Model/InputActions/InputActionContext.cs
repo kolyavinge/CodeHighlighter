@@ -16,7 +16,7 @@ internal interface IInputActionContext
     ITextSelectionInternal TextSelection { get; }
     ITextSelector TextSelector { get; }
     ITokensColors TokenColors { get; }
-    ITokens Tokens { get; }
+    ITokensInternal Tokens { get; }
     IViewportInternal Viewport { get; }
     IViewportCursorPositionCorrector CursorPositionCorrector { get; }
     IPageScroller PageScroller { get; }
@@ -31,7 +31,7 @@ internal class InputActionContext : IInputActionContext
     public ITextMeasuresInternal TextMeasures { get; }
     public ITextSelectionInternal TextSelection { get; }
     public ITextSelector TextSelector { get; }
-    public ITokens Tokens { get; }
+    public ITokensInternal Tokens { get; }
     public ITokensColors TokenColors { get; }
     public IViewportInternal Viewport { get; set; }
     public IViewportCursorPositionCorrector CursorPositionCorrector { get; }
@@ -47,7 +47,7 @@ internal class InputActionContext : IInputActionContext
         ITextMeasuresInternal textMeasures,
         ITextSelectionInternal textSelection,
         ITextSelector textSelector,
-        ITokens tokens,
+        ITokensInternal tokens,
         ITokensColors tokenColors,
         IViewportInternal viewport,
         IViewportCursorPositionCorrector cursorPositionCorrector,
