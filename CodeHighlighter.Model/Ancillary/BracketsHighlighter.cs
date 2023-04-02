@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using static CodeHighlighter.Model.IBracketsHighlighter;
+using CodeHighlighter.Model;
+using static CodeHighlighter.Ancillary.IBracketsHighlighter;
 
-namespace CodeHighlighter.Model;
+namespace CodeHighlighter.Ancillary;
 
 public interface IBracketsHighlighter
 {

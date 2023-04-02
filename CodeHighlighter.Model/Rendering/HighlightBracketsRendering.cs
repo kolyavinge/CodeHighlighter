@@ -1,6 +1,6 @@
 ﻿using CodeHighlighter.Common;
 using CodeHighlighter.Model;
-using static CodeHighlighter.Model.IBracketsHighlighter;
+using static CodeHighlighter.Ancillary.IBracketsHighlighter;
 
 namespace CodeHighlighter.Rendering;
 

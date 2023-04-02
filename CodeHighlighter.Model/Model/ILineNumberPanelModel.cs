@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeHighlighter.Ancillary;
 
 namespace CodeHighlighter.Model;
 

@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using CodeEditor.Mvvm;
 using CodeHighlighter;
+using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Model;
 

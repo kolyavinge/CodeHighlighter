@@ -2,7 +2,7 @@
 using System.Linq;
 using CodeHighlighter.Common;
 
-namespace CodeHighlighter.Model;
+namespace CodeHighlighter.Ancillary;
 
 public class LineFold
 {

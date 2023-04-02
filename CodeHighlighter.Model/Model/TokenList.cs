@@ -5,7 +5,7 @@ namespace CodeHighlighter.Model;
 
 public class TokenList : IEnumerable<Token>, IReadOnlyCollection<Token>, IReadOnlyList<Token>
 {
-    public static TokenList FromEnumerable(IEnumerable<Token> tokens) => new TokenList(tokens);
+    public static TokenList FromEnumerable(IEnumerable<Token> tokens) => new(tokens);
 
     private readonly List<Token> _list = new();
 

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.Model;
 
-namespace CodeHighlighter.Model;
+namespace CodeHighlighter.Ancillary;
 
 public readonly struct LineFoldWithOffsetY
 {

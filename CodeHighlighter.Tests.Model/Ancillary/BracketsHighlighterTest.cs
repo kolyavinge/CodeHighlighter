@@ -1,10 +1,11 @@
 ﻿using System;
+using CodeHighlighter.Ancillary;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
-using static CodeHighlighter.Model.IBracketsHighlighter;
+using static CodeHighlighter.Ancillary.IBracketsHighlighter;
 
-namespace CodeHighlighter.Tests.Model;
+namespace CodeHighlighter.Tests.Ancillary;
 
 class BracketsHighlighterTest
 {

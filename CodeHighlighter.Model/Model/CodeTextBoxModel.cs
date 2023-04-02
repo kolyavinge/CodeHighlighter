@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Common;
 using CodeHighlighter.HistoryActions;

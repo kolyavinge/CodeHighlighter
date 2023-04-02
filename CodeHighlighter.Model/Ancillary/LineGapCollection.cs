@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CodeHighlighter.Common;
 
-namespace CodeHighlighter.Model;
+namespace CodeHighlighter.Ancillary;
 
 public class LineGap
 {

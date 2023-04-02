@@ -1,6 +1,6 @@
 ﻿using CodeHighlighter.Common;
 
-namespace CodeHighlighter.Model;
+namespace CodeHighlighter.Ancillary;
 
 public interface ILinesDecorationCollection
 {

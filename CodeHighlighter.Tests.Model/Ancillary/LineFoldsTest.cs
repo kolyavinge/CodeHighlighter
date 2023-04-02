@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using CodeHighlighter.Model;
+using CodeHighlighter.Ancillary;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Model;
+namespace CodeHighlighter.Tests.Ancillary;
 
 internal class LineFoldsTest
 {

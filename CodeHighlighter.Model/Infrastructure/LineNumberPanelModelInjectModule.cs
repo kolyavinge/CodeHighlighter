@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Model;
+﻿using CodeHighlighter.Ancillary;
+using CodeHighlighter.Model;
 using DependencyInjection;
 
 namespace CodeHighlighter.Infrastructure;

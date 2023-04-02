@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeHighlighter.Ancillary;
 using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;

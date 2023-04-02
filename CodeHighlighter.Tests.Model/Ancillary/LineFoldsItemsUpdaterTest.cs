@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using CodeHighlighter.Model;
+using CodeHighlighter.Ancillary;
 using Moq;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Model;
+namespace CodeHighlighter.Tests.Ancillary;
 
 internal class LineFoldsItemsUpdaterTest
 {

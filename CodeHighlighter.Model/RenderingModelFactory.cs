@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.Infrastructure;
+﻿using CodeHighlighter.Ancillary;
+using CodeHighlighter.Infrastructure;
 using CodeHighlighter.Model;
 using CodeHighlighter.Rendering;
 

@@ -1,4 +1,5 @@
-﻿using CodeHighlighter.CodeProvidering;
+﻿using CodeHighlighter.Ancillary;
+using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Infrastructure;
 using CodeHighlighter.InputActions;
 using CodeHighlighter.Model;

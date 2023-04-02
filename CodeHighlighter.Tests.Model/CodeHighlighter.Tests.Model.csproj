@@ -18,8 +18,4 @@
 	  <ProjectReference Include="..\CodeHighlighter.Model\CodeHighlighter.Model.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Utils\" />
-	</ItemGroup>
-
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace CodeHighlighter.Model;
+﻿using CodeHighlighter.Model;
+
+namespace CodeHighlighter.Ancillary;
 
 public interface ICodeTextBoxModelAdditionalInfo
 {
