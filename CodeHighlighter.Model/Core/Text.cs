@@ -244,7 +244,22 @@ internal class Text : IText
         }
     }
 
-    public override string ToString() => string.Join(Environment.NewLine, _lines.Select(line => line.ToString()));
+    public override string ToString()
+    {
+        var buff = new char[_lines.Count * 100];
+        int buffIndex = 0, lineLength;
+        foreach (var line in _lines)
+        {
+            lineLength = line.Length;
+            if (buffIndex + lineLength > buff.Length) Array.Resize(ref buff, 2 * buff.Length);
+            line.CopyTo(buff, buffIndex);
+            buffIndex += lineLength;
+            Environment.NewLine.CopyTo(0, buff, buffIndex, Environment.NewLine.Length);
+            buffIndex += Environment.NewLine.Length;
+        }
+
+        return new string(buff, 0, buffIndex - Environment.NewLine.Length);
+    }
 }
 
 internal static class TextExt

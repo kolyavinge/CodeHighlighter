@@ -87,4 +87,6 @@ internal class TextLine : IEnumerable<char>
     public IEnumerator<char> GetEnumerator() => _symbs.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _symbs.GetEnumerator();
+
+    public void CopyTo(char[] buff, int startIndex) => _symbs.CopyTo(buff, startIndex);
 }
