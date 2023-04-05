@@ -13,7 +13,7 @@ internal class RegexSearchLogicTest
     private Mock<IText> _text;
     private string _pattern;
     private SearchOptions _options;
-    private List<SearchEntry> _result;
+    private List<TextPosition> _result;
     private RegexSearchLogic _logic;
 
     [SetUp]
@@ -57,7 +57,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 0), new(0, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 0, 0, 4)));
     }
 
     [Test]
@@ -71,7 +71,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 0), new(0, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 0, 0, 4)));
     }
 
     [Test]
@@ -85,7 +85,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 0), new(0, 2))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 0, 0, 2)));
     }
 
     [Test]
@@ -99,7 +99,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(1, 0), new(1, 2))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(1, 0, 1, 2)));
     }
 
     [Test]
@@ -113,7 +113,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 1), new(0, 3))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 1, 0, 3)));
     }
 
     [Test]
@@ -127,7 +127,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(1, 1), new(1, 3))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(1, 1, 1, 3)));
     }
 
     [Test]
@@ -141,7 +141,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 2), new(0, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 2, 0, 4)));
     }
 
     [Test]
@@ -155,7 +155,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(1, 2), new(1, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(1, 2, 1, 4)));
     }
 
     [Test]
@@ -169,7 +169,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 2), new(1, 2))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 2, 1, 2)));
     }
 
     [Test]
@@ -183,7 +183,7 @@ internal class RegexSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(1, 3), new(1, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(1, 3, 1, 4)));
     }
 
     private void DoSearch()

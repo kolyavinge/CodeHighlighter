@@ -6,7 +6,7 @@ namespace CodeHighlighter.Ancillary;
 
 internal class TextSearchLogic : ISearchLogic
 {
-    public IEnumerable<SearchEntry> DoSearch(IText text, string pattern, SearchOptions options)
+    public IEnumerable<TextPosition> DoSearch(IText text, string pattern, SearchOptions options)
     {
         if (String.IsNullOrWhiteSpace(pattern)) yield break;
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) throw new ArgumentException("String pattern cannot be multiline.");
@@ -24,7 +24,7 @@ internal class TextSearchLogic : ISearchLogic
                         line[lineCol + pattern.Length - 1] == lastPatternChar &&
                         IsMiddleEqual(line, lineCol, pattern))
                     {
-                        yield return new(new(lineIndex, lineCol), new(lineIndex, lineCol + pattern.Length));
+                        yield return new(lineIndex, lineCol, lineIndex, lineCol + pattern.Length);
                     }
                 }
             }
@@ -36,7 +36,7 @@ internal class TextSearchLogic : ISearchLogic
                         CharUtils.IsCharEqualIgnoreCase(line[lineCol + pattern.Length - 1], lastPatternChar) &&
                         IsMiddleEqualIgnoreCase(line, lineCol, pattern))
                     {
-                        yield return new(new(lineIndex, lineCol), new(lineIndex, lineCol + pattern.Length));
+                        yield return new(lineIndex, lineCol, lineIndex, lineCol + pattern.Length);
                     }
                 }
             }

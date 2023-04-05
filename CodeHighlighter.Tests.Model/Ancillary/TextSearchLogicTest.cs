@@ -13,7 +13,7 @@ internal class TextSearchLogicTest
     private Mock<IText> _text;
     private string _pattern;
     private SearchOptions _options;
-    private List<SearchEntry> _result;
+    private List<TextPosition> _result;
     private TextSearchLogic _logic;
 
     [SetUp]
@@ -91,7 +91,7 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 0), new(0, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 0, 0, 4)));
     }
 
     [Test]
@@ -152,7 +152,7 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 2), new(0, 6))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 2, 0, 6)));
     }
 
     [Test]
@@ -166,7 +166,7 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 0), new(0, 4))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 0, 0, 4)));
     }
 
     [Test]
@@ -232,7 +232,7 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(1));
-        Assert.That(_result.First(), Is.EqualTo(new SearchEntry(new(0, 2), new(0, 6))));
+        Assert.That(_result.First(), Is.EqualTo(new TextPosition(0, 2, 0, 6)));
     }
 
     [Test]
@@ -247,9 +247,9 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.That(_result, Has.Count.EqualTo(3));
-        Assert.That(_result[0], Is.EqualTo(new SearchEntry(new(0, 2), new(0, 5))));
-        Assert.That(_result[1], Is.EqualTo(new SearchEntry(new(1, 0), new(1, 3))));
-        Assert.That(_result[2], Is.EqualTo(new SearchEntry(new(2, 1), new(2, 4))));
+        Assert.That(_result[0], Is.EqualTo(new TextPosition(0, 2, 0, 5)));
+        Assert.That(_result[1], Is.EqualTo(new TextPosition(1, 0, 1, 3)));
+        Assert.That(_result[2], Is.EqualTo(new TextPosition(2, 1, 2, 4)));
     }
 
     [Test]

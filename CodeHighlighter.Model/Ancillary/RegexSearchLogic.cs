@@ -9,7 +9,7 @@ internal class RegexSearchLogic : ISearchLogic
     private int _startLineIndex;
     private int _currentCharIndex;
 
-    public IEnumerable<SearchEntry> DoSearch(IText text, string pattern, SearchOptions options)
+    public IEnumerable<TextPosition> DoSearch(IText text, string pattern, SearchOptions options)
     {
         if (String.IsNullOrWhiteSpace(pattern)) yield break;
         var textString = text.ToString();
@@ -26,7 +26,7 @@ internal class RegexSearchLogic : ISearchLogic
         }
     }
 
-    private SearchEntry MakeSearchEntry(IText text, Match match)
+    private TextPosition MakeSearchEntry(IText text, Match match)
     {
         int matchCharIndex = match.Index;
         int newLineLength = Environment.NewLine.Length;
@@ -61,6 +61,6 @@ internal class RegexSearchLogic : ISearchLogic
         }
         int endColumnIndex = matchCharIndex - _currentCharIndex;
 
-        return new(new(_startLineIndex, startColumnIndex), new(endLineIndex, endColumnIndex));
+        return new(_startLineIndex, startColumnIndex, endLineIndex, endColumnIndex);
     }
 }
