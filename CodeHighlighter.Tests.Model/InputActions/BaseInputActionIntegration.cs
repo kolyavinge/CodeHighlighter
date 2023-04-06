@@ -13,6 +13,7 @@ internal class BaseInputActionIntegration
     protected TextCursor _textCursor;
     protected TextCursorAbsolutePosition _textCursorAbsolutePosition;
     protected TextMeasures _textMeasures;
+    protected TextSelectionLineConverter _textSelectionLineConverter;
     protected TextSelection _textSelection;
     protected TextSelector _textSelector;
     protected Tokens _tokens;
@@ -38,7 +39,8 @@ internal class BaseInputActionIntegration
         _editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
         _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
         _textCursor = new(_text, new TextCursorPositionCorrector(_text, _folds));
-        _textSelection = new(_text);
+        _textSelectionLineConverter = new TextSelectionLineConverter(_text);
+        _textSelection = new(_text, _textSelectionLineConverter);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _tokensColors = new(_codeProvider);

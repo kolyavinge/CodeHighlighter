@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeHighlighter.Core;
 
@@ -35,15 +36,17 @@ internal interface ITextSelectionInternal : ITextSelection
 internal class TextSelection : ITextSelectionInternal
 {
     private readonly IText _text;
+    private readonly ITextSelectionLineConverter _textSelectionLineConverter;
 
     public bool IsExist => StartPosition.LineIndex != EndPosition.LineIndex || StartPosition.ColumnIndex != EndPosition.ColumnIndex;
     public bool InProgress { get; set; }
     public CursorPosition StartPosition { get; set; }
     public CursorPosition EndPosition { get; set; }
 
-    public TextSelection(IText text)
+    public TextSelection(IText text, ITextSelectionLineConverter textSelectionLineConverter)
     {
         _text = text;
+        _textSelectionLineConverter = textSelectionLineConverter;
     }
 
     public ITextSelectionInternal Set(CursorPosition selectionStart, CursorPosition selectionEnd)
@@ -67,22 +70,10 @@ internal class TextSelection : ITextSelectionInternal
 
     public IEnumerable<TextSelectionLine> GetSelectedLines()
     {
-        if (!IsExist) yield break;
+        if (!IsExist) return Enumerable.Empty<TextSelectionLine>();
         var (start, end) = GetSortedPositions();
-        if (start.LineIndex == end.LineIndex)
-        {
-            yield return new TextSelectionLine(start.LineIndex, start.ColumnIndex, end.ColumnIndex);
-        }
-        else
-        {
-            var rightColumnIndex = start.Kind == CursorPositionKind.Real ? _text.GetLine(start.LineIndex).Length : start.ColumnIndex;
-            yield return new TextSelectionLine(start.LineIndex, start.ColumnIndex, rightColumnIndex);
-            for (int middleLineIndex = start.LineIndex + 1; middleLineIndex <= end.LineIndex - 1; middleLineIndex++)
-            {
-                yield return new TextSelectionLine(middleLineIndex, 0, _text.GetLine(middleLineIndex).Length);
-            }
-            yield return new TextSelectionLine(end.LineIndex, 0, end.ColumnIndex);
-        }
+
+        return _textSelectionLineConverter.GetSelectedLines(start, end);
     }
 
     public void Reset()

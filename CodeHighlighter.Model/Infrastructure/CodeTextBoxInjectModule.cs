@@ -19,6 +19,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<ITextMeasuresInternal, TextMeasures>().ToSingleton();
         bindingProvider.Bind<IHistoryInternal, History>().ToSingleton();
         bindingProvider.Bind<ILinesDecorationCollection, LinesDecorationCollection>().ToSingleton();
+        bindingProvider.Bind<ITextSelectionLineConverter, TextSelectionLineConverter>().ToSingleton();
         bindingProvider.Bind<ITextSelectionInternal, TextSelection>().ToSingleton();
         bindingProvider.Bind<ITextSelector, TextSelector>().ToSingleton();
         bindingProvider.Bind<IEditTextResultToLinesChangeConverter, EditTextResultToLinesChangeConverter>().ToSingleton();
@@ -27,6 +28,7 @@ internal class CodeTextBoxInjectModule : InjectModule
         // IViewportContext не нужно добавлять в контейнер
         bindingProvider.Bind<IViewportInternal, Viewport>().ToSingleton();
         bindingProvider.Bind<IBracketsHighlighter, BracketsHighlighter>().ToSingleton();
+        bindingProvider.Bind<ITextHighlighter, TextHighlighter>().ToSingleton();
         bindingProvider.Bind<ITextEventsInternal, TextEvents>().ToSingleton();
         bindingProvider.Bind<ITextMeasuresEvents, TextMeasuresEvents>().ToSingleton();
         bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();

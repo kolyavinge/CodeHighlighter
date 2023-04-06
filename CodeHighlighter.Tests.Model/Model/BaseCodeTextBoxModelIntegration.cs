@@ -13,7 +13,8 @@ internal class BaseCodeTextBoxModelIntegration
     {
         var codeProvider = new SqlCodeProvider();
         var text = new Text();
-        var textSelection = new TextSelection(text);
+        var textSelectionLineConverter = new TextSelectionLineConverter(text);
+        var textSelection = new TextSelection(text, textSelectionLineConverter);
         var gaps = new LineGapCollection();
         var folds = new LineFolds();
         var editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
@@ -36,6 +37,7 @@ internal class BaseCodeTextBoxModelIntegration
         var cursorPositionCorrector = new ViewportCursorPositionCorrector(viewport, textMeasures, textCursorAbsolutePosition);
         var pageScroller = new PageScroller(viewport, gaps);
         var bracketsHighlighter = new BracketsHighlighter(text, "");
+        var textHighlighter = new TextHighlighter(textSelectionLineConverter);
         var inputActionsFactory = new InputActionsFactory();
         var inputActionContext = new InputActionContext(
             codeProvider,
@@ -71,6 +73,7 @@ internal class BaseCodeTextBoxModelIntegration
             folds,
             viewport,
             bracketsHighlighter,
+            textHighlighter,
             inputActionContext,
             inputActionsFactory,
             historyActionsFactory,

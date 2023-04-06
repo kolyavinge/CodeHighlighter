@@ -16,6 +16,7 @@ internal class BaseHistoryActionIntegration
     protected readonly TextCursor _textCursor;
     protected readonly TextCursorAbsolutePosition _textCursorAbsolutePosition;
     protected readonly TextMeasures _textMeasures;
+    protected readonly TextSelectionLineConverter _textSelectionLineConverter;
     protected readonly TextSelection _textSelection;
     protected readonly TextSelector _textSelector;
     protected readonly Tokens _tokens;
@@ -42,7 +43,8 @@ internal class BaseHistoryActionIntegration
         _editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());
         _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
         _textCursor = new(_text, new TextCursorPositionCorrector(_text, _folds));
-        _textSelection = new(_text);
+        _textSelectionLineConverter = new TextSelectionLineConverter(_text);
+        _textSelection = new(_text, _textSelectionLineConverter);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _tokensColors = new(_codeProvider);

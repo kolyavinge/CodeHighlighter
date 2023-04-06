@@ -67,6 +67,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
 
     public IBracketsHighlighter BracketsHighlighter { get; }
 
+    public ITextHighlighter TextHighlighter { get; }
+
     public bool IsReadOnly { get; set; }
 
     public ICodeTextBoxModelAdditionalInfo AdditionalInfo { get; }
@@ -89,6 +91,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         ILineFolds folds,
         IViewportInternal viewport,
         IBracketsHighlighter bracketsHighlighter,
+        ITextHighlighter textHighlighter,
         IInputActionContext inputActionContext,
         IInputActionsFactory inputActionsFactory,
         IHistoryActionsFactory historyActionsFactory,
@@ -115,6 +118,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         Gaps = gaps;
         Folds = folds;
         BracketsHighlighter = bracketsHighlighter;
+        TextHighlighter = textHighlighter;
         IsReadOnly = additionalParams.IsReadOnly;
         AdditionalInfo = additionalInfo;
         SetCodeProvider(codeProvider);
@@ -153,6 +157,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
             _textMeasures.UpdateMeasures(e.LineHeight, e.LetterWidth);
             _viewport.UpdateScrollBarsMaximumValues();
         };
+        TextHighlighter.Changed += (s, e) => _codeTextBox.InvalidateVisual();
     }
 
     public string GetSelectedText()

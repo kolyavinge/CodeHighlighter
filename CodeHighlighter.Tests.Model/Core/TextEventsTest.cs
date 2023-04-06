@@ -99,7 +99,7 @@ internal class TextEventsTest
     public void DeleteSelection_RaiseTextChanged()
     {
         _text.TextContent = "123\n123";
-        _text.DeleteSelection(new TextSelection(_text).Set(new(0, 0), new(1, 3)).GetSelectedLines());
+        _text.DeleteSelection(new TextSelectionLine[] { new(0, 0, 0), new(1, 0, 3) });
         _events.RaiseTextChanged();
         Assert.AreEqual(1, _linesCount);
     }

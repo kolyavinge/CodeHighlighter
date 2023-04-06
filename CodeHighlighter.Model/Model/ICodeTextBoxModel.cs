@@ -24,6 +24,7 @@ public interface ICodeTextBoxModel
     ILineFolds Folds { get; }
     IViewport Viewport { get; }
     IBracketsHighlighter BracketsHighlighter { get; }
+    ITextHighlighter TextHighlighter { get; }
     bool IsReadOnly { get; set; }
     ICodeTextBoxModelAdditionalInfo AdditionalInfo { get; }
     void AttachCodeTextBox(ICodeTextBox codeTextBox);

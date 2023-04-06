@@ -8,6 +8,7 @@ public interface ICodeTextBoxRenderingModel
     IHighlightBracketsRendering HighlightBrackets { get; }
     ILineGapRendering LineGap { get; }
     IActivatedLineFoldsRendering ActivatedLineFolds { get; }
+    ITextHighlightRendering TextHighlight { get; }
 }
 
 internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
@@ -18,6 +19,7 @@ internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
     public IHighlightBracketsRendering HighlightBrackets { get; }
     public ILineGapRendering LineGap { get; }
     public IActivatedLineFoldsRendering ActivatedLineFolds { get; }
+    public ITextHighlightRendering TextHighlight { get; }
 
     public CodeTextBoxRenderingModel(
         ITextRendering textRendering,
@@ -25,7 +27,8 @@ internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
         ILinesDecorationRendering linesDecorationRendering,
         IHighlightBracketsRendering highlightBracketsRendering,
         ILineGapRendering lineGap,
-        IActivatedLineFoldsRendering activatedLineFolds)
+        IActivatedLineFoldsRendering activatedLineFolds,
+        ITextHighlightRendering textHighlight)
     {
         Text = textRendering;
         TextSelection = textSelectionRendering;
@@ -33,5 +36,6 @@ internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
         HighlightBrackets = highlightBracketsRendering;
         LineGap = lineGap;
         ActivatedLineFolds = activatedLineFolds;
+        TextHighlight = textHighlight;
     }
 }
