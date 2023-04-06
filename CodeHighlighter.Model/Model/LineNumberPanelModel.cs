@@ -4,6 +4,20 @@ using CodeHighlighter.Core;
 
 namespace CodeHighlighter.Model;
 
+public interface ILineNumberPanel
+{
+    void InvalidateVisual();
+}
+
+public interface ILineNumberPanelModel
+{
+    ILineGapCollection Gaps { get; }
+
+    void AttachLineNumberPanel(ILineNumberPanel panel);
+
+    IEnumerable<LineNumber> GetLines(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
+}
+
 internal class LineNumberPanelModel : ILineNumberPanelModel
 {
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;

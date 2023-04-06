@@ -3,6 +3,15 @@ using CodeHighlighter.Ancillary;
 
 namespace CodeHighlighter.Model;
 
+public interface ILineFoldingPanel
+{
+    double ActualHeight { get; }
+    double VerticalScrollBarValue { get; }
+    int TextLinesCount { get; }
+    double TextLineHeight { get; }
+    void InvalidateVisual();
+}
+
 public interface ILineFoldingPanelModel
 {
     ILineFolds Folds { get; }
