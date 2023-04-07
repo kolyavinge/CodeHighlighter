@@ -22,7 +22,7 @@ public interface ITextHighlighter
     IReadOnlyCollection<TextHighlight> Highlights { get; }
     void Add(IEnumerable<TextHighlight> highlights);
     void Remove(IEnumerable<TextHighlight> highlights);
-    IEnumerable<TextSelectionLine> GetSelectedLines(TextHighlight highlight);
+    IEnumerable<(TextHighlight, IEnumerable<TextSelectionLine>)> GetSelectedLines();
 }
 
 internal class TextHighlighter : ITextHighlighter
@@ -51,10 +51,15 @@ internal class TextHighlighter : ITextHighlighter
         Changed?.Invoke(this, EventArgs.Empty);
     }
 
-    public IEnumerable<TextSelectionLine> GetSelectedLines(TextHighlight highlight)
+    public IEnumerable<(TextHighlight, IEnumerable<TextSelectionLine>)> GetSelectedLines()
     {
-        return _textSelectionLineConverter.GetSelectedLines(
-            new(highlight.Position.StartLineIndex, highlight.Position.StartColumnIndex),
-            new(highlight.Position.EndLineIndex, highlight.Position.EndColumnIndex));
+        foreach (var highlight in _highlights)
+        {
+            var selectedLines = _textSelectionLineConverter.GetSelectedLines(
+                new(highlight.Position.StartLineIndex, highlight.Position.StartColumnIndex),
+                new(highlight.Position.EndLineIndex, highlight.Position.EndColumnIndex));
+
+            yield return (highlight, selectedLines);
+        }
     }
 }

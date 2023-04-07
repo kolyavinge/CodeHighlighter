@@ -27,9 +27,9 @@ internal class TextHighlightRendering : ITextHighlightRendering
 
     public void Render()
     {
-        foreach (var highlight in _model.TextHighlighter.Highlights)
+        foreach (var item in _model.TextHighlighter.GetSelectedLines())
         {
-            var selectedLines = _model.TextHighlighter.GetSelectedLines(highlight);
+            var (highlight, selectedLines) = item;
             _textSelectionRect
                 .GetCalculatedRects(selectedLines, _model.TextMeasures, _model.Viewport.ActualHeight, _model.Viewport.HorizontalScrollBarValue, _model.Viewport.VerticalScrollBarValue)
                 .Each(rect => _renderingContext.DrawRectangle(highlight.Color, rect));
