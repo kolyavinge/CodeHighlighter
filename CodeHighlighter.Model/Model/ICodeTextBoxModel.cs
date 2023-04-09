@@ -63,4 +63,5 @@ public interface ICodeTextBoxModel
     void Copy();
     void Paste();
     void Cut();
+    ISearchPanelModel MakeSearchPanelModel();
 }

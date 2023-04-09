@@ -365,6 +365,8 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox.ClipboardSetText(GetSelectedText());
         LeftDelete();
     }
+
+    public ISearchPanelModel MakeSearchPanelModel() => new SearchPanelModel(this, new TextSearchLogic(_text), new RegexSearchLogic(_text));
 }
 
 public class CodeTextBoxModelAdditionalParams
