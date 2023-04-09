@@ -12,7 +12,7 @@ internal class RegexSearchLogicTest
 {
     private Mock<IText> _text;
     private string _pattern;
-    private SearchOptions _options;
+    private bool _matchCase;
     private List<TextPosition> _result;
     private RegexSearchLogic _logic;
 
@@ -20,8 +20,8 @@ internal class RegexSearchLogicTest
     public void Setup()
     {
         _text = new Mock<IText>();
-        _options = new SearchOptions();
-        _logic = new RegexSearchLogic();
+        _matchCase = true;
+        _logic = new RegexSearchLogic(_text.Object);
     }
 
     [Test]
@@ -47,12 +47,27 @@ internal class RegexSearchLogicTest
     }
 
     [Test]
+    public void PatternOneSpace()
+    {
+        _text.Setup(x => x.ToString()).Returns("   ");
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
+        _pattern = " ";
+
+        DoSearch();
+
+        Assert.That(_result, Has.Count.EqualTo(3));
+        Assert.That(_result[0], Is.EqualTo(new TextPosition(0, 0, 0, 1)));
+        Assert.That(_result[1], Is.EqualTo(new TextPosition(0, 1, 0, 2)));
+        Assert.That(_result[2], Is.EqualTo(new TextPosition(0, 2, 0, 3)));
+    }
+
+    [Test]
     public void Case()
     {
         _text.Setup(x => x.ToString()).Returns("abcd");
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "abcd";
-        _options.IgnoreCase = false;
+        _matchCase = true;
 
         DoSearch();
 
@@ -66,7 +81,7 @@ internal class RegexSearchLogicTest
         _text.Setup(x => x.ToString()).Returns("ABCD");
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abcd";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -186,8 +201,18 @@ internal class RegexSearchLogicTest
         Assert.That(_result.First(), Is.EqualTo(new TextPosition(1, 3, 1, 4)));
     }
 
+    [Test]
+    public void WrongPattern_EmptyResult()
+    {
+        _pattern = "(((";
+
+        DoSearch();
+
+        Assert.IsEmpty(_result);
+    }
+
     private void DoSearch()
     {
-        _result = _logic.DoSearch(_text.Object, _pattern, _options).ToList();
+        _result = _logic.DoSearch(_pattern, _matchCase).ToList();
     }
 }

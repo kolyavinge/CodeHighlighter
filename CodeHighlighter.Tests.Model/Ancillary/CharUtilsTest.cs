@@ -28,4 +28,10 @@ internal class CharUtilsTest
         Assert.False(CharUtils.IsCharEqualIgnoreCase('ж', 'x'));
         Assert.False(CharUtils.IsCharEqualIgnoreCase('ж', 'x'));
     }
+
+    [Test]
+    public void IsCharEqualIgnoreCase_NonAlphabet()
+    {
+        Assert.False(CharUtils.IsCharEqualIgnoreCase(' ', '@'));
+    }
 }

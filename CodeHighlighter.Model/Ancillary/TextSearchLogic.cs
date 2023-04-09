@@ -4,19 +4,31 @@ using CodeHighlighter.Core;
 
 namespace CodeHighlighter.Ancillary;
 
-internal class TextSearchLogic : ISearchLogic
+internal interface ITextSearchLogic
 {
-    public IEnumerable<TextPosition> DoSearch(IText text, string pattern, SearchOptions options)
+    IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase);
+}
+
+internal class TextSearchLogic : ITextSearchLogic
+{
+    private readonly IText _text;
+
+    public TextSearchLogic(IText text)
     {
-        if (String.IsNullOrWhiteSpace(pattern)) yield break;
+        _text = text;
+    }
+
+    public IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase)
+    {
+        if (pattern == "") yield break;
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) throw new ArgumentException("String pattern cannot be multiline.");
         var firstPatternChar = pattern.First();
         var lastPatternChar = pattern.Last();
-        for (int lineIndex = 0; lineIndex < text.LinesCount; lineIndex++)
+        for (int lineIndex = 0; lineIndex < _text.LinesCount; lineIndex++)
         {
-            var line = text.GetLine(lineIndex);
+            var line = _text.GetLine(lineIndex);
             var length = line.Length - pattern.Length + 1;
-            if (options.IgnoreCase == false)
+            if (matchCase)
             {
                 for (int lineCol = 0; lineCol < length; lineCol++)
                 {

@@ -4,29 +4,41 @@ using CodeHighlighter.Core;
 
 namespace CodeHighlighter.Ancillary;
 
-internal class RegexSearchLogic : ISearchLogic
+internal interface IRegexSearchLogic
 {
+    IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase);
+}
+
+internal class RegexSearchLogic : IRegexSearchLogic
+{
+    private readonly IText _text;
     private int _startLineIndex;
     private int _currentCharIndex;
 
-    public IEnumerable<TextPosition> DoSearch(IText text, string pattern, SearchOptions options)
+    public RegexSearchLogic(IText text)
     {
-        if (String.IsNullOrWhiteSpace(pattern)) yield break;
-        var textString = text.ToString();
+        _text = text;
+    }
+
+    public IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase)
+    {
+        if (pattern == "") yield break;
+        var textString = _text.ToString();
         var regexOptions = RegexOptions.None;
-        if (options.IgnoreCase) regexOptions |= RegexOptions.IgnoreCase;
+        if (!matchCase) regexOptions |= RegexOptions.IgnoreCase;
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) regexOptions |= RegexOptions.Multiline;
-        var regex = new Regex(pattern, regexOptions);
+        var regex = MakeRegexOrNull(pattern, regexOptions);
+        if (regex == null) yield break;
         var matches = regex.Matches(textString);
         _startLineIndex = 0;
         _currentCharIndex = 0;
         foreach (Match match in matches)
         {
-            yield return MakeSearchEntry(text, match);
+            yield return MakeSearchEntry(match);
         }
     }
 
-    private TextPosition MakeSearchEntry(IText text, Match match)
+    private TextPosition MakeSearchEntry(Match match)
     {
         int matchCharIndex = match.Index;
         int newLineLength = Environment.NewLine.Length;
@@ -34,7 +46,7 @@ internal class RegexSearchLogic : ISearchLogic
         // start position
         while (true)
         {
-            var line = text.GetLine(_startLineIndex);
+            var line = _text.GetLine(_startLineIndex);
             var lineLength = line.Length + newLineLength;
             if (_currentCharIndex + lineLength <= matchCharIndex)
             {
@@ -50,7 +62,7 @@ internal class RegexSearchLogic : ISearchLogic
         matchCharIndex = match.Index + match.Length;
         while (_currentCharIndex <= matchCharIndex)
         {
-            var line = text.GetLine(endLineIndex);
+            var line = _text.GetLine(endLineIndex);
             var lineLength = line.Length + newLineLength;
             if (_currentCharIndex + lineLength <= matchCharIndex)
             {
@@ -62,5 +74,17 @@ internal class RegexSearchLogic : ISearchLogic
         int endColumnIndex = matchCharIndex - _currentCharIndex;
 
         return new(_startLineIndex, startColumnIndex, endLineIndex, endColumnIndex);
+    }
+
+    private Regex? MakeRegexOrNull(string pattern, RegexOptions regexOptions)
+    {
+        try
+        {
+            return new Regex(pattern, regexOptions);
+        }
+        catch (ArgumentException)
+        {
+            return null;
+        }
     }
 }

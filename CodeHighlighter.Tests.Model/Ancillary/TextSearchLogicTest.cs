@@ -12,7 +12,7 @@ internal class TextSearchLogicTest
 {
     private Mock<IText> _text;
     private string _pattern;
-    private SearchOptions _options;
+    private bool _matchCase;
     private List<TextPosition> _result;
     private TextSearchLogic _logic;
 
@@ -20,8 +20,8 @@ internal class TextSearchLogicTest
     public void Setup()
     {
         _text = new Mock<IText>();
-        _options = new SearchOptions();
-        _logic = new TextSearchLogic();
+        _matchCase = true;
+        _logic = new TextSearchLogic(_text.Object);
     }
 
     [Test]
@@ -33,6 +33,21 @@ internal class TextSearchLogicTest
         DoSearch();
 
         Assert.IsEmpty(_result);
+    }
+
+    [Test]
+    public void PatternOneSpace()
+    {
+        _text.SetupGet(x => x.LinesCount).Returns(1);
+        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
+        _pattern = " ";
+
+        DoSearch();
+
+        Assert.That(_result, Has.Count.EqualTo(3));
+        Assert.That(_result[0], Is.EqualTo(new TextPosition(0, 0, 0, 1)));
+        Assert.That(_result[1], Is.EqualTo(new TextPosition(0, 1, 0, 2)));
+        Assert.That(_result[2], Is.EqualTo(new TextPosition(0, 2, 0, 3)));
     }
 
     [Test]
@@ -161,7 +176,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abcd";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -175,7 +190,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "_bcd";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -188,7 +203,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abc_";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -201,7 +216,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "ab_d";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -214,7 +229,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "a_cd";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -227,7 +242,7 @@ internal class TextSearchLogicTest
         _text.SetupGet(x => x.LinesCount).Returns(1);
         _text.Setup(x => x.GetLine(0)).Returns(new TextLine("__ABCD"));
         _pattern = "abcd";
-        _options.IgnoreCase = true;
+        _matchCase = false;
 
         DoSearch();
 
@@ -266,6 +281,6 @@ internal class TextSearchLogicTest
 
     private void DoSearch()
     {
-        _result = _logic.DoSearch(_text.Object, _pattern, _options).ToList();
+        _result = _logic.DoSearch(_pattern, _matchCase).ToList();
     }
 }

@@ -3,8 +3,8 @@ using CodeHighlighter.Core;
 
 var bigtext = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\big_sql.txt");
 var text = new Text(bigtext);
-var searchLogic = new TextSearchLogic();
+var searchLogic = new TextSearchLogic(text);
 for (int i = 0; i < 100; i++)
 {
-    var result = searchLogic.DoSearch(text, "create", new() { IgnoreCase = true }).ToList();
+    var result = searchLogic.DoSearch("create", false).ToList();
 }
