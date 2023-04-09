@@ -31,6 +31,7 @@
             <CheckBox IsChecked="{Binding IsAlterLinesColor}" Content="Alter lines colors" Margin="8,3,0,0" />
             <CheckBox IsChecked="{Binding IsGapEnabled}" Content="Show gaps" Margin="8,3,0,0" />
             <CheckBox IsChecked="{Binding IsFoldEnabled}" Content="Fold" Margin="8,3,0,0" />
+            <highlighter:SearchPanel Model="{Binding SearchPanelModel}" Margin="8,0" Width="200" />
         </StackPanel>
 
         <Grid Margin="0,24,0,24">

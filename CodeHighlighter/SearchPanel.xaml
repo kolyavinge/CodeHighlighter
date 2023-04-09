@@ -1,0 +1,14 @@
+﻿<UserControl
+    x:Class="CodeHighlighter.SearchPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <ToggleButton Content="Aa" IsChecked="{Binding Model.MatchCase, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" HorizontalAlignment="Left" Width="32" ToolTip="Match case" />
+        <ToggleButton Content=".*" IsChecked="{Binding Model.IsRegex, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" HorizontalAlignment="Left" Margin="34,0,0,0" Width="32" ToolTip="Use regex pattern" />
+        <TextBox Text="{Binding Model.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Margin="68,0,0,0" />
+    </Grid>
+</UserControl>

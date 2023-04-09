@@ -6,6 +6,7 @@ using CodeEditor.Mvvm;
 using CodeHighlighter;
 using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
+using CodeHighlighter.Common;
 using CodeHighlighter.Core;
 using CodeHighlighter.Model;
 
@@ -18,6 +19,8 @@ public class MainViewModel
     public ILineNumberPanelModel LineNumberPanelModel { get; }
 
     public ILineFoldingPanelModel LineFoldingPanelModel { get; }
+
+    public ISearchPanelModel SearchPanelModel { get; }
 
     public ICodeProvider CodeProvider { get; }
 
@@ -114,9 +117,12 @@ public class MainViewModel
         CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
         CodeTextBoxModel.TextEvents.TextChanged += OnTextChanged;
         CodeTextBoxModel.Folds.Items = new LineFold[] { new(8, 13), new(37, 91), new(42, 8) };
-        CodeTextBoxModel.TextHighlighter.Add(new TextHighlight[] { new(new(11, 4, 11, 14), new(200, 70, 50)), new(new(17, 4, 18, 6), new(200, 70, 50)) });
+        CodeTextBoxModel.TextHighlighter.Add(new TextHighlight[] { new(new(11, 4, 11, 14), new(168, 135, 200)), new(new(17, 4, 18, 6), new(107, 187, 199)) });
         LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
         LineFoldingPanelModel = LineFoldingPanelModelFactory.MakeModel(CodeTextBoxModel);
+        SearchPanelModel = CodeTextBoxModel.MakeSearchPanelModel();
+        SearchPanelModel.HighlightColor = Color.FromHex("c7a86b");
+        SearchPanelModel.Pattern = "begin";
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);
     }
 
