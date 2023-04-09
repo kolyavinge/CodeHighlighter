@@ -10,7 +10,7 @@ namespace CodeHighlighter.Tests.Ancillary;
 
 internal class RegexSearchLogicTest
 {
-    private Mock<IText> _text;
+    private Mock<ITextLines> _textLines;
     private string _pattern;
     private bool _matchCase;
     private List<TextPosition> _result;
@@ -19,15 +19,15 @@ internal class RegexSearchLogicTest
     [SetUp]
     public void Setup()
     {
-        _text = new Mock<IText>();
+        _textLines = new Mock<ITextLines>();
         _matchCase = true;
-        _logic = new RegexSearchLogic(_text.Object);
+        _logic = new RegexSearchLogic(_textLines.Object);
     }
 
     [Test]
     public void EmptyTextEmptyPattern()
     {
-        _text.Setup(x => x.ToString()).Returns("");
+        _textLines.Setup(x => x.ToString()).Returns("");
         _pattern = "";
 
         DoSearch();
@@ -38,7 +38,7 @@ internal class RegexSearchLogicTest
     [Test]
     public void EmptyPattern()
     {
-        _text.Setup(x => x.ToString()).Returns("123");
+        _textLines.Setup(x => x.ToString()).Returns("123");
         _pattern = "";
 
         DoSearch();
@@ -49,8 +49,8 @@ internal class RegexSearchLogicTest
     [Test]
     public void PatternOneSpace()
     {
-        _text.Setup(x => x.ToString()).Returns("   ");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
+        _textLines.Setup(x => x.ToString()).Returns("   ");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
         _pattern = " ";
 
         DoSearch();
@@ -64,8 +64,8 @@ internal class RegexSearchLogicTest
     [Test]
     public void Case()
     {
-        _text.Setup(x => x.ToString()).Returns("abcd");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.ToString()).Returns("abcd");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "abcd";
         _matchCase = true;
 
@@ -78,8 +78,8 @@ internal class RegexSearchLogicTest
     [Test]
     public void IgnoreCase()
     {
-        _text.Setup(x => x.ToString()).Returns("ABCD");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.Setup(x => x.ToString()).Returns("ABCD");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abcd";
         _matchCase = false;
 
@@ -92,9 +92,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Begining_1()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "ab";
 
         DoSearch();
@@ -106,9 +106,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Begining_2()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "ef";
 
         DoSearch();
@@ -120,9 +120,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Middle_1()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "bc";
 
         DoSearch();
@@ -134,9 +134,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Middle_2()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "fg";
 
         DoSearch();
@@ -148,9 +148,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Ending_1()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "cd";
 
         DoSearch();
@@ -162,9 +162,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void Ending_2()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "gh";
 
         DoSearch();
@@ -176,9 +176,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void TwoLinesMatch()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = $"cd{Environment.NewLine}ef";
 
         DoSearch();
@@ -190,9 +190,9 @@ internal class RegexSearchLogicTest
     [Test]
     public void LastSymbol()
     {
-        _text.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
+        _textLines.Setup(x => x.ToString()).Returns($"abcd{Environment.NewLine}efgh");
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("efgh"));
         _pattern = "h";
 
         DoSearch();

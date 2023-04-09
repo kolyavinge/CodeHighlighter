@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using CodeHighlighter.Ancillary;
+﻿using CodeHighlighter.Ancillary;
 using CodeHighlighter.CodeProvidering;
 using CodeHighlighter.Common;
 using CodeHighlighter.Core;
@@ -35,9 +33,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         }
     }
 
-    public IEnumerable<string> TextLines => _text.Lines.Select(x => x.ToString());
-
-    public int TextLinesCount => _text.LinesCount;
+    public ITextLines TextLines { get; }
 
     public CursorPosition CursorPosition => _textCursor.Position;
 
@@ -76,6 +72,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
     public CodeTextBoxModel(
         ICodeProvider codeProvider,
         IText text,
+        ITextLines textLines,
         ITextCursor textCursor,
         ITextCursorAbsolutePosition textCursorAbsolutePosition,
         ITextSelectionInternal textSelection,
@@ -110,6 +107,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _inputActionContext = inputActionContext;
         _inputActionsFactory = inputActionsFactory;
         _historyActionsFactory = historyActionsFactory;
+        TextLines = textLines;
         TextSelection = textSelection;
         TextEvents = textEvents;
         TextMeasuresEvents = textMeasuresEvents;
@@ -365,8 +363,6 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         _codeTextBox.ClipboardSetText(GetSelectedText());
         LeftDelete();
     }
-
-    public ISearchPanelModel MakeSearchPanelModel() => new SearchPanelModel(this, new TextSearchLogic(_text), new RegexSearchLogic(_text));
 }
 
 public class CodeTextBoxModelAdditionalParams

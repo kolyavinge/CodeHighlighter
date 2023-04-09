@@ -5,7 +5,13 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Core;
 
-internal class TextLine : IEnumerable<char>
+public interface ITextLine
+{
+    int Length { get; }
+    char this[int i] { get; }
+}
+
+internal class TextLine : ITextLine, IEnumerable<char>
 {
     private readonly List<char> _symbs;
 

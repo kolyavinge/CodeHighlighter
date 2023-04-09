@@ -28,7 +28,7 @@ public class ActivatedLineFoldsRendering : IActivatedLineFoldsRendering
     public void RenderActivatedFoldLines(object platformColor)
     {
         var folds = _lineNumberGenerator
-            .GetFolds(_model.Viewport.ActualHeight, _model.Viewport.VerticalScrollBarValue, _model.TextMeasures.LineHeight, _model.TextLinesCount)
+            .GetFolds(_model.Viewport.ActualHeight, _model.Viewport.VerticalScrollBarValue, _model.TextMeasures.LineHeight, _model.TextLines.Count)
             .Where(x => x.IsActive);
 
         foreach (var fold in folds)

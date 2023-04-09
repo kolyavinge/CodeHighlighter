@@ -11,11 +11,11 @@ internal interface ITextSearchLogic
 
 internal class TextSearchLogic : ITextSearchLogic
 {
-    private readonly IText _text;
+    private readonly ITextLines _textLines;
 
-    public TextSearchLogic(IText text)
+    public TextSearchLogic(ITextLines textLines)
     {
-        _text = text;
+        _textLines = textLines;
     }
 
     public IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase)
@@ -24,9 +24,9 @@ internal class TextSearchLogic : ITextSearchLogic
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) throw new ArgumentException("String pattern cannot be multiline.");
         var firstPatternChar = pattern.First();
         var lastPatternChar = pattern.Last();
-        for (int lineIndex = 0; lineIndex < _text.LinesCount; lineIndex++)
+        for (int lineIndex = 0; lineIndex < _textLines.Count; lineIndex++)
         {
-            var line = _text.GetLine(lineIndex);
+            var line = _textLines.GetLine(lineIndex);
             var length = line.Length - pattern.Length + 1;
             if (matchCase)
             {
@@ -55,7 +55,7 @@ internal class TextSearchLogic : ITextSearchLogic
         }
     }
 
-    private bool IsMiddleEqual(TextLine line, int lineCol, string pattern)
+    private bool IsMiddleEqual(ITextLine line, int lineCol, string pattern)
     {
         for (int i = 1; i < pattern.Length - 1; i++)
         {
@@ -65,7 +65,7 @@ internal class TextSearchLogic : ITextSearchLogic
         return true;
     }
 
-    private bool IsMiddleEqualIgnoreCase(TextLine line, int lineCol, string pattern)
+    private bool IsMiddleEqualIgnoreCase(ITextLine line, int lineCol, string pattern)
     {
         for (int i = 1; i < pattern.Length - 1; i++)
         {

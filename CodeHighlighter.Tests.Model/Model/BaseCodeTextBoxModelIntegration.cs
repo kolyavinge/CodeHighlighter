@@ -13,6 +13,7 @@ internal class BaseCodeTextBoxModelIntegration
     {
         var codeProvider = new SqlCodeProvider();
         var text = new Text();
+        var textLines = new TextLines(text);
         var textSelectionLineConverter = new TextSelectionLineConverter(text);
         var textSelection = new TextSelection(text, textSelectionLineConverter);
         var gaps = new LineGapCollection();
@@ -58,6 +59,7 @@ internal class BaseCodeTextBoxModelIntegration
         return new CodeTextBoxModel(
             codeProvider,
             text,
+            textLines,
             textCursor,
             textCursorAbsolutePosition,
             textSelection,

@@ -11,19 +11,19 @@ internal interface IRegexSearchLogic
 
 internal class RegexSearchLogic : IRegexSearchLogic
 {
-    private readonly IText _text;
     private int _startLineIndex;
     private int _currentCharIndex;
+    private readonly ITextLines _textLines;
 
-    public RegexSearchLogic(IText text)
+    public RegexSearchLogic(ITextLines textLines)
     {
-        _text = text;
+        _textLines = textLines;
     }
 
     public IEnumerable<TextPosition> DoSearch(string pattern, bool matchCase)
     {
         if (pattern == "") yield break;
-        var textString = _text.ToString();
+        var textString = _textLines.ToString();
         var regexOptions = RegexOptions.None;
         if (!matchCase) regexOptions |= RegexOptions.IgnoreCase;
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) regexOptions |= RegexOptions.Multiline;
@@ -46,7 +46,7 @@ internal class RegexSearchLogic : IRegexSearchLogic
         // start position
         while (true)
         {
-            var line = _text.GetLine(_startLineIndex);
+            var line = _textLines.GetLine(_startLineIndex);
             var lineLength = line.Length + newLineLength;
             if (_currentCharIndex + lineLength <= matchCharIndex)
             {
@@ -62,7 +62,7 @@ internal class RegexSearchLogic : IRegexSearchLogic
         matchCharIndex = match.Index + match.Length;
         while (_currentCharIndex <= matchCharIndex)
         {
-            var line = _text.GetLine(endLineIndex);
+            var line = _textLines.GetLine(endLineIndex);
             var lineLength = line.Length + newLineLength;
             if (_currentCharIndex + lineLength <= matchCharIndex)
             {

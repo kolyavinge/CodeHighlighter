@@ -50,14 +50,14 @@ public class MainViewModel
             _isAlterLinesColor = value;
             if (value)
             {
-                for (int i = 0; i < CodeTextBoxModel.TextLinesCount; i += 2)
+                for (int i = 0; i < CodeTextBoxModel.TextLines.Count; i += 2)
                 {
                     CodeTextBoxModel.LinesDecoration[i] = new LineDecoration { Background = new(250, 220, 160) };
                 }
             }
             else
             {
-                for (int i = 0; i < CodeTextBoxModel.TextLinesCount; i++)
+                for (int i = 0; i < CodeTextBoxModel.TextLines.Count; i++)
                 {
                     CodeTextBoxModel.LinesDecoration[i] = null;
                 }
@@ -120,7 +120,7 @@ public class MainViewModel
         CodeTextBoxModel.TextHighlighter.Add(new TextHighlight[] { new(new(11, 4, 11, 14), new(168, 135, 200)), new(new(17, 4, 18, 6), new(107, 187, 199)) });
         LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
         LineFoldingPanelModel = LineFoldingPanelModelFactory.MakeModel(CodeTextBoxModel);
-        SearchPanelModel = CodeTextBoxModel.MakeSearchPanelModel();
+        SearchPanelModel = SearchPanelModelFactory.MakeModel(CodeTextBoxModel);
         SearchPanelModel.HighlightColor = Color.FromHex("c7a86b");
         SearchPanelModel.Pattern = "begin";
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);

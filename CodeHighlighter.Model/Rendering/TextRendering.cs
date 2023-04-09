@@ -29,7 +29,7 @@ internal class TextRendering : ITextRendering
     {
         var textMeasures = _model.TextMeasures;
         var viewport = _model.Viewport;
-        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLinesCount))
+        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLines.Count))
         {
             var lineTokens = _model.Tokens.GetTokens(line.LineIndex);
             foreach (var token in lineTokens)

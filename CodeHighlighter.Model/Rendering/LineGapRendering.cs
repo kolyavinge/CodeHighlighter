@@ -31,7 +31,7 @@ internal class LineGapRendering : ILineGapRendering
         if (!_model.Gaps.AnyItems) return;
         var textMeasures = _model.TextMeasures;
         var viewport = _model.Viewport;
-        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLinesCount))
+        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLines.Count))
         {
             var gap = _model.Gaps[line.LineIndex];
             if (gap == null) continue;

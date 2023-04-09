@@ -11,6 +11,7 @@ internal class CodeTextBoxInjectModule : InjectModule
     public override void Init(IBindingProvider bindingProvider)
     {
         bindingProvider.Bind<IText, Text>().ToSingleton();
+        bindingProvider.Bind<ITextLines, TextLines>().ToSingleton();
         bindingProvider.Bind<ITextCursor, TextCursor>().ToSingleton();
         bindingProvider.Bind<ITextCursorPositionCorrector, TextCursorPositionCorrector>().ToSingleton();
         bindingProvider.Bind<ITextCursorAbsolutePosition, TextCursorAbsolutePosition>().ToSingleton();

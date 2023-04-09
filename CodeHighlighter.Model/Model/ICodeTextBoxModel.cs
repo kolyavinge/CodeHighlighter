@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CodeHighlighter.Ancillary;
+﻿using CodeHighlighter.Ancillary;
 using CodeHighlighter.Common;
 using CodeHighlighter.Core;
 
@@ -8,8 +7,7 @@ namespace CodeHighlighter.Model;
 public interface ICodeTextBoxModel
 {
     string Text { get; set; }
-    IEnumerable<string> TextLines { get; }
-    int TextLinesCount { get; }
+    public ITextLines TextLines { get; }
     CursorPosition CursorPosition { get; }
     Point AbsoluteCursorPosition { get; }
     ITextSelection TextSelection { get; }
@@ -63,5 +61,4 @@ public interface ICodeTextBoxModel
     void Copy();
     void Paste();
     void Cut();
-    ISearchPanelModel MakeSearchPanelModel();
 }

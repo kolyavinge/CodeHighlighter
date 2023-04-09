@@ -10,7 +10,7 @@ namespace CodeHighlighter.Tests.Ancillary;
 
 internal class TextSearchLogicTest
 {
-    private Mock<IText> _text;
+    private Mock<ITextLines> _textLines;
     private string _pattern;
     private bool _matchCase;
     private List<TextPosition> _result;
@@ -19,15 +19,15 @@ internal class TextSearchLogicTest
     [SetUp]
     public void Setup()
     {
-        _text = new Mock<IText>();
+        _textLines = new Mock<ITextLines>();
         _matchCase = true;
-        _logic = new TextSearchLogic(_text.Object);
+        _logic = new TextSearchLogic(_textLines.Object);
     }
 
     [Test]
     public void EmptyTextEmptyPattern()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(0);
+        _textLines.SetupGet(x => x.Count).Returns(0);
         _pattern = "";
 
         DoSearch();
@@ -38,8 +38,8 @@ internal class TextSearchLogicTest
     [Test]
     public void PatternOneSpace()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("   "));
         _pattern = " ";
 
         DoSearch();
@@ -53,7 +53,7 @@ internal class TextSearchLogicTest
     [Test]
     public void PatternMultiline_1_Error()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(0);
+        _textLines.SetupGet(x => x.Count).Returns(0);
         _pattern = "123\n123";
 
         try
@@ -70,7 +70,7 @@ internal class TextSearchLogicTest
     [Test]
     public void PatternMultiline_2_Error()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(0);
+        _textLines.SetupGet(x => x.Count).Returns(0);
         _pattern = "123\r123";
 
         try
@@ -87,8 +87,8 @@ internal class TextSearchLogicTest
     [Test]
     public void EmptyPattern()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("123"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("123"));
         _pattern = "";
 
         DoSearch();
@@ -99,8 +99,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_WholeTextInPattern()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "abcd";
 
         DoSearch();
@@ -112,8 +112,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_WrongFirst()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "_bcd";
 
         DoSearch();
@@ -124,8 +124,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_WrongLast()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "abc_";
 
         DoSearch();
@@ -136,8 +136,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_WrongMiddle_1()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "ab_d";
 
         DoSearch();
@@ -148,8 +148,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_WrongMiddle_2()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("abcd"));
         _pattern = "a_cd";
 
         DoSearch();
@@ -160,8 +160,8 @@ internal class TextSearchLogicTest
     [Test]
     public void Case_PatternLastPosition()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("__abcd"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("__abcd"));
         _pattern = "abcd";
 
         DoSearch();
@@ -173,8 +173,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_WholeTextInPattern()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abcd";
         _matchCase = false;
 
@@ -187,8 +187,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_WrongFirst()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "_bcd";
         _matchCase = false;
 
@@ -200,8 +200,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_WrongLast()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "abc_";
         _matchCase = false;
 
@@ -213,8 +213,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_WrongMiddle_1()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "ab_d";
         _matchCase = false;
 
@@ -226,8 +226,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_WrongMiddle_2()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("ABCD"));
         _pattern = "a_cd";
         _matchCase = false;
 
@@ -239,8 +239,8 @@ internal class TextSearchLogicTest
     [Test]
     public void IgnoreCase_PatternLastPosition()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("__ABCD"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("__ABCD"));
         _pattern = "abcd";
         _matchCase = false;
 
@@ -253,10 +253,10 @@ internal class TextSearchLogicTest
     [Test]
     public void MultiLines()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(3);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("__abc"));
-        _text.Setup(x => x.GetLine(1)).Returns(new TextLine("abc"));
-        _text.Setup(x => x.GetLine(2)).Returns(new TextLine("_abc_"));
+        _textLines.SetupGet(x => x.Count).Returns(3);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("__abc"));
+        _textLines.Setup(x => x.GetLine(1)).Returns(new TextLine("abc"));
+        _textLines.Setup(x => x.GetLine(2)).Returns(new TextLine("_abc_"));
         _pattern = "abc";
 
         DoSearch();
@@ -270,8 +270,8 @@ internal class TextSearchLogicTest
     [Test]
     public void LongPattern()
     {
-        _text.SetupGet(x => x.LinesCount).Returns(1);
-        _text.Setup(x => x.GetLine(0)).Returns(new TextLine("12345"));
+        _textLines.SetupGet(x => x.Count).Returns(1);
+        _textLines.Setup(x => x.GetLine(0)).Returns(new TextLine("12345"));
         _pattern = "1234567890";
 
         DoSearch();

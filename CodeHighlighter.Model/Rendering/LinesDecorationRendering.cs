@@ -32,7 +32,7 @@ internal class LinesDecorationRendering : ILinesDecorationRendering
         var textMeasures = _model.TextMeasures;
         var viewport = _model.Viewport;
 
-        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLinesCount))
+        foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLines.Count))
         {
             var lineDecoration = linesDecorationCollection[line.LineIndex];
             if (lineDecoration != null)
