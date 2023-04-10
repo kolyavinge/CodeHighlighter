@@ -15,10 +15,12 @@ internal class TextLines : ITextLines
 
     public int Count => _text.LinesCount;
 
-    public ITextLine GetLine(int lineIndex) => _text.GetLine(lineIndex);
-
     public TextLines(IText text)
     {
         _text = text;
     }
+
+    public ITextLine GetLine(int lineIndex) => _text.GetLine(lineIndex);
+
+    public override string ToString() => _text.ToString();
 }
