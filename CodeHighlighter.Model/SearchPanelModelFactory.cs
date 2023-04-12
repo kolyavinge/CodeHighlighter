@@ -13,6 +13,7 @@ public static class SearchPanelModelFactory
         container.BindSingleton<ITextSearchLogic, TextSearchLogic>();
         container.BindSingleton<IRegexSearchLogic, RegexSearchLogic>();
         container.BindSingleton<ISearchPanelModel, SearchPanelModel>();
+        container.BindSingleton<ITextPositionNavigatorInternal, TextPositionNavigator>();
         container.BindSingleton<ICodeTextBoxModel>(codeTextBoxModel);
         container.BindSingleton<ITextLines>(codeTextBoxModel.TextLines);
 

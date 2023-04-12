@@ -19,4 +19,14 @@ public partial class SearchPanel
     {
         InitializeComponent();
     }
+
+    private void ButtonGotoPrev(object sender, RoutedEventArgs e)
+    {
+        Model.Navigator.GotoPrev();
+    }
+
+    private void ButtonGotoNext(object sender, RoutedEventArgs e)
+    {
+        Model.Navigator.GotoNext();
+    }
 }

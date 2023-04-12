@@ -26,6 +26,7 @@ public interface ICodeTextBoxModel
     bool IsReadOnly { get; set; }
     ICodeTextBoxModelAdditionalInfo AdditionalInfo { get; }
     void AttachCodeTextBox(ICodeTextBox codeTextBox);
+    bool Focus();
     string GetSelectedText();
     void MoveCursorTo(CursorPosition position);
     void MoveCursorLeft();

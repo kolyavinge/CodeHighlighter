@@ -158,6 +158,11 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         TextHighlighter.Changed += (s, e) => _codeTextBox.InvalidateVisual();
     }
 
+    public bool Focus()
+    {
+        return _codeTextBox?.Focus() ?? false;
+    }
+
     public string GetSelectedText()
     {
         return _textSelector.GetSelectedText();

@@ -5,7 +5,7 @@ using CodeHighlighter.Model;
 using Moq;
 using NUnit.Framework;
 
-namespace CodeHighlighter.Tests.Ancillary;
+namespace CodeHighlighter.Tests.Model;
 
 internal class SearchPanelModelTest
 {
@@ -14,6 +14,7 @@ internal class SearchPanelModelTest
     private Mock<ICodeTextBoxModel> _codeTextBoxModel;
     private Mock<ITextSearchLogic> _textSearchLogic;
     private Mock<IRegexSearchLogic> _regexSearchLogic;
+    private Mock<ITextPositionNavigatorInternal> _textPositionNavigator;
     private Color _highlightColor;
     private SearchPanelModel _model;
 
@@ -27,8 +28,9 @@ internal class SearchPanelModelTest
         _codeTextBoxModel.SetupGet(x => x.TextHighlighter).Returns(_textHighlighter.Object);
         _textSearchLogic = new Mock<ITextSearchLogic>();
         _regexSearchLogic = new Mock<IRegexSearchLogic>();
+        _textPositionNavigator = new Mock<ITextPositionNavigatorInternal>();
         _highlightColor = Color.FromHex("123456");
-        _model = new SearchPanelModel(_codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object);
+        _model = new SearchPanelModel(_codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object, _textPositionNavigator.Object);
         _model.HighlightColor = _highlightColor;
     }
 
@@ -120,5 +122,15 @@ internal class SearchPanelModelTest
         _textSearchLogic.Setup(x => x.DoSearch("456", false)).Returns(new TextPosition[0]);
         _model.Pattern = "456";
         Assert.False(_model.HasResult);
+    }
+
+    [Test]
+    public void TextPositionNavigatorSetPositions()
+    {
+        _textSearchLogic.Setup(x => x.DoSearch("123", false)).Returns(new TextPosition[] { new(0, 1, 2, 3) });
+
+        _model.Pattern = "123";
+
+        _textPositionNavigator.Verify(x => x.SetPositions(new TextPosition[] { new(0, 1, 2, 3) }), Times.Once());
     }
 }
