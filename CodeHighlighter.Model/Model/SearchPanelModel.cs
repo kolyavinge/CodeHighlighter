@@ -6,14 +6,24 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
+public interface ISearchPanel
+{
+    bool FocusPattern();
+    void SelectAllPattern();
+}
+
 public interface ISearchPanelModel
 {
     string Pattern { get; set; }
     bool IsRegex { get; set; }
     bool MatchCase { get; set; }
+    bool IsPatternEntered { get; }
     bool HasResult { get; }
     Color HighlightColor { get; set; }
     ITextPositionNavigator Navigator { get; }
+    void AttachSearchPanel(ISearchPanel panel);
+    bool FocusPattern();
+    void SelectAllPattern();
 }
 
 internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
@@ -22,11 +32,13 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     private readonly ITextSearchLogic _textSearchLogic;
     private readonly IRegexSearchLogic _regexSearchLogic;
     private readonly ITextPositionNavigatorInternal _textPositionNavigator;
+    private ISearchPanel? _panel;
     private List<TextPosition> _currentSearchResult;
     private List<TextHighlight> _currentHighlights;
     private string _pattern;
     private bool _isRegex;
     private bool _matchCase;
+    private bool _isPatternEntered;
     private bool _hasResult;
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -34,7 +46,7 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     public string Pattern
     {
         get => _pattern;
-        set { _pattern = value; UpdateSearch(); }
+        set { _pattern = value; UpdateSearch(); PropertyChanged?.Invoke(this, new("Pattern")); }
     }
 
     public bool IsRegex
@@ -47,6 +59,12 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     {
         get => _matchCase;
         set { _matchCase = value; UpdateSearch(); }
+    }
+
+    public bool IsPatternEntered
+    {
+        get => _isPatternEntered;
+        private set { _isPatternEntered = value; PropertyChanged?.Invoke(this, new("IsPatternEntered")); }
     }
 
     public bool HasResult
@@ -77,6 +95,15 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         _matchCase = false;
     }
 
+    public void AttachSearchPanel(ISearchPanel panel)
+    {
+        _panel = panel;
+    }
+
+    public bool FocusPattern() => _panel?.FocusPattern() ?? false;
+
+    public void SelectAllPattern() => _panel?.SelectAllPattern();
+
     private void UpdateSearch()
     {
         if (Pattern == "" && !_currentSearchResult.Any()) return;
@@ -85,6 +112,7 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         _currentHighlights = _currentSearchResult.Select(x => new TextHighlight(x, HighlightColor)).ToList();
         _codeTextBoxModel.TextHighlighter.Add(_currentHighlights);
         _textPositionNavigator.SetPositions(_currentSearchResult);
+        IsPatternEntered = !String.IsNullOrWhiteSpace(_pattern);
         HasResult = _currentSearchResult.Any();
     }
 }
