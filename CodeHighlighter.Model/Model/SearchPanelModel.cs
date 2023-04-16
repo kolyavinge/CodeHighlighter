@@ -17,6 +17,7 @@ public interface ISearchPanelModel
     string Pattern { get; set; }
     bool IsRegex { get; set; }
     bool MatchCase { get; set; }
+    bool IsWholeWord { get; set; }
     bool IsPatternEntered { get; }
     bool HasResult { get; }
     Color HighlightColor { get; set; }
@@ -31,6 +32,7 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     private readonly ICodeTextBoxModel _codeTextBoxModel;
     private readonly ITextSearchLogic _textSearchLogic;
     private readonly IRegexSearchLogic _regexSearchLogic;
+    private readonly IWholeWordLogic _wholeWordLogic;
     private readonly ITextPositionNavigatorInternal _textPositionNavigator;
     private ISearchPanel? _panel;
     private List<TextPosition> _currentSearchResult;
@@ -38,6 +40,7 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     private string _pattern;
     private bool _isRegex;
     private bool _matchCase;
+    private bool _isWholeWord;
     private bool _isPatternEntered;
     private bool _hasResult;
 
@@ -61,6 +64,12 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         set { _matchCase = value; UpdateSearch(); }
     }
 
+    public bool IsWholeWord
+    {
+        get => _isWholeWord;
+        set { _isWholeWord = value; UpdateSearch(); }
+    }
+
     public bool IsPatternEntered
     {
         get => _isPatternEntered;
@@ -81,12 +90,14 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         ICodeTextBoxModel codeTextBoxModel,
         ITextSearchLogic textSearchLogic,
         IRegexSearchLogic regexSearchLogic,
+        IWholeWordLogic wholeWordLogic,
         ITextPositionNavigatorInternal textPositionNavigator)
     {
         _codeTextBoxModel = codeTextBoxModel;
         _codeTextBoxModel.TextEvents.TextChanged += (s, e) => UpdateSearch();
         _textSearchLogic = textSearchLogic;
         _regexSearchLogic = regexSearchLogic;
+        _wholeWordLogic = wholeWordLogic;
         _textPositionNavigator = textPositionNavigator;
         _currentSearchResult = new();
         _currentHighlights = new();
@@ -107,7 +118,12 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
     private void UpdateSearch()
     {
         if (Pattern == "" && !_currentSearchResult.Any()) return;
-        _currentSearchResult = IsRegex ? _regexSearchLogic.DoSearch(Pattern, MatchCase).ToList() : _textSearchLogic.DoSearch(Pattern, MatchCase).ToList();
+        var searchResult = IsRegex ? _regexSearchLogic.DoSearch(Pattern, MatchCase) : _textSearchLogic.DoSearch(Pattern, MatchCase);
+        if (_isWholeWord)
+        {
+            searchResult = _wholeWordLogic.GetResult(searchResult);
+        }
+        _currentSearchResult = searchResult.ToList();
         _codeTextBoxModel.TextHighlighter.Remove(_currentHighlights);
         _currentHighlights = _currentSearchResult.Select(x => new TextHighlight(x, HighlightColor)).ToList();
         _codeTextBoxModel.TextHighlighter.Add(_currentHighlights);

@@ -14,6 +14,7 @@ internal class SearchPanelModelTest
     private Mock<ICodeTextBoxModel> _codeTextBoxModel;
     private Mock<ITextSearchLogic> _textSearchLogic;
     private Mock<IRegexSearchLogic> _regexSearchLogic;
+    private Mock<IWholeWordLogic> _wholeWordLogic;
     private Mock<ITextPositionNavigatorInternal> _textPositionNavigator;
     private Color _highlightColor;
     private SearchPanelModel _model;
@@ -28,9 +29,11 @@ internal class SearchPanelModelTest
         _codeTextBoxModel.SetupGet(x => x.TextHighlighter).Returns(_textHighlighter.Object);
         _textSearchLogic = new Mock<ITextSearchLogic>();
         _regexSearchLogic = new Mock<IRegexSearchLogic>();
+        _wholeWordLogic = new Mock<IWholeWordLogic>();
         _textPositionNavigator = new Mock<ITextPositionNavigatorInternal>();
         _highlightColor = Color.FromHex("123456");
-        _model = new SearchPanelModel(_codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object, _textPositionNavigator.Object);
+        _model = new SearchPanelModel(
+            _codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object, _wholeWordLogic.Object, _textPositionNavigator.Object);
         _model.HighlightColor = _highlightColor;
     }
 
@@ -89,6 +92,16 @@ internal class SearchPanelModelTest
         _model.Pattern = "123";
 
         _regexSearchLogic.Verify(x => x.DoSearch("123", true), Times.Once());
+    }
+
+    [Test]
+    public void WholeWord()
+    {
+        _textSearchLogic.Setup(x => x.DoSearch("123", false)).Returns(new TextPosition[] { new(0, 1, 2, 3) });
+        _model.IsWholeWord = true;
+        _model.Pattern = "123";
+
+        _wholeWordLogic.Verify(x => x.GetResult(new TextPosition[] { new(0, 1, 2, 3) }), Times.Once());
     }
 
     [Test]

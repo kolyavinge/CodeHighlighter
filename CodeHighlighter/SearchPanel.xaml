@@ -10,6 +10,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
@@ -18,19 +19,25 @@
 
         <ToggleButton Grid.Column="0" Content="Aa" IsChecked="{Binding Model.MatchCase, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" ToolTip="Match case" />
 
-        <ToggleButton Grid.Column="1" Content=".*" IsChecked="{Binding Model.IsRegex, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" ToolTip="Use regex pattern" />
+        <ToggleButton Grid.Column="1" IsChecked="{Binding Model.IsWholeWord, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" ToolTip="Use whole word">
+            <ToggleButton.Content>
+                <TextBlock Text="Aa" TextDecorations="Underline" />
+            </ToggleButton.Content>
+        </ToggleButton>
+
+        <ToggleButton Grid.Column="2" Content=".*" IsChecked="{Binding Model.IsRegex, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" ToolTip="Use regex pattern" />
 
         <TextBox
             x:Name="_pattern"
-            Grid.Column="2"
+            Grid.Column="3"
             Text="{Binding Model.Pattern, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
             VerticalContentAlignment="Center"
             AcceptsReturn="False" />
 
-        <Button Grid.Column="3" Content="˄" IsEnabled="{Binding Model.HasResult, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonGotoPrev" ToolTip="Go to prev result" />
+        <Button Grid.Column="4" Content="˄" IsEnabled="{Binding Model.HasResult, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonGotoPrev" ToolTip="Go to prev result" />
 
-        <Button Grid.Column="4" Content="˅" IsEnabled="{Binding Model.HasResult, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonGotoNext" ToolTip="Go to next result" />
+        <Button Grid.Column="5" Content="˅" IsEnabled="{Binding Model.HasResult, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonGotoNext" ToolTip="Go to next result" />
 
-        <Button Grid.Column="5" Content="✗" IsEnabled="{Binding Model.IsPatternEntered, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonClear" ToolTip="Clear search pattern" />
+        <Button Grid.Column="6" Content="✗" IsEnabled="{Binding Model.IsPatternEntered, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}" Click="ButtonClear" ToolTip="Clear search pattern" />
     </Grid>
 </UserControl>

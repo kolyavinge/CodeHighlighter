@@ -12,6 +12,7 @@ public static class SearchPanelModelFactory
         var container = new DependencyContainer();
         container.BindSingleton<ITextSearchLogic, TextSearchLogic>();
         container.BindSingleton<IRegexSearchLogic, RegexSearchLogic>();
+        container.BindSingleton<IWholeWordLogic, WholeWordLogic>();
         container.BindSingleton<ISearchPanelModel, SearchPanelModel>();
         container.BindSingleton<ITextPositionNavigatorInternal, TextPositionNavigator>();
         container.BindSingleton<ICodeTextBoxModel>(codeTextBoxModel);
