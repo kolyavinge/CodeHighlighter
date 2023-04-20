@@ -16,6 +16,7 @@ internal class SearchPanelModelTest
     private Mock<IRegexSearchLogic> _regexSearchLogic;
     private Mock<IWholeWordLogic> _wholeWordLogic;
     private Mock<ITextPositionNavigatorInternal> _textPositionNavigator;
+    private Mock<ISearchPanel> _panel;
     private Color _highlightColor;
     private SearchPanelModel _model;
 
@@ -31,10 +32,12 @@ internal class SearchPanelModelTest
         _regexSearchLogic = new Mock<IRegexSearchLogic>();
         _wholeWordLogic = new Mock<IWholeWordLogic>();
         _textPositionNavigator = new Mock<ITextPositionNavigatorInternal>();
+        _panel = new Mock<ISearchPanel>();
         _highlightColor = Color.FromHex("123456");
         _model = new SearchPanelModel(
             _codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object, _wholeWordLogic.Object, _textPositionNavigator.Object);
         _model.HighlightColor = _highlightColor;
+        _model.AttachSearchPanel(_panel.Object);
     }
 
     [Test]
@@ -145,5 +148,54 @@ internal class SearchPanelModelTest
         _model.Pattern = "123";
 
         _textPositionNavigator.Verify(x => x.SetPositions(new TextPosition[] { new(0, 1, 2, 3) }), Times.Once());
+    }
+
+    [Test]
+    public void ActivatePattern_SelectedTextNull()
+    {
+        _codeTextBoxModel.Setup(x => x.GetSelectedText()).Returns((string)null);
+
+        _model.Pattern = "123";
+        _model.ActivatePattern();
+
+        Assert.That(_model.Pattern, Is.EqualTo("123"));
+        _panel.Verify(x => x.FocusPattern(), Times.Once());
+        _panel.Verify(x => x.SelectAllPattern(), Times.Once());
+    }
+
+    [Test]
+    public void ActivatePattern_SelectedTextEmpty()
+    {
+        _codeTextBoxModel.Setup(x => x.GetSelectedText()).Returns("");
+
+        _model.Pattern = "123";
+        _model.ActivatePattern();
+
+        Assert.That(_model.Pattern, Is.EqualTo("123"));
+        _panel.Verify(x => x.FocusPattern(), Times.Once());
+        _panel.Verify(x => x.SelectAllPattern(), Times.Once());
+    }
+
+    [Test]
+    public void ActivatePattern_SelectedText()
+    {
+        _codeTextBoxModel.Setup(x => x.GetSelectedText()).Returns("456");
+
+        _model.Pattern = "123";
+        _model.ActivatePattern();
+
+        Assert.That(_model.Pattern, Is.EqualTo("456"));
+        _panel.Verify(x => x.FocusPattern(), Times.Once());
+        _panel.Verify(x => x.SelectAllPattern(), Times.Once());
+    }
+
+    [Test]
+    public void ActivatePattern_PanelIsNotAttached()
+    {
+        _model.AttachSearchPanel(null);
+        _model.ActivatePattern();
+
+        _panel.Verify(x => x.FocusPattern(), Times.Never());
+        _panel.Verify(x => x.SelectAllPattern(), Times.Never());
     }
 }

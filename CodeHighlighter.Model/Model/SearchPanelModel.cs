@@ -25,6 +25,7 @@ public interface ISearchPanelModel
     void AttachSearchPanel(ISearchPanel panel);
     bool FocusPattern();
     void SelectAllPattern();
+    void ActivatePattern();
 }
 
 internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
@@ -130,5 +131,16 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         _textPositionNavigator.SetPositions(_currentSearchResult);
         IsPatternEntered = !String.IsNullOrWhiteSpace(_pattern);
         HasResult = _currentSearchResult.Any();
+    }
+
+    public void ActivatePattern()
+    {
+        var selectedText = _codeTextBoxModel.GetSelectedText();
+        if (!String.IsNullOrWhiteSpace(selectedText))
+        {
+            Pattern = selectedText;
+        }
+        FocusPattern();
+        SelectAllPattern();
     }
 }
