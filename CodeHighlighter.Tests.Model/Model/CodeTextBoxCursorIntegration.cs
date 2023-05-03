@@ -5,16 +5,16 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelCursorIntegration : BaseCodeTextBoxModelIntegration
+internal class CodeTextBoxCursorIntegration : BaseCodeTextBoxIntegration
 {
-    private Mock<ICodeTextBox> _codeTextBox;
+    private Mock<ICodeTextBoxView> _codeTextBox;
     private Mock<IViewportContext> _viewportContext;
     private CodeTextBoxModel _model;
 
     [SetUp]
     public void Setup()
     {
-        _codeTextBox = new Mock<ICodeTextBox>();
+        _codeTextBox = new Mock<ICodeTextBoxView>();
         _viewportContext = _codeTextBox.As<IViewportContext>();
         _model = MakeModel();
         _model.AttachCodeTextBox(_codeTextBox.Object);

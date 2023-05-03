@@ -11,12 +11,12 @@ public interface ILineFoldingPanelMouseController
 
 internal class LineFoldingPanelMouseController : ILineFoldingPanelMouseController
 {
-    private readonly ILineFoldingPanel _panel;
-    private readonly ILineFoldingPanelModel _model;
+    private readonly ILineFoldingPanelView _panel;
+    private readonly ILineFoldingPanel _model;
 
     public LineFoldingPanelMouseController(
-        ILineFoldingPanel panel,
-        ILineFoldingPanelModel model)
+        ILineFoldingPanelView panel,
+        ILineFoldingPanel model)
     {
         _panel = panel;
         _model = model;

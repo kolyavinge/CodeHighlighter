@@ -12,12 +12,12 @@ public interface ILineGapRendering
 
 internal class LineGapRendering : ILineGapRendering
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
     private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
 
     public LineGapRendering(
-        ICodeTextBoxModel model,
+        ICodeTextBox model,
         ICodeTextBoxRenderingContext renderingContext,
         IExtendedLineNumberGenerator lineNumberGenerator)
     {

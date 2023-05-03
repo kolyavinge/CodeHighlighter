@@ -7,16 +7,16 @@ namespace CodeHighlighter;
 
 public static class RenderingModelFactory
 {
-    public static ICodeTextBoxRenderingModel MakeModel(ICodeTextBoxModel model, ICodeTextBoxRenderingContext renderingContext)
+    public static ICodeTextBoxRendering MakeModel(ICodeTextBox model, ICodeTextBoxRenderingContext renderingContext)
     {
         var container = new DependencyContainer();
         container.InitFromModules(new RenderingInjectModule());
-        container.BindSingleton<ICodeTextBoxModel>(model);
+        container.BindSingleton<ICodeTextBox>(model);
         container.BindSingleton<ILineGapCollection>(model.Gaps);
         container.BindSingleton<ILineFolds>(model.Folds);
         container.BindSingleton<ICodeTextBoxRenderingContext>(renderingContext);
 
-        var renderingModel = container.Resolve<ICodeTextBoxRenderingModel>();
+        var renderingModel = container.Resolve<ICodeTextBoxRendering>();
 
         return renderingModel;
     }

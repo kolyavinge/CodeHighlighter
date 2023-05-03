@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter.Model;
 
-internal class DummyCodeTextBox : ICodeTextBox
+internal class DummyCodeTextBox : ICodeTextBoxView
 {
     public static readonly DummyCodeTextBox Instance = new();
 

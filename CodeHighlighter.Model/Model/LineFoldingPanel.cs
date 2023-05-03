@@ -3,7 +3,7 @@ using CodeHighlighter.Ancillary;
 
 namespace CodeHighlighter.Model;
 
-public interface ILineFoldingPanel
+public interface ILineFoldingPanelView
 {
     double ActualHeight { get; }
     double VerticalScrollBarValue { get; }
@@ -12,26 +12,26 @@ public interface ILineFoldingPanel
     void InvalidateVisual();
 }
 
-public interface ILineFoldingPanelModel
+public interface ILineFoldingPanel
 {
     ILineFolds Folds { get; }
-    void AttachLineFoldingPanel(ILineFoldingPanel panel);
+    void AttachLineFoldingPanel(ILineFoldingPanelView panel);
     IEnumerable<LineFoldWithOffsetY> GetFolds(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
 }
 
-internal class LineFoldingPanelModel : ILineFoldingPanelModel
+internal class LineFoldingPanel : ILineFoldingPanel
 {
     private readonly ILineFoldsNumberGenerator _lineNumberGenerator;
 
     public ILineFolds Folds { get; }
 
-    public LineFoldingPanelModel(ILineFolds folds, ILineFoldsNumberGenerator lineNumberGenerator)
+    public LineFoldingPanel(ILineFolds folds, ILineFoldsNumberGenerator lineNumberGenerator)
     {
         Folds = folds;
         _lineNumberGenerator = lineNumberGenerator;
     }
 
-    public void AttachLineFoldingPanel(ILineFoldingPanel panel)
+    public void AttachLineFoldingPanel(ILineFoldingPanelView panel)
     {
         Folds.ItemsSet += (s, e) => panel.InvalidateVisual();
         Folds.Activated += (s, e) => panel.InvalidateVisual();

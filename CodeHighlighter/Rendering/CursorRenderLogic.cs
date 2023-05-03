@@ -31,7 +31,7 @@ internal class CursorRenderLogic
         _cursorLine.BeginAnimation(Line.VisibilityProperty, _animation);
     }
 
-    public void DrawCursor(ICodeTextBoxModel model)
+    public void DrawCursor(ICodeTextBox model)
     {
         var cursorAbsolutePoint = model.AbsoluteCursorPosition;
         cursorAbsolutePoint.X -= model.Viewport.HorizontalScrollBarValue;
@@ -56,7 +56,7 @@ internal class CursorRenderLogic
         _cursorLine.BeginAnimation(Line.VisibilityProperty, _animation);
     }
 
-    public void DrawHighlightedCursorLine(ICodeTextBoxModel model, DrawingContext context, Brush background, double actualWidth)
+    public void DrawHighlightedCursorLine(ICodeTextBox model, DrawingContext context, Brush background, double actualWidth)
     {
         var x = 0.0;
         var y = model.AbsoluteCursorPosition.Y - model.Viewport.VerticalScrollBarValue;

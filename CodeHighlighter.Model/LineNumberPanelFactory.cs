@@ -3,14 +3,14 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter;
 
-public static class LineNumberPanelModelFactory
+public static class LineNumberPanelFactory
 {
-    public static ILineNumberPanelModel MakeModel(ICodeTextBoxModel? codeTextBoxModel = null)
+    public static ILineNumberPanel MakeModel(ICodeTextBox? codeTextBoxModel = null)
     {
         var container = new DependencyContainer();
         container.InitFromModules(new LineNumberPanelModelInjectModule(codeTextBoxModel));
 
-        var model = container.Resolve<ILineNumberPanelModel>();
+        var model = container.Resolve<ILineNumberPanel>();
 
         return model;
     }

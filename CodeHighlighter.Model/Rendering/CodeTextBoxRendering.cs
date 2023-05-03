@@ -1,6 +1,6 @@
 ﻿namespace CodeHighlighter.Rendering;
 
-public interface ICodeTextBoxRenderingModel
+public interface ICodeTextBoxRendering
 {
     ITextRendering Text { get; }
     ITextSelectionRendering TextSelection { get; }
@@ -11,7 +11,7 @@ public interface ICodeTextBoxRenderingModel
     ITextHighlightRendering TextHighlight { get; }
 }
 
-internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
+internal class CodeTextBoxRendering : ICodeTextBoxRendering
 {
     public ITextRendering Text { get; }
     public ITextSelectionRendering TextSelection { get; }
@@ -21,7 +21,7 @@ internal class CodeTextBoxRenderingModel : ICodeTextBoxRenderingModel
     public IActivatedLineFoldsRendering ActivatedLineFolds { get; }
     public ITextHighlightRendering TextHighlight { get; }
 
-    public CodeTextBoxRenderingModel(
+    public CodeTextBoxRendering(
         ITextRendering textRendering,
         ITextSelectionRendering textSelectionRendering,
         ILinesDecorationRendering linesDecorationRendering,

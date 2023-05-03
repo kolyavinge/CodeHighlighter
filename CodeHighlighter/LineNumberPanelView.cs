@@ -8,25 +8,25 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class LineNumberPanel : Control, ILineNumberPanel
+public class LineNumberPanelView : Control, ILineNumberPanelView
 {
     private readonly RenderingContext _context;
     private readonly INumberRendering? _numberRendering;
 
     #region Model
-    public ILineNumberPanelModel Model
+    public ILineNumberPanel Model
     {
-        get => (ILineNumberPanelModel)GetValue(ModelProperty);
+        get => (ILineNumberPanel)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(ILineNumberPanelModel), typeof(LineNumberPanel), new PropertyMetadata(LineNumberPanelModelFactory.MakeModel(), ModelChangedCallback));
+        DependencyProperty.Register("Model", typeof(ILineNumberPanel), typeof(LineNumberPanelView), new PropertyMetadata(LineNumberPanelFactory.MakeModel(), ModelChangedCallback));
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var model = (ILineNumberPanelModel)e.NewValue;
-        var panel = (LineNumberPanel)d;
+        var model = (ILineNumberPanel)e.NewValue;
+        var panel = (LineNumberPanelView)d;
         model.AttachLineNumberPanel(panel);
         panel.InvalidateVisual();
     }
@@ -40,11 +40,11 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
-        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineNumberPanel), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
+        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineNumberPanelView), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
 
     private static void VerticalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineNumberPanelView)d;
         if ((double)e.NewValue < 0) panel.VerticalScrollBarValue = 0.0;
         panel.InvalidateVisual();
     }
@@ -58,11 +58,11 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty TextLinesCountProperty =
-        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineNumberPanel), new PropertyMetadata(TextLinesCountChangedCallback));
+        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineNumberPanelView), new PropertyMetadata(TextLinesCountChangedCallback));
 
     private static void TextLinesCountChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineNumberPanelView)d;
         panel.InvalidateVisual();
     }
     #endregion
@@ -75,16 +75,16 @@ public class LineNumberPanel : Control, ILineNumberPanel
     }
 
     public static readonly DependencyProperty TextLineHeightProperty =
-        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineNumberPanel), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
+        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineNumberPanelView), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
 
     private static void TextLineHeightChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineNumberPanel)d;
+        var panel = (LineNumberPanelView)d;
         panel.InvalidateVisual();
     }
     #endregion
 
-    public LineNumberPanel()
+    public LineNumberPanelView()
     {
         _context = new RenderingContext(this);
         _numberRendering = RenderingModelFactory.MakeNumberRendering(_context);

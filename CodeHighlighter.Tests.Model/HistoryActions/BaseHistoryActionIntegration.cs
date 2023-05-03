@@ -29,7 +29,7 @@ internal class BaseHistoryActionIntegration
     protected readonly LineFolds _folds;
     protected readonly LineFoldsUpdater _lineFoldsUpdater;
     protected readonly TextEvents _textEvents;
-    protected Mock<ICodeTextBox> _codeTextBox;
+    protected Mock<ICodeTextBoxView> _codeTextBox;
     protected InputActionsFactory _inputActionsFactory;
     protected InputActionContext _context;
 

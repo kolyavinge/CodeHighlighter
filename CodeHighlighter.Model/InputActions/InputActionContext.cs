@@ -8,7 +8,7 @@ namespace CodeHighlighter.InputActions;
 internal interface IInputActionContext
 {
     ICodeProvider CodeProvider { get; }
-    ICodeTextBox CodeTextBox { get; set; }
+    ICodeTextBoxView CodeTextBox { get; set; }
     IText Text { get; }
     ITextCursor TextCursor { get; }
     ITextEventsInternal TextEvents { get; }
@@ -38,7 +38,7 @@ internal class InputActionContext : IInputActionContext
     public IPageScroller PageScroller { get; }
     public ILineFoldsUpdater LineFoldsUpdater { get; }
     public ITextEventsInternal TextEvents { get; }
-    public ICodeTextBox CodeTextBox { get; set; }
+    public ICodeTextBoxView CodeTextBox { get; set; }
 
     public InputActionContext(
         ICodeProvider codeProvider,

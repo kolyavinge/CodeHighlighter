@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelSelectionIntegration : BaseCodeTextBoxModelIntegration
+internal class CodeTextBoxSelectionIntegration : BaseCodeTextBoxIntegration
 {
     private CodeTextBoxModel _model;
 

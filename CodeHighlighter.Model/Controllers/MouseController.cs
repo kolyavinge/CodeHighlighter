@@ -16,15 +16,15 @@ public interface IMouseController
 
 internal class MouseController : IMouseController
 {
-    private readonly ICodeTextBox _codeTextBox;
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBoxView _codeTextBox;
+    private readonly ICodeTextBox _model;
     private readonly IPointInTextSelection _pointInTextSelection;
     private readonly IMouseCursorPosition _mouseCursorPosition;
     private bool _isLeftButtonPressed;
 
     public MouseController(
-        ICodeTextBox codeTextBox,
-        ICodeTextBoxModel model,
+        ICodeTextBoxView codeTextBox,
+        ICodeTextBox model,
         IPointInTextSelection pointInTextSelection,
         IMouseCursorPosition mouseCursorPosition)
     {

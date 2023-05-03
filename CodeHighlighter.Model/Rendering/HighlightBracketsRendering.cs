@@ -13,13 +13,13 @@ public interface IHighlightBracketsRendering
 
 internal class HighlightBracketsRendering : IHighlightBracketsRendering
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
     private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
     private readonly ILineFolds _folds;
 
     public HighlightBracketsRendering(
-        ICodeTextBoxModel model,
+        ICodeTextBox model,
         ICodeTextBoxRenderingContext renderingContext,
         IExtendedLineNumberGenerator lineNumberGenerator,
         ILineFolds folds)
@@ -46,7 +46,7 @@ internal class HighlightBracketsRendering : IHighlightBracketsRendering
         }
     }
 
-    private Rect GetBracketRect(ICodeTextBoxModel model, BracketPosition bracketPosition)
+    private Rect GetBracketRect(ICodeTextBox model, BracketPosition bracketPosition)
     {
         var offsetY = _lineNumberGenerator.GetLineOffsetY(bracketPosition.LineIndex, model.TextMeasures.LineHeight);
 

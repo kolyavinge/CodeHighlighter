@@ -22,6 +22,6 @@ internal class RenderingInjectModule : InjectModule
         bindingProvider.Bind<IActivatedLineFoldsRendering, ActivatedLineFoldsRendering>().ToSingleton();
         bindingProvider.Bind<ITextHighlightRendering, TextHighlightRendering>().ToSingleton();
 
-        bindingProvider.Bind<ICodeTextBoxRenderingModel, CodeTextBoxRenderingModel>().ToSingleton();
+        bindingProvider.Bind<ICodeTextBoxRendering, CodeTextBoxRendering>().ToSingleton();
     }
 }

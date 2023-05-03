@@ -3,26 +3,26 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter;
 
-public partial class SearchPanel : ISearchPanel
+public partial class SearchPanelView : ISearchPanelView
 {
     #region Model
-    public ISearchPanelModel Model
+    public ISearchPanel Model
     {
-        get => (ISearchPanelModel)GetValue(ModelProperty);
+        get => (ISearchPanel)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
-    public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(ISearchPanelModel), typeof(SearchPanel), new PropertyMetadata(OnModelChangedCallback));
+    public static readonly DependencyProperty ModelProperty = DependencyProperty.Register("Model", typeof(ISearchPanel), typeof(SearchPanelView), new PropertyMetadata(OnModelChangedCallback));
 
     private static void OnModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (SearchPanel)d;
-        var model = (ISearchPanelModel)e.NewValue;
+        var panel = (SearchPanelView)d;
+        var model = (ISearchPanel)e.NewValue;
         model.AttachSearchPanel(panel);
     }
     #endregion
 
-    public SearchPanel()
+    public SearchPanelView()
     {
         InitializeComponent();
     }

@@ -6,12 +6,12 @@ namespace CodeHighlighter;
 
 public static class ControllerFactory
 {
-    public static IKeyboardController MakeKeyboardController(ICodeTextBoxModel model)
+    public static IKeyboardController MakeKeyboardController(ICodeTextBox model)
     {
         return new KeyboardController(model);
     }
 
-    public static IMouseController MakeMouseController(ICodeTextBox codeTextBox, ICodeTextBoxModel model)
+    public static IMouseController MakeMouseController(ICodeTextBoxView codeTextBox, ICodeTextBox model)
     {
         return new MouseController(
             codeTextBox,
@@ -20,7 +20,7 @@ public static class ControllerFactory
             new MouseCursorPosition(model.Viewport, model.TextMeasures, new ExtendedLineNumberGenerator(new LineNumberGenerator(), model.Gaps, model.Folds)));
     }
 
-    public static ILineFoldingPanelMouseController MakeMouseController(ILineFoldingPanel panel, ILineFoldingPanelModel model)
+    public static ILineFoldingPanelMouseController MakeMouseController(ILineFoldingPanelView panel, ILineFoldingPanel model)
     {
         return new LineFoldingPanelMouseController(panel, model);
     }

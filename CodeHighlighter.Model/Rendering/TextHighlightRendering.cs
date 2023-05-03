@@ -11,12 +11,12 @@ public interface ITextHighlightRendering
 
 internal class TextHighlightRendering : ITextHighlightRendering
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
     private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly ITextSelectionRect _textSelectionRect;
 
     public TextHighlightRendering(
-        ICodeTextBoxModel model,
+        ICodeTextBox model,
         ICodeTextBoxRenderingContext renderingContext,
         ITextSelectionRect textSelectionRect)
     {

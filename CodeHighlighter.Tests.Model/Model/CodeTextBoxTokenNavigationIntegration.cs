@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelTokenNavigationIntegration : BaseCodeTextBoxModelIntegration
+internal class CodeTextBoxTokenNavigationIntegration : BaseCodeTextBoxIntegration
 {
     private CodeTextBoxModel _model;
 

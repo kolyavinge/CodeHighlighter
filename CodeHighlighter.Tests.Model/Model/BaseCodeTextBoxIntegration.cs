@@ -7,7 +7,7 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class BaseCodeTextBoxModelIntegration
+internal class BaseCodeTextBoxIntegration
 {
     protected CodeTextBoxModel MakeModel()
     {

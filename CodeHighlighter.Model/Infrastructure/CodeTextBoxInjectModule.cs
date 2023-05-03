@@ -46,6 +46,6 @@ internal class CodeTextBoxInjectModule : InjectModule
         bindingProvider.Bind<IInputActionsFactory, InputActionsFactory>().ToSingleton();
         bindingProvider.Bind<IInputActionContext, InputActionContext>().ToSingleton();
         bindingProvider.Bind<IHistoryActionsFactory, HistoryActionsFactory>().ToSingleton();
-        bindingProvider.Bind<ICodeTextBoxModel, CodeTextBoxModel>().ToSingleton();
+        bindingProvider.Bind<ICodeTextBox, CodeTextBoxModel>().ToSingleton();
     }
 }

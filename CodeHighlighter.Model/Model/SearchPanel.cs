@@ -6,13 +6,13 @@ using CodeHighlighter.Common;
 
 namespace CodeHighlighter.Model;
 
-public interface ISearchPanel
+public interface ISearchPanelView
 {
     bool FocusPattern();
     void SelectAllPattern();
 }
 
-public interface ISearchPanelModel
+public interface ISearchPanel
 {
     string Pattern { get; set; }
     bool IsRegex { get; set; }
@@ -22,20 +22,20 @@ public interface ISearchPanelModel
     bool HasResult { get; }
     Color HighlightColor { get; set; }
     ITextPositionNavigator Navigator { get; }
-    void AttachSearchPanel(ISearchPanel panel);
+    void AttachSearchPanel(ISearchPanelView panel);
     bool FocusPattern();
     void SelectAllPattern();
     void ActivatePattern();
 }
 
-internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
+internal class SearchPanel : ISearchPanel, INotifyPropertyChanged
 {
-    private readonly ICodeTextBoxModel _codeTextBoxModel;
+    private readonly ICodeTextBox _codeTextBoxModel;
     private readonly ITextSearchLogic _textSearchLogic;
     private readonly IRegexSearchLogic _regexSearchLogic;
     private readonly IWholeWordLogic _wholeWordLogic;
     private readonly ITextPositionNavigatorInternal _textPositionNavigator;
-    private ISearchPanel? _panel;
+    private ISearchPanelView? _panel;
     private List<TextPosition> _currentSearchResult;
     private List<TextHighlight> _currentHighlights;
     private string _pattern;
@@ -87,8 +87,8 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
 
     public ITextPositionNavigator Navigator => _textPositionNavigator;
 
-    public SearchPanelModel(
-        ICodeTextBoxModel codeTextBoxModel,
+    public SearchPanel(
+        ICodeTextBox codeTextBoxModel,
         ITextSearchLogic textSearchLogic,
         IRegexSearchLogic regexSearchLogic,
         IWholeWordLogic wholeWordLogic,
@@ -107,7 +107,7 @@ internal class SearchPanelModel : ISearchPanelModel, INotifyPropertyChanged
         _matchCase = false;
     }
 
-    public void AttachSearchPanel(ISearchPanel panel)
+    public void AttachSearchPanel(ISearchPanelView panel)
     {
         _panel = panel;
     }

@@ -8,9 +8,9 @@ using CodeHighlighter.InputActions;
 
 namespace CodeHighlighter.Model;
 
-internal class CodeTextBoxModel : ICodeTextBoxModel
+internal class CodeTextBoxModel : ICodeTextBox
 {
-    private ICodeTextBox _codeTextBox;
+    private ICodeTextBoxView _codeTextBox;
     private readonly IText _text;
     private readonly ITextCursor _textCursor;
     private readonly ITextCursorAbsolutePosition _textCursorAbsolutePosition;
@@ -135,7 +135,7 @@ internal class CodeTextBoxModel : ICodeTextBoxModel
         }
     }
 
-    public void AttachCodeTextBox(ICodeTextBox codeTextBox)
+    public void AttachCodeTextBox(ICodeTextBoxView codeTextBox)
     {
         _codeTextBox = codeTextBox;
         _viewport.SetContext(codeTextBox);

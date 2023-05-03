@@ -4,16 +4,16 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter;
 
-public static class CodeTextBoxModelFactory
+public static class CodeTextBoxFactory
 {
-    public static ICodeTextBoxModel MakeModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
+    public static ICodeTextBox MakeModel(ICodeProvider codeProvider, CodeTextBoxModelAdditionalParams? additionalParams = null)
     {
         var container = new DependencyContainer();
         container.InitFromModules(new CodeTextBoxInjectModule());
         container.BindSingleton<ICodeProvider>(codeProvider);
         container.BindSingleton<CodeTextBoxModelAdditionalParams>(additionalParams ?? new());
 
-        var model = container.Resolve<ICodeTextBoxModel>();
+        var model = container.Resolve<ICodeTextBox>();
 
         return model;
     }

@@ -11,12 +11,12 @@ public interface IActivatedLineFoldsRendering
 
 public class ActivatedLineFoldsRendering : IActivatedLineFoldsRendering
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
     private readonly ICodeTextBoxRenderingContext _context;
     private readonly ILineFoldsNumberGenerator _lineNumberGenerator;
 
     public ActivatedLineFoldsRendering(
-        ICodeTextBoxModel model,
+        ICodeTextBox model,
         ICodeTextBoxRenderingContext context,
         ILineFoldsNumberGenerator lineNumberGenerator)
     {

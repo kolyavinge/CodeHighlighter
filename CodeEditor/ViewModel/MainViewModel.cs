@@ -14,13 +14,13 @@ namespace CodeEditor.ViewModel;
 
 public class MainViewModel
 {
-    public ICodeTextBoxModel CodeTextBoxModel { get; }
+    public ICodeTextBox CodeTextBoxModel { get; }
 
-    public ILineNumberPanelModel LineNumberPanelModel { get; }
+    public ILineNumberPanel LineNumberPanelModel { get; }
 
-    public ILineFoldingPanelModel LineFoldingPanelModel { get; }
+    public ILineFoldingPanel LineFoldingPanelModel { get; }
 
-    public ISearchPanelModel SearchPanelModel { get; }
+    public ISearchPanel SearchPanelModel { get; }
 
     public ICodeProvider CodeProvider { get; }
 
@@ -113,14 +113,14 @@ public class MainViewModel
     public MainViewModel()
     {
         CodeProvider = new SqlCodeProvider();
-        CodeTextBoxModel = CodeTextBoxModelFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
+        CodeTextBoxModel = CodeTextBoxFactory.MakeModel(CodeProvider, new() { HighlighteredBrackets = "()[]" });
         CodeTextBoxModel.Text = File.ReadAllText(@"D:\Projects\CodeHighlighter\CodeEditor\Examples\sql.txt");
         CodeTextBoxModel.TextEvents.TextChanged += OnTextChanged;
         CodeTextBoxModel.Folds.Items = new LineFold[] { new(8, 13), new(37, 91), new(42, 8) };
         CodeTextBoxModel.TextHighlighter.Add(new TextHighlight[] { new(new(11, 4, 11, 14), new(168, 135, 200)), new(new(17, 4, 18, 6), new(107, 187, 199)) });
-        LineNumberPanelModel = LineNumberPanelModelFactory.MakeModel(CodeTextBoxModel);
-        LineFoldingPanelModel = LineFoldingPanelModelFactory.MakeModel(CodeTextBoxModel);
-        SearchPanelModel = SearchPanelModelFactory.MakeModel(CodeTextBoxModel);
+        LineNumberPanelModel = LineNumberPanelFactory.MakeModel(CodeTextBoxModel);
+        LineFoldingPanelModel = LineFoldingPanelFactory.MakeModel(CodeTextBoxModel);
+        SearchPanelModel = SearchPanelFactory.MakeModel(CodeTextBoxModel);
         SearchPanelModel.HighlightColor = Color.FromHex("c7a86b");
         SearchPanelModel.Pattern = "begin";
         KeyDownCommand = new ActionCommand<KeyEventArgs>(KeyDown);

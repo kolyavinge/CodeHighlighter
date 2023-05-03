@@ -4,11 +4,11 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter;
 
-public static class LineFoldingPanelModelFactory
+public static class LineFoldingPanelFactory
 {
-    public static ILineFoldingPanelModel MakeModel(ICodeTextBoxModel codeTextBoxModel)
+    public static ILineFoldingPanel MakeModel(ICodeTextBox codeTextBoxModel)
     {
-        return new LineFoldingPanelModel(
+        return new LineFoldingPanel(
             codeTextBoxModel.Folds,
             new LineFoldsNumberGenerator(
                 codeTextBoxModel.Folds,

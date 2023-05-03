@@ -22,7 +22,7 @@ internal class RenderingContext : ICodeTextBoxRenderingContext, ILineNumberPanel
         _typeface = new Typeface(_control.FontFamily, _control.FontStyle, _control.FontWeight, _control.FontStretch);
     }
 
-    public RenderingContext(CodeTextBox codeTextBox) : this((Control)codeTextBox)
+    public RenderingContext(CodeTextBoxView codeTextBox) : this((Control)codeTextBox)
     {
         codeTextBox.FontSettingsChanged += (s, e) =>
         {

@@ -7,9 +7,9 @@ namespace CodeHighlighter.Infrastructure;
 
 internal class LineNumberPanelModelInjectModule : InjectModule
 {
-    private readonly ICodeTextBoxModel? _codeTextBoxModel;
+    private readonly ICodeTextBox? _codeTextBoxModel;
 
-    public LineNumberPanelModelInjectModule(ICodeTextBoxModel? codeTextBoxModel)
+    public LineNumberPanelModelInjectModule(ICodeTextBox? codeTextBoxModel)
     {
         _codeTextBoxModel = codeTextBoxModel;
     }
@@ -19,7 +19,7 @@ internal class LineNumberPanelModelInjectModule : InjectModule
         bindingProvider.Bind<ILineNumberGenerator, LineNumberGenerator>().ToSingleton();
         bindingProvider.Bind<IExtendedLineNumberGenerator, ExtendedLineNumberGenerator>().ToSingleton();
         bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
-        bindingProvider.Bind<ILineNumberPanelModel, LineNumberPanelModel>().ToSingleton();
+        bindingProvider.Bind<ILineNumberPanel, LineNumberPanel>().ToSingleton();
 
         if (_codeTextBoxModel != null)
         {

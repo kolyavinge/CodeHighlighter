@@ -13,9 +13,9 @@ public interface IKeyboardController
 
 internal class KeyboardController : IKeyboardController
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
 
-    public KeyboardController(ICodeTextBoxModel model)
+    public KeyboardController(ICodeTextBox model)
     {
         _model = model;
     }

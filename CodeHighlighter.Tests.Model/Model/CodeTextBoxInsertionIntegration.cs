@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class CodeTextBoxModelInsertionIntegration : BaseCodeTextBoxModelIntegration
+internal class CodeTextBoxInsertionIntegration : BaseCodeTextBoxIntegration
 {
     private CodeTextBoxModel _model;
 

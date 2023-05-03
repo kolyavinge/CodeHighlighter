@@ -8,17 +8,17 @@ namespace CodeHighlighter.Tests.Controllers;
 
 internal class MouseControllerIntegration
 {
-    private Mock<ICodeTextBox> _codeTextBox;
-    private ICodeTextBoxModel _model;
+    private Mock<ICodeTextBoxView> _codeTextBox;
+    private ICodeTextBox _model;
     private IKeyboardController _keybaordController;
     private IMouseController _mouseController;
 
     [SetUp]
     public void Setup()
     {
-        _codeTextBox = new Mock<ICodeTextBox>();
-        _codeTextBox = new Mock<ICodeTextBox>();
-        _model = CodeTextBoxModelFactory.MakeModel(new EmptyCodeProvider());
+        _codeTextBox = new Mock<ICodeTextBoxView>();
+        _codeTextBox = new Mock<ICodeTextBoxView>();
+        _model = CodeTextBoxFactory.MakeModel(new EmptyCodeProvider());
         _model.AttachCodeTextBox(_codeTextBox.Object);
         _codeTextBox.Raise(x => x.FontSettingsChanged += null, new FontSettingsChangedEventArgs(10, 10));
         _keybaordController = ControllerFactory.MakeKeyboardController(_model);

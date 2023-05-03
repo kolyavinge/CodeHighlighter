@@ -7,34 +7,34 @@ using NUnit.Framework;
 
 namespace CodeHighlighter.Tests.Model;
 
-internal class SearchPanelModelTest
+internal class SearchPanelTest
 {
     private Mock<ITextEvents> _textEvents;
     private Mock<ITextHighlighter> _textHighlighter;
-    private Mock<ICodeTextBoxModel> _codeTextBoxModel;
+    private Mock<ICodeTextBox> _codeTextBoxModel;
     private Mock<ITextSearchLogic> _textSearchLogic;
     private Mock<IRegexSearchLogic> _regexSearchLogic;
     private Mock<IWholeWordLogic> _wholeWordLogic;
     private Mock<ITextPositionNavigatorInternal> _textPositionNavigator;
-    private Mock<ISearchPanel> _panel;
+    private Mock<ISearchPanelView> _panel;
     private Color _highlightColor;
-    private SearchPanelModel _model;
+    private SearchPanel _model;
 
     [SetUp]
     public void Setup()
     {
         _textEvents = new Mock<ITextEvents>();
         _textHighlighter = new Mock<ITextHighlighter>();
-        _codeTextBoxModel = new Mock<ICodeTextBoxModel>();
+        _codeTextBoxModel = new Mock<ICodeTextBox>();
         _codeTextBoxModel.SetupGet(x => x.TextEvents).Returns(_textEvents.Object);
         _codeTextBoxModel.SetupGet(x => x.TextHighlighter).Returns(_textHighlighter.Object);
         _textSearchLogic = new Mock<ITextSearchLogic>();
         _regexSearchLogic = new Mock<IRegexSearchLogic>();
         _wholeWordLogic = new Mock<IWholeWordLogic>();
         _textPositionNavigator = new Mock<ITextPositionNavigatorInternal>();
-        _panel = new Mock<ISearchPanel>();
+        _panel = new Mock<ISearchPanelView>();
         _highlightColor = Color.FromHex("123456");
-        _model = new SearchPanelModel(
+        _model = new SearchPanel(
             _codeTextBoxModel.Object, _textSearchLogic.Object, _regexSearchLogic.Object, _wholeWordLogic.Object, _textPositionNavigator.Object);
         _model.HighlightColor = _highlightColor;
         _model.AttachSearchPanel(_panel.Object);

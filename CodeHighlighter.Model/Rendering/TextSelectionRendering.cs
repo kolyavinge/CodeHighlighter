@@ -11,12 +11,12 @@ public interface ITextSelectionRendering
 
 internal class TextSelectionRendering : ITextSelectionRendering
 {
-    private readonly ICodeTextBoxModel _model;
+    private readonly ICodeTextBox _model;
     private readonly ICodeTextBoxRenderingContext _renderingContext;
     private readonly ITextSelectionRect _textSelectionRect;
 
     public TextSelectionRendering(
-        ICodeTextBoxModel model, ICodeTextBoxRenderingContext renderingContext, ITextSelectionRect textSelectionRect)
+        ICodeTextBox model, ICodeTextBoxRenderingContext renderingContext, ITextSelectionRect textSelectionRect)
     {
         _model = model;
         _renderingContext = renderingContext;

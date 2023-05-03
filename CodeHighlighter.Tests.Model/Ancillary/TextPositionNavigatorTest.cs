@@ -8,13 +8,13 @@ namespace CodeHighlighter.Tests.Ancillary;
 
 internal class TextPositionNavigatorTest
 {
-    private Mock<ICodeTextBoxModel> _codeTextBoxModel;
+    private Mock<ICodeTextBox> _codeTextBoxModel;
     private TextPositionNavigator _navigator;
 
     [SetUp]
     public void Setup()
     {
-        _codeTextBoxModel = new Mock<ICodeTextBoxModel>();
+        _codeTextBoxModel = new Mock<ICodeTextBox>();
         _navigator = new TextPositionNavigator(_codeTextBoxModel.Object);
     }
 

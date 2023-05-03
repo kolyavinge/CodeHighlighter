@@ -17,10 +17,10 @@ internal interface ITextPositionNavigatorInternal : ITextPositionNavigator
 
 internal class TextPositionNavigator : ITextPositionNavigatorInternal
 {
-    private readonly ICodeTextBoxModel _codeTextBoxModel;
+    private readonly ICodeTextBox _codeTextBoxModel;
     private TextPosition[] _positions;
 
-    public TextPositionNavigator(ICodeTextBoxModel codeTextBoxModel)
+    public TextPositionNavigator(ICodeTextBox codeTextBoxModel)
     {
         _codeTextBoxModel = codeTextBoxModel;
         _positions = Array.Empty<TextPosition>();

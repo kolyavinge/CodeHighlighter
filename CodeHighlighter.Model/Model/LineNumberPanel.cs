@@ -4,28 +4,28 @@ using CodeHighlighter.Core;
 
 namespace CodeHighlighter.Model;
 
-public interface ILineNumberPanel
+public interface ILineNumberPanelView
 {
     void InvalidateVisual();
 }
 
-public interface ILineNumberPanelModel
+public interface ILineNumberPanel
 {
     ILineGapCollection Gaps { get; }
 
-    void AttachLineNumberPanel(ILineNumberPanel panel);
+    void AttachLineNumberPanel(ILineNumberPanelView panel);
 
     IEnumerable<LineNumber> GetLines(double controlHeight, double verticalScrollBarValue, double textLineHeight, int textLinesCount);
 }
 
-internal class LineNumberPanelModel : ILineNumberPanelModel
+internal class LineNumberPanel : ILineNumberPanel
 {
     private readonly IExtendedLineNumberGenerator _lineNumberGenerator;
     private readonly ILineFolds _folds;
 
     public ILineGapCollection Gaps { get; }
 
-    public LineNumberPanelModel(
+    public LineNumberPanel(
         IExtendedLineNumberGenerator lineNumberGenerator,
         ILineGapCollection gaps,
         ILineFolds folds)
@@ -35,7 +35,7 @@ internal class LineNumberPanelModel : ILineNumberPanelModel
         Gaps = gaps;
     }
 
-    public void AttachLineNumberPanel(ILineNumberPanel panel)
+    public void AttachLineNumberPanel(ILineNumberPanelView panel)
     {
         _folds.ItemsSet += (s, e) => panel.InvalidateVisual();
         _folds.Activated += (s, e) => panel.InvalidateVisual();

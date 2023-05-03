@@ -10,11 +10,11 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
+public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 {
     private IKeyboardController? _keyboardController;
     private IMouseController? _mouseController;
-    private ICodeTextBoxRenderingModel? _renderingModel;
+    private ICodeTextBoxRendering? _renderingModel;
     private RenderingContext? _renderingContext;
     private readonly MouseSettings _mouseSettings;
     private readonly CursorRenderLogic _cursorRenderLogic;
@@ -24,19 +24,19 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
     #region Model
-    public ICodeTextBoxModel? Model
+    public ICodeTextBox? Model
     {
-        get => (ICodeTextBoxModel?)GetValue(ModelProperty);
+        get => (ICodeTextBox?)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(ICodeTextBoxModel), typeof(CodeTextBox), new PropertyMetadata(ModelPropertyChangedCallback));
+        DependencyProperty.Register("Model", typeof(ICodeTextBox), typeof(CodeTextBoxView), new PropertyMetadata(ModelPropertyChangedCallback));
 
     private static void ModelPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var model = (ICodeTextBoxModel)e.NewValue ?? throw new ArgumentNullException(nameof(Model));
-        var codeTextBox = (CodeTextBox)d;
+        var model = (ICodeTextBox)e.NewValue ?? throw new ArgumentNullException(nameof(Model));
+        var codeTextBox = (CodeTextBoxView)d;
         InitModel(codeTextBox, model);
     }
     #endregion
@@ -49,7 +49,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty SelectionBrushProperty =
-        DependencyProperty.Register("SelectionBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 })));
+        DependencyProperty.Register("SelectionBrush", typeof(Brush), typeof(CodeTextBoxView), new PropertyMetadata(new SolidColorBrush(new Color { R = 40, G = 80, B = 120, A = 100 })));
     #endregion
 
     #region HighlightBracketsBrush
@@ -60,7 +60,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty HighlightPairBracketsBrushProperty =
-        DependencyProperty.Register("HighlightPairBracketsBrush", typeof(Brush), typeof(CodeTextBox));
+        DependencyProperty.Register("HighlightPairBracketsBrush", typeof(Brush), typeof(CodeTextBoxView));
     #endregion
 
     #region HighlightNoPairBracketBrush
@@ -71,7 +71,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty HighlightNoPairBracketBrushProperty =
-        DependencyProperty.Register("HighlightNoPairBracketBrush", typeof(Brush), typeof(CodeTextBox));
+        DependencyProperty.Register("HighlightNoPairBracketBrush", typeof(Brush), typeof(CodeTextBoxView));
     #endregion
 
     #region CursorLineHighlightingBrush
@@ -82,7 +82,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty CursorLineHighlightingBrushProperty =
-        DependencyProperty.Register("CursorLineHighlightingBrush", typeof(Brush), typeof(CodeTextBox));
+        DependencyProperty.Register("CursorLineHighlightingBrush", typeof(Brush), typeof(CodeTextBoxView));
     #endregion
 
     #region LineGapBrush
@@ -93,7 +93,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty LineGapBrushProperty =
-        DependencyProperty.Register("LineGapBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(Brushes.Gray));
+        DependencyProperty.Register("LineGapBrush", typeof(Brush), typeof(CodeTextBoxView), new PropertyMetadata(Brushes.Gray));
     #endregion
 
     #region ActivatedFoldBrush
@@ -104,7 +104,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty ActivatedFoldBrushProperty =
-        DependencyProperty.Register("ActivatedFoldBrush", typeof(Brush), typeof(CodeTextBox), new PropertyMetadata(Brushes.Gray));
+        DependencyProperty.Register("ActivatedFoldBrush", typeof(Brush), typeof(CodeTextBoxView), new PropertyMetadata(Brushes.Gray));
     #endregion
 
     #region VerticalScrollBarValue
@@ -115,11 +115,11 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
-        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
+        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
 
     private static void VerticalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var codeTextBox = (CodeTextBox)d;
+        var codeTextBox = (CodeTextBoxView)d;
         var value = (double)e.NewValue;
         if (value < 0) codeTextBox.VerticalScrollBarValue = 0.0;
         else if (value > codeTextBox.VerticalScrollBarMaximum) codeTextBox.VerticalScrollBarValue = codeTextBox.VerticalScrollBarMaximum;
@@ -135,7 +135,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty VerticalScrollBarMaximumProperty =
-        DependencyProperty.Register("VerticalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        DependencyProperty.Register("VerticalScrollBarMaximum", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
     #region HorizontalScrollBarValue
@@ -146,11 +146,11 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty HorizontalScrollBarValueProperty =
-        DependencyProperty.Register("HorizontalScrollBarValue", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, HorizontalScrollBarValueChangedCallback));
+        DependencyProperty.Register("HorizontalScrollBarValue", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, HorizontalScrollBarValueChangedCallback));
 
     private static void HorizontalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var codeTextBox = (CodeTextBox)d;
+        var codeTextBox = (CodeTextBoxView)d;
         var value = (double)e.NewValue;
         if (value < 0) codeTextBox.HorizontalScrollBarValue = 0.0;
         else if (value > codeTextBox.HorizontalScrollBarMaximum) codeTextBox.HorizontalScrollBarValue = codeTextBox.HorizontalScrollBarMaximum;
@@ -166,7 +166,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty HorizontalScrollBarMaximumProperty =
-        DependencyProperty.Register("HorizontalScrollBarMaximum", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        DependencyProperty.Register("HorizontalScrollBarMaximum", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
     #region ViewportWidth
@@ -177,7 +177,7 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty ViewportWidthProperty =
-        DependencyProperty.Register("ViewportWidth", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        DependencyProperty.Register("ViewportWidth", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
     #region ViewportHeight
@@ -188,10 +188,10 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
     }
 
     public static readonly DependencyProperty ViewportHeightProperty =
-        DependencyProperty.Register("ViewportHeight", typeof(double), typeof(CodeTextBox), new PropertyMetadata(0.0, ScrollBarChangedCallback));
+        DependencyProperty.Register("ViewportHeight", typeof(double), typeof(CodeTextBoxView), new PropertyMetadata(0.0, ScrollBarChangedCallback));
     #endregion
 
-    private static void InitModel(CodeTextBox codeTextBox, ICodeTextBoxModel model)
+    private static void InitModel(CodeTextBoxView codeTextBox, ICodeTextBox model)
     {
         model.AttachCodeTextBox(codeTextBox);
         model.TextMeasuresEvents.LetterWidthChanged += (s, e) => { codeTextBox.TextLetterWidth = e.LetterWidth; };
@@ -211,18 +211,18 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
 
     private static void ScrollBarChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var codeTextBox = (CodeTextBox)d;
+        var codeTextBox = (CodeTextBoxView)d;
         codeTextBox.InvalidateVisual();
     }
 
     private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var codeTextBox = (CodeTextBox)d;
+        var codeTextBox = (CodeTextBoxView)d;
         if (codeTextBox.Model == null) return;
         UpdateFontSettings(codeTextBox, codeTextBox.FontSettings);
     }
 
-    private static void UpdateFontSettings(CodeTextBox codeTextBox, FontSettings fontSettings)
+    private static void UpdateFontSettings(CodeTextBoxView codeTextBox, FontSettings fontSettings)
     {
         fontSettings.FontFamily = codeTextBox.FontFamily;
         fontSettings.FontSize = codeTextBox.FontSize;
@@ -232,13 +232,13 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         codeTextBox.FontSettingsChanged?.Invoke(codeTextBox, new(fontSettings.LineHeight, fontSettings.LetterWidth));
     }
 
-    static CodeTextBox()
+    static CodeTextBoxView()
     {
-        FontSizeProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
-        FontFamilyProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
-        FontStyleProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
-        FontWeightProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
-        FontStretchProperty.OverrideMetadata(typeof(CodeTextBox), new FrameworkPropertyMetadata(OnFontSettingsChanged));
+        FontSizeProperty.OverrideMetadata(typeof(CodeTextBoxView), new FrameworkPropertyMetadata(OnFontSettingsChanged));
+        FontFamilyProperty.OverrideMetadata(typeof(CodeTextBoxView), new FrameworkPropertyMetadata(OnFontSettingsChanged));
+        FontStyleProperty.OverrideMetadata(typeof(CodeTextBoxView), new FrameworkPropertyMetadata(OnFontSettingsChanged));
+        FontWeightProperty.OverrideMetadata(typeof(CodeTextBoxView), new FrameworkPropertyMetadata(OnFontSettingsChanged));
+        FontStretchProperty.OverrideMetadata(typeof(CodeTextBoxView), new FrameworkPropertyMetadata(OnFontSettingsChanged));
     }
 
     internal FontSettings FontSettings { get; private set; }
@@ -271,14 +271,14 @@ public class CodeTextBox : Control, ICodeTextBox, INotifyPropertyChanged
         set { _isHorizontalScrollBarVisible = value; PropertyChanged?.Invoke(this, new(nameof(IsHorizontalScrollBarVisible))); }
     }
 
-    public CodeTextBox()
+    public CodeTextBoxView()
     {
         _cursorRenderLogic = new CursorRenderLogic();
         _mouseSettings = new MouseSettings();
         FontSettings = new FontSettings();
         Cursor = Cursors.IBeam;
         FocusVisualStyle = null;
-        var template = new ControlTemplate(typeof(CodeTextBox));
+        var template = new ControlTemplate(typeof(CodeTextBoxView));
         template.VisualTree = new FrameworkElementFactory(typeof(Grid), "RootLayout");
         template.VisualTree.AppendChild(new FrameworkElementFactory(typeof(Line), "CursorLine"));
         Template = template;

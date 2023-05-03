@@ -9,26 +9,26 @@ using CodeHighlighter.Rendering;
 
 namespace CodeHighlighter;
 
-public class LineFoldingPanel : Control, ILineFoldingPanel
+public class LineFoldingPanelView : Control, ILineFoldingPanelView
 {
     private readonly RenderingContext _context;
     private ILineFoldsRendering? _lineFoldsRendering;
     private ILineFoldingPanelMouseController? _mouseController;
 
     #region Model
-    public ILineFoldingPanelModel Model
+    public ILineFoldingPanel Model
     {
-        get => (ILineFoldingPanelModel)GetValue(ModelProperty);
+        get => (ILineFoldingPanel)GetValue(ModelProperty);
         set => SetValue(ModelProperty, value);
     }
 
     public static readonly DependencyProperty ModelProperty =
-        DependencyProperty.Register("Model", typeof(ILineFoldingPanelModel), typeof(LineFoldingPanel), new PropertyMetadata(ModelChangedCallback));
+        DependencyProperty.Register("Model", typeof(ILineFoldingPanel), typeof(LineFoldingPanelView), new PropertyMetadata(ModelChangedCallback));
 
     private static void ModelChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var model = (ILineFoldingPanelModel)e.NewValue;
-        var panel = (LineFoldingPanel)d;
+        var model = (ILineFoldingPanel)e.NewValue;
+        var panel = (LineFoldingPanelView)d;
         model.AttachLineFoldingPanel(panel);
         panel._lineFoldsRendering = RenderingModelFactory.MakeLineFoldsRendering(panel._context);
         panel._mouseController = ControllerFactory.MakeMouseController(panel, model);
@@ -44,11 +44,11 @@ public class LineFoldingPanel : Control, ILineFoldingPanel
     }
 
     public static readonly DependencyProperty VerticalScrollBarValueProperty =
-        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineFoldingPanel), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
+        DependencyProperty.Register("VerticalScrollBarValue", typeof(double), typeof(LineFoldingPanelView), new PropertyMetadata(0.0, VerticalScrollBarValueChangedCallback));
 
     private static void VerticalScrollBarValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineFoldingPanel)d;
+        var panel = (LineFoldingPanelView)d;
         if ((double)e.NewValue < 0) panel.VerticalScrollBarValue = 0.0;
         panel.InvalidateVisual();
     }
@@ -62,11 +62,11 @@ public class LineFoldingPanel : Control, ILineFoldingPanel
     }
 
     public static readonly DependencyProperty TextLinesCountProperty =
-        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineFoldingPanel), new PropertyMetadata(TextLinesCountChangedCallback));
+        DependencyProperty.Register("TextLinesCount", typeof(int), typeof(LineFoldingPanelView), new PropertyMetadata(TextLinesCountChangedCallback));
 
     private static void TextLinesCountChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineFoldingPanel)d;
+        var panel = (LineFoldingPanelView)d;
         panel.InvalidateVisual();
     }
     #endregion
@@ -79,16 +79,16 @@ public class LineFoldingPanel : Control, ILineFoldingPanel
     }
 
     public static readonly DependencyProperty TextLineHeightProperty =
-        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineFoldingPanel), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
+        DependencyProperty.Register("TextLineHeight", typeof(double), typeof(LineFoldingPanelView), new PropertyMetadata(1.0, TextLineHeightChangedCallback));
 
     private static void TextLineHeightChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var panel = (LineFoldingPanel)d;
+        var panel = (LineFoldingPanelView)d;
         panel.InvalidateVisual();
     }
     #endregion
 
-    public LineFoldingPanel()
+    public LineFoldingPanelView()
     {
         _context = new RenderingContext(this);
     }

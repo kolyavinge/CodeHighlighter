@@ -59,9 +59,9 @@ internal class DefaultHorizontalScrollBarMaximumValueStrategy : IHorizontalScrol
 
 public class MaximumHorizontalScrollBarMaximumValueStrategy : IHorizontalScrollBarMaximumValueStrategy
 {
-    private readonly List<ICodeTextBoxModel> _models;
+    private readonly List<ICodeTextBox> _models;
 
-    public MaximumHorizontalScrollBarMaximumValueStrategy(IEnumerable<ICodeTextBoxModel> models)
+    public MaximumHorizontalScrollBarMaximumValueStrategy(IEnumerable<ICodeTextBox> models)
     {
         _models = models.ToList();
     }

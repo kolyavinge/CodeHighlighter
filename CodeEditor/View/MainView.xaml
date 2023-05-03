@@ -31,7 +31,7 @@
             <CheckBox IsChecked="{Binding IsAlterLinesColor}" Content="Alter lines colors" Margin="8,3,0,0" />
             <CheckBox IsChecked="{Binding IsGapEnabled}" Content="Show gaps" Margin="8,3,0,0" />
             <CheckBox IsChecked="{Binding IsFoldEnabled}" Content="Fold" Margin="8,3,0,0" />
-            <highlighter:SearchPanel Model="{Binding SearchPanelModel}" Margin="8,0" Width="200" />
+            <highlighter:SearchPanelView Model="{Binding SearchPanelModel}" Margin="8,0" Width="200" />
         </StackPanel>
 
         <Grid Margin="0,24,0,24">
@@ -41,7 +41,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <highlighter:LineNumberPanel
+            <highlighter:LineNumberPanelView
                 Grid.Column="0"
                 Model="{Binding LineNumberPanelModel}"
                 Margin="0,0,0,17"
@@ -55,7 +55,7 @@
                 Foreground="DimGray"
                 MinWidth="50" />
 
-            <highlighter:LineFoldingPanel
+            <highlighter:LineFoldingPanelView
                 Grid.Column="1"
                 Model="{Binding LineFoldingPanelModel}"
                 FontFamily="Consolas"
@@ -67,7 +67,7 @@
                 Foreground="DimGray"
                 Width="{Binding TextLineHeight, ElementName=codeTextBox}" />
 
-            <highlighter:CodeTextBox
+            <highlighter:CodeTextBoxView
                 Grid.Column="2"
                 x:Name="codeTextBox"
                 Model="{Binding CodeTextBoxModel}"
@@ -85,12 +85,12 @@
                         <i:InvokeCommandAction Command="{Binding KeyDownCommand}" PassEventArgsToCommand="True" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
-                <highlighter:CodeTextBox.ContextMenu>
+                <highlighter:CodeTextBoxView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Menu item 1" />
                     </ContextMenu>
-                </highlighter:CodeTextBox.ContextMenu>
-            </highlighter:CodeTextBox>
+                </highlighter:CodeTextBoxView.ContextMenu>
+            </highlighter:CodeTextBoxView>
 
             <ScrollBar
                 Grid.Column="2"
