@@ -15,7 +15,7 @@ internal class BaseCodeTextBoxIntegration
         var text = new Text();
         var textLines = new TextLines(text);
         var textSelectionLineConverter = new TextSelectionLineConverter(text);
-        var textSelection = new TextSelection(text, textSelectionLineConverter);
+        var textSelection = new TextSelection(textSelectionLineConverter);
         var gaps = new LineGapCollection();
         var folds = new LineFolds();
         var editTextResultToLinesChangeConverter = new EditTextResultToLinesChangeConverter(new TextLinesChangingLogic());

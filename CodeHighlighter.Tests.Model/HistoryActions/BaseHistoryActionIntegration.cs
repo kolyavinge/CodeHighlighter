@@ -44,7 +44,7 @@ internal class BaseHistoryActionIntegration
         _lineFoldsUpdater = new LineFoldsUpdater(_folds, _editTextResultToLinesChangeConverter);
         _textCursor = new(_text, new TextCursorPositionCorrector(_text, _folds));
         _textSelectionLineConverter = new TextSelectionLineConverter(_text);
-        _textSelection = new(_text, _textSelectionLineConverter);
+        _textSelection = new(_textSelectionLineConverter);
         _textSelector = new(_text, _textCursor, _textSelection);
         _tokens = new();
         _tokensColors = new(_codeProvider);

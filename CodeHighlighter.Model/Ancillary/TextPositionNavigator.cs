@@ -4,6 +4,8 @@ using CodeHighlighter.Model;
 
 namespace CodeHighlighter.Ancillary;
 
+public readonly record struct TextPosition(int StartLineIndex, int StartColumnIndex, int EndLineIndex, int EndColumnIndex);
+
 public interface ITextPositionNavigator
 {
     void GotoPrev();

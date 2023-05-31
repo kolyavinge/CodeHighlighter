@@ -7,16 +7,14 @@ namespace CodeHighlighter.Tests.Core;
 
 internal class TextSelectionTest
 {
-    private Text _text;
     private Mock<ITextSelectionLineConverter> _textSelectionLineConverter;
     private TextSelection _textSelection;
 
     [SetUp]
     public void Setup()
     {
-        _text = new Text();
         _textSelectionLineConverter = new Mock<ITextSelectionLineConverter>();
-        _textSelection = new TextSelection(_text, _textSelectionLineConverter.Object);
+        _textSelection = new TextSelection(_textSelectionLineConverter.Object);
     }
 
     [Test]
@@ -32,7 +30,6 @@ internal class TextSelectionTest
     [Test]
     public void SelectAll_Empty()
     {
-        _text.TextContent = "";
         _textSelection.StartPosition = new();
         _textSelection.EndPosition = new();
 
@@ -60,7 +57,7 @@ internal class TextSelectionTest
     [Test]
     public void GetTextSelectionLines_1()
     {
-        _text.TextContent = "01234\n01234\n01234\n01234\n01234";
+        // 01234\n01234\n01234\n01234\n01234
         _textSelection.StartPosition = new(0, 2);
         _textSelection.EndPosition = new(3, 4);
 
@@ -72,7 +69,7 @@ internal class TextSelectionTest
     [Test]
     public void GetTextSelectionLines_2()
     {
-        _text.TextContent = "01234\n01234\n01234\n01234\n01234";
+        // 01234\n01234\n01234\n01234\n01234
         _textSelection.StartPosition = new(3, 4);
         _textSelection.EndPosition = new(0, 2);
 
@@ -84,7 +81,7 @@ internal class TextSelectionTest
     [Test]
     public void VirtualCursor()
     {
-        _text.TextContent = "    000\r\n\r\n111";
+        // "    000\r\n\r\n111"
         _textSelection.StartPosition = new(1, 4, CursorPositionKind.Virtual);
         _textSelection.EndPosition = new(2, 0);
 

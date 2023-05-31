@@ -1,16 +1,7 @@
 ﻿namespace CodeHighlighter.Common;
 
-public struct Point
+public readonly record struct Point(double X, double Y)
 {
-    public double X;
-    public double Y;
-
-    public Point(double x, double y)
-    {
-        X = x;
-        Y = y;
-    }
-
     public override string ToString()
     {
         return $"{X}:{Y}";

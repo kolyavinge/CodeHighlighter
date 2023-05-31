@@ -10,47 +10,13 @@ public interface IBracketsHighlighter
 {
     HighlightResult GetHighlightedBrackets(CursorPosition position);
 
-    internal struct BracketPair
-    {
-        public readonly char Open;
-        public readonly char Close;
-        public BracketPair(char open, char close)
-        {
-            Open = open;
-            Close = close;
-        }
-    }
+    internal readonly record struct BracketPair(char Open, char Close);
 
-    public readonly struct BracketPosition
-    {
-        public readonly int LineIndex;
-        public readonly int ColumnIndex;
-        public BracketPosition(int lineIndex, int columnIndex)
-        {
-            LineIndex = lineIndex;
-            ColumnIndex = columnIndex;
-        }
-    }
+    public readonly record struct BracketPosition(int LineIndex, int ColumnIndex);
 
-    public enum HighlightKind
-    {
-        NoHighlight,
-        Highlighted,
-        NoPair
-    }
+    public enum HighlightKind { NoHighlight, Highlighted, NoPair }
 
-    public readonly struct HighlightResult
-    {
-        public readonly BracketPosition Open;
-        public readonly BracketPosition Close;
-        public readonly HighlightKind Kind;
-        public HighlightResult(HighlightKind kind, BracketPosition open, BracketPosition close)
-        {
-            Open = open;
-            Close = close;
-            Kind = kind;
-        }
-    }
+    public readonly record struct HighlightResult(HighlightKind Kind, BracketPosition Open, BracketPosition Close);
 }
 
 internal class BracketsHighlighter : IBracketsHighlighter

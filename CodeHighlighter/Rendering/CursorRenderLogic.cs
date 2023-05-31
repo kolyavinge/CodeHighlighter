@@ -33,13 +33,13 @@ internal class CursorRenderLogic
 
     public void DrawCursor(ICodeTextBox model)
     {
-        var cursorAbsolutePoint = model.AbsoluteCursorPosition;
-        cursorAbsolutePoint.X -= model.Viewport.HorizontalScrollBarValue;
-        cursorAbsolutePoint.Y -= model.Viewport.VerticalScrollBarValue;
-        _cursorLine.X1 = (int)cursorAbsolutePoint.X + _cursorThickness;  // cursor is not cropped to the left
-        _cursorLine.Y1 = (int)(cursorAbsolutePoint.Y - 1);
-        _cursorLine.X2 = (int)cursorAbsolutePoint.X;
-        _cursorLine.Y2 = (int)(cursorAbsolutePoint.Y + model.TextMeasures.LineHeight + 1);
+        var (x, y) = model.AbsoluteCursorPosition;
+        x -= model.Viewport.HorizontalScrollBarValue;
+        y -= model.Viewport.VerticalScrollBarValue;
+        _cursorLine.X1 = (int)x + _cursorThickness;  // cursor is not cropped to the left
+        _cursorLine.Y1 = (int)(y - 1);
+        _cursorLine.X2 = (int)x;
+        _cursorLine.Y2 = (int)(y + model.TextMeasures.LineHeight + 1);
     }
 
     public void HideCursor()

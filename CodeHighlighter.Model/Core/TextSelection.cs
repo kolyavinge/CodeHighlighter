@@ -3,19 +3,7 @@ using System.Linq;
 
 namespace CodeHighlighter.Core;
 
-public readonly struct TextSelectionLine
-{
-    public readonly int LineIndex;
-    public readonly int LeftColumnIndex;
-    public readonly int RightColumnIndex;
-
-    public TextSelectionLine(int lineIndex, int leftColumnIndex, int rightColumnIndex)
-    {
-        LineIndex = lineIndex;
-        LeftColumnIndex = leftColumnIndex;
-        RightColumnIndex = rightColumnIndex;
-    }
-}
+public readonly record struct TextSelectionLine(int LineIndex, int LeftColumnIndex, int RightColumnIndex);
 
 public interface ITextSelection
 {
@@ -35,7 +23,6 @@ internal interface ITextSelectionInternal : ITextSelection
 
 internal class TextSelection : ITextSelectionInternal
 {
-    private readonly IText _text;
     private readonly ITextSelectionLineConverter _textSelectionLineConverter;
 
     public bool IsExist => StartPosition.LineIndex != EndPosition.LineIndex || StartPosition.ColumnIndex != EndPosition.ColumnIndex;
@@ -43,9 +30,8 @@ internal class TextSelection : ITextSelectionInternal
     public CursorPosition StartPosition { get; set; }
     public CursorPosition EndPosition { get; set; }
 
-    public TextSelection(IText text, ITextSelectionLineConverter textSelectionLineConverter)
+    public TextSelection(ITextSelectionLineConverter textSelectionLineConverter)
     {
-        _text = text;
         _textSelectionLineConverter = textSelectionLineConverter;
     }
 

@@ -4,17 +4,7 @@ using CodeHighlighter.Core;
 
 namespace CodeHighlighter.Ancillary;
 
-public readonly struct TextHighlight
-{
-    public readonly TextPosition Position;
-    public readonly Color Color;
-
-    public TextHighlight(TextPosition position, Color color)
-    {
-        Position = position;
-        Color = color;
-    }
-}
+public readonly record struct TextHighlight(TextPosition Position, Color Color);
 
 public interface ITextHighlighter
 {

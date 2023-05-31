@@ -10,42 +10,12 @@ public interface ICodeProvider
     IEnumerable<TokenColor> GetColors();
 }
 
-public class Token
+public record Token(string Name, int LineIndex, int StartColumnIndex, byte Kind)
 {
-    public readonly string Name;
-    public readonly int LineIndex;
-    public readonly int StartColumnIndex;
-    public readonly byte Kind;
     public int EndColumnIndex => StartColumnIndex + Name.Length - 1;
-
-    public Token(string name, int lineIndex, int startColumnIndex, byte kind)
-    {
-        Name = name;
-        LineIndex = lineIndex;
-        StartColumnIndex = startColumnIndex;
-        Kind = kind;
-    }
-
-    public override bool Equals(object? obj) => obj is Token token &&
-        Name == token.Name &&
-        LineIndex == token.LineIndex &&
-        StartColumnIndex == token.StartColumnIndex &&
-        Kind == token.Kind;
-
-    public override int GetHashCode() => HashCode.Combine(Name, LineIndex, StartColumnIndex, Kind);
 }
 
-public readonly struct TokenColor
-{
-    public readonly byte Kind;
-    public readonly Color Color;
-
-    public TokenColor(byte kind, Color color)
-    {
-        Kind = kind;
-        Color = color;
-    }
-}
+public readonly record struct TokenColor(byte Kind, Color Color);
 
 public interface ITokenKindUpdatable
 {
@@ -62,23 +32,7 @@ public class TokenKindUpdatedEventArgs : EventArgs
     }
 }
 
-public class UpdatedTokenKind
-{
-    public string Name { get; }
-    public byte Kind { get; }
-
-    public UpdatedTokenKind(string name, byte kind)
-    {
-        Name = name;
-        Kind = kind;
-    }
-
-    public override bool Equals(object? obj) => obj is UpdatedTokenKind kind &&
-        Name == kind.Name &&
-        Kind == kind.Kind;
-
-    public override int GetHashCode() => HashCode.Combine(Name, Kind);
-}
+public record UpdatedTokenKind(string Name, byte Kind);
 
 public interface ITextIterator
 {
