@@ -92,7 +92,7 @@ public class LineNumberPanelView : Control, ILineNumberPanelView
 
     protected override void OnRender(DrawingContext context)
     {
-        if (_numberRendering == null) return;
+        if (_numberRendering is null) return;
         _context.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));

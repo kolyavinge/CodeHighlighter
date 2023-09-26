@@ -21,7 +21,7 @@ internal class LineNumberPanelModelInjectModule : InjectModule
         bindingProvider.Bind<ILineGapCollection, LineGapCollection>().ToSingleton();
         bindingProvider.Bind<ILineNumberPanel, LineNumberPanel>().ToSingleton();
 
-        if (_codeTextBoxModel != null)
+        if (_codeTextBoxModel is not null)
         {
             bindingProvider.Bind<ILineFolds>().ToMethod(_ => _codeTextBoxModel.Folds);
         }

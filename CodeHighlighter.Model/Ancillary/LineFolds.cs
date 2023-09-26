@@ -122,7 +122,7 @@ internal class LineFolds : ILineFolds
     public void Switch(int lineIndex)
     {
         var fold = _items.FirstOrDefault(x => x.LineIndex == lineIndex);
-        if (fold == null) return;
+        if (fold is null) return;
         if (fold.IsActive)
         {
             Deactivate(new[] { lineIndex });

@@ -34,7 +34,7 @@ internal class LineGapRendering : ILineGapRendering
         foreach (var line in _lineNumberGenerator.GetLineNumbers(viewport.ActualHeight, viewport.VerticalScrollBarValue, textMeasures.LineHeight, _model.TextLines.Count))
         {
             var gap = _model.Gaps[line.LineIndex];
-            if (gap == null) continue;
+            if (gap is null) continue;
             for (int i = 1; i <= gap.CountBefore; i++)
             {
                 var y = line.OffsetY - i * textMeasures.LineHeight;

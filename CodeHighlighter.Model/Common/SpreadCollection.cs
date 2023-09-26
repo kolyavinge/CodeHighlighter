@@ -19,7 +19,7 @@ public class SpreadCollection<T> : IEnumerable<T>
         }
         set
         {
-            if (value != null)
+            if (value is not null)
             {
                 if (_items.ContainsKey(lineIndex))
                 {

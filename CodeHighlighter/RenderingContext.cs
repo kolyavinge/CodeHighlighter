@@ -46,7 +46,7 @@ internal class RenderingContext : ICodeTextBoxRenderingContext, ILineNumberPanel
 
     public void DrawText(string text, Common.Point position, Common.Color? foreground)
     {
-        var brush = foreground != null ? _textBrushes[foreground.Value] : _control.Foreground;
+        var brush = foreground is not null ? _textBrushes[foreground.Value] : _control.Foreground;
         var formattedText = new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, _typeface, _control.FontSize, brush, 1.0);
         _context!.DrawText(formattedText, new(position.X, position.Y));
     }

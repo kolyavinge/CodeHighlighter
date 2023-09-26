@@ -72,7 +72,7 @@ internal class TokenCursorPositionLogic
             }
         }
 
-        return tokenOnPosition != null ? new(tokenOnPosition, neighbourToken) : null;
+        return tokenOnPosition is not null ? new(tokenOnPosition, neighbourToken) : null;
     }
 
     public TokenCursorPositionExt GetPositionExt(TokenList lineTokens, int columnIndex)

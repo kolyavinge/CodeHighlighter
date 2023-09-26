@@ -52,7 +52,7 @@ internal class ExtendedLineNumberGenerator : IExtendedLineNumberGenerator
             if (_folds.IsFolded(line.LineIndex)) continue;
 
             var gap = _gaps[line.LineIndex];
-            if (gap != null) absoluteOffsetY += gap.CountBefore * textLineHeight;
+            if (gap is not null) absoluteOffsetY += gap.CountBefore * textLineHeight;
 
             if (absoluteOffsetY - verticalScrollBarValue >= controlHeight) yield break;
             else if (absoluteOffsetY + textLineHeight > verticalScrollBarValue) yield return new(line.LineIndex, absoluteOffsetY - verticalScrollBarValue);

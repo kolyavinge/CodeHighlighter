@@ -218,7 +218,7 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
     private static void OnFontSettingsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var codeTextBox = (CodeTextBoxView)d;
-        if (codeTextBox.Model == null) return;
+        if (codeTextBox.Model is null) return;
         UpdateFontSettings(codeTextBox, codeTextBox.FontSettings);
     }
 
@@ -295,8 +295,8 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnRender(DrawingContext context)
     {
-        if (Model == null) return;
-        if (_renderingModel == null) return;
+        if (Model is null) return;
+        if (_renderingModel is null) return;
         _renderingContext!.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
@@ -320,7 +320,7 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
-        if (Model == null) return;
+        if (Model is null) return;
         ViewportHeight = sizeInfo.NewSize.Height;
         ViewportWidth = sizeInfo.NewSize.Width;
         ViewportSizeChanged?.Invoke(this, EventArgs.Empty);
@@ -329,7 +329,7 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnMouseDown(MouseButtonEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         var positionInControl = e.GetPosition(this);
         if (e.ChangedButton == MouseButton.Left)
         {
@@ -344,14 +344,14 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         var positionInControl = e.GetPosition(this);
         _mouseController.Move(new(positionInControl.X, positionInControl.Y));
     }
 
     protected override void OnMouseUp(MouseButtonEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         if (e.ChangedButton == MouseButton.Left)
         {
             _mouseController.LeftButtonUp();
@@ -361,20 +361,20 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnMouseWheel(MouseWheelEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         _mouseController.ScrollWheel(_mouseSettings.VerticalScrollLinesCount, e.Delta > 0);
     }
 
     protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         var positionInControl = e.GetPosition(this);
         _mouseController.LeftButtonDoubleClick(new(positionInControl.X, positionInControl.Y));
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
-        if (_keyboardController == null) return;
+        if (_keyboardController is null) return;
         var controlPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         var key = e.Key == System.Windows.Input.Key.System ? e.SystemKey : e.Key;
@@ -384,14 +384,14 @@ public class CodeTextBoxView : Control, ICodeTextBoxView, INotifyPropertyChanged
 
     protected override void OnKeyUp(KeyEventArgs e)
     {
-        if (_keyboardController == null) return;
+        if (_keyboardController is null) return;
         var shiftPressed = (e.KeyboardDevice.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
         e.Handled = _keyboardController.KeyUp(shiftPressed);
     }
 
     protected override void OnTextInput(TextCompositionEventArgs e)
     {
-        if (_keyboardController == null) return;
+        if (_keyboardController is null) return;
         _keyboardController.TextInput(e.Text);
     }
 

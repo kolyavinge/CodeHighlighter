@@ -95,7 +95,7 @@ public class LineFoldingPanelView : Control, ILineFoldingPanelView
 
     protected override void OnRender(DrawingContext context)
     {
-        if (_lineFoldsRendering == null) return;
+        if (_lineFoldsRendering is null) return;
         _context.SetContext(context);
         context.PushClip(new RectangleGeometry(new Rect(0, 0, ActualWidth, ActualHeight)));
         context.DrawRectangle(Background ?? Brushes.White, null, new Rect(0, 0, ActualWidth, ActualHeight));
@@ -106,7 +106,7 @@ public class LineFoldingPanelView : Control, ILineFoldingPanelView
 
     protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
     {
-        if (_mouseController == null) return;
+        if (_mouseController is null) return;
         var positionInControl = e.GetPosition(this);
         _mouseController.LeftButtonDown(new(positionInControl.X, positionInControl.Y));
     }

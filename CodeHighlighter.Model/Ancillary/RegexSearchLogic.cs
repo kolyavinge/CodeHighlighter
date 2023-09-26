@@ -28,7 +28,7 @@ internal class RegexSearchLogic : IRegexSearchLogic
         if (!matchCase) regexOptions |= RegexOptions.IgnoreCase;
         if (pattern.IndexOfAny(new[] { '\r', '\n' }) != -1) regexOptions |= RegexOptions.Multiline;
         var regex = MakeRegexOrNull(pattern, regexOptions);
-        if (regex == null) yield break;
+        if (regex is null) yield break;
         var matches = regex.Matches(textString);
         _startLineIndex = 0;
         _currentCharIndex = 0;
